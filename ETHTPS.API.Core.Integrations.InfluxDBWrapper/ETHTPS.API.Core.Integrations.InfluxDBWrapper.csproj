@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ETHTPS.Data.InfluxIntegration\ETHTPS.Data.Integrations.InfluxIntegration.csproj" />
+    <ProjectReference Include="..\ETHTPS.Data\ETHTPS.Data.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\Data\" />
+  </ItemGroup>
+
+</Project>
