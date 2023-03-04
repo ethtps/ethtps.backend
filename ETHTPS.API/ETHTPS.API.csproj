@@ -50,12 +50,4 @@
     <ProjectReference Include="..\ETHTPS.DependencyInjection\ETHTPS.API.DependencyInjection.csproj" />
   </ItemGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="taskkill /f /im ETHTPS.API.exe 2&gt;nul 1&gt;nul &amp;set errorlevel=0" />
-  </Target>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;$(SolutionDir)\files\*&quot; &quot;$(TargetDir)\&quot;" />
-  </Target>
-
 </Project>

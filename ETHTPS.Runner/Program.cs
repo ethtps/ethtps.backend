@@ -12,7 +12,6 @@ namespace ETHTPS.Runner
                 //ServiceCreator.GetTaskRunner(),
                 ServiceCreator.GetAPI(),
                 ServiceCreator.GetWSAPI(),
-                ServiceCreator.GetGateway()
             };
             var size = Window.GetHostWidthHeight.Invoke();
             Console.Clear();
@@ -23,6 +22,7 @@ namespace ETHTPS.Runner
                 SX = 0,
                 SY = 0
             };
+
             var w = Window.OpenBox("Services", settings);
             var consoles = w.SplitColumns(services.Select(x => new Split(size.width / services.Length - 1, x.Name)).ToArray()).ToList();
             var windowedServices = services.Select((s, i) => new WindowedService(s, consoles[i])).ToList();

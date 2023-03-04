@@ -31,7 +31,7 @@ builder.Services.AddCustomCORSPolicies()
                 .AddScoped<PingAllClientsTask>()
                 .AddScoped<SendLiveDataTask>()
                 .AddScoped<UpdateVisitorCountTask>()
-                .RegisterMicroservice(APP_NAME);
+                ;//.RegisterMicroservice(APP_NAME);
 
 WebSocketServer websocketServer = new("ws://localhost:2000")
 {

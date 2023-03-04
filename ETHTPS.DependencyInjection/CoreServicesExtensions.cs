@@ -12,6 +12,8 @@ using ETHTPS.API.Security.Core.Humanity.Recaptcha;
 using ETHTPS.Configuration;
 using ETHTPS.Configuration.Database;
 using ETHTPS.Services.BlockchainServices.BlockTime;
+using static ETHTPS.Data.Core.Extensions.EnvironmentExtensions;
+using static ETHTPS.Data.Core.Constants.EnvironmentVariables;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -63,5 +65,7 @@ namespace ETHTPS.API.DependencyInjection
             .AddDbContext<ConfigurationContext>(options => options.UseSqlServer(GetConfigurationServiceConnectionString()), ServiceLifetime.Singleton)
             .AddSingleton<IDBConfigurationProvider, DBConfigurationProvider>()
             .AddScoped<IWebsiteStatisticsService, WebsiteStatisticsService>();
+
+        private static string GetConfigurationServiceConnectionString() => GetEnvVarValue(CONFIGURATION_PROVIDER_CONN_STR);
     }
 }

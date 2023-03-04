@@ -13,4 +13,8 @@
 		<PackageReference Include="Goblinfactory.Konsole" Version="7.0.0.7-alpha" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\ETHTPS.Data\ETHTPS.Data.Core.csproj" />
+	</ItemGroup>
+
 </Project>

@@ -10,6 +10,23 @@ namespace ETHTPS.Data.Core
             public static TimeSpan LowUpdateRate = TimeSpan.FromMinutes(1);
         }
 
+        public static class EnvironmentVariables
+        {
+            public static string ENV = "ETHTPS_ENV";
+            public static string BASE_DIR = "ETHTPS_BASE_DIR";
+            public static string CONFIGURATION_PROVIDER_CONN_STR = "ETHTPS_CONFIGURATION_PROVIDER_DB_CONN_STR";
+            public static class API
+            {
+                public static string LOCATION = "ETHTPS_API_DIR";
+                public static string NAME = "ETHTPS.API";
+            }
+            public static class WSAPI
+            {
+                public static string LOCATION = "ETHTPS_WSAPI_DIR";
+                public static string NAME = "ETHTPS.WSAPI";
+            }
+        }
+
         public static class Headers
         {
             public static string XAPIKey => "X-API-Key";

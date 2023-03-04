@@ -46,8 +46,8 @@ namespace ETHTPS.API
                     .AddCache()
                     .AddScoped<AggregatedEndpointStatsBuilder>()
                     .AddInfluxHistoricalDataProvider() //Not working r/n
-                    .AddMSSQLHistoricalDataServices()
-                    .RegisterMicroservice(APP_NAME, "General API");
+                    .AddMSSQLHistoricalDataServices();
+            //.RegisterMicroservice(APP_NAME, "General API");
             services.AddDataUpdaterStatusService();
 
 #if DEBUG

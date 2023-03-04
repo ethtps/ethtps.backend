@@ -27,7 +27,7 @@ services.AddSwagger()
         .AddDataServices()
         .WithStore(DatabaseProvider.InfluxDB)
         .AddRunner(BackgroundServiceType.Coravel)
-        .RegisterMicroservice(CURRENT_APP_NAME, "Task runner web app");
+        ;//.RegisterMicroservice(CURRENT_APP_NAME, "Task runner web app");
 
 var app = builder.Build();
 
