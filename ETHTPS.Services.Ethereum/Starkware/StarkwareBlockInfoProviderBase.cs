@@ -14,7 +14,7 @@ using ETHTPS.Services.Attributes;
 namespace ETHTPS.Services.Ethereum.Starkware
 {
     [RunsEvery(CronConstants.Every30s)]
-    public abstract class StarkwareBlockInfoProviderBase : IBlockInfoProvider
+    public abstract class StarkwareBlockInfoProviderBase : IHTTPBlockInfoProvider
     {
         private readonly string _productName;
         private readonly EthtpsContext _context;

@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Data.Core.Models.DataUpdater
 {
-    public class LiveUpdaterStatus : IBasicLiveUpdaterStatus, IComparable<UpdaterStatus>, IEquatable<UpdaterStatus>
+    public class LiveDataUpdaterStatus : IBasicLiveUpdaterStatus, IComparable<UpdaterStatus>, IEquatable<UpdaterStatus>
     {
         private const double UNRELIABILITY_RATIO_THRESHOLD = 1;
         public string Updater { get; set; }
@@ -34,7 +34,7 @@ namespace ETHTPS.Data.Core.Models.DataUpdater
         }
         public int CompareTo(UpdaterStatus other) => Status.CompareTo(other.ToString());
         public bool Equals(UpdaterStatus other) => this == other;
-        public static bool operator ==(LiveUpdaterStatus? status, UpdaterStatus other) => status?.Status == other.ToString();
-        public static bool operator !=(LiveUpdaterStatus? status, UpdaterStatus other) => !(status == other);
+        public static bool operator ==(LiveDataUpdaterStatus? status, UpdaterStatus other) => status?.Status == other.ToString();
+        public static bool operator !=(LiveDataUpdaterStatus? status, UpdaterStatus other) => !(status == other);
     }
 }

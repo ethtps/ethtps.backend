@@ -17,17 +17,17 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.ProviderSpecific.Ty
         public UpdaterType UpdaterType { get; private set; }
         public string ProviderName => _providerDataUpdaterStatusManager.ProviderName;
 
-        public IEnumerable<LiveUpdaterStatus> GetAllStatuses()
+        public IEnumerable<LiveDataUpdaterStatus> GetAllStatuses()
         {
             return _providerDataUpdaterStatusManager.GetAllStatuses();
         }
 
-        public IEnumerable<LiveUpdaterStatus> GetStatusFor(string provider)
+        public IEnumerable<LiveDataUpdaterStatus> GetStatusFor(string provider)
         {
             return _providerDataUpdaterStatusManager.GetStatusFor(provider);
         }
 
-        public LiveUpdaterStatus? GetStatusFor(string provider, UpdaterType updaterType)
+        public LiveDataUpdaterStatus? GetStatusFor(string provider, UpdaterType updaterType)
         {
             return _providerDataUpdaterStatusManager.GetStatusFor(provider, updaterType);
         }

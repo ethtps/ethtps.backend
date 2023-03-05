@@ -12,7 +12,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("OMG Network")]
     [RunsEvery(CronConstants.Every13s)]
-    public class OMGNetworkBlockInfoProvider : IBlockInfoProvider
+    public class OMGNetworkBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
 

@@ -16,7 +16,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
             _context = context;
         }
 
-        public IEnumerable<LiveUpdaterStatus> GetAllStatuses()
+        public IEnumerable<ETHTPS.Data.Core.Models.DataUpdater.LiveDataUpdaterStatus> GetAllStatuses()
         {
             lock (_context.LockObj)
             {
@@ -24,7 +24,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
             }
         }
 
-        public LiveUpdaterStatus? GetStatusFor(string provider, UpdaterType updaterType)
+        public ETHTPS.Data.Core.Models.DataUpdater.LiveDataUpdaterStatus? GetStatusFor(string provider, UpdaterType updaterType)
         {
             lock (_context.LockObj)
             {
@@ -35,7 +35,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
             }
         }
 
-        public IEnumerable<LiveUpdaterStatus> GetStatusFor(string provider)
+        public IEnumerable<ETHTPS.Data.Core.Models.DataUpdater.LiveDataUpdaterStatus> GetStatusFor(string provider)
         {
             lock (_context.LockObj)
             {
@@ -88,7 +88,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
             {
                 if (!_context.LiveDataUpdaterStatuses.Any(x => x.UpdaterId == updater.Id))
                 {
-                    _context.LiveDataUpdaterStatuses.Add(new LiveDataUpdaterStatus()
+                    _context.LiveDataUpdaterStatuses.Add(new ETHTPS.Data.Integrations.MSSQL.LiveDataUpdaterStatus()
                     {
                         StatusId = s.Id,
                         UpdaterId = updater.Id,
@@ -165,7 +165,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
             }
         }
 
-        private static LiveUpdaterStatus Convert(LiveDataUpdaterStatus result) => new()
+        private static ETHTPS.Data.Core.Models.DataUpdater.LiveDataUpdaterStatus Convert(ETHTPS.Data.Integrations.MSSQL.LiveDataUpdaterStatus result) => new()
         {
             LastSuccessfulRunTime = result.LastSuccessfulRunTime,
             NumberOfFailures = result.NumberOfFailures,

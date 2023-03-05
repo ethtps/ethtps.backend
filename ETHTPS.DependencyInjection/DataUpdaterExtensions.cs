@@ -44,7 +44,7 @@ namespace ETHTPS.API.DependencyInjection
             typeof(OptimismBlockInfoProvider),
             typeof(LoopringBlockInfoProvider),
             typeof(BobaNetworkBlockInfoProvider),
-            typeof(XDAIBlockInfoProvider),
+            typeof(XDAIHTTPBlockInfoProvider),
             typeof(ZKSwapBlockInfoProvider),
             typeof(ZKSpaceBlockInfoProvider),
             typeof(ZKSsyncBlockInfoProvider),
@@ -59,7 +59,7 @@ namespace ETHTPS.API.DependencyInjection
             typeof(ZKTubeBlockInfoProvider),
             typeof(FTMScanBlockInfoProvider),
             typeof(SorareBlockInfoProvider),
-            typeof(DeversiFiBlockInfoProvider),
+            typeof(DeversiFIHTTPBlockInfoProvider),
             typeof(PolygonHermezBlockInfoProvider),
         };
         public static IServiceCollection AddDataServices(this IServiceCollection services) => services.AddScoped(_enabledUpdaters);
@@ -88,7 +88,7 @@ namespace ETHTPS.API.DependencyInjection
             return services;
         }
         public static void RegisterHangfireBackgroundServiceAndTimeBucket<T, V>(this IServiceCollection services, string cronExpression, string queue)
-            where V : class, IBlockInfoProvider
+            where V : class, IHTTPBlockInfoProvider
             where T : MSSQLLogger<V>
         {
             services.AddScoped<V>();

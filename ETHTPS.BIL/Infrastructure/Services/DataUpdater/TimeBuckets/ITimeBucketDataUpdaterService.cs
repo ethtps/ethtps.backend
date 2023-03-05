@@ -4,7 +4,7 @@ using ETHTPS.Data.Core.Models.DataEntries.BlockchainServices.Models;
 namespace ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.TimeBuckets
 {
     public interface ITimeBucketDataUpdaterService<T>
-        where T: IBlockInfoProvider
+        where T : IHTTPBlockInfoProvider
     {
         void UpdateAllEntries(TPSGPSInfo entry);
         void UpdateLatestEntries(TPSGPSInfo entry);

@@ -5,7 +5,7 @@ namespace ETHTPS.Data.Integrations.MSSQL;
 
 public partial class AggregatedCounter
 {
-    public string Key { get; set; }
+    public string Key { get; set; } = string.Empty;
 
     public long Value { get; set; }
 

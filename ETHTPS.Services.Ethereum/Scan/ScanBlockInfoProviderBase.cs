@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace ETHTPS.Services.Ethereum.Scan
 {
-    public abstract class ScanBlockInfoProviderBase : IBlockInfoProvider
+    public abstract class ScanBlockInfoProviderBase : IHTTPBlockInfoProvider
     {
         protected readonly HttpClient _httpClient;
         private readonly string _apiKey;

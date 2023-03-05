@@ -2,7 +2,6 @@
 using ETHTPS.API.Core.Integrations.MSSQL.Services;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.Core.Models;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,20 +19,20 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Controllers.CRUD
         [Route("[action]")]
         [HttpPut]
         [Authorize(Policy = "EditorsOnly")]
-        public void Create(TEntity entity) => Create(entity);
+        public new void Create(TEntity entity) => Create(entity);
         [Route("[action]")]
         [HttpPut]
         [Authorize(Policy = "EditorsOnly")]
-        public void DeleteById(int id) => DeleteById(id);
+        public new void DeleteById(int id) => DeleteById(id);
         [Route("[action]")]
         [HttpGet]
         public new IEnumerable<TEntity> GetAll() => base.GetAll();
         [HttpGet]
         [Route("[action]")]
-        public TEntity GetById(int id) => GetById(id);
+        public new TEntity GetById(int id) => GetById(id);
         [Route("[action]")]
         [Authorize(Policy = "EditorsOnly")]
         [HttpPut]
-        public void Update(TEntity entity) => Update(entity);
+        public new void Update(TEntity entity) => Update(entity);
     }
 }

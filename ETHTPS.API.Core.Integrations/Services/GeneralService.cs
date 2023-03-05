@@ -12,6 +12,7 @@ using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
+using ETHTPS.Data.Core.Extensions;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {
@@ -122,11 +123,11 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
                         break;
                     case TimeInterval.OneWeek:
                         TimeInterval nextInterval = TimeInterval.OneMonth;
-                        result.LastData.Add("tps", Enumerable.Where(_tpsService.Get(model, nextInterval), x => x.Value.Any()).ToDictionary(x => x.Key, x => new List<DataPoint>() { new DataPoint() { Value = x.Value.TakeLast(7).Average(x => (x.Data.FirstOrDefault() == null) ? 0 : x.Data.FirstOrDefault().Value) } }));
+                        result.LastData.Add("tps", Enumerable.Where(_tpsService.Get(model, nextInterval), x => x.Value.Any()).ToDictionary(x => x.Key, x => new List<DataPoint>() { new DataPoint() { Value = x.Value.TakeLast(7).Average(x => (x.Data.FirstOrDefault() == null) ? 0 : x?.Data?.FirstOrDefault()?.Value).GetValueOrDefault() } }));
 
-                        result.LastData.Add("gps", Enumerable.Where(_gpsService.Get(model, nextInterval), x => x.Value.Any()).ToDictionary(x => x.Key, x => new List<DataPoint>() { new DataPoint() { Value = x.Value.TakeLast(7).Average(x => (x.Data.FirstOrDefault() == null) ? 0 : x.Data.FirstOrDefault().Value) } }));
+                        result.LastData.Add("gps", Enumerable.Where(_gpsService.Get(model, nextInterval), x => x.Value.Any()).ToDictionary(x => x.Key, x => new List<DataPoint>() { new DataPoint() { Value = x.Value.TakeLast(7).Average(x => (x.Data.FirstOrDefault() == null) ? 0 : x?.Data?.FirstOrDefault()?.Value).GetValueOrDefault() } }));
 
-                        result.LastData.Add("gasAdjustedTPS", Enumerable.Where(_gasAdjustedTPSService.Get(model, nextInterval), x => x.Value.Any()).ToDictionary(x => x.Key, x => new List<DataPoint>() { new DataPoint() { Value = x.Value.TakeLast(7).Average(x => (x.Data.FirstOrDefault() == null) ? 0 : x.Data.FirstOrDefault().Value) } }));
+                        result.LastData.Add("gasAdjustedTPS", Enumerable.Where(_gasAdjustedTPSService.Get(model, nextInterval), x => x.Value.Any()).ToDictionary(x => x.Key, x => new List<DataPoint>() { new DataPoint() { Value = x.Value.TakeLast(7).Average(x => x?.Data?.FirstOrDefault()?.Value).GetValueOrDefault() } }));
                         break;
                     default:
                         nextInterval = GetNextIntervalForInstantData(interval);
@@ -195,10 +196,12 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
         }
 
 
-        public IEnumerable<string> GetUniqueDataYears(ProviderQueryModel model)
+        public IEnumerable<string?> GetUniqueDataYears(ProviderQueryModel model)
         {
-            IEnumerable<string> entries = _tpsService.Get(model, TimeInterval.All)[model.Provider]?.Select(x => x.Data.FirstOrDefault()?.Date.Year.ToString())?.OrderBy(x => x).Distinct();
-            return entries;
+            IEnumerable<string?>? entries = _tpsService.Get(model, TimeInterval.All)[model.Provider]?.Select(x => x.Data.FirstOrDefault()?.Date.Year.ToString())?.OrderBy(x => x)?.Distinct();
+            var preResult = (entries?.SafeAny(x => x != null)).GetValueOrDefault();
+            var e = Enumerable.Empty<string?>();
+            return preResult ? (entries ?? e).ToList() : e;
         }
 
         public AllDataModel GetAllData(string network)

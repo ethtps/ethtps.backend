@@ -17,7 +17,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Ronin")]
     [RunsEvery(CronConstants.Every5s)]
-    public class RoninBlockInfoProvider : IBlockInfoProvider
+    public class RoninBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
         private readonly string _baseURL;

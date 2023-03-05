@@ -19,13 +19,13 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("XDAI")]
     [RunsEvery(CronConstants.Every5s)]
-    public class XDAIBlockInfoProvider : IBlockInfoProvider
+    public class XDAIHTTPBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
         private readonly string _transactionCountSelector;
         private readonly string _dateSelector;
         private readonly string _gasSelector;
-        public XDAIBlockInfoProvider(IConfiguration configuration)
+        public XDAIHTTPBlockInfoProvider(IConfiguration configuration)
         {
             _httpClient = new HttpClient();
             var config = configuration.GetSection("TPSLoggerConfigurations").GetSection("StandardLoggerConfiguration").GetSection("XDAI");

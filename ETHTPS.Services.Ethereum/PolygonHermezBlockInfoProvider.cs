@@ -14,7 +14,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Polygon Hermez")]
     [RunsEvery(CronConstants.Every13s)]
-    public class PolygonHermezBlockInfoProvider : IBlockInfoProvider
+    public class PolygonHermezBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient = new HttpClient();
 

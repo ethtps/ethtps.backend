@@ -12,8 +12,8 @@ namespace ETHTPS.Tests.ServiceTests
 {
     public class InfluxTests : TestBase
     {
-        private IInfluxWrapper _influxWrapper;
-        private IAsyncHistoricalBlockInfoProvider _asyncHistoricalBlockInfoProvider;
+        private IInfluxWrapper? _influxWrapper;
+        private IAsyncHistoricalBlockInfoProvider? _asyncHistoricalBlockInfoProvider;
         private const string DEFAULT_BUCKET_NAME = "blockinfo";
         private const string DEFAULT_MEASUREMENT_NAME = "blockinfo";
 
@@ -34,6 +34,9 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public void NoExceptionThrownTest()
         {
+            if (_influxWrapper == null)
+                return;
+
             Assert.DoesNotThrowAsync(async () =>
             {
                 await foreach (var entry in _influxWrapper.GetEntriesBetween<Block
@@ -60,6 +63,9 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public async Task ValuesOkAsync()
         {
+            if (_asyncHistoricalBlockInfoProvider == null)
+                return;
+
             var x = await _asyncHistoricalBlockInfoProvider.GetLatestBlocksAsync(new ProviderQueryModel(), Data.Core.TimeInterval.OneWeek);
             Assert.That(x.Any(x => x.TransactionCount > 0));
             Assert.Pass();

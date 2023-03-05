@@ -38,7 +38,7 @@ namespace ETHTPS.Data.Core.Extensions
         /// <summary>
         /// A variant of <see cref="System.Linq.Enumerable.Where{TSource}(IEnumerable{TSource}, Func{TSource, bool})"/> that returns an empty array instead of throwing an exception when the search clause finds no results or the source is null.
         /// </summary>
-        public static IEnumerable<T> SafeWhere<T>(this IEnumerable<T> source, Func<T,bool> predicate)
+        public static IEnumerable<T> SafeWhere<T>(this IEnumerable<T> source, Func<T, bool> predicate)
         {
             if (source == null || !source.Any(predicate))
                 return Enumerable.Empty<T>();
@@ -55,6 +55,14 @@ namespace ETHTPS.Data.Core.Extensions
                 return Enumerable.Empty<TReturn>();
 
             return source.Select(selector);
+        }
+
+        public static bool SafeAny<T>(this IEnumerable<T>? source, Func<T, bool> selector)
+        {
+            if (source == null || !source.Any())
+                return false;
+
+            return source?.Count(x => x != null) > 0;
         }
     }
 }

@@ -26,7 +26,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
                 IEnumerable<Provider> providers = model.Provider.ToUpper() == "ALL" ? Context.Providers.AsEnumerable() : new Provider[] { Context.Providers.First(x => x.Name.ToUpper() == model.Provider.ToUpper()) };
                 foreach (Provider p in providers.ToArray())
                 {
-                    TpsandGasDataMax entry = Context.TpsandGasDataMaxes.FirstOrDefault(x => x.Provider == p.Id && x.NetworkNavigation.Name == model.Network);
+                    TpsandGasDataMax? entry = Context.TpsandGasDataMaxes.FirstOrDefault(x => x.Provider == p.Id && x.NetworkNavigation.Name == model.Network);
                     if (entry != null)
                     {
                         result.Add(new DataResponseModel()

@@ -15,8 +15,12 @@ using System.Threading.Tasks;
 
 namespace ETHTPS.Services.BlockchainServices.CoravelLoggers
 {
-    public class CoravelBlockLogger<T> : ICoravelBackgroundService
-        where T : IBlockInfoProvider
+    /// <summary>
+    /// A simple periodic task update runner
+    /// </summary>
+    /// <typeparam name="TBlockInfoProvider"></typeparam>
+    public class CoravelBlockLogger<TBlockInfoProvider> : ICoravelBackgroundService
+        where TBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private static Dictionary<string, int> _lastBlockNumberDictionary = new();
         private static IBucketCreator _bucketCreator;
@@ -24,15 +28,15 @@ namespace ETHTPS.Services.BlockchainServices.CoravelLoggers
         private const int MAX_CONSECUTIVE_FAILURE_COUNT = 5;
         private static object _lockObj = new object();
 
-        private readonly ILogger<CoravelBlockLogger<T>> _logger;
+        private readonly ILogger<CoravelBlockLogger<TBlockInfoProvider>> _logger;
         private readonly IProviderTypeDataUpdaterStatusService _statusService;
-        private readonly T _instance;
+        private readonly TBlockInfoProvider _instance;
         private readonly string _providerName;
         private readonly IInfluxWrapper _influxWrapper;
-        private string _serviceName => $"CoravelBlockLogger<{typeof(T).Name}>";
+        private string _serviceName => $"CoravelBlockLogger<{typeof(TBlockInfoProvider).Name}>";
         private string Format(string source) => $"{DateTime.Now.ToShortTimeString()} | {_serviceName} : {source}";
 
-        public CoravelBlockLogger(ILogger<CoravelBlockLogger<T>> logger, IDataUpdaterStatusService statusService, T instance, IInfluxWrapper influxWrapper)
+        public CoravelBlockLogger(ILogger<CoravelBlockLogger<TBlockInfoProvider>> logger, IDataUpdaterStatusService statusService, TBlockInfoProvider instance, IInfluxWrapper influxWrapper)
         {
             _providerName = instance.GetProviderName();
             _logger = logger;

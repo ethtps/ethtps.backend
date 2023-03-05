@@ -21,7 +21,7 @@ namespace ETHTPS.Services.Ethereum
     /// </summary>
     [Provider("Immutable X")]
     [RunsEvery(CronConstants.Every13s)]
-    public class ImmutableXBlockInfoProvider : IBlockInfoProvider
+    public class ImmutableXBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;

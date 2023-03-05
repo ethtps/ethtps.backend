@@ -14,7 +14,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Starknet")]
     [RunsEvery(CronConstants.Every13s)]
-    public class VoyagerBlockInfoProvider : IBlockInfoProvider
+    public class VoyagerBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
         public double BlockTimeSeconds { get; set; }

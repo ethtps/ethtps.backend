@@ -33,6 +33,9 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             lock (_lockObject)
             {
                 var target = _entitySet.FirstOrDefault(e => e.Id == id);
+                if (target == null)
+                    return;
+
                 _entitySet.Remove(target);
                 _saveChangesAction();
             }
@@ -50,7 +53,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
         {
             lock (_lockObject)
             {
-                return _entitySet.FirstOrDefault(e => e.Id == id);
+                return _entitySet.First(e => e.Id == id);
             }
 
         }

@@ -18,7 +18,7 @@ namespace ETHTPS.Tests.DataTransformation
 {
     public class DataTransformationTests : TestBase
     {
-        private IAggregatedDataService _dataService;
+        private IAggregatedDataService? _dataService;
         private readonly L2DataRequestModel _defaultModel = new L2DataRequestModel()
         {
             Provider = "Ethereum",
@@ -52,15 +52,15 @@ namespace ETHTPS.Tests.DataTransformation
 
             Assert.DoesNotThrow(() =>
             {
-                _dataService.GetTPS(_defaultModel, Data.Core.TimeInterval.OneWeek); _dataService.GetData(_defaultModel, Data.Core.DataType.TPS, Data.Core.TimeInterval.OneWeek);
+                _dataService?.GetTPS(_defaultModel, Data.Core.TimeInterval.OneWeek); _dataService?.GetData(_defaultModel, Data.Core.DataType.TPS, Data.Core.TimeInterval.OneWeek);
             });
             Assert.DoesNotThrow(() =>
             {
-                _dataService.GetGPS(_defaultModel, Data.Core.TimeInterval.OneWeek); _dataService.GetData(_defaultModel, Data.Core.DataType.GPS, Data.Core.TimeInterval.OneWeek);
+                _dataService?.GetGPS(_defaultModel, Data.Core.TimeInterval.OneWeek); _dataService?.GetData(_defaultModel, Data.Core.DataType.GPS, Data.Core.TimeInterval.OneWeek);
             });
             Assert.DoesNotThrow(() =>
             {
-                _dataService.GetGTPS(_defaultModel, Data.Core.TimeInterval.OneWeek); _dataService.GetData(_defaultModel, Data.Core.DataType.GasAdjustedTPS, Data.Core.TimeInterval.OneWeek);
+                _dataService?.GetGTPS(_defaultModel, Data.Core.TimeInterval.OneWeek); _dataService?.GetData(_defaultModel, Data.Core.DataType.GasAdjustedTPS, Data.Core.TimeInterval.OneWeek);
             });
         }
     }

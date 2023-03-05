@@ -15,7 +15,10 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 
         public IEnumerable<IMarkdownPage> GetMarkdownPagesFor(string providerName)
         {
-            return _context.ProviderDetailsMarkdownPages?.ToList()?.Where(x => x.Provider.Name.LossyCompareTo(providerName)).Select(x => x.MarkdownPage);
+            var result = _context.ProviderDetailsMarkdownPages?.ToList()?.Where(x => x.Provider.Name.LossyCompareTo(providerName)).Select(x => x.MarkdownPage);
+            if (result == null)
+                throw new KeyNotFoundException(providerName);
+            return result;
         }
     }
 }

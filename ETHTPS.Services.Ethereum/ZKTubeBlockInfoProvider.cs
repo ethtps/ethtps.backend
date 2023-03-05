@@ -12,7 +12,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("zkTube")]
     [RunsEvery(CronConstants.Every30s)]
-    public class ZKTubeBlockInfoProvider : IBlockInfoProvider
+    public class ZKTubeBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
 

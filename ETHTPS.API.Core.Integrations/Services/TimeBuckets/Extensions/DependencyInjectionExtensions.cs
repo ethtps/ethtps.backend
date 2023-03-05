@@ -10,7 +10,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets.Extensions
     public static class DependencyInjectionExtensions
     {
         public static void InjectTimeBucketService<V>(this IServiceCollection services)
-           where V : class, IBlockInfoProvider
+           where V : class, IHTTPBlockInfoProvider
         {
             services.TryAddScoped<V>();
             services.AddScoped<ITimeBucketDataUpdaterService<V>, MSSQLTimeBucketService<V>>();

@@ -9,7 +9,7 @@ namespace ETHTPS.Services.BlockchainServices.Extensions
     public static class AttributeExtensions
     {
         public static string GetProviderName<T>(this T blockInfoProviderType)
-            where T : IBlockInfoProvider => GetProviderName(typeof(T));
+            where T : IHTTPBlockInfoProvider => GetProviderName(typeof(T));
 
         public static string GetProviderName(this Type type)
         {

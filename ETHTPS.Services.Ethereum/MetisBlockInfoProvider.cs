@@ -22,7 +22,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Metis")]
     [RunsEvery(CronConstants.Every13s)]
-    public class MetisBlockInfoProvider : IBlockInfoProvider
+    public class MetisBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
         private readonly string _baseURL;

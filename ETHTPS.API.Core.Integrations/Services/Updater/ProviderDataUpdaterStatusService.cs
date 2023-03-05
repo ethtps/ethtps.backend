@@ -19,17 +19,17 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
 
         public string ProviderName { get; private set; }
 
-        public IEnumerable<LiveUpdaterStatus> GetAllStatuses()
+        public IEnumerable<LiveDataUpdaterStatus> GetAllStatuses()
         {
             return _statusService.GetAllStatuses();
         }
 
-        public IEnumerable<LiveUpdaterStatus> GetStatusFor(string provider)
+        public IEnumerable<LiveDataUpdaterStatus> GetStatusFor(string provider)
         {
             return _statusService.GetStatusFor(provider);
         }
 
-        public LiveUpdaterStatus? GetStatusFor(string provider, UpdaterType updaterType)
+        public LiveDataUpdaterStatus? GetStatusFor(string provider, UpdaterType updaterType)
         {
             return _statusService.GetStatusFor(provider, updaterType);
         }
@@ -75,7 +75,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
 
         public DateTime? GetLastRunTimeFor(string provider, UpdaterType updaterType)
         {
-           return _statusService.GetLastRunTimeFor(provider, updaterType);
+            return _statusService.GetLastRunTimeFor(provider, updaterType);
         }
     }
 }

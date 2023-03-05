@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace ETHTPS.Services.Ethereum.JSONRPC
 {
-    public abstract class JSONRPCBlockInfoProviderBase : IBlockInfoProvider
+    public abstract class JSONRPCBlockInfoProviderBase : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
         private static DateTime LastCallTime = DateTime.Now;

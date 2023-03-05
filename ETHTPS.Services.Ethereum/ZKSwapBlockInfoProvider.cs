@@ -13,7 +13,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("ZKSwap")]
     [RunsEvery(CronConstants.Every5s)]
-    public class ZKSwapBlockInfoProvider : IBlockInfoProvider
+    public class ZKSwapBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
         public ZKSwapBlockInfoProvider()

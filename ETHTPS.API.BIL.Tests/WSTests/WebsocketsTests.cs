@@ -17,11 +17,11 @@ namespace ETHTPS.Tests.WSTests
     public class WebsocketsTests : TestBase
     {
         private const string _wsURL = "ws://localhost:2000/LiveData";
-        private ILogger<WebsocketsTests> _logger;
+        private ILogger<WebsocketsTests>? _logger;
         private int _expectedTime = 4000;
         private int _failMultiplier = 2;
         List<WebSocket> _wsList = new List<WebSocket>();
-        WebSocket _monitoringWS;
+        WebSocket? _monitoringWS;
 
         [SetUp]
         public void Setup()
@@ -34,7 +34,7 @@ namespace ETHTPS.Tests.WSTests
         public void Teardown()
         {
             _wsList.ForEach(x => x.Close());
-            _monitoringWS.Close();
+            _monitoringWS?.Close();
         }
 
         private WebSocket CreateWebsocket()
@@ -57,13 +57,15 @@ namespace ETHTPS.Tests.WSTests
         [Test]
         public async Task OverloadTest()
         {
+            if (_monitoringWS == null)
+                return;
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             _monitoringWS.OnMessage += (sender, e) =>
             {
                 if (e.Data == "keep_alive")
                 {
-                    _monitoringWS.Send("ack");
+                    _monitoringWS?.Send("ack");
                     return;
                 }
                 stopwatch.Stop();

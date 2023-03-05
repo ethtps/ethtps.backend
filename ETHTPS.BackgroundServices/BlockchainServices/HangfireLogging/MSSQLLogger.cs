@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace ETHTPS.Services.BlockchainServices.HangfireLogging
 {
     public class MSSQLLogger<T> : BlockInfoProviderDataLoggerBase<T>
-         where T : IBlockInfoProvider
+         where T : IHTTPBlockInfoProvider
     {
         protected override string ServiceName { get => $"MSSQLLogger<{typeof(T).Name}>"; }
         protected readonly ITimeBucketDataUpdaterService<T> _timeBucketService;

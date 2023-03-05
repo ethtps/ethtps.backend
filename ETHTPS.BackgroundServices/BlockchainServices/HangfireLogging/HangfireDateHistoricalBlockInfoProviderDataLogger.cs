@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace ETHTPS.Services.BlockchainServices.HangfireLogging
 {
     public class HangfireDateHistoricalBlockInfoProviderDataLogger<T> : MSSQLLogger<T>
-        where T : IBlockInfoProvider
+        where T : IHTTPBlockInfoProvider
     {
         public HangfireDateHistoricalBlockInfoProviderDataLogger(T instance, ILogger<HangfireBackgroundService> logger, EthtpsContext context, IDataUpdaterStatusService statusService, ITimeBucketDataUpdaterService<T> timeBucketService) : base(instance, logger, context, statusService, timeBucketService)
         {

@@ -14,7 +14,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Aztec")]
     [RunsEvery(CronConstants.Every13s)]
-    public class AztecBlockInfoProvider : IBlockInfoProvider
+    public class AztecBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
         public double BlockTimeSeconds { get; set; }

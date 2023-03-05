@@ -14,7 +14,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Loopring")]
     [RunsEvery(CronConstants.Every13s)]
-    public class LoopringBlockInfoProvider : IBlockInfoProvider
+    public class LoopringBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
 

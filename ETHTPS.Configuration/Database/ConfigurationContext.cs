@@ -17,16 +17,21 @@ public partial class ConfigurationContext : ContextBase<ConfigurationContext>
 
     }
 
-    public virtual DbSet<Environment> Environments { get; set; }
+    public virtual DbSet<Environment> Environments { get; set; } = new EmptyDBSet<Environment>();
 
-    public virtual DbSet<Microservice> Microservices { get; set; }
+    public virtual DbSet<Microservice> Microservices { get; set; } = new EmptyDBSet<Microservice>();
 
-    public virtual DbSet<MicroserviceConfigurationString> MicroserviceConfigurationStrings { get; set; }
 
-    public virtual DbSet<Provider> Providers { get; set; }
-    public virtual DbSet<ConfigurationString> ConfigurationStrings { get; set; }
+    public virtual DbSet<MicroserviceConfigurationString> MicroserviceConfigurationStrings { get; set; } = new EmptyDBSet<MicroserviceConfigurationString>();
+
+
+    public virtual DbSet<Provider> Providers { get; set; } = new EmptyDBSet<Provider>();
+
+    public virtual DbSet<ConfigurationString> ConfigurationStrings { get; set; } = new EmptyDBSet<ConfigurationString>();
+
 
     public virtual DbSet<ProviderConfigurationString> ProviderConfigurationStrings { get; set; }
+= new EmptyDBSet<ProviderConfigurationString>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -41,7 +46,7 @@ public partial class ConfigurationContext : ContextBase<ConfigurationContext>
             entity.Property(e => e.Value).HasMaxLength(255);
         });
 
-      
+
         modelBuilder.Entity<Environment>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Environm__3214EC27D353D7B2");
@@ -90,7 +95,7 @@ public partial class ConfigurationContext : ContextBase<ConfigurationContext>
                 .HasConstraintName("FK__Microserv__Micro__4865BE2A");
         });
 
-      
+
 
         modelBuilder.Entity<Provider>(entity =>
         {
@@ -137,7 +142,7 @@ public partial class ConfigurationContext : ContextBase<ConfigurationContext>
                 .HasConstraintName("FK__ProviderC__Provi__39237A9A");
         });
 
-       
+
 
         OnModelCreatingPartial(modelBuilder);
     }

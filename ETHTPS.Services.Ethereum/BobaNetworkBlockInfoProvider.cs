@@ -21,7 +21,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Boba Network")]
     [RunsEvery(CronConstants.Every13s)]
-    public class BobaNetworkBlockInfoProvider : IBlockInfoProvider
+    public class BobaNetworkBlockInfoProvider : IHTTPBlockInfoProvider
     {
         public double BlockTimeSeconds { get; set; }
         private const string NAME = "Boba Network";

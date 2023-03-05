@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace ETHTPS.Services.BlockchainServices.HangfireLogging
 {
     public abstract class BlockInfoProviderDataLoggerBase<T> : HangfireBackgroundService
-        where T : IBlockInfoProvider
+        where T : IHTTPBlockInfoProvider
     {
         protected readonly T _instance;
         protected readonly string _provider;

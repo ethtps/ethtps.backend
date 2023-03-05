@@ -40,10 +40,10 @@ namespace ETHTPS.Services.BlockchainServices.Extensions
             throw new NotSupportedException($"Type '{provider.GetType()}' is not supported!");
         }
 
-        public static IBlockInfoProvider GetProvider(this IServiceProvider services, string name)
+        public static IHTTPBlockInfoProvider GetProvider(this IServiceProvider services, string name)
         {
-            var blockInfoProviders = services.GetAllServiceDescriptors().Where(d => d.Key.IsSubclassOf(typeof(IBlockInfoProvider)));
-            return (IBlockInfoProvider)blockInfoProviders.First(x => x.Key.GetProviderName() == name).Value;
+            var blockInfoProviders = services.GetAllServiceDescriptors().Where(d => d.Key.IsSubclassOf(typeof(IHTTPBlockInfoProvider)));
+            return (IHTTPBlockInfoProvider)blockInfoProviders.First(x => x.Key.GetProviderName() == name).Value;
         }
     }
 }

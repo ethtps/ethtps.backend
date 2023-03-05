@@ -1,36 +1,11 @@
-# ETHTPS
-Aggregated Ethereum TPS data for L2s and sidechains
+# ETHTPS.Backend
 
-# Frontend
+## Aggregated Ethereum TPS data for L2s and sidechains
 
-Requirements: [NodeJS](https://nodejs.org/en/download/)
+The ASP.NET Core backend for [ethtps.info](https://ethtps.info)'s API
 
-Setup:
+### Setup
 
-1. Clone the repository
+Note: For environment variables, I'm using `{var}` as a value YOU have to define. For example, if you have var `ENV=DEVLOPMENT` and `B_{ENV}=2`, you need to define `B_DEVELOPMENT`. I'm doing this so it's easier to switch between environments while developing.
 
-  ```git clone --branch dev https://github.com/Mister-Eth/ETHTPS```
-  
-2. CD to the frontend directory
-
-  ```cd ETHTPS/Frontend```
-  
-3. Install the dependencies
-
-  ```npm i```
-  
-4. Run the app
-
-  On Windows: ```npm run win-start```
-  
-  On Linux: ```npm run linux-start```
-  
- # Backend
- 
- Requirements: [.NET 5.0 Framework](https://dotnet.microsoft.com/en-us/download/dotnet/5.0), [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) and optionally [SSMS](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15)
- 
-Database setup:
-
-1. Run ```docs/init.sql``` to create the tables
-
-2. Run ```docs/populate.sql``` to add data
+1. Define the following environment variables: `ETHTPS_ENV`, `ETHTPS_BASE_DIR` (parent directory of the current repo), `ETHTPS_CONFIGURATION_PROVIDER_DB_CONN_STR`, `ETHTPS_API_DIR_{ETHTPS_ENV}`, `ETHTPS_WSAPI_DIR_{ETHTPS_ENV}`, `{ETHTPS_ENV}`, `EXPLORER` (`nautilus`/`dolphin` etc.), `ETHTPS_BACKEND=ethtps.backend`, `ETHTPS_OUT_DIR_{ENV}`, `ETHTPS_API_LIB_NAME=ETHTPS.API.dll`, `ETHTPS_RUNNER=ETHTPS.Runner`

@@ -20,7 +20,7 @@ using ETHTPS.Services.BlockchainServices.HangfireLogging;
 namespace ETHTPS.Services.BlockchainServices.Status
 {
     public class HistoricalInfluxLogger<T> : BlockInfoProviderDataLoggerBase<T>
-         where T : IBlockInfoProvider
+         where T : IHTTPBlockInfoProvider
     {
         private readonly IInfluxWrapper _influxWrapper;
         private readonly ITimeBucketDataUpdaterService<T>? _timeBucketService;

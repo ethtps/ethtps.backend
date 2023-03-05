@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets
 {
     public class MSSQLTimeBucketService<T> : ITimeBucketDataUpdaterService<T>
-         where T : IBlockInfoProvider
+         where T : IHTTPBlockInfoProvider
     {
         private readonly EthtpsContext _context;
         private readonly int _mainnetID;

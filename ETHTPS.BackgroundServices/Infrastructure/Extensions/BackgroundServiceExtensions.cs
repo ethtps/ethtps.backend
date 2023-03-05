@@ -14,7 +14,7 @@ namespace ETHTPS.Services.Infrastructure.Extensions
     {
 #pragma warning disable CS0618
         public static void RegisterHangfireBackgroundService<T, V>(this IServiceCollection services, string cronExpression, string queue)
-            where V : class, IBlockInfoProvider
+            where V : class, IHTTPBlockInfoProvider
             where T : MSSQLLogger<V>
         {
             services.AddScoped<V>();
@@ -23,7 +23,7 @@ namespace ETHTPS.Services.Infrastructure.Extensions
         }
 
         public static void RegisterInfluxHangfireBackgroundService<T, V>(this IServiceCollection services, string cronExpression, string queue)
-           where V : class, IBlockInfoProvider
+           where V : class, IHTTPBlockInfoProvider
            where T : InfluxLogger<V>
         {
             services.AddScoped<V>();
@@ -32,7 +32,7 @@ namespace ETHTPS.Services.Infrastructure.Extensions
         }
 
         public static void RegisterInfluxHangfireHistoricalBackgroundService<T, V>(this IServiceCollection services)
-           where V : class, IBlockInfoProvider
+           where V : class, IHTTPBlockInfoProvider
            where T : HistoricalInfluxLogger<V>
         {
             services.TryAddScoped<V>();
@@ -41,7 +41,7 @@ namespace ETHTPS.Services.Infrastructure.Extensions
         }
 
         public static void RegisterHistoricalHangfireBackgroundService<T, V>(this IServiceCollection services, string cronExpression, string queue)
-           where V : class, IBlockInfoProvider
+           where V : class, IHTTPBlockInfoProvider
            where T : HangfireHistoricalBlockInfoProviderDataLogger<V>
         {
             services.AddScoped<T>();
@@ -50,7 +50,7 @@ namespace ETHTPS.Services.Infrastructure.Extensions
         }
 
         public static void RegisterHistoricalHangfireDateBackgroundService<T, V>(this IServiceCollection services, string cronExpression, string queue)
-           where V : class, IBlockInfoProvider
+           where V : class, IHTTPBlockInfoProvider
            where T : HangfireDateHistoricalBlockInfoProviderDataLogger<V>
         {
             services.AddScoped<T>();
@@ -59,7 +59,7 @@ namespace ETHTPS.Services.Infrastructure.Extensions
         }
 
         public static void RegisterTimeWarpHangfireBackgroundService<T, V>(this IServiceCollection services, string cronExpression, string queue)
-          where V : class, IBlockInfoProvider
+          where V : class, IHTTPBlockInfoProvider
           where T : TimeWarpBlockInfoProviderDataLogger<V>
         {
             services.AddScoped<T>();

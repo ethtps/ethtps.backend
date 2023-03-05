@@ -19,7 +19,7 @@ using ETHTPS.Data.Core.Models.DataEntries.BlockchainServices.Models;
 namespace ETHTPS.Services.BlockchainServices.HangfireLogging
 {
     public class InfluxLogger<T> : BlockInfoProviderDataLoggerBase<T>
-         where T : IBlockInfoProvider
+         where T : IHTTPBlockInfoProvider
     {
         private static IBucketCreator _bucketCreator;
         private static object _lockObj = new object();

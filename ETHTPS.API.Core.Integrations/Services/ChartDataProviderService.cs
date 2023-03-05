@@ -107,7 +107,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
         /// </summary>
         public StackedChartModel GetStackedChartData(ChartDataRequestModel model)
         {
-            IPSService service = null;
+            IPSService? service = default;
             switch (model.DataType.ToUpper())
             {
                 case "TPS":
@@ -149,7 +149,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             var toBeRemoved = result.Series.TakeLast(index);
             var maxCount = toBeRemoved.Max(x => x.DataPoints.Count());
             var xTimestamps = toBeRemoved.First(x => x.DataPoints.Count() == maxCount).DataPoints.Select(x => x.X);
-            var lastNSeriesAverages = Enumerable.Range(0, maxCount).Select(i => toBeRemoved?.Where(s => s.DataPoints.Count() > i).Average(x => (x.DataPoints.ElementAt(i)?.Y.HasValue ?? false) ? (x.DataPoints.ElementAt(i).Y.HasValue ? x.DataPoints.ElementAt(i).Y.Value : 0) : 0));
+            var lastNSeriesAverages = Enumerable.Range(0, maxCount).Select(i => toBeRemoved?.Where(s => s.DataPoints.Count() > i).Average(x => (x.DataPoints.ElementAt(i)?.Y.HasValue ?? false) ? (x.DataPoints.ElementAt(i).Y.HasValue ? x.DataPoints?.ElementAt(i)?.Y : 0) : 0));
             var aggregatedSeries = Enumerable.Range(0, maxCount).Select(i => new StackedChartDataPoint()
             {
                 X = xTimestamps.ElementAt(i),
