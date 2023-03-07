@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ETHTPS.Data.Core.Extensions
 {
@@ -19,8 +21,25 @@ namespace ETHTPS.Data.Core.Extensions
             }
         }
 
-        public static IEnumerable<T> Where2<T>(this IEnumerable<T> source, Func<T, int> predicate) => Enumerable.Where(source, x => predicate(x) == 1);
+        /// <summary>
+        /// Selects only the non-null elements of this list and returns an empty list if none is found
+        /// </summary>
+        public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> source) => source.SafeWhere(x => x != null);
 
+        public static IEnumerable<T> Where2<T>(this IEnumerable<T> source, Func<T, int> predicate) => Enumerable.Where(source, x => predicate(x) == 1);
+#pragma warning disable SYSLIB0011
+        public static T DeepClone<T>(this T obj)
+        {
+            using (var ms = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(ms, obj);
+                ms.Position = 0;
+
+                return (T)formatter.Deserialize(ms);
+            }
+        }
+#pragma warning restore SYSLIB0011
         //public static IEnumerable<T> Where<T>(this IEnumerable<T> source, Func<T, bool> predicate) => source;
 
         public static T FirstIfAny<T>(this IEnumerable<T> source, Func<T, bool> selector)

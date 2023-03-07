@@ -15,5 +15,5 @@ public partial class Feature
 
     public string? Details { get; set; }
 
-    public virtual Project Project { get; set; } = null!;
+    public virtual Project? Project { get; set; } = null!;
 }

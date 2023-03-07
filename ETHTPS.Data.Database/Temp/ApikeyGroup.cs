@@ -11,7 +11,7 @@ public partial class ApikeyGroup
 
     public int GroupId { get; set; }
 
-    public virtual Apikey Apikey { get; set; } = null!;
+    public virtual Apikey? Apikey { get; set; } = null!;
 
-    public virtual Group Group { get; set; } = null!;
+    public virtual Group? Group { get; set; } = null!;
 }

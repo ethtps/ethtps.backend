@@ -19,5 +19,5 @@ public partial class Project
 
     public virtual ICollection<Feature> Features { get; } = new List<Feature>();
 
-    public virtual Provider ProviderNavigation { get; set; }
+    public virtual Provider? ProviderNavigation { get; set; } = new();
 }

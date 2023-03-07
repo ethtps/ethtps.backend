@@ -1,4 +1,6 @@
-﻿namespace ETHTPS.Data.Integrations.MSSQL.Extensions
+﻿using ETHTPS.Data.Core.Extensions;
+
+namespace ETHTPS.Data.Integrations.MSSQL.Extensions
 {
     public static class ExperimentExtensions
     {
@@ -57,7 +59,9 @@
             {
                 if (context.ApikeyExperimentBindings.Any(x => x.ApikeyId == apiKeyId))
                 {
-                    return context.ApikeyExperimentBindings.Where(x => x.ApikeyId == apiKeyId).Select(x => x.Experiment).ToList();
+                    return context.ApikeyExperimentBindings.Where(x => x.ApikeyId == apiKeyId).Select(x => x.Experiment)
+                    .WhereNotNull()
+                    .Select(x => x.DeepClone()).ToList();
                 }
             }
             return Enumerable.Empty<Experiment>();

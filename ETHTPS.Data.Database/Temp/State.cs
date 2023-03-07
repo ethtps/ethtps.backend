@@ -17,5 +17,5 @@ public partial class State
 
     public string? Data { get; set; }
 
-    public virtual Job Job { get; set; } = null!;
+    public virtual Job? Job { get; set; } = null!;
 }

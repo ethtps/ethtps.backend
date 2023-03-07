@@ -23,11 +23,11 @@ public partial class Experiment
 
     public virtual ICollection<ExperimentResult> ExperimentResults { get; } = new List<ExperimentResult>();
 
-    public virtual ExperimentalSession ExperimentalSession { get; set; }
+    public virtual ExperimentalSession? ExperimentalSession { get; set; }
 
-    public virtual Provider Project { get; set; }
+    public virtual Provider? Project { get; set; }
 
-    public virtual ExperimentRunParameter RunParametersNavigation { get; set; }
+    public virtual ExperimentRunParameter? RunParametersNavigation { get; set; } = new();
 
-    public virtual ExperimentTarget TargetNavigation { get; set; }
+    public virtual ExperimentTarget? TargetNavigation { get; set; } = new();
 }

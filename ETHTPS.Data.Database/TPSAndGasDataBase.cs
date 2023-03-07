@@ -5,7 +5,7 @@
         public int Id { get; set; }
         public int Network { get; set; }
         public int Provider { get; set; }
-        public virtual Network NetworkNavigation { get; set; }
-        public virtual Provider ProviderNavigation { get; set; }
+        public virtual Network? NetworkNavigation { get; set; } = new();
+        public virtual Provider? ProviderNavigation { get; set; } = new();
     }
 }

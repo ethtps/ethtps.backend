@@ -13,7 +13,7 @@ public partial class OldestLoggedTimeWarpBlock
 
     public int OldestBlock { get; set; }
 
-    public virtual Network NetworkNavigation { get; set; } = null!;
+    public virtual Network? NetworkNavigation { get; set; } = null!;
 
-    public virtual Provider ProviderNavigation { get; set; } = null!;
+    public virtual Provider? ProviderNavigation { get; set; } = null!;
 }

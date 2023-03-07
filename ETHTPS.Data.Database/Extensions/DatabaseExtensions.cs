@@ -11,7 +11,7 @@ namespace ETHTPS.Data.Integrations.MSSQL.Extensions
 {
     public static class DatabaseExtensions
     {
-        public static async Task<T> GetCachedResponseAsync<T>(this EthtpsContext context, params object[] args)
+        public static async Task<T?> GetCachedResponseAsync<T>(this EthtpsContext context, params object[] args)
         {
             var name = StringExtensions.AggregateToLowercase(args);
 
@@ -37,6 +37,6 @@ namespace ETHTPS.Data.Integrations.MSSQL.Extensions
 
         public static int GetMainnetID(this EthtpsContext context) => context.Networks.First(x => x.Name == "Mainnet").Id;
 
-     
+
     }
 }

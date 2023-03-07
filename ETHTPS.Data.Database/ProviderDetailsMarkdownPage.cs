@@ -11,7 +11,7 @@ public partial class ProviderDetailsMarkdownPage
 
     public int MarkdownPageId { get; set; }
 
-    public virtual MarkdownPage MarkdownPage { get; set; }
+    public virtual MarkdownPage? MarkdownPage { get; set; }
 
-    public virtual Provider Provider { get; set; }
+    public virtual Provider? Provider { get; set; }
 }

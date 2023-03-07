@@ -9,6 +9,7 @@ namespace ETHTPS.Data.Integrations.MSSQL;
 
 public partial class EthtpsContext : ContextBase<EthtpsContext>
 {
+#pragma warning  disable CS8618
     public EthtpsContext()
     {
     }
@@ -17,6 +18,7 @@ public partial class EthtpsContext : ContextBase<EthtpsContext>
         : base(options)
     {
     }
+#pragma warning  restore CS8618
 
     public virtual DbSet<AggregatedCounter> AggregatedCounters { get; set; }
 

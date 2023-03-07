@@ -13,7 +13,7 @@ public partial class ExternalWebsite
 
     public int Category { get; set; }
 
-    public virtual ExternalWebsiteCateopry CategoryNavigation { get; set; } = null!;
+    public virtual ExternalWebsiteCateopry? CategoryNavigation { get; set; } = null!;
 
     public virtual ICollection<ProviderLink> ProviderLinks { get; } = new List<ProviderLink>();
 }

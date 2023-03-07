@@ -13,5 +13,5 @@ public partial class ExperimentalSession
 
     public int RetentionSeconds { get; set; }
 
-    public virtual Experiment IdNavigation { get; set; } = null!;
+    public virtual Experiment? IdNavigation { get; set; } = null!;
 }

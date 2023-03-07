@@ -25,9 +25,9 @@ public partial class Experiment
 
     public virtual ExperimentalSession? ExperimentalSession { get; set; }
 
-    public virtual Provider Project { get; set; } = null!;
+    public virtual Provider? Project { get; set; } = null!;
 
-    public virtual ExperimentRunParameter RunParametersNavigation { get; set; } = null!;
+    public virtual ExperimentRunParameter? RunParametersNavigation { get; set; } = null!;
 
-    public virtual ExperimentTarget TargetNavigation { get; set; } = null!;
+    public virtual ExperimentTarget? TargetNavigation { get; set; } = null!;
 }

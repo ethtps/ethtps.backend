@@ -41,7 +41,7 @@ public partial class Provider
 
     public virtual ICollection<ProviderLink> ProviderLinks { get; } = new List<ProviderLink>();
 
-    public virtual Provider? SubchainOfNavigation { get; set; }
+    public virtual Provider? SubchainOfNavigation { get; set; } = new();
 
     public virtual ICollection<TimeWarpDatum> TimeWarpData { get; } = new List<TimeWarpDatum>();
 
@@ -71,5 +71,5 @@ public partial class Provider
 
     public virtual ICollection<TpsandGasDataYear> TpsandGasDataYears { get; } = new List<TpsandGasDataYear>();
 
-    public virtual ProviderType TypeNavigation { get; set; } = null!;
+    public virtual ProviderType? TypeNavigation { get; set; } = null!;
 }

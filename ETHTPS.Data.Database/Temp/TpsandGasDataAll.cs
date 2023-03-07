@@ -19,7 +19,7 @@ public partial class TpsandGasDataAll
 
     public int ReadingsCount { get; set; }
 
-    public virtual Network NetworkNavigation { get; set; } = null!;
+    public virtual Network? NetworkNavigation { get; set; } = null!;
 
-    public virtual Provider ProviderNavigation { get; set; } = null!;
+    public virtual Provider? ProviderNavigation { get; set; } = null!;
 }

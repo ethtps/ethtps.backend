@@ -15,5 +15,5 @@ public partial class ExperimentFeedback
 
     public string Text { get; set; }
 
-    public virtual Experiment ExperimentNavigation { get; set; }
+    public virtual Experiment? ExperimentNavigation { get; set; } = new();
 }

@@ -15,135 +15,135 @@ public partial class EthtpsContext : DbContext
     {
     }
 
-    public virtual DbSet<AggregatedCounter> AggregatedCounters { get; set; }
+    public virtual DbSet<AggregatedCounter>? AggregatedCounters { get; set; }
 
-    public virtual DbSet<Apikey> Apikeys { get; set; }
+    public virtual DbSet<Apikey>? Apikeys { get; set; }
 
-    public virtual DbSet<ApikeyExperimentBinding> ApikeyExperimentBindings { get; set; }
+    public virtual DbSet<ApikeyExperimentBinding>? ApikeyExperimentBindings { get; set; }
 
-    public virtual DbSet<ApikeyGroup> ApikeyGroups { get; set; }
+    public virtual DbSet<ApikeyGroup>? ApikeyGroups { get; set; }
 
-    public virtual DbSet<CachedResponse> CachedResponses { get; set; }
+    public virtual DbSet<CachedResponse>? CachedResponses { get; set; }
 
-    public virtual DbSet<ConfigurationString> ConfigurationStrings { get; set; }
+    public virtual DbSet<ConfigurationString>? ConfigurationStrings { get; set; }
 
-    public virtual DbSet<Counter> Counters { get; set; }
+    public virtual DbSet<Counter>? Counters { get; set; }
 
-    public virtual DbSet<DataUpdater> DataUpdaters { get; set; }
+    public virtual DbSet<DataUpdater>? DataUpdaters { get; set; }
 
-    public virtual DbSet<DataUpdaterStatus> DataUpdaterStatuses { get; set; }
+    public virtual DbSet<DataUpdaterStatus>? DataUpdaterStatuses { get; set; }
 
-    public virtual DbSet<DataUpdaterType> DataUpdaterTypes { get; set; }
+    public virtual DbSet<DataUpdaterType>? DataUpdaterTypes { get; set; }
 
-    public virtual DbSet<DetailedAccessStat> DetailedAccessStats { get; set; }
+    public virtual DbSet<DetailedAccessStat>? DetailedAccessStats { get; set; }
 
-    public virtual DbSet<Environment> Environments { get; set; }
+    public virtual DbSet<Environment>? Environments { get; set; }
 
-    public virtual DbSet<Experiment> Experiments { get; set; }
+    public virtual DbSet<Experiment>? Experiments { get; set; }
 
-    public virtual DbSet<ExperimentFeedback> ExperimentFeedbacks { get; set; }
+    public virtual DbSet<ExperimentFeedback>? ExperimentFeedbacks { get; set; }
 
-    public virtual DbSet<ExperimentResult> ExperimentResults { get; set; }
+    public virtual DbSet<ExperimentResult>? ExperimentResults { get; set; }
 
-    public virtual DbSet<ExperimentRunParameter> ExperimentRunParameters { get; set; }
+    public virtual DbSet<ExperimentRunParameter>? ExperimentRunParameters { get; set; }
 
-    public virtual DbSet<ExperimentTarget> ExperimentTargets { get; set; }
+    public virtual DbSet<ExperimentTarget>? ExperimentTargets { get; set; }
 
-    public virtual DbSet<ExperimentTargetType> ExperimentTargetTypes { get; set; }
+    public virtual DbSet<ExperimentTargetType>? ExperimentTargetTypes { get; set; }
 
-    public virtual DbSet<ExperimentalSession> ExperimentalSessions { get; set; }
+    public virtual DbSet<ExperimentalSession>? ExperimentalSessions { get; set; }
 
-    public virtual DbSet<ExternalWebsite> ExternalWebsites { get; set; }
+    public virtual DbSet<ExternalWebsite>? ExternalWebsites { get; set; }
 
-    public virtual DbSet<ExternalWebsiteCateopry> ExternalWebsiteCateopries { get; set; }
+    public virtual DbSet<ExternalWebsiteCateopry>? ExternalWebsiteCateopries { get; set; }
 
-    public virtual DbSet<Feature> Features { get; set; }
+    public virtual DbSet<Feature>? Features { get; set; }
 
-    public virtual DbSet<Group> Groups { get; set; }
+    public virtual DbSet<Group>? Groups { get; set; }
 
-    public virtual DbSet<GroupRole> GroupRoles { get; set; }
+    public virtual DbSet<GroupRole>? GroupRoles { get; set; }
 
-    public virtual DbSet<Hash> Hashes { get; set; }
+    public virtual DbSet<Hash>? Hashes { get; set; }
 
-    public virtual DbSet<Job> Jobs { get; set; }
+    public virtual DbSet<Job>? Jobs { get; set; }
 
-    public virtual DbSet<JobParameter> JobParameters { get; set; }
+    public virtual DbSet<JobParameter>? JobParameters { get; set; }
 
-    public virtual DbSet<JobQueue> JobQueues { get; set; }
+    public virtual DbSet<JobQueue>? JobQueues { get; set; }
 
-    public virtual DbSet<List> Lists { get; set; }
+    public virtual DbSet<List>? Lists { get; set; }
 
-    public virtual DbSet<LiveDataUpdaterStatus> LiveDataUpdaterStatuses { get; set; }
+    public virtual DbSet<LiveDataUpdaterStatus>? LiveDataUpdaterStatuses { get; set; }
 
-    public virtual DbSet<Log> Logs { get; set; }
+    public virtual DbSet<Log>? Logs { get; set; }
 
-    public virtual DbSet<MarkdownPage> MarkdownPages { get; set; }
+    public virtual DbSet<MarkdownPage>? MarkdownPages { get; set; }
 
-    public virtual DbSet<Microservice> Microservices { get; set; }
+    public virtual DbSet<Microservice>? Microservices { get; set; }
 
-    public virtual DbSet<MicroserviceConfigurationString> MicroserviceConfigurationStrings { get; set; }
+    public virtual DbSet<MicroserviceConfigurationString>? MicroserviceConfigurationStrings { get; set; }
 
-    public virtual DbSet<Network> Networks { get; set; }
+    public virtual DbSet<Network>? Networks { get; set; }
 
-    public virtual DbSet<OldestLoggedHistoricalEntry> OldestLoggedHistoricalEntries { get; set; }
+    public virtual DbSet<OldestLoggedHistoricalEntry>? OldestLoggedHistoricalEntries { get; set; }
 
-    public virtual DbSet<OldestLoggedTimeWarpBlock> OldestLoggedTimeWarpBlocks { get; set; }
+    public virtual DbSet<OldestLoggedTimeWarpBlock>? OldestLoggedTimeWarpBlocks { get; set; }
 
-    public virtual DbSet<Permission> Permissions { get; set; }
+    public virtual DbSet<Permission>? Permissions { get; set; }
 
-    public virtual DbSet<PermissionsForRole> PermissionsForRoles { get; set; }
+    public virtual DbSet<PermissionsForRole>? PermissionsForRoles { get; set; }
 
-    public virtual DbSet<Project> Projects { get; set; }
+    public virtual DbSet<Project>? Projects { get; set; }
 
-    public virtual DbSet<Provider> Providers { get; set; }
+    public virtual DbSet<Provider>? Providers { get; set; }
 
-    public virtual DbSet<ProviderConfigurationString> ProviderConfigurationStrings { get; set; }
+    public virtual DbSet<ProviderConfigurationString>? ProviderConfigurationStrings { get; set; }
 
-    public virtual DbSet<ProviderDetailsMarkdownPage> ProviderDetailsMarkdownPages { get; set; }
+    public virtual DbSet<ProviderDetailsMarkdownPage>? ProviderDetailsMarkdownPages { get; set; }
 
-    public virtual DbSet<ProviderLink> ProviderLinks { get; set; }
+    public virtual DbSet<ProviderLink>? ProviderLinks { get; set; }
 
-    public virtual DbSet<ProviderType> ProviderTypes { get; set; }
+    public virtual DbSet<ProviderType>? ProviderTypes { get; set; }
 
-    public virtual DbSet<Role> Roles { get; set; }
+    public virtual DbSet<Role>? Roles { get; set; }
 
-    public virtual DbSet<Schema> Schemas { get; set; }
+    public virtual DbSet<Schema>? Schemas { get; set; }
 
-    public virtual DbSet<Server> Servers { get; set; }
+    public virtual DbSet<Server>? Servers { get; set; }
 
-    public virtual DbSet<Set> Sets { get; set; }
+    public virtual DbSet<Set>? Sets { get; set; }
 
-    public virtual DbSet<StarkwareTransactionCountDatum> StarkwareTransactionCountData { get; set; }
+    public virtual DbSet<StarkwareTransactionCountDatum>? StarkwareTransactionCountData { get; set; }
 
-    public virtual DbSet<State> States { get; set; }
+    public virtual DbSet<State>? States { get; set; }
 
-    public virtual DbSet<TimeWarpDataDay> TimeWarpDataDays { get; set; }
+    public virtual DbSet<TimeWarpDataDay>? TimeWarpDataDays { get; set; }
 
-    public virtual DbSet<TimeWarpDataHour> TimeWarpDataHours { get; set; }
+    public virtual DbSet<TimeWarpDataHour>? TimeWarpDataHours { get; set; }
 
-    public virtual DbSet<TimeWarpDataMinute> TimeWarpDataMinutes { get; set; }
+    public virtual DbSet<TimeWarpDataMinute>? TimeWarpDataMinutes { get; set; }
 
-    public virtual DbSet<TimeWarpDataWeek> TimeWarpDataWeeks { get; set; }
+    public virtual DbSet<TimeWarpDataWeek>? TimeWarpDataWeeks { get; set; }
 
-    public virtual DbSet<TimeWarpDatum> TimeWarpData { get; set; }
+    public virtual DbSet<TimeWarpDatum>? TimeWarpData { get; set; }
 
-    public virtual DbSet<TpsandGasDataAll> TpsandGasDataAlls { get; set; }
+    public virtual DbSet<TpsandGasDataAll>? TpsandGasDataAlls { get; set; }
 
-    public virtual DbSet<TpsandGasDataDay> TpsandGasDataDays { get; set; }
+    public virtual DbSet<TpsandGasDataDay>? TpsandGasDataDays { get; set; }
 
-    public virtual DbSet<TpsandGasDataHour> TpsandGasDataHours { get; set; }
+    public virtual DbSet<TpsandGasDataHour>? TpsandGasDataHours { get; set; }
 
-    public virtual DbSet<TpsandGasDataLatest> TpsandGasDataLatests { get; set; }
+    public virtual DbSet<TpsandGasDataLatest>? TpsandGasDataLatests { get; set; }
 
-    public virtual DbSet<TpsandGasDataMax> TpsandGasDataMaxes { get; set; }
+    public virtual DbSet<TpsandGasDataMax>? TpsandGasDataMaxes { get; set; }
 
-    public virtual DbSet<TpsandGasDataMinute> TpsandGasDataMinutes { get; set; }
+    public virtual DbSet<TpsandGasDataMinute>? TpsandGasDataMinutes { get; set; }
 
-    public virtual DbSet<TpsandGasDataMonth> TpsandGasDataMonths { get; set; }
+    public virtual DbSet<TpsandGasDataMonth>? TpsandGasDataMonths { get; set; }
 
-    public virtual DbSet<TpsandGasDataWeek> TpsandGasDataWeeks { get; set; }
+    public virtual DbSet<TpsandGasDataWeek>? TpsandGasDataWeeks { get; set; }
 
-    public virtual DbSet<TpsandGasDataYear> TpsandGasDataYears { get; set; }
+    public virtual DbSet<TpsandGasDataYear>? TpsandGasDataYears { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -573,7 +573,7 @@ public partial class EthtpsContext : DbContext
             entity.Property(e => e.ExpireAt).HasColumnType("datetime");
         });
 
-       
+
         modelBuilder.Entity<Log>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_dbo.Log");

@@ -11,5 +11,5 @@ public partial class JobParameter
 
     public string? Value { get; set; }
 
-    public virtual Job Job { get; set; } = null!;
+    public virtual Job? Job { get; set; } = null!;
 }

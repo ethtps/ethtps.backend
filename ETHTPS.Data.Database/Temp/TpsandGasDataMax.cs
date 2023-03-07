@@ -21,7 +21,7 @@ public partial class TpsandGasDataMax
 
     public int? MaxGpsblockNumber { get; set; }
 
-    public virtual Network NetworkNavigation { get; set; } = null!;
+    public virtual Network? NetworkNavigation { get; set; } = null!;
 
-    public virtual Provider ProviderNavigation { get; set; } = null!;
+    public virtual Provider? ProviderNavigation { get; set; } = null!;
 }

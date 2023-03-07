@@ -17,21 +17,20 @@ public partial class ConfigurationContext : ContextBase<ConfigurationContext>
 
     }
 
-    public virtual DbSet<Environment> Environments { get; set; } = new EmptyDBSet<Environment>();
+    public virtual DbSet<Environment>? Environments { get; set; }
 
-    public virtual DbSet<Microservice> Microservices { get; set; } = new EmptyDBSet<Microservice>();
-
-
-    public virtual DbSet<MicroserviceConfigurationString> MicroserviceConfigurationStrings { get; set; } = new EmptyDBSet<MicroserviceConfigurationString>();
+    public virtual DbSet<Microservice>? Microservices { get; set; }
 
 
-    public virtual DbSet<Provider> Providers { get; set; } = new EmptyDBSet<Provider>();
-
-    public virtual DbSet<ConfigurationString> ConfigurationStrings { get; set; } = new EmptyDBSet<ConfigurationString>();
+    public virtual DbSet<MicroserviceConfigurationString>? MicroserviceConfigurationStrings { get; set; }
 
 
-    public virtual DbSet<ProviderConfigurationString> ProviderConfigurationStrings { get; set; }
-= new EmptyDBSet<ProviderConfigurationString>();
+    public virtual DbSet<Provider>? Providers { get; set; }
+
+    public virtual DbSet<ConfigurationString>? ConfigurationStrings { get; set; }
+
+
+    public virtual DbSet<ProviderConfigurationString>? ProviderConfigurationStrings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

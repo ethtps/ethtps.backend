@@ -15,5 +15,5 @@ public partial class ExperimentTarget
 
     public virtual ICollection<Experiment> Experiments { get; } = new List<Experiment>();
 
-    public virtual ExperimentTargetType TypeNavigation { get; set; } = null!;
+    public virtual ExperimentTargetType? TypeNavigation { get; set; } = null!;
 }

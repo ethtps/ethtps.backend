@@ -57,7 +57,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
                     Color = x.Color,
                     TheoreticalMaxTPS = x.TheoreticalMaxTps,
                     IsGeneralPurpose = x.IsGeneralPurpose ?? x.TypeNavigation.IsGeneralPurpose,
-                    IsSubchainOf = x.SubchainOfNavigation?.Name,
+                    IsSubchainOf = x.SubchainOfNavigation.Name,
                     Status = _dataUpdaterStatusService.GetStatusFor(x.Name, UpdaterType.BlockInfo)
                 });
             }
@@ -216,7 +216,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
                 Providers = Context.Providers.Select(x => new ProviderModel()
                 {
                     Name = x.Name,
-                    Type = x.TypeNavigation.Name
+                    Type = x.TypeNavigation != null ? x.TypeNavigation.Name : string.Empty
                 }).ToArray(),
                 AllTPSData = Intervals().Select(interval => new { interval, data = _tpsService.Get(allDataModel, interval) }).ToDictionary(x => x.interval, x => x.data),
                 MaxData = Max(allDataModel),

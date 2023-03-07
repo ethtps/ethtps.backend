@@ -13,7 +13,7 @@ public partial class ProviderLink
 
     public string? Link { get; set; }
 
-    public virtual ExternalWebsite ExternalWebsite { get; set; } = null!;
+    public virtual ExternalWebsite? ExternalWebsite { get; set; } = null!;
 
-    public virtual Provider Provider { get; set; } = null!;
+    public virtual Provider? Provider { get; set; } = null!;
 }
