@@ -13,7 +13,6 @@ namespace ETHTPS.API
     {
         public static void Main(string[] args)
         {
-            //AppDomain.CurrentDomain.SetData("APP_CONFIG_FILE", Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "appsettings.json"));
             CreateHostBuilder(args).Build().Run();
         }
 

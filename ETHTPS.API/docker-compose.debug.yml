@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  webapp:
+    image: mcr.microsoft.com/dotnet/sdk:7.0
+    ports:
+      - 8180
+      - 8443
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8180
+    volumes:
+      - ~/.aspnet/https:/https:ro
