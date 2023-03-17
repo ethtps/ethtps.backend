@@ -19,12 +19,13 @@ namespace ETHTPS.API.DependencyInjection
                 c.DocumentFilter<PublicSwaggerFilter>();
             }
             c.DocumentFilter<AddXAPIKeyHeaderParameter>();
+
             c.DocumentFilter<PolymorphismDocumentFilter<DatedXYDataPoint>>();
             c.DocumentFilter<PolymorphismDocumentFilter<NumericXYDataPoint>>();
             c.DocumentFilter<PolymorphismDocumentFilter<StringXYDataPoint>>();
             c.DocumentFilter<PolymorphismDocumentFilter<ProviderDatedXYDataPoint>>();
             c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-
+            c.CustomSchemaIds(type => type.FullName);
             c.SwaggerDoc("v3", new OpenApiInfo
             {
                 Version = "v3",

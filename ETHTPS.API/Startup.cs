@@ -30,6 +30,7 @@ namespace ETHTPS.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddEssentialServices();
             services.AddDatabaseContext(APP_NAME);
             services.AddCustomCORSPolicies();
 
@@ -63,7 +64,7 @@ namespace ETHTPS.API
                 app.UseDeveloperExceptionPage();
             }
             app.RequestsAreForwardedByReverseProxy();
-            //app.UseMiddleware<UnstableConnectionSimulatorMiddleware>(); //Simulating high server load
+            app.UseMiddleware<UnstableConnectionSimulatorMiddleware>(); //Simulating high server load
             app.UseMiddleware<AccesStatsMiddleware>();
             app.ConfigureSwagger();
             app.UseRouting();

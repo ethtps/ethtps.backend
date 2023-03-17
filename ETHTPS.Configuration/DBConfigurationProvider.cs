@@ -11,12 +11,10 @@ namespace ETHTPS.Configuration
         public DBConfigurationProvider(ConfigurationContext context, string environment = Constants
             .ENVIRONMENT)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
             if (_context?.Environments == null)
                 throw new ArgumentNullException(nameof(_context.Environments));
 
-            _context = context;
             _environment = environment;
             AddEnvironments(environment);
             lock (_context.LockObj)

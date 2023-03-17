@@ -7,11 +7,11 @@ namespace ETHTPS.Runner
         private static Style DEFAULT_STYLE = Style.WhiteOnRed;
         static async Task Main(string[] args)
         {
-            var services = new[]
+            var services = new Service[]
             {
                 //ServiceCreator.GetTaskRunner(),
-                ServiceCreator.GetAPI(),
-                ServiceCreator.GetWSAPI(),
+                //ServiceCreator.GetAPI(),
+                //ServiceCreator.GetWSAPI(),
             };
             var size = Window.GetHostWidthHeight.Invoke();
             Console.Clear();
