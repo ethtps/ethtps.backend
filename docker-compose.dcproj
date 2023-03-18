@@ -9,6 +9,7 @@
     <DockerServiceName>ethtps.taskrunner</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="docker-compose.development.yml" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>

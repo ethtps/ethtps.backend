@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6FC336E8-1CA6-4FFD-A769-9C4A9968A323}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		.env.development = .env.development
 		files\nlog.config = files\nlog.config
 	EndProjectSection
 EndProject

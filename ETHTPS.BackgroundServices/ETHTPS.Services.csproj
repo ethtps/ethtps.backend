@@ -7,8 +7,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Remove="BlockchainServices\InfluxLoggers\**" />
 		<Compile Remove="CacheUpdaters\**" />
+		<EmbeddedResource Remove="BlockchainServices\InfluxLoggers\**" />
 		<EmbeddedResource Remove="CacheUpdaters\**" />
+		<None Remove="BlockchainServices\InfluxLoggers\**" />
 		<None Remove="CacheUpdaters\**" />
 	</ItemGroup>
 
@@ -38,10 +41,6 @@
 		<ProjectReference Include="..\ETHTPS.Data.Database\ETHTPS.Data.Integrations.MSSQL.csproj" />
 		<ProjectReference Include="..\ETHTPS.Data.InfluxIntegration\ETHTPS.Data.Integrations.InfluxIntegration.csproj" />
 		<ProjectReference Include="..\ETHTPS.Data\ETHTPS.Data.Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="BlockchainServices\InfluxLoggers\" />
 	</ItemGroup>
 
 </Project>
