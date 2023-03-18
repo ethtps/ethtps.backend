@@ -23,8 +23,3 @@
 **/values.dev.yaml
 LICENSE
 README.md
-# .dockerignore
-
-Dockerfile
-[b|B]in
-[O|o]bj

@@ -6,12 +6,8 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Platforms>AnyCPU;x64</Platforms>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<_ContentIncludedByDefault Remove="appsettings.default.Development.json" />
-		<_ContentIncludedByDefault Remove="appsettings.default.json" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<Folder Include="Extensions\" />
@@ -33,7 +29,7 @@
 
 	<ItemGroup>
 		<Content Update="appsettings.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</Content>

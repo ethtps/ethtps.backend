@@ -2,9 +2,7 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
-EXPOSE 10202
-ENV ASPNETCORE_URLS=http://+:10202
-ENV ASPNETCORE_ENVIRONMENT=”development”
+EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src

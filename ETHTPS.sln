@@ -71,7 +71,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTester", "ConsoleTes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETHTPS.Runner", "ETHTPS.Runner\ETHTPS.Runner.csproj", "{D6CAE998-1923-4E34-90FC-FDB5D44D2EC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETHTPS.API.Gateway", "ETHTPS.API.Gateway\ETHTPS.API.Gateway.csproj", "{CB5BBB0A-237D-412B-AAE3-1226A9F0F931}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETHTPS.API.Gateway", "ETHTPS.API.Gateway\ETHTPS.API.Gateway.csproj", "{CB5BBB0A-237D-412B-AAE3-1226A9F0F931}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{F7FB8D79-82D1-4B76-8054-B71371B2A83E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -323,6 +325,18 @@ Global
 		{CB5BBB0A-237D-412B-AAE3-1226A9F0F931}.Staging|Any CPU.Build.0 = Debug|Any CPU
 		{CB5BBB0A-237D-412B-AAE3-1226A9F0F931}.Staging|x64.ActiveCfg = Debug|Any CPU
 		{CB5BBB0A-237D-412B-AAE3-1226A9F0F931}.Staging|x64.Build.0 = Debug|Any CPU
+		{F7FB8D79-82D1-4B76-8054-B71371B2A83E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7FB8D79-82D1-4B76-8054-B71371B2A83E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7FB8D79-82D1-4B76-8054-B71371B2A83E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F7FB8D79-82D1-4B76-8054-B71371B2A83E}.Debug|x64.Build.0 = Debug|Any CPU
+		{F7FB8D79-82D1-4B76-8054-B71371B2A83E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7FB8D79-82D1-4B76-8054-B71371B2A83E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7FB8D79-82D1-4B76-8054-B71371B2A83E}.Release|x64.ActiveCfg = Release|Any CPU
+		{F7FB8D79-82D1-4B76-8054-B71371B2A83E}.Release|x64.Build.0 = Release|Any CPU
+		{F7FB8D79-82D1-4B76-8054-B71371B2A83E}.Staging|Any CPU.ActiveCfg = Release|Any CPU
+		{F7FB8D79-82D1-4B76-8054-B71371B2A83E}.Staging|Any CPU.Build.0 = Release|Any CPU
+		{F7FB8D79-82D1-4B76-8054-B71371B2A83E}.Staging|x64.ActiveCfg = Release|Any CPU
+		{F7FB8D79-82D1-4B76-8054-B71371B2A83E}.Staging|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
