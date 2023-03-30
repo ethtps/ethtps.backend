@@ -20,7 +20,9 @@ namespace ETHTPS.API.DependencyInjection
         }
         public static IServiceCollection AddDatabaseContext(this IServiceCollection services, string appName)
         {
-            services.AddDbContext<EthtpsContext>(options => options.UseSqlServer(services.GetDefaultConnectionString(appName)), ServiceLifetime.Scoped);
+            var configurationString = services.GetDefaultConnectionString(appName);
+
+            services.AddDbContext<EthtpsContext>(options => options.UseSqlServer(configurationString), ServiceLifetime.Scoped);
             return services;
 
         }
