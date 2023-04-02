@@ -2,7 +2,7 @@
 
 using System;
 
-namespace ETHTPS.Data.Core
+namespace ETHTPS.Data.Core.Database
 {
     public abstract class ContextBase<TContext> : DbContext
         where TContext : DbContext
@@ -22,7 +22,7 @@ namespace ETHTPS.Data.Core
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseLazyLoadingProxies();
+            optionsBuilder.UseLazyLoadingProxies().EnableThreadSafetyChecks();
         }
 
     }

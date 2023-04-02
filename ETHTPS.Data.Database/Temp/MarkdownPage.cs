@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ETHTPS.Data.Integrations.MSSQL.Temp;
-
-public partial class MarkdownPage
+namespace ETHTPS.Data.Integrations.MSSQL.Temp
 {
-    public int Id { get; set; }
+    public partial class MarkdownPage
+    {
+        public MarkdownPage()
+        {
+            ProviderDetailsMarkdownPages = new HashSet<ProviderDetailsMarkdownPage>();
+        }
 
-    public string RawMarkdown { get; set; } = null!;
+        public int Id { get; set; }
+        public string RawMarkdown { get; set; } = null!;
 
-    public virtual ICollection<ProviderDetailsMarkdownPage> ProviderDetailsMarkdownPages { get; } = new List<ProviderDetailsMarkdownPage>();
+        public virtual ICollection<ProviderDetailsMarkdownPage> ProviderDetailsMarkdownPages { get; set; }
+    }
 }

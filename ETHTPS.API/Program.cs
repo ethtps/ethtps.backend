@@ -4,6 +4,8 @@ using Microsoft.Extensions.Hosting;
 
 using NLog.Extensions.Hosting;
 
+using Steeltoe.Discovery.Client;
+
 using System.IO;
 using System.Reflection;
 
@@ -19,6 +21,7 @@ namespace ETHTPS.API
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration(configureDelegate => configureDelegate.SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)))
+                //.AddDiscoveryClient()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

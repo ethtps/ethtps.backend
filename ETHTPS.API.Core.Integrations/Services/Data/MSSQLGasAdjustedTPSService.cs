@@ -7,13 +7,14 @@ using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
 using ETHTPS.Data.Core;
+using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
 {
     public class MSSQLGasAdjustedTPSService : HistoricalMethodsServiceBase, IGTPSService
     {
         private readonly IGPSService _gpsService;
-        public MSSQLGasAdjustedTPSService(IGPSService gpsService, EthtpsContext context, IEnumerable<IHistoricalDataProvider> historicalDataServices) : base(context, historicalDataServices)
+        public MSSQLGasAdjustedTPSService(IGPSService gpsService, EthtpsContext context, IEnumerable<IHistoricalDataProvider> historicalDataServices, IDataUpdaterStatusService dataUpdaterStatusService) : base(context, historicalDataServices, dataUpdaterStatusService)
         {
             _gpsService = gpsService;
         }

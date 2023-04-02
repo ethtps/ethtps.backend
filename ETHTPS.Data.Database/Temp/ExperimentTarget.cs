@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ETHTPS.Data.Integrations.MSSQL.Temp;
-
-public partial class ExperimentTarget
+namespace ETHTPS.Data.Integrations.MSSQL.Temp
 {
-    public int Id { get; set; }
+    public partial class ExperimentTarget
+    {
+        public ExperimentTarget()
+        {
+            Experiments = new HashSet<Experiment>();
+        }
 
-    public string Name { get; set; } = null!;
+        public int Id { get; set; }
+        public string Name { get; set; } = null!;
+        public string? Description { get; set; }
+        public int Type { get; set; }
 
-    public string? Description { get; set; }
-
-    public int Type { get; set; }
-
-    public virtual ICollection<Experiment> Experiments { get; } = new List<Experiment>();
-
-    public virtual ExperimentTargetType? TypeNavigation { get; set; } = null!;
+        public virtual ExperimentTargetType TypeNavigation { get; set; } = null!;
+        public virtual ICollection<Experiment> Experiments { get; set; }
+    }
 }

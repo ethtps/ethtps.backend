@@ -18,11 +18,12 @@ namespace ETHTPS.API.DependencyInjection
                 return provider.GetConfigurationStringsForMicroservice(appName).First(x => x.Name == connectionStringName).Value;
             }
         }
+
         public static IServiceCollection AddDatabaseContext(this IServiceCollection services, string appName)
         {
             var configurationString = services.GetDefaultConnectionString(appName);
-
-            services.AddDbContext<EthtpsContext>(options => options.UseSqlServer(configurationString), ServiceLifetime.Scoped);
+           // services.AddEntityFrameworkProxies();
+            services.AddDbContext<EthtpsContext>(options => options.UseSqlServer(configurationString), ServiceLifetime.Transient);
             return services;
 
         }

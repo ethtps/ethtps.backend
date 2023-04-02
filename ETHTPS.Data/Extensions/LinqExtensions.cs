@@ -44,13 +44,17 @@ namespace ETHTPS.Data.Core.Extensions
 
         public static T FirstIfAny<T>(this IEnumerable<T> source, Func<T, bool> selector)
         {
-            if (source == null || !source.Any())
-                return default(T);
-
-            if (source.Any(selector))
+            try
             {
-                return source.First(selector);
+                if (source == null || !source.Any())
+                    return default(T);
+
+                if (source.Any(selector))
+                {
+                    return source.First(selector);
+                }
             }
+            catch { }
             return default(T);
         }
 
@@ -78,10 +82,15 @@ namespace ETHTPS.Data.Core.Extensions
 
         public static bool SafeAny<T>(this IEnumerable<T>? source, Func<T, bool> selector)
         {
-            if (source == null || !source.Any())
-                return false;
+            try
+            {
+                if (source == null || !source.Any(selector))
+                    return false;
 
-            return source?.Count(x => x != null) > 0;
+                return source?.Count(x => x != null) > 0;
+            }
+            catch { }
+            return false;
         }
     }
 }

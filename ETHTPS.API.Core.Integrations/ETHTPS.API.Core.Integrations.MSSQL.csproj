@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.3" />
   </ItemGroup>
 
   <ItemGroup>

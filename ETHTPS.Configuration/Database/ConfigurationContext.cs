@@ -1,5 +1,4 @@
-﻿using ETHTPS.Data.Core;
-
+﻿using ETHTPS.Data.Core.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace ETHTPS.Configuration.Database;

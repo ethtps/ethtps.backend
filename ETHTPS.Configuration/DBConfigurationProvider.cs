@@ -29,9 +29,9 @@ namespace ETHTPS.Configuration
         {
             lock (_context.LockObj)
             {
-                var existing = _context.Environments.Select(x => x.Name).ToList();
-                var toAdd = environments.Where(x => !existing.Contains(x));
-                _context.Environments.AddRange(toAdd.Select(x => new Database.Environment()
+                var existing = _context.Environments?.Select(x => x.Name).ToList();
+                var toAdd = environments?.Where(x => !existing.Contains(x));
+                _context.Environments?.AddRange(toAdd.SafeSelect(x => new Database.Environment()
                 {
                     Name = x
                 }));
