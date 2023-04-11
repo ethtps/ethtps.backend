@@ -20,21 +20,15 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
 
         protected IEnumerable<ProviderSummaryBase> SafeGetProviderSummaries(ProviderQueryModel model)
         {
-            var formatted = Providers().Select(x =>
-            new
-            {
-                x.Name,
-                x.Id
-            });
             if (model.Provider.EqualsIgnoreCase(Constants.All))
             {
-                return formatted.Select(x => new Provider()
+                return AllProviders.Select(x => new Provider()
                 {
                     Name = x.Name,
                     Id = x.Id
                 });
             }
-            var target = formatted.FirstOrDefault(x => x.Name.EqualsIgnoreCase(model.Provider));
+            var target = AllProviders.FirstOrDefault(x => x.Name.EqualsIgnoreCase(model.Provider));
             return target == null? Enumerable.Empty<ProviderSummaryBase>(): new ProviderSummaryBase[]
             {
                  new Provider()
@@ -47,20 +41,8 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
 
         protected DataPoint SafeGetMax(DataType dataType, ProviderSummaryBase providerSummary, ProviderQueryModel model)
         {
-            var entry = Context.TpsandGasDataMaxes.Select(x => 
-            new 
-            { 
-                x.Provider, 
-                x.Id,
-                 x.Network,
-                x.MaxGps,
-                x.MaxTps,
-                x.MaxGpsblockNumber,
-                x.MaxTpsblockNumber,
-                x.NetworkNavigation,
-                x.Date
-            })
-                .FirstOrDefault(x => x.Provider == providerSummary.Id && x.NetworkNavigation.Name == model.Network);
+            var entry =  Context.TpsandGasDataMaxes.FirstOrDefault(x => x
+            .Provider != providerSummary.Id);
             if (entry == null)
             {
                 return new DataPoint()

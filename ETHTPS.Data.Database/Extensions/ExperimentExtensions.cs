@@ -9,7 +9,7 @@ namespace ETHTPS.Data.Integrations.MSSQL.Extensions
         {
             lock (context.LockObj)
             {
-                var targetTypes = context.ExperimentTargetTypes.Where(x => x.TargetTypeName == "Device" && (x.TargetTypeValue == deviceType || x.TargetTypeValue == "All"));
+                var targetTypes = context.ExperimentTargetTypes.Where(x => x.TargetTypeName == "Device" && (x.TargetTypeValue == deviceType || x.TargetTypeValue == "All")).ToList();
                 if (targetTypes.Any())
                 {
                     foreach (var targetType in targetTypes)
@@ -36,7 +36,7 @@ namespace ETHTPS.Data.Integrations.MSSQL.Extensions
             // Others only sometimes
             if (experiment.RunParametersNavigation.EnrollmentChance != null)
             {
-                if (Random.Next(100) < experiment.RunParametersNavigation.EnrollmentChance)
+                if (Random.Next(100) <= experiment.RunParametersNavigation.EnrollmentChance)
                 {
                     return true;
                 }
@@ -60,8 +60,8 @@ namespace ETHTPS.Data.Integrations.MSSQL.Extensions
                 if (context.ApikeyExperimentBindings.Any(x => x.ApikeyId == apiKeyId))
                 {
                     return context.ApikeyExperimentBindings.Where(x => x.ApikeyId == apiKeyId).Select(x => x.Experiment)
-                    .WhereNotNull()
-                    .Select(x => x.DeepClone()).ToList();
+                    .ToList()
+                    .WhereNotNull();
                 }
             }
             return Enumerable.Empty<Experiment>();

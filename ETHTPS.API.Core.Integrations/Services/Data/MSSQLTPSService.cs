@@ -28,7 +28,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
             {
                 if (model.Provider.ToUpper() == "ALL")
                 {
-                    foreach (var p in Providers().Where(x => x.Enabled).ToList())
+                    foreach (var p in AllProviders.Where(x => x.Enabled).ToList())
                     {
                         if (!model.IncludeSidechains)
                         {
@@ -75,7 +75,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
             List<DataResponseModel> result = new();
             lock (Context.LockObj)
             {
-                foreach (var p in Providers().Where(x => x.Enabled).ToList())
+                foreach (var p in AllProviders.Where(x => x.Enabled).ToList())
                 {
                     if (!model.IncludeSidechains)
                     {

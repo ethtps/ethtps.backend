@@ -1,5 +1,6 @@
 ﻿using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Core.Models.DataUpdater;
 using ETHTPS.Data.Core.Models.Providers;
 using ETHTPS.Data.Integrations.MSSQL;
@@ -24,7 +25,7 @@ namespace ETHTPS.API.Core.Services
             bool result = false;
             lock (Context.LockObj)
             {
-                result = Providers().First(x => x.Name == provider).Type == "Sidechain";
+                result = AllProviders.First(x => x.Name == provider).Type == "Sidechain";
             }
             return result;
         }
@@ -41,25 +42,34 @@ namespace ETHTPS.API.Core.Services
             }
         }
 
-        public IEnumerable<ProviderResponseModel> Providers()
+        private IEnumerable<ProviderResponseModel> _allProviders = Enumerable.Empty<ProviderResponseModel>();
+
+        public IEnumerable<ProviderResponseModel> AllProviders
         {
-            IEnumerable<ProviderResponseModel> result;
-            lock (Context.LockObj)
+            get
             {
-                var types = Context.ProviderTypes.AsEnumerable();
-                result = Context.Providers.Select(x => new ProviderResponseModel()
+                if (_allProviders.Count() == 0)
                 {
-                    Name = x.Name,
-                    Type = Context.ProviderTypes.First(y=>y.Id == x.Type).Name,
-                    Color = x.Color,
-                    TheoreticalMaxTPS = x.TheoreticalMaxTps,
-                    IsGeneralPurpose = types.First(y=>y.Id == x.Type).IsGeneralPurpose,
-                    IsSubchainOf = "Ethereum",
-                    Status = _dataUpdaterStatusService.GetStatusFor(x.Name, UpdaterType.BlockInfo),
-                    Enabled = x.Enabled
-                }).Where(x => x.Enabled);
+                    lock (Context.LockObj)
+                    {
+                        var types = Context.ProviderTypes.AsEnumerable();
+                        _allProviders = Context.Providers.SafeSelect(x => new ProviderResponseModel()
+                        {
+                            Id = x.Id,
+                            Name = x.Name,
+                            Type = Context.ProviderTypes.First(y => y.Id == x.Type).Name,
+                            Color = x.Color,
+                            TheoreticalMaxTPS = x.TheoreticalMaxTps,
+                            IsGeneralPurpose = types.First(y => y.Id == x.Type).IsGeneralPurpose,
+                            IsSubchainOf = "Ethereum",
+                            Status = _dataUpdaterStatusService.GetStatusFor(x.Name, UpdaterType.BlockInfo),
+                            Enabled = x.Enabled
+                        }).SafeWhere(x => x.Enabled).ToList();
+                    }
+                }
+                return _allProviders;
+
             }
-            return result;
         }
     }
 }

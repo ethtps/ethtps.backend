@@ -46,12 +46,11 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 
         public IEnumerable<ProviderResponseModel> Providers(string subchainsOf)
         {
-            IEnumerable<ProviderResponseModel> list = Providers();
             if (string.IsNullOrWhiteSpace(subchainsOf) || subchainsOf.LossyCompareTo(Constants.All))
             {
-                return list;
+                return AllProviders;
             }
-            return Enumerable.Where(list, x => x.Name.LossyCompareTo(subchainsOf));
+            return Enumerable.Where(AllProviders, x => x.Name.LossyCompareTo(subchainsOf));
         }
 
         public IDictionary<string, string> ColorDictionary()
@@ -59,7 +58,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             IDictionary<string, string> result;
             lock (Context.LockObj)
             {
-                result = Providers().Select(x => new{x.Name,x.Color,x.Enabled }).Where(x => x.Enabled).ToDictionary(x => x.Name, x => x.Color);
+                result = AllProviders.Select(x => new{x.Name,x.Color,x.Enabled }).Where(x => x.Enabled).ToDictionary(x => x.Name, x => x.Color);
             }
             return result;
         }
@@ -193,7 +192,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             };
             return new AllDataModel()
             {
-                Providers = Providers().Select(x => new ProviderModel()
+                Providers = AllProviders.Select(x => new ProviderModel()
                 {
                     Name = x.Name,
                     Type = x.Type != null ? x.Type : string.Empty
@@ -212,8 +211,8 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             return new HomePageViewModel()
             {
                 InstantTPS = await InstantTPSAsync(),
-                ColorDictionary = _Providers().ToDictionary(x => x.Name, x => x.Color),
-                ProviderData = _Providers().Select(x => new ProviderInfo()
+                ColorDictionary = _Providers.ToDictionary(x => x.Name, x => x.Color),
+                ProviderData = _Providers.Select(x => new ProviderInfo()
                 {
                     Name = x.Name,
                     MaxTPS = MaxTPS(x.Name).FirstOrDefaultOrDefault().Data.FirstOrDefaultOrDefault().TPS,

@@ -64,7 +64,7 @@ namespace ETHTPS.API
                 app.UseDeveloperExceptionPage();
             }
             app.RequestsAreForwardedByReverseProxy();
-            app.UseMiddleware<UnstableConnectionSimulatorMiddleware>(); //Simulating high server load
+            //app.UseMiddleware<UnstableConnectionSimulatorMiddleware>(); //Simulating high server load
             app.UseMiddleware<AccesStatsMiddleware>();
             app.ConfigureSwagger();
             app.UseRouting();

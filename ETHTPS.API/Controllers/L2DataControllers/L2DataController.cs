@@ -37,7 +37,7 @@ namespace ETHTPS.API.Controllers.L2DataControllers
         [SwaggerResponse(400, "Invalid parameter(s)", Type = typeof(ValidationResult))]
         public IActionResult Get([FromBody] L2DataRequestModel requestModel, DataType dataType)
         {
-            var providers = _generalService.Providers().Select(x => (x.Name, x.Type == "Sidechain")).Where(x => !requestModel.IncludeSidechains ? !x.Item2 : true);
+            var providers = _generalService.AllProviders.Select(x => (x.Name, x.Type == "Sidechain")).Where(x => !requestModel.IncludeSidechains ? !x.Item2 : true);
             if (requestModel.Providers != null)
                 if (requestModel.Providers.Contains(Constants.All))
                     requestModel.Providers = providers.Select(x => x.Name).ToList();
