@@ -2,6 +2,7 @@ using Coravel;
 
 using ETHTPS.API.DependencyInjection;
 using ETHTPS.API.Security.Core.Policies;
+using ETHTPS.WSAPI.Infrastructure.LiveData.Connection;
 
 namespace ETHTPS.WSAPI
 {
@@ -29,6 +30,8 @@ namespace ETHTPS.WSAPI
                    .AddCache()
                    .AddScheduler()
                    .AddMSSQLHistoricalDataServices();
+            services.AddSignalR();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -49,6 +52,7 @@ namespace ETHTPS.WSAPI
             {
                 endpoints.MapControllers().RequireAuthorization();
             });
+            app.MapHub<LiveDataHub>("/api/v3/wsapi/live-data");
             app.Services.UseScheduler(scheduler =>
             {
 
