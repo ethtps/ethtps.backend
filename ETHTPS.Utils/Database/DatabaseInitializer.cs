@@ -3,11 +3,11 @@ using System.Data.SqlClient;
 
 namespace ETHTPS.Utils.Database
 {
-    public class DatabaseInitializationService : IDatabaseInitializationService
+    public class DatabaseInitializer: IDatabaseInitializer
     {
-        private readonly ILogger<DatabaseInitializationService> _logger;
+        private readonly ILogger<DatabaseInitializer> _logger;
 
-        public DatabaseInitializationService(ILogger<DatabaseInitializationService> logger)
+        public DatabaseInitializer(ILogger<DatabaseInitializer> logger)
         {
             _logger = logger;
         }

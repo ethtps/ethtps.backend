@@ -12,4 +12,12 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\LiveData\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ETHTPS.DependencyInjection\ETHTPS.API.DependencyInjection.csproj" />
+  </ItemGroup>
+
 </Project>

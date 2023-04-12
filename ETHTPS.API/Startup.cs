@@ -35,8 +35,8 @@ namespace ETHTPS.API
             services.AddCustomCORSPolicies();
 
             services.AddControllersWithViews()
-                .AddControllersAsServices()
-                .ConfigureNewtonsoftJson();
+                    .AddControllersAsServices()
+                    .ConfigureNewtonsoftJson();
             services.AddSwagger()
                     .AddMemoryCache()
                     .AddAPIKeyProvider()

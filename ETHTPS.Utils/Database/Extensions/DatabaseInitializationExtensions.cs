@@ -4,6 +4,6 @@ namespace ETHTPS.Utils.Database.Extensions
 {
     public static class DatabaseInitializationExtensions
     {
-        public static IServiceCollection AddDatabaseInitializationService(this IServiceCollection services) => services.AddScoped<IDatabaseInitializationService, DatabaseInitializationService>();
+        public static IServiceCollection AddDatabaseInitializer(this IServiceCollection services) => services.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
     }
 }
