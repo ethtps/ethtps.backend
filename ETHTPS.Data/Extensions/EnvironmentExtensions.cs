@@ -1,10 +1,12 @@
-﻿using System;
+﻿using ETHTPS.Utils.DotEnv;
+using System;
 using static ETHTPS.Data.Core.Constants.EnvironmentVariables;
 
 namespace ETHTPS.Data.Core.Extensions
 {
     public static class EnvironmentExtensions
     {
+        private static DotEnvParser _parser = new(".env.data.development");
         public static string GetEnvVarValue(string name)
         {
             var env = GetEnvironmentVariableFromAnywherePriorityWiseOrThrow(ENV);
@@ -13,7 +15,7 @@ namespace ETHTPS.Data.Core.Extensions
             string? result = null;
             result = env switch
             {
-                "DEVELOPMENT" => GetEnvironmentVariableFromAnywherePriorityWiseOrThrow($"{name}_{env}"),
+                "DEVELOPMENT" => GetEnvironmentVariableFromAnywherePriorityWiseOrThrow($"{name}"),
                 _ => throw new ArgumentOutOfRangeException(ENV)
             };
             if (string.IsNullOrEmpty(result))
@@ -29,6 +31,7 @@ namespace ETHTPS.Data.Core.Extensions
             Environment.GetEnvironmentVariable(name, 
                 EnvironmentVariableTarget.Process) ?? 
             Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.User) ?? 
-            Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Machine) ?? throw new ArgumentNullException(name);
+            Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Machine) ??
+            _parser.Get(name) ?? throw new ArgumentNullException(name);
     }
 }

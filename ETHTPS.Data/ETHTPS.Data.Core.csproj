@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove=".env.data.development" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include=".env.data.development">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="InfluxDB.Client.Core" Version="4.11.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.4" />
@@ -32,6 +42,10 @@
   <ItemGroup>
     <Folder Include="Models\Charts\" />
     <Folder Include="Models\Queries\Responses\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ETHTPS.Utils\ETHTPS.Utils.csproj" />
   </ItemGroup>
 
 </Project>
