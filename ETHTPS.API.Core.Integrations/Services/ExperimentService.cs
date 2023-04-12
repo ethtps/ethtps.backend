@@ -19,8 +19,8 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 
         public Task EnrollInNewExperimentsIfApplicableAsync(ExperimentRequesterParameters parameters, HttpContext context)
         {
-            var experiments = _context.GetExperimentsForDeviceType(parameters.DeviceType);
-            var runningExperiments = experiments.Where(x => x.IsRunning());
+            var experiments = _context.GetExperimentsForDeviceType(parameters.DeviceType).ToList();
+            var runningExperiments = experiments.Where(x => x.IsRunning()).ToList();
             if (runningExperiments.Any())
             {
                 foreach (var experiment in runningExperiments)

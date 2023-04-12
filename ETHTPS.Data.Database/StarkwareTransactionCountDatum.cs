@@ -17,5 +17,5 @@ public partial class StarkwareTransactionCountDatum
 
     public double LastUpdateTps { get; set; }
 
-    public virtual Network NetworkNavigation { get; set; }
+    public virtual Network? NetworkNavigation { get; set; } = new();
 }

@@ -12,24 +12,37 @@ namespace ETHTPS.API.DependencyInjection
 {
     public static class SwaggerExtensions
     {
-        public static IServiceCollection AddSwagger(this IServiceCollection services, bool usePublicFilter = false) => services.AddSwaggerGen(c =>
+        public static IServiceCollection AddSwagger(this IServiceCollection services, string title= "ETHTPS.info API", string description= "Backend definition for ethtps.info; you're free to play around", bool addExtraFilters = true, bool usePublicFilter = false) => services.AddSwaggerGen(c =>
         {
-            if (usePublicFilter)
+            if (addExtraFilters)
             {
-                c.DocumentFilter<PublicSwaggerFilter>();
-            }
-            c.DocumentFilter<AddXAPIKeyHeaderParameter>();
-            c.DocumentFilter<PolymorphismDocumentFilter<DatedXYDataPoint>>();
-            c.DocumentFilter<PolymorphismDocumentFilter<NumericXYDataPoint>>();
-            c.DocumentFilter<PolymorphismDocumentFilter<StringXYDataPoint>>();
-            c.DocumentFilter<PolymorphismDocumentFilter<ProviderDatedXYDataPoint>>();
-            c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+                if (usePublicFilter)
+                {
+                    c.DocumentFilter<PublicSwaggerFilter>();
+                }
+                c.DocumentFilter<AddXAPIKeyHeaderParameter>();
 
+                c.DocumentFilter<PolymorphismDocumentFilter<DatedXYDataPoint>>();
+                c.DocumentFilter<PolymorphismDocumentFilter<NumericXYDataPoint>>();
+                c.DocumentFilter<PolymorphismDocumentFilter<StringXYDataPoint>>();
+                c.DocumentFilter<PolymorphismDocumentFilter<ProviderDatedXYDataPoint>>();
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+                c.CustomSchemaIds(type => type.FullName);
+                var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                var xmlFilename = $"ETHTPS.API.Core.xml";
+                var inFile = Path.Combine(directory ?? string.Empty, xmlFilename);
+                if (File.Exists(inFile))
+                {
+                    var outFile = Path.Combine(directory ?? string.Empty, "ETHTPS.API.xml");
+                    File.WriteAllText(outFile, File.ReadAllText(inFile).Replace("ETHTPS.API.Core", "ETHTPS.API"));
+                    c.IncludeXmlComments(inFile, true);
+                }
+            }
             c.SwaggerDoc("v3", new OpenApiInfo
             {
                 Version = "v3",
-                Title = "ETHTPS.info API",
-                Description = "Backend definition for ethtps.info; you're free to play around",
+                Title = title,
+                Description = description,
                 //TermsOfService = new Uri("https://ethtps.info/terms"),
                 Contact = new OpenApiContact
                 {
@@ -37,15 +50,6 @@ namespace ETHTPS.API.DependencyInjection
                     Url = new Uri("https://twitter.com/Mister_Eth")
                 }
             });
-            var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var xmlFilename = $"ETHTPS.API.Core.xml";
-            var inFile = Path.Combine(directory ?? string.Empty, xmlFilename);
-            if (File.Exists(inFile))
-            {
-                var outFile = Path.Combine(directory ?? string.Empty, "ETHTPS.API.xml");
-                File.WriteAllText(outFile, File.ReadAllText(inFile).Replace("ETHTPS.API.Core", "ETHTPS.API"));
-                c.IncludeXmlComments(inFile, true);
-            }
         }).AddSwaggerGenNewtonsoftSupport();
 
         public static IApplicationBuilder ConfigureSwagger(this IApplicationBuilder app) => app.UseSwagger()

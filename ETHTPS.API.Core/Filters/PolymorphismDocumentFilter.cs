@@ -11,7 +11,14 @@ namespace ETHTPS.API.Core.Filters
     {
         public void Apply(OpenApiDocument openApiDoc, DocumentFilterContext context)
         {
-            RegisterSubClasses(context, typeof(T));
+            try
+            {
+                RegisterSubClasses(context, typeof(T));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error registering {typeof(T)}: " + ex);
+            }
         }
 
         private static void RegisterSubClasses(DocumentFilterContext context, Type abstractType)

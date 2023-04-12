@@ -38,7 +38,7 @@ namespace ETHTPS.API.Controllers.L2DataControllers
             if (!string.IsNullOrWhiteSpace(subchainsOf))
                 return _generalService.Providers(subchainsOf);
 
-            return _generalService.Providers();
+            return _generalService.AllProviders;
         }
 
         [HttpGet]

@@ -60,7 +60,7 @@ namespace ETHTPS.API.DependencyInjection
         }
 
 
-        private static IServiceCollection AddEssentialServices(this IServiceCollection services) =>
+        public static IServiceCollection AddEssentialServices(this IServiceCollection services) =>
             services.AddScoped<IHumanityCheckService, RecaptchaVerificationService>()
             .AddDbContext<ConfigurationContext>(options => options.UseSqlServer(GetConfigurationServiceConnectionString()), ServiceLifetime.Singleton)
             .AddSingleton<IDBConfigurationProvider, DBConfigurationProvider>()

@@ -30,12 +30,13 @@ namespace ETHTPS.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddEssentialServices();
             services.AddDatabaseContext(APP_NAME);
             services.AddCustomCORSPolicies();
 
             services.AddControllersWithViews()
-                .AddControllersAsServices()
-                .ConfigureNewtonsoftJson();
+                    .AddControllersAsServices()
+                    .ConfigureNewtonsoftJson();
             services.AddSwagger()
                     .AddMemoryCache()
                     .AddAPIKeyProvider()

@@ -2,13 +2,14 @@
 using ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Data.Core;
+using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 
 namespace ETHTPS.API.Core.Services
 {
     public abstract class HistoricalMethodsServiceBase : ContextServiceBase
     {
         protected IEnumerable<IHistoricalDataProvider> HistoricalDataServices { get; set; }
-        protected HistoricalMethodsServiceBase(EthtpsContext context, IEnumerable<IHistoricalDataProvider> historicalDataServices) : base(context)
+        protected HistoricalMethodsServiceBase(EthtpsContext context, IEnumerable<IHistoricalDataProvider> historicalDataServices, IDataUpdaterStatusService dataUpdaterStatus) : base(context, dataUpdaterStatus)
         {
             HistoricalDataServices = historicalDataServices;
         }

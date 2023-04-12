@@ -1,4 +1,5 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+﻿using Microsoft.VisualBasic;
+using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.TimeBuckets;
 using ETHTPS.Data.Integrations.MSSQL;
@@ -23,7 +24,7 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
         [AutomaticRetry(Attempts = 0, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
         public override async Task RunAsync()
         {
-            if (!_context.OldestLoggedHistoricalEntries.Any(x => x.Network == 1 && x.ProviderNavigation.Name == _provider))
+            if (!_context.OldestLoggedHistoricalEntries.Any(x => x.Network == _mainnetID && x.ProviderNavigation.Name == _provider))
             {
                 _context.OldestLoggedHistoricalEntries.Add(new OldestLoggedHistoricalEntry()
                 {
@@ -33,7 +34,7 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
                 });
             }
             await _context.SaveChangesAsync();
-            var oldestEntry = _context.OldestLoggedHistoricalEntries.First(x => x.Network == 1 && x.ProviderNavigation.Name == _provider);
+            var oldestEntry = _context.OldestLoggedHistoricalEntries.First(x => x.Network == _mainnetID && x.ProviderNavigation.Name == _provider);
             var step = 1;
 
             if (_context.Providers.Any(x => x.Id == _providerID && x.HistoricalAggregationDeltaBlock.HasValue))

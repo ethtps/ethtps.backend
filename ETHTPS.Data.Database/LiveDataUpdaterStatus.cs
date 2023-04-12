@@ -15,7 +15,7 @@ public partial class LiveDataUpdaterStatus
 
     public int NumberOfFailures { get; set; }
 
-    public virtual DataUpdaterStatus Status { get; set; } = null!;
+    public virtual DataUpdaterStatus? Status { get; set; } = null!;
 
-    public virtual DataUpdater Updater { get; set; } = null!;
+    public virtual DataUpdater? Updater { get; set; } = null!;
 }

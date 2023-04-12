@@ -50,7 +50,7 @@ namespace ETHTPS.API.Controllers
         [HttpGet]
         public IActionResult Provider([FromQuery] ProviderPageRequestModel model)
         {
-            if (string.IsNullOrWhiteSpace(model.Provider) || model.Provider.LossyCompareTo(Constants.All) || !_generalService.Providers().Any(x => x.Name.LossyCompareTo(model.Provider)))
+            if (string.IsNullOrWhiteSpace(model.Provider) || model.Provider.LossyCompareTo(Constants.All) || !_generalService.AllProviders.Any(x => x.Name.LossyCompareTo(model.Provider)))
             {
                 return BadRequest($"Invalid provider name \"{model.Provider}\"");
             }
