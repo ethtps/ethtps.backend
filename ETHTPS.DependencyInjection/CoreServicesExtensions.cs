@@ -59,7 +59,9 @@ namespace ETHTPS.API.DependencyInjection
                 .AddScoped<GeneralService>();
         }
 
-
+        /// <summary>
+        /// Adds services that are required for other services to work. Must be called BEFORE <see cref="AddMixedCoreServices(IServiceCollection)"/>
+        /// </summary>
         public static IServiceCollection AddEssentialServices(this IServiceCollection services) =>
             services.AddScoped<IHumanityCheckService, RecaptchaVerificationService>()
             .AddDbContext<ConfigurationContext>(options => options.UseSqlServer(GetConfigurationServiceConnectionString()), ServiceLifetime.Singleton)

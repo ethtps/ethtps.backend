@@ -52,8 +52,7 @@ namespace ETHTPS.API
             services.AddDataUpdaterStatusService();
 
 #if DEBUG
-            services.AddScoped<PublicDataInitializer>()
-                    .AddScoped<PrivateDataInitializer>();
+            services.AddScoped<PublicDataInitializer>();
 #endif
         }
 

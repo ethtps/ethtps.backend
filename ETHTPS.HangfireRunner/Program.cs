@@ -14,12 +14,14 @@ using Coravel;
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseNLog();
 var services = builder.Services;
-services.AddDatabaseContext(CURRENT_APP_NAME)
+services.AddEssentialServices()
+        .AddDatabaseContext(CURRENT_APP_NAME)
         .AddDataProviderServices(DatabaseProvider.MSSQL)
         .AddMixedCoreServices()
         .AddCustomCORSPolicies()
         .AddAPIKeyAuthenticationAndAuthorization()
-        .AddControllers().AddControllersAsServices();
+        .AddControllers()
+        .AddControllersAsServices();
 
 services.AddSwagger()
         .AddScoped<IInfluxWrapper, InfluxWrapper>()
