@@ -25,7 +25,7 @@ namespace ETHTPS.API.DependencyInjection
             try
             {
                 var configurationString = services.GetDefaultConnectionString(appName);
-                services.AddDbContext<EthtpsContext>(options => options.UseSqlServer(configurationString), ServiceLifetime.Transient);
+                services.AddDbContext<EthtpsContext>(options => options.UseSqlServer(configurationString), ServiceLifetime.Scoped);
                 return services;
             }
             catch (Exception ex)
