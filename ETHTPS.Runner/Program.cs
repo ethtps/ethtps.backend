@@ -1,21 +1,33 @@
 ﻿using Konsole;
 
+using Newtonsoft.Json;
+
 namespace ETHTPS.Runner
 {
     internal class Program
     {
         private static Style DEFAULT_STYLE = Style.WhiteOnRed;
+        private const string STARTUP_CONFIG = "Startup.json";
+
         static async Task Main(string[] args)
         {
-            var services = new Service[]
+            if (!File.Exists(STARTUP_CONFIG))
             {
-                //ServiceCreator.GetTaskRunner(),
-                //ServiceCreator.GetAPI(),
-                //ServiceCreator.GetWSAPI(),
-            };
+                await Console.Out.WriteLineAsync($"{STARTUP_CONFIG} not found");
+                return;
+            }
+            StartupConfig? config = JsonConvert.DeserializeObject<StartupConfig>(File.ReadAllText(STARTUP_CONFIG));
+            if (config == null || config?.Executables?.Length == 0)
+            {
+                await Console.Out.WriteLineAsync("Nothing to do");
+                return;
+            }
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            Service[] services = config.Executables.Select(x => new Service(x.Name, Path.Combine(config.BaseDirectory ?? string.Empty, x.Directory ?? string.Empty), x.Executable, x.Arguments)).ToArray();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             var size = Window.GetHostWidthHeight.Invoke();
             Console.Clear();
-            var settings = new WindowSettings()
+            WindowSettings settings = new ()
             {
                 Width = size.width,
                 Height = size.height,

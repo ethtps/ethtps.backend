@@ -131,6 +131,7 @@ namespace ETHTPS.API.DependencyInjection
                             {
                                 interval?.EveryFifteenSeconds();
                             }
+                            Console.WriteLine($"Registered {loggerType.Name}<{loggerType.GetGenericArguments()[0].Name}>");
                         }
                     });
                 }
