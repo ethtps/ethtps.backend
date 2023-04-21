@@ -29,7 +29,10 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.BlockInfo
                 var statusService = provider.GetRequiredService<IDataUpdaterStatusService>();
                 foreach(var p in providers)
                 {
+                    // BlockInfo means both historical and TPSGPS
                     statusService.SetStatusFor(p.GetProviderName(), Data.Core.Models.DataUpdater.UpdaterType.BlockInfo, Data.Core.Models.DataUpdater.UpdaterStatus.Idle);
+                    statusService.SetStatusFor(p.GetProviderName(), Data.Core.Models.DataUpdater.UpdaterType.Historical, Data.Core.Models.DataUpdater.UpdaterStatus.Idle);
+                    statusService.SetStatusFor(p.GetProviderName(), Data.Core.Models.DataUpdater.UpdaterType.TPSGPS, Data.Core.Models.DataUpdater.UpdaterStatus.Idle);
                 }
             }
             return services;

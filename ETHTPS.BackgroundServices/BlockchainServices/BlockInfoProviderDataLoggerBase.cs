@@ -5,16 +5,15 @@ using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Data.Core.Models.DataEntries.BlockchainServices.Models;
 using ETHTPS.Data.Core.Models.DataUpdater;
-using ETHTPS.Services.BlockchainServices;
-using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.Attributes;
 using Microsoft.Extensions.Logging;
 
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ETHTPS.Services.BlockchainServices.HangfireLogging;
 
-namespace ETHTPS.Services.BlockchainServices.HangfireLogging
+namespace ETHTPS.Services.BlockchainServices
 {
     public abstract class BlockInfoProviderDataLoggerBase<T> : HangfireBackgroundService
         where T : IHTTPBlockInfoProvider
