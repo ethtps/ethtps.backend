@@ -7,6 +7,8 @@ using ETHTPS.Services.BackgroundTasks.Recurring.Aggregated;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
+using Newtonsoft.Json;
+
 using System.Diagnostics;
 using System.Reactive.Concurrency;
 
@@ -48,8 +50,11 @@ namespace ETHTPS.API.Core.Middlewares
             catch (Exception e)
             {
                 logger.LogError($"{e.GetType()} exception caught by middleware");
+#if DEBUG
+                logger.LogError(JsonConvert.SerializeObject(e));
+#endif
                 context.Response.StatusCode = 400;
-                // throw;
+                 throw;
             }
             finally
             {

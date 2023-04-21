@@ -13,9 +13,9 @@ public partial class MicroserviceConfigurationString
 
     public int EnvironmentId { get; set; }
 
-    public virtual ConfigurationString ConfigurationString { get; set; } = null!;
+    public virtual ConfigurationString? ConfigurationString { get; set; } = null!;
 
-    public virtual Environment Environment { get; set; } = null!;
+    public virtual Environment? Environment { get; set; } = null!;
 
-    public virtual Microservice Microservice { get; set; } = null!;
+    public virtual Microservice? Microservice { get; set; } = null!;
 }

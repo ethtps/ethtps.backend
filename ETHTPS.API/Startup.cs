@@ -30,12 +30,13 @@ namespace ETHTPS.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddEssentialServices();
             services.AddDatabaseContext(APP_NAME);
             services.AddCustomCORSPolicies();
 
             services.AddControllersWithViews()
-                .AddControllersAsServices()
-                .ConfigureNewtonsoftJson();
+                    .AddControllersAsServices()
+                    .ConfigureNewtonsoftJson();
             services.AddSwagger()
                     .AddMemoryCache()
                     .AddAPIKeyProvider()
@@ -51,8 +52,7 @@ namespace ETHTPS.API
             services.AddDataUpdaterStatusService();
 
 #if DEBUG
-            services.AddScoped<PublicDataInitializer>()
-                    .AddScoped<PrivateDataInitializer>();
+            services.AddScoped<PublicDataInitializer>();
 #endif
         }
 

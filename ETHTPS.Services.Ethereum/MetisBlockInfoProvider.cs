@@ -1,4 +1,4 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+﻿using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Services.BlockchainServices;
 using ETHTPS.Services.Ethereum.JSONRPC.Models;
 using ETHTPS.Services.Infrastructure.Serialization;

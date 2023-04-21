@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-
-using ETHTPS.Data.Core;
-
+using ETHTPS.Data.Core.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace ETHTPS.Data.Integrations.MSSQL;
 
-public partial class EthtpsContext : ContextBase<EthtpsContext>
-{
+public partial class EthtpsContext : ETHTPSContextBase 
+{ 
+#pragma warning disable CS8618
     public EthtpsContext()
     {
     }
@@ -17,6 +16,7 @@ public partial class EthtpsContext : ContextBase<EthtpsContext>
         : base(options)
     {
     }
+#pragma warning  restore CS8618
 
     public virtual DbSet<AggregatedCounter> AggregatedCounters { get; set; }
 
@@ -727,6 +727,7 @@ public partial class EthtpsContext : ContextBase<EthtpsContext>
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(255);
+            
             entity.Property(e => e.Website)
                 .IsRequired()
                 .HasMaxLength(255);
@@ -735,25 +736,28 @@ public partial class EthtpsContext : ContextBase<EthtpsContext>
                 .HasForeignKey(d => d.Provider)
                 .HasConstraintName("FK__Projects__Provid__6AEFE058");
         });
-
         modelBuilder.Entity<Provider>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Provider__3214EC2720D7D6EB");
-
-            entity.HasIndex(e => e.Name, "UQ__Provider__737584F60991B0F2").IsUnique();
+            entity.HasIndex(e => e.Name, "UQ__Provider__737584F60991B0F2")
+                .IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("ID");
+
             entity.Property(e => e.Color)
                 .HasMaxLength(16)
                 .IsUnicode(false);
+
             entity.Property(e => e.Name).HasMaxLength(255);
+
             entity.Property(e => e.TheoreticalMaxTps).HasColumnName("TheoreticalMaxTPS");
 
-            entity.HasOne(d => d.SubchainOfNavigation).WithMany(p => p.InverseSubchainOfNavigation)
+            entity.HasOne(d => d.SubchainOfNavigation)
+                .WithMany(p => p.InverseSubchainOfNavigation)
                 .HasForeignKey(d => d.SubchainOf)
                 .HasConstraintName("FK__Providers__Subch__4E53A1AA");
 
-            entity.HasOne(d => d.TypeNavigation).WithMany(p => p.Providers)
+            entity.HasOne(d => d.TypeNavigation)
+                .WithMany(p => p.Providers)
                 .HasForeignKey(d => d.Type)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Providers__Type__4D5F7D71");

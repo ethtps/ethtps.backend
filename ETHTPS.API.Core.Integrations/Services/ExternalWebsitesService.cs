@@ -19,13 +19,13 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             lock (_context.LockObj)
             {
                 var links = _context.ProviderLinks.ToList()
-                    .Where(x => x.Provider.Name.LossyCompareTo(providerName));
+                    .Where(x => x.Provider != null ? x.Provider.Name == providerName : false);
                 return links
                     .Select(link => new ProviderExternalWebsite()
                     {
-                        Category = link.ExternalWebsite.CategoryNavigation.Id,
-                        Name = link.ExternalWebsite.Name,
-                        IconBase64 = (link.ExternalWebsite.IconBase64.Length == 0) ? null : link.ExternalWebsite.IconBase64,
+                        Category = link.ExternalWebsite?.CategoryNavigation.Id ?? 1,
+                        Name = link.ExternalWebsite?.Name,
+                        IconBase64 = (link.ExternalWebsite?.IconBase64.Length == 0) ? null : link.ExternalWebsite?.IconBase64,
                         Url = link.Link
                     });
             }

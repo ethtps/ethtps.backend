@@ -13,6 +13,7 @@ using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
 using ETHTPS.Data.Core.Extensions;
+using ServiceStack;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {
@@ -21,14 +22,12 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
         private readonly ITPSService _tpsService;
         private readonly IGPSService _gpsService;
         private readonly IGTPSService _gasAdjustedTPSService;
-        private readonly IDataUpdaterStatusService _dataUpdaterStatusService;
 
-        public GeneralService(ITPSService tpsService, IGPSService gpsService, IGTPSService gasAdjustedTPSService, EthtpsContext context, IEnumerable<IHistoricalDataProvider> historicalDataServices, IDataUpdaterStatusService dataUpdaterStatusService) : base(context, historicalDataServices)
+        public GeneralService(ITPSService tpsService, IGPSService gpsService, IGTPSService gasAdjustedTPSService, EthtpsContext context, IEnumerable<IHistoricalDataProvider> historicalDataServices, IDataUpdaterStatusService dataUpdaterStatusService) : base(context, historicalDataServices, dataUpdaterStatusService)
         {
             _tpsService = tpsService;
             _gpsService = gpsService;
             _gasAdjustedTPSService = gasAdjustedTPSService;
-            _dataUpdaterStatusService = dataUpdaterStatusService;
         }
 
 
@@ -45,33 +44,13 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 
         public IEnumerable<TimeInterval> Intervals() => TimeIntervals();
 
-        public IEnumerable<ProviderResponseModel> Providers()
-        {
-            IEnumerable<ProviderResponseModel> result;
-            lock (Context.LockObj)
-            {
-                result = Context.Providers.ToList().Where(x => x.Enabled).Select(x => new ProviderResponseModel()
-                {
-                    Name = x.Name,
-                    Type = x.TypeNavigation.Name,
-                    Color = x.Color,
-                    TheoreticalMaxTPS = x.TheoreticalMaxTps,
-                    IsGeneralPurpose = x.IsGeneralPurpose ?? x.TypeNavigation.IsGeneralPurpose,
-                    IsSubchainOf = x.SubchainOfNavigation?.Name,
-                    Status = _dataUpdaterStatusService.GetStatusFor(x.Name, UpdaterType.BlockInfo)
-                });
-            }
-            return result;
-        }
-
         public IEnumerable<ProviderResponseModel> Providers(string subchainsOf)
         {
-            IEnumerable<ProviderResponseModel> list = Providers();
             if (string.IsNullOrWhiteSpace(subchainsOf) || subchainsOf.LossyCompareTo(Constants.All))
             {
-                return list;
+                return AllProviders;
             }
-            return Enumerable.Where(list, x => x.Name.LossyCompareTo(subchainsOf));
+            return Enumerable.Where(AllProviders, x => x.Name.LossyCompareTo(subchainsOf));
         }
 
         public IDictionary<string, string> ColorDictionary()
@@ -79,7 +58,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             IDictionary<string, string> result;
             lock (Context.LockObj)
             {
-                result = Context.Providers.Where(x => x.Enabled).ToDictionary(x => x.Name, x => x.Color);
+                result = AllProviders.Select(x => new{x.Name,x.Color,x.Enabled }).Where(x => x.Enabled).ToDictionary(x => x.Name, x => x.Color);
             }
             return result;
         }
@@ -213,10 +192,10 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             };
             return new AllDataModel()
             {
-                Providers = Context.Providers.Select(x => new ProviderModel()
+                Providers = AllProviders.Select(x => new ProviderModel()
                 {
                     Name = x.Name,
-                    Type = x.TypeNavigation.Name
+                    Type = x.Type != null ? x.Type : string.Empty
                 }).ToArray(),
                 AllTPSData = Intervals().Select(interval => new { interval, data = _tpsService.Get(allDataModel, interval) }).ToDictionary(x => x.interval, x => x.data),
                 MaxData = Max(allDataModel),
@@ -232,8 +211,8 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             return new HomePageViewModel()
             {
                 InstantTPS = await InstantTPSAsync(),
-                ColorDictionary = _context.Providers.ToDictionary(x => x.Name, x => x.Color),
-                ProviderData = _context.Providers.Select(x => new ProviderInfo()
+                ColorDictionary = _Providers.ToDictionary(x => x.Name, x => x.Color),
+                ProviderData = _Providers.Select(x => new ProviderInfo()
                 {
                     Name = x.Name,
                     MaxTPS = MaxTPS(x.Name).FirstOrDefaultOrDefault().Data.FirstOrDefaultOrDefault().TPS,

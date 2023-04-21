@@ -1,5 +1,4 @@
-﻿using Castle.Components.DictionaryAdapter.Xml;
-
+﻿
 using ETHTPS.Configuration;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Extensions;
@@ -15,6 +14,7 @@ using InfluxDB.Client.Api.Domain;
 using Microsoft.Extensions.Logging;
 
 using System.Diagnostics;
+using ETHTPS.Data.Core.Attributes;
 
 namespace ETHTPS.Data.Integrations.InfluxIntegration
 {

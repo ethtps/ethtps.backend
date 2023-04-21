@@ -11,11 +11,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Hangfire;
-using ETHTPS.Services.BlockchainServices.Extensions;
+using ETHTPS.Data.Core.Attributes;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.TimeBuckets;
-using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+using ETHTPS.Data.Core.BlockInfo;
 using InfluxDB.Client.Api.Domain;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
+using ETHTPS.Services.BlockchainServices.Extensions;
 
 namespace ETHTPS.Services.BlockchainServices.Status
 {

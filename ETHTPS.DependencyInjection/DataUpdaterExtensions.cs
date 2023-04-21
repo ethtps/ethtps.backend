@@ -6,12 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using static ETHTPS.API.Core.Constants;
 using ETHTPS.Services.Infrastructure.Extensions;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
-using ETHTPS.API.Core.Integrations.MSSQL.Services.Updater;
 using Hangfire;
 using ETHTPS.Services.BlockchainServices.Status.BackgroundTasks.Discord;
 using ETHTPS.Services.BlockchainServices.Status;
 using ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets.Extensions;
-using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Services.Ethereum.JSONRPC.Infura;
 using ETHTPS.Services.Ethereum.JSONRPC.Generic;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
@@ -22,6 +21,7 @@ using Coravel.Scheduling.Schedule;
 using Coravel.Scheduling.Schedule.Interfaces;
 using ETHTPS.Services.Attributes;
 using System.Reflection;
+using ETHTPS.API.Core.Integrations.MSSQL.Services.Updater;
 
 namespace ETHTPS.API.DependencyInjection
 {
@@ -131,6 +131,7 @@ namespace ETHTPS.API.DependencyInjection
                             {
                                 interval?.EveryFifteenSeconds();
                             }
+                            Console.WriteLine($"Registered {loggerType.Name}<{loggerType.GetGenericArguments()[0].Name}>");
                         }
                     });
                 }

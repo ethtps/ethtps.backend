@@ -1,9 +1,13 @@
 ﻿using ETHTPS.Data.Core.Models.DataUpdater;
 
+using Newtonsoft.Json;
+
 namespace ETHTPS.Data.ResponseModels
 {
-    public class ProviderResponseModel
+    public class ProviderResponseModel 
     {
+        [JsonIgnore]
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Color { get; set; }
         public int TheoreticalMaxTPS { get; set; }
@@ -11,5 +15,7 @@ namespace ETHTPS.Data.ResponseModels
         public bool IsGeneralPurpose { get; set; }
         public string? IsSubchainOf { get; set; }
         public IBasicLiveUpdaterStatus? Status { get; set; }
+        [JsonIgnore]
+        public bool Enabled { get; set; }
     }
 }

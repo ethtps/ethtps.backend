@@ -27,5 +27,5 @@ public partial class Provider
 
     public virtual ICollection<ProviderConfigurationString> ProviderConfigurationStrings { get; } = new List<ProviderConfigurationString>();
 
-    public virtual Provider? SubchainOfNavigation { get; set; }
+    public virtual Provider? SubchainOfNavigation { get; set; } = new();
 }

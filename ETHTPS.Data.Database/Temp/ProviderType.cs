@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ETHTPS.Data.Integrations.MSSQL.Temp;
-
-public partial class ProviderType
+namespace ETHTPS.Data.Integrations.MSSQL.Temp
 {
-    public int Id { get; set; }
+    public partial class ProviderType
+    {
+        public ProviderType()
+        {
+            Providers = new HashSet<Provider>();
+        }
 
-    public string Name { get; set; } = null!;
+        public int Id { get; set; }
+        public string Name { get; set; } = null!;
+        public string Color { get; set; } = null!;
+        public bool IsGeneralPurpose { get; set; }
+        public bool Enabled { get; set; }
 
-    public string Color { get; set; } = null!;
-
-    public bool IsGeneralPurpose { get; set; }
-
-    public bool Enabled { get; set; }
-
-    public virtual ICollection<Provider> Providers { get; } = new List<Provider>();
+        public virtual ICollection<Provider> Providers { get; set; }
+    }
 }

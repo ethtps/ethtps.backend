@@ -7,7 +7,7 @@ using static ETHTPS.API.Core.Constants;
 using ETHTPS.Services.Infrastructure.Extensions;
 using ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices;
 using ETHTPS.Services.Ethereum.JSONRPC.Infura;
-using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Integrations.InfluxIntegration.HistoricalDataServices;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ETHTPS.Data.Integrations.InfluxIntegration;

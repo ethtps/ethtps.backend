@@ -11,7 +11,7 @@ public partial class ApikeyExperimentBinding
 
     public int ApikeyId { get; set; }
 
-    public virtual Apikey Apikey { get; set; }
+    public virtual Apikey? Apikey { get; set; }
 
-    public virtual Experiment Experiment { get; set; }
+    public virtual Experiment? Experiment { get; set; }
 }

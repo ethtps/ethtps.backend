@@ -13,7 +13,7 @@ public partial class DataUpdater
 
     public virtual ICollection<LiveDataUpdaterStatus> LiveDataUpdaterStatuses { get; } = new List<LiveDataUpdaterStatus>();
 
-    public virtual Provider Provider { get; set; } = null!;
+    public virtual Provider? Provider { get; set; } = null!;
 
-    public virtual DataUpdaterType Type { get; set; } = null!;
+    public virtual DataUpdaterType? Type { get; set; } = null!;
 }

@@ -1,4 +1,5 @@
 ﻿using ETHTPS.Configuration.Database;
+using ETHTPS.Data.Core.Extensions;
 
 namespace ETHTPS.Configuration
 {
@@ -10,12 +11,10 @@ namespace ETHTPS.Configuration
         public DBConfigurationProvider(ConfigurationContext context, string environment = Constants
             .ENVIRONMENT)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
             if (_context?.Environments == null)
                 throw new ArgumentNullException(nameof(_context.Environments));
 
-            _context = context;
             _environment = environment;
             AddEnvironments(environment);
             lock (_context.LockObj)
@@ -30,9 +29,9 @@ namespace ETHTPS.Configuration
         {
             lock (_context.LockObj)
             {
-                var existing = _context.Environments.Select(x => x.Name).ToList();
-                var toAdd = environments.Where(x => !existing.Contains(x));
-                _context.Environments.AddRange(toAdd.Select(x => new Database.Environment()
+                var existing = _context.Environments?.Select(x => x.Name).ToList();
+                var toAdd = environments?.Where(x => !existing.Contains(x));
+                _context.Environments?.AddRange(toAdd.SafeSelect(x => new Database.Environment()
                 {
                     Name = x
                 }));
@@ -79,6 +78,12 @@ namespace ETHTPS.Configuration
                 return _context.MicroserviceConfigurationStrings
                     .Where(x => x.Microservice.Name.ToUpper() == microserviceName.ToUpper() && x.Environment.Name.ToUpper() == _environment.ToUpper() || x.Environment.Name.ToUpper() == "ALL")
                     .Select(x => (IConfigurationString)x.ConfigurationString)
+                    .WhereNotNull()
+                    .Select(x => new ConfigurationString()
+                    {
+                        Name = x.Name,
+                        Value = x.Value
+                    })
                     .ToList();
             }
         }
@@ -89,6 +94,7 @@ namespace ETHTPS.Configuration
             {
                 return _context.ProviderConfigurationStrings
                     .Where(x => x.Provider.Name.ToUpper() == provider.ToUpper() && x.Environment.Name.ToUpper() == _environment.ToUpper() || x.Environment.Name.ToUpper() == "ALL")
+                    .WhereNotNull()
                     .Select(x => (IConfigurationString)x.ConfigurationString)
                     .ToList();
             }
