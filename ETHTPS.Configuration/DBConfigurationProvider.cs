@@ -1,5 +1,8 @@
 ﻿using ETHTPS.Configuration.Database;
+using ETHTPS.Configuration.Validation;
 using ETHTPS.Data.Core.Extensions;
+
+using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Configuration
 {
@@ -8,7 +11,7 @@ namespace ETHTPS.Configuration
         private readonly ConfigurationContext _context;
         private readonly string _environment;
         private readonly int _environmentID;
-        public DBConfigurationProvider(ConfigurationContext context, string environment = Constants
+        public DBConfigurationProvider(ConfigurationContext context, ILogger<ConfigurationValidator>? logger, string environment = Constants
             .ENVIRONMENT)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -21,6 +24,8 @@ namespace ETHTPS.Configuration
             {
                 _environmentID = _context.Environments.First(x => x.Name.ToUpper() == environment.ToUpper()).Id;
             }
+            var validator = new ConfigurationValidator(context, logger);
+            validator.ThrowIfConfigurationInvalid();
         }
 
         IDBConfigurationProvider IDBConfigurationProvider.this[string environment] { get => new DBConfigurationProvider(this._context, environment); }
