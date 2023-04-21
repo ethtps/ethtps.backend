@@ -9,16 +9,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="Startup.json" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="Startup.json">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="BetterConsoleTables" Version="2.0.4-rc1" />
 		<PackageReference Include="Goblinfactory.Konsole" Version="7.0.0.7-alpha" />
 		<PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.3" />

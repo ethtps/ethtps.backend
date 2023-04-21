@@ -1,5 +1,6 @@
 ﻿using ETHTPS.Configuration.Extensions;
 using ETHTPS.Data.Core.Database;
+using ETHTPS.Data.Core.Database.Relational;
 using Microsoft.EntityFrameworkCore;
 
 namespace ETHTPS.Configuration.Database;

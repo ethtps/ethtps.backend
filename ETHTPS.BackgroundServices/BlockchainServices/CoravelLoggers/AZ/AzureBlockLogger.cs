@@ -1,7 +1,8 @@
-using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.Data.Integrations.InfluxIntegration;
 using Microsoft.Extensions.Logging;
+using ETHTPS.Data.Core.Attributes;
 
 namespace ETHTPS.Services.BlockchainServices.CoravelLoggers.AZ
 {

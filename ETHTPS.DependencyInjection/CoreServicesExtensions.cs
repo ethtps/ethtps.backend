@@ -17,13 +17,15 @@ using static ETHTPS.Data.Core.Constants.EnvironmentVariables;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
 
 namespace ETHTPS.API.DependencyInjection
 {
     public static partial class CoreServicesExtensions
     {
         public static IServiceCollection AddMixedCoreServices(this IServiceCollection services) =>
-            services.AddEssentialServices()
+            services
             .AddScoped<GeneralService>()
             .AddScoped<TimeWarpService>()
             .AddScoped<EthereumBlockTimeProvider>()
@@ -56,7 +58,8 @@ namespace ETHTPS.API.DependencyInjection
             return services
                 .AddScoped<IPSDataFormatter, DeedleTimeSeriesFormatter>()
                 .AddScoped<IAggregatedDataService, DependencyInjectionAggregatedDataservice>()
-                .AddScoped<GeneralService>();
+                .AddScoped<GeneralService>()
+                .AddAutoDiscoveredIHTTPBlockInfoProvidersToDatabase();
         }
 
         /// <summary>
@@ -64,7 +67,7 @@ namespace ETHTPS.API.DependencyInjection
         /// </summary>
         public static IServiceCollection AddEssentialServices(this IServiceCollection services) =>
             services.AddScoped<IHumanityCheckService, RecaptchaVerificationService>()
-            .AddDbContext<ConfigurationContext>(options => options.UseSqlServer(GetConfigurationServiceConnectionString()), ServiceLifetime.Singleton)
+            .AddDbContext<ConfigurationContext>(options => options.UseSqlServer(GetConfigurationServiceConnectionString()), ServiceLifetime.Scoped)
             .AddSingleton<IDBConfigurationProvider, DBConfigurationProvider>()
             .AddScoped<IWebsiteStatisticsService, WebsiteStatisticsService>();
 

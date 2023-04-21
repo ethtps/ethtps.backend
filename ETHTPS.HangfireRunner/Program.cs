@@ -10,6 +10,7 @@ using NLog.Extensions.Hosting;
 using ETHTPS.Configuration;
 using ETHTPS.Data.Integrations.InfluxIntegration;
 using Coravel;
+using ETHTPS.Data.Core.BlockInfo;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseNLog();

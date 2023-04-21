@@ -2,6 +2,7 @@
 
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.Data.Core.Models.DataPoints.XYPoints;

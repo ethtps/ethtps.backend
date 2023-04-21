@@ -1,7 +1,11 @@
 ﻿using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
-namespace ETHTPS.API.BIL.Infrastructure.Services.BlockInfo
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace ETHTPS.Data.Core.BlockInfo
 {
     public interface IAsyncHistoricalBlockInfoProvider
     {

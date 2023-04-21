@@ -1,6 +1,9 @@
 ﻿using ETHTPS.Data.Core.Models.DataEntries;
 
-namespace ETHTPS.Services.BlockchainServices
+using System;
+using System.Threading.Tasks;
+
+namespace ETHTPS.Data.Core.BlockInfo
 {
     /// <summary>
     /// Provides information about blocks.
