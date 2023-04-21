@@ -1,4 +1,5 @@
 ﻿using ETHTPS.API.BIL.Infrastructure.Services;
+using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
 using ETHTPS.API.BIL.Infrastructure.Services.ChartData;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
@@ -12,13 +13,12 @@ using ETHTPS.API.Security.Core.Humanity.Recaptcha;
 using ETHTPS.Configuration;
 using ETHTPS.Configuration.Database;
 using ETHTPS.Services.BlockchainServices.BlockTime;
-using static ETHTPS.Data.Core.Extensions.EnvironmentExtensions;
-using static ETHTPS.Data.Core.Constants.EnvironmentVariables;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using ETHTPS.Data.Core.BlockInfo;
-using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+
+using static ETHTPS.Data.Core.Constants.EnvironmentVariables;
+using static ETHTPS.Data.Core.Extensions.EnvironmentExtensions;
 
 namespace ETHTPS.API.DependencyInjection
 {
@@ -69,7 +69,7 @@ namespace ETHTPS.API.DependencyInjection
         public static IServiceCollection AddEssentialServices(this IServiceCollection services) =>
             services.AddScoped<IHumanityCheckService, RecaptchaVerificationService>()
             .AddDbContext<ConfigurationContext>(options => options.UseSqlServer(GetConfigurationServiceConnectionString()), ServiceLifetime.Scoped)
-            .AddSingleton<IDBConfigurationProvider, DBConfigurationProvider>()
+            .AddScoped<IDBConfigurationProvider, DBConfigurationProvider>()
             .AddScoped<IWebsiteStatisticsService, WebsiteStatisticsService>();
 
         private static string GetConfigurationServiceConnectionString() => GetEnvVarValue(CONFIGURATION_PROVIDER_CONN_STR);
