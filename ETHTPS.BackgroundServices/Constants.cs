@@ -2,15 +2,15 @@
 {
     public static class CronConstants
     {
-        public const string Every5s = "*/5 * * * * *";
-        public const string Every10s = "*/10 * * * * *";
-        public const string Every13s = "*/13 * * * * *";
-        public const string Every30s = "*/30 * * * * *";
-        public const string EveryMinute = "* * * * *";
-        public const string Every5Minutes = "*/5 * * * *";
-        public const string Every15Minutes = "*/15 * * * *";
-        public const string EveryHour = "0 * * * *";
-        public const string Never = "0 0 5 31 2 ?";
-        public const string EveryMidnight = "0 0 * * *";
+        public const string EVERY_5_S = "*/5 * * * * *";
+        public const string EVERY_10_S = "*/10 * * * * *";
+        public const string EVERY_13_S = "*/13 * * * * *";
+        public const string EVERY_30_S = "*/30 * * * * *";
+        public const string EVERY_MINUTE = "* * * * *";
+        public const string EVERY_5_MINUTES = "*/5 * * * *";
+        public const string EVERY_15_MINUTES = "*/15 * * * *";
+        public const string EVERY_HOUR = "0 * * * *";
+        public const string NEVER = "0 0 5 31 2 ?";
+        public const string EVERY_MIDNIGHT = "0 0 * * *";
     }
 }

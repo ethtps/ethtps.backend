@@ -7,18 +7,18 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
     public class WebsiteStatisticsService : IWebsiteStatisticsService
     {
         private readonly EthtpsContext _context;
-        const string NAME = "CurrentVisitors";
+        const string _NAME = "CurrentVisitors";
         public bool Enabled { get => _context.Experiments.Any(x => x.Name == "Current visitors"); }
         public WebsiteStatisticsService(EthtpsContext context)
         {
             _context = context;
 
-            if (!_context.CachedResponses.Get<int?, CachedResponse>(NAME).HasValue)
+            if (!_context.CachedResponses.Get<int?, CachedResponse>(_NAME).HasValue)
             {
                 _context.CachedResponses.Add(new()
                 {
-                    KeyJson = NAME,
-                    Name = NAME,
+                    KeyJson = _NAME,
+                    Name = _NAME,
                     ValueJson = "0"
                 });
                 _context.SaveChanges();
@@ -29,7 +29,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
         {
             lock (_context.LockObj)
             {
-                return _context.CachedResponses.Get<int, CachedResponse>(NAME);
+                return _context.CachedResponses.Get<int, CachedResponse>(_NAME);
             }
         }
 
@@ -37,7 +37,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
         {
             lock (_context.LockObj)
             {
-                var entry = _context.CachedResponses.First(c => c.Name == NAME);
+                var entry = _context.CachedResponses.First(c => c.Name == _NAME);
                 entry.ValueJson = count.ToString();
                 _context.Update(entry);
                 _context.SaveChanges();

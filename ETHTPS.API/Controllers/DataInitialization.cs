@@ -11,12 +11,10 @@ namespace ETHTPS.API.Controllers
     public class DataInitialization : APIControllerBase
     {
         private readonly PublicDataInitializer _publicDataInitializer;
-        private readonly PrivateDataInitializer _privateDataInitializer;
 
-        public DataInitialization(PublicDataInitializer publicDataInitializer, PrivateDataInitializer privateDataInitializer)
+        public DataInitialization(PublicDataInitializer publicDataInitializer)
         {
             _publicDataInitializer = publicDataInitializer;
-            _privateDataInitializer = privateDataInitializer;
         }
 
         [Route("[action]")]
@@ -24,7 +22,6 @@ namespace ETHTPS.API.Controllers
         public IActionResult Initialize()
         {
             _publicDataInitializer.Initialize();
-            _privateDataInitializer.Initialize();
             return Created(string.Empty, null);
         }
     }

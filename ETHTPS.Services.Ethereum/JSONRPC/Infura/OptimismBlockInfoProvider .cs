@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
 {
     [Provider("Optimism")]
-    [RunsEvery(CronConstants.Every5s)]
+    [RunsEvery(CronConstants.EVERY_5_S)]
     public class OptimismBlockInfoProvider : InfuraBlockInfoProviderBase
     {
         public OptimismBlockInfoProvider(IConfiguration configuration) : base(configuration, "OptimismEndpoint")

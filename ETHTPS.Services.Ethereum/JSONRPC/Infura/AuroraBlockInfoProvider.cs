@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
 {
     [Provider("Aurora")]
-    [RunsEvery(CronConstants.Every30s)]
+    [RunsEvery(CronConstants.EVERY_30_S)]
     public class AuroraBlockInfoProvider : InfuraBlockInfoProviderBase
     {
         public AuroraBlockInfoProvider(IConfiguration configuration) : base(configuration, "AuroraEndpoint")

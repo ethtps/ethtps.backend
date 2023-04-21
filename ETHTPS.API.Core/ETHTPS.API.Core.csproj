@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<Configurations>Debug;Release;Staging</Configurations>
@@ -16,19 +16,19 @@
 		<PackageReference Include="NLog.Extensions.Hosting" Version="5.2.3" />
 		<PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.3" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
-		<PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="7.0.0-rc2.4" />
-		<PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="7.0.0-rc2.4" />
-		<PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="7.0.0-rc2.10" />
+		<PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="7.0.0-rc2.5" />
+		<PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="7.0.0-rc2.5" />
+		<PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="7.0.0-rc2.11" />
 		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="7.0.0-rc2.7" />
-		<PackageReference Include="Google.Protobuf" Version="3.22.1" />
-		<PackageReference Include="Grpc.AspNetCore.Server" Version="2.52.0" />
-		<PackageReference Include="Grpc.Tools" Version="2.53.0">
+		<PackageReference Include="Google.Protobuf" Version="3.22.3" />
+		<PackageReference Include="Grpc.AspNetCore.Server" Version="2.53.0-pre1" />
+		<PackageReference Include="Grpc.Tools" Version="2.54.0">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0-beta2" />
-		<PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.22.0-beta2" />
-		<PackageReference Include="Microsoft.ApplicationInsights.Kubernetes" Version="6.1.0" />
+		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0-beta3" />
+		<PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.22.0-beta3" />
+		<PackageReference Include="Microsoft.ApplicationInsights.Kubernetes" Version="6.1.1-beta3" />
 	</ItemGroup>
 
 	<ItemGroup>

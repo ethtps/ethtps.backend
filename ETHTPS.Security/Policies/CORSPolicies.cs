@@ -5,10 +5,10 @@ namespace ETHTPS.API.Security.Core.Policies
 {
     public static class CORSPolicies
     {
-        private static readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        private static readonly string _myAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public static IServiceCollection AddCustomCORSPolicies(this IServiceCollection services) => services.AddCors(options =>
         {
-            options.AddPolicy(name: MyAllowSpecificOrigins,
+            options.AddPolicy(name: _myAllowSpecificOrigins,
                       builder =>
                       {
                           builder.WithOrigins("https://ethtps.info");
@@ -21,6 +21,6 @@ namespace ETHTPS.API.Security.Core.Policies
                       });
         });
 
-        public static IApplicationBuilder UseCustomCORSPolicies(this IApplicationBuilder app) => app.UseCors(MyAllowSpecificOrigins);
+        public static IApplicationBuilder UseCustomCORSPolicies(this IApplicationBuilder app) => app.UseCors(_myAllowSpecificOrigins);
     }
 }

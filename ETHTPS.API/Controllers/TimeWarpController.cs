@@ -1,15 +1,14 @@
-﻿using ETHTPS.API.Core.Integrations.MSSQL.Services;
-using ETHTPS.Data.Integrations.MSSQL.TimeWarp;
-using ETHTPS.Data.Integrations.MSSQL.TimeWarp.Models;
-using ETHTPS.Data.Core.Models;
-using ETHTPS.Data.Core.Models.Queries.Data.Requests;
-using ETHTPS.Data.Core.Models.DataPoints;
-
-using Microsoft.AspNetCore.Mvc;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
+using ETHTPS.API.Core.Integrations.MSSQL.Services;
+using ETHTPS.Data.Core.Models.DataPoints;
+using ETHTPS.Data.Core.Models.Queries.Data.Requests;
+using ETHTPS.Data.Integrations.MSSQL.TimeWarp;
+using ETHTPS.Data.Integrations.MSSQL.TimeWarp.Models;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Controllers
 {
@@ -17,7 +16,7 @@ namespace ETHTPS.API.Controllers
     public class TimeWarpController
     {
         private readonly TimeWarpService _timeWarpService;
-        private const string DEFAULT_SMOOTHING = "Instant";
+        private const string _DEFAULT_SMOOTHING = "Instant";
         public TimeWarpController(TimeWarpService timeWarpService)
         {
             _timeWarpService = timeWarpService;
@@ -30,13 +29,13 @@ namespace ETHTPS.API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<DataPoint> GetGasAdjustedTPSAt(ProviderQueryModel model, long timestamp, string smoothing = DEFAULT_SMOOTHING, int count = 30)
+        public IEnumerable<DataPoint> GetGasAdjustedTPSAt(ProviderQueryModel model, long timestamp, string smoothing = _DEFAULT_SMOOTHING, int count = 30)
         {
             return ((ITimeWarpService)_timeWarpService).GetGasAdjustedTPSAt(model, timestamp, smoothing, count);
         }
 
         [HttpGet]
-        public IEnumerable<DataPoint> GetGPSAt(ProviderQueryModel model, long timestamp, string smoothing = DEFAULT_SMOOTHING, int count = 30)
+        public IEnumerable<DataPoint> GetGPSAt(ProviderQueryModel model, long timestamp, string smoothing = _DEFAULT_SMOOTHING, int count = 30)
         {
             return ((ITimeWarpService)_timeWarpService).GetGPSAt(model, timestamp, smoothing, count);
         }
@@ -48,7 +47,7 @@ namespace ETHTPS.API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<DataPoint> GetTPSAt(ProviderQueryModel model, long timestamp, string smoothing = DEFAULT_SMOOTHING, int count = 30)
+        public IEnumerable<DataPoint> GetTPSAt(ProviderQueryModel model, long timestamp, string smoothing = _DEFAULT_SMOOTHING, int count = 30)
         {
             return ((ITimeWarpService)_timeWarpService).GetTPSAt(model, timestamp, smoothing, count);
         }

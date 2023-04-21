@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
 {
     [Provider("AVAX C-chain")]
-    [RunsEvery(CronConstants.Every30s)]
+    [RunsEvery(CronConstants.EVERY_30_S)]
     public class AVAXBlockInfoProvider : InfuraBlockInfoProviderBase
     {
         public AVAXBlockInfoProvider(IConfiguration configuration) : base(configuration, "AVAXEndpoint")

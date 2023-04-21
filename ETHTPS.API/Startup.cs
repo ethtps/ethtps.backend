@@ -1,26 +1,27 @@
 
 
+using Coravel;
+
+using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+using ETHTPS.API.Core.Middlewares;
+using ETHTPS.API.DependencyInjection;
+using ETHTPS.API.Security.Core.Authentication;
+using ETHTPS.API.Security.Core.Policies;
+using ETHTPS.Configuration.Database;
+using ETHTPS.Services.BackgroundTasks.Recurring.Aggregated;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ETHTPS.Configuration.Extensions;
-using ETHTPS.Configuration.Database;
-using ETHTPS.API.Core.Middlewares;
-using ETHTPS.API.Security.Core.Policies;
-using ETHTPS.API.DependencyInjection;
-using ETHTPS.API.Security.Core.Authentication;
-using Coravel;
-using ETHTPS.Services.BackgroundTasks.Recurring.Aggregated;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 
 namespace ETHTPS.API
 {
     public class Startup
     {
-        private readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-        const string APP_NAME = "ETHTPS.API.General";
+        private readonly string _myAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        private readonly string _appName = "ETHTPS.API.General";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -31,7 +32,7 @@ namespace ETHTPS.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddEssentialServices();
-            services.AddDatabaseContext(APP_NAME);
+            services.AddDatabaseContext(_appName);
             services.AddCustomCORSPolicies();
 
             services.AddControllersWithViews()
@@ -52,8 +53,7 @@ namespace ETHTPS.API
             services.AddDataUpdaterStatusService();
 
 #if DEBUG
-            services.AddScoped<PublicDataInitializer>()
-                    .AddScoped<PrivateDataInitializer>();
+            services.AddScoped<PublicDataInitializer>();
 #endif
         }
 
@@ -69,7 +69,7 @@ namespace ETHTPS.API
             app.ConfigureSwagger();
             app.UseRouting();
             app.UseAuthorization();
-            app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors(_myAllowSpecificOrigins);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers().RequireAuthorization();

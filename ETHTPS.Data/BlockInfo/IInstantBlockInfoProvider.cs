@@ -2,7 +2,7 @@
 
 using System.Threading.Tasks;
 
-namespace ETHTPS.Services.BlockchainServices
+namespace ETHTPS.Data.Core.BlockInfo
 {
     /// <summary>
     /// Provides information about blocks.

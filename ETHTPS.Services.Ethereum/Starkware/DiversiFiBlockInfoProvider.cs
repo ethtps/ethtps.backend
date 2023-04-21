@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 namespace ETHTPS.Services.Ethereum.Starkware
 {
     [Provider("DeversiFi")]
-    [RunsEvery(CronConstants.Every30s)]
+    [RunsEvery(CronConstants.EVERY_30_S)]
     public class DeversiFIHTTPBlockInfoProvider : StarkwareBlockInfoProviderBase
     {
         public DeversiFIHTTPBlockInfoProvider(EthtpsContext context, IConfiguration configuration) : base(Products.DeversiFi, context, configuration)

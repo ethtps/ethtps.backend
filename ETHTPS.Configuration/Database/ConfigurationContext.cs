@@ -1,5 +1,6 @@
 ﻿using ETHTPS.Configuration.Extensions;
 using ETHTPS.Data.Core.Database;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace ETHTPS.Configuration.Database;
@@ -31,6 +32,7 @@ public partial class ConfigurationContext : ContextBase<ConfigurationContext>
 
 
     public virtual DbSet<ProviderConfigurationString>? ProviderConfigurationStrings { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ConfigurationString>(entity =>

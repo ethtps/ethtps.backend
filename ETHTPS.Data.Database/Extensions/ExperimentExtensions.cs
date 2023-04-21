@@ -4,7 +4,7 @@ namespace ETHTPS.Data.Integrations.MSSQL.Extensions
 {
     public static class ExperimentExtensions
     {
-        private static Random Random = new();
+        private static Random _random = new();
         public static IEnumerable<Experiment> GetExperimentsForDeviceType(this EthtpsContext context, string deviceType)
         {
             lock (context.LockObj)
@@ -36,7 +36,7 @@ namespace ETHTPS.Data.Integrations.MSSQL.Extensions
             // Others only sometimes
             if (experiment.RunParametersNavigation.EnrollmentChance != null)
             {
-                if (Random.Next(100) <= experiment.RunParametersNavigation.EnrollmentChance)
+                if (_random.Next(100) <= experiment.RunParametersNavigation.EnrollmentChance)
                 {
                     return true;
                 }

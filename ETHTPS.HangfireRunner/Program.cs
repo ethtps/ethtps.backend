@@ -10,23 +10,26 @@ using NLog.Extensions.Hosting;
 using ETHTPS.Configuration;
 using ETHTPS.Data.Integrations.InfluxIntegration;
 using Coravel;
+using ETHTPS.Data.Core.BlockInfo;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseNLog();
 var services = builder.Services;
-services.AddDatabaseContext(CURRENT_APP_NAME)
+services.AddEssentialServices()
+        .AddDatabaseContext(CURRENT_APP_NAME)
         .AddDataProviderServices(DatabaseProvider.MSSQL)
         .AddMixedCoreServices()
         .AddCustomCORSPolicies()
         .AddAPIKeyAuthenticationAndAuthorization()
-        .AddControllers().AddControllersAsServices();
+        .AddControllers()
+        .AddControllersAsServices();
 
 services.AddSwagger()
         .AddScoped<IInfluxWrapper, InfluxWrapper>()
         .AddDataUpdaterStatusService()
         .AddDataServices()
-        .WithStore(DatabaseProvider.InfluxDB)
-        .AddRunner(BackgroundServiceType.Coravel)
+        .WithStore(DatabaseProvider.MSSQL)
+        .AddRunner(BackgroundServiceType.Coravel);
         ;//.RegisterMicroservice(CURRENT_APP_NAME, "Task runner web app");
 
 var app = builder.Build();
