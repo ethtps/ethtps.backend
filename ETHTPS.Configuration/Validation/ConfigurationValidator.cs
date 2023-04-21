@@ -1,4 +1,6 @@
-﻿using ETHTPS.Configuration.Database;
+﻿using System.Reflection;
+
+using ETHTPS.Configuration.Database;
 using ETHTPS.Configuration.Validation.Exceptions;
 using ETHTPS.Configuration.Validation.Models;
 
@@ -22,12 +24,13 @@ namespace ETHTPS.Configuration.Validation
 
         public ConfigurationValidator(ConfigurationContext context, ILogger<ConfigurationValidator>? logger)
         {
-            if (!File.Exists(STARTUP_CONFIG_FILENAME))
-                throw new ConfigurationNotFoundException("No startup configuration found", STARTUP_CONFIG_FILENAME);
+            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, STARTUP_CONFIG_FILENAME);
+            if (!File.Exists(path))
+                throw new ConfigurationNotFoundException($"No startup configuration file found ({path})", STARTUP_CONFIG_FILENAME);
 
-            _startupConfiguration = JsonConvert.DeserializeObject<StartupConfigurationModel>(File.ReadAllText(STARTUP_CONFIG_FILENAME));
+            _startupConfiguration = JsonConvert.DeserializeObject<StartupConfigurationModel>(File.ReadAllText(path));
             if (_startupConfiguration == null)
-                throw new ConfigurationNotFoundException("Couldn't load configuration", STARTUP_CONFIG_FILENAME);
+                throw new ConfigurationNotFoundException("Couldn't load configuration", path);
 
             _context = context;
             _logger = logger;

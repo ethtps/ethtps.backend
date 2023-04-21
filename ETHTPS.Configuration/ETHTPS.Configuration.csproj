@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="StartupConfigStrings.json" />
+    <None Remove="StartupConfig.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="StartupConfigStrings.json">
+    <Content Include="StartupConfig.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -12,8 +12,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6FC336E8-1CA6-4FFD-A769-9C4A9968A323}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		.env.development = .env.development
 		files\nlog.config = files\nlog.config
+		.env = .env
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{9DDB3A6B-7733-4BAF-B4D1-AD629B8AA54D}"
@@ -84,7 +84,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{7EB5DE8C-E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETHTPS.Utils", "ETHTPS.Utils\ETHTPS.Utils.csproj", "{522F298A-300A-4982-855A-F4FD35E1C65F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETHTPS.WSAPI", "ETHTPS.WSAPI\ETHTPS.WSAPI\ETHTPS.WSAPI.csproj", "{4C3674A9-E84F-43BE-9D04-E8CA0A1C0AE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ETHTPS.WSAPI", "ETHTPS.WSAPI\ETHTPS.WSAPI\ETHTPS.WSAPI.csproj", "{4C3674A9-E84F-43BE-9D04-E8CA0A1C0AE2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

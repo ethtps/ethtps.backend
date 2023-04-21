@@ -1,5 +1,4 @@
-﻿using ETHTPS.Data.Core.BlockInfo;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.DependencyInjection;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Integrations.InfluxIntegration;
@@ -31,7 +30,8 @@ namespace ETHTPS.Tests
                     .AddDataUpdaterStatusService()
                     .AddScoped<IInfluxWrapper, InfluxWrapper>()
                     .AddScoped<IAsyncHistoricalBlockInfoProvider, HistoricalInfluxProvider>()
-                    .AddMSSQLHistoricalDataServices();
+                    .AddMSSQLHistoricalDataServices()
+                    .AddDataProviderServices(DatabaseProvider.MSSQL);
             ServiceProvider = services.BuildServiceProvider();
         }
     }

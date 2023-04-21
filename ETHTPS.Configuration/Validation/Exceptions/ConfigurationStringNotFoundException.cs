@@ -3,12 +3,14 @@
     public class ConfigurationStringNotFoundException : Exception
     {
         public string ConfigurationStringName { get; private set; }
-        public string MicroverviceName { get; set; }
+        public string MicroserviceName { get; set; }
 
-        public ConfigurationStringNotFoundException(string configurationStringName, string microverviceName)
+        public ConfigurationStringNotFoundException(string configurationStringName, string microserviceName)
         {
             ConfigurationStringName = configurationStringName;
-            MicroverviceName = microverviceName;
+            MicroserviceName = microserviceName;
         }
+
+        public override string Message => $"Configuration string {ConfigurationStringName} for {MicroserviceName} not found";
     }
 }

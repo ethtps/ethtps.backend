@@ -366,3 +366,4 @@ MigrationBackup/
 .ionide/
 /ETHTPS.Configuration/Database/Initialization/PrivateDataInitializer.cs
 ETHTPS.Runner/Startup.json
+.env

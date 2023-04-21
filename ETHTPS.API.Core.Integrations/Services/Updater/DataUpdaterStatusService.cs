@@ -1,7 +1,7 @@
-﻿using ETHTPS.Data.Core.Models.DataUpdater;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.ProviderSpecific;
 using ETHTPS.Data.Core.Extensions;
+using ETHTPS.Data.Core.Models.DataUpdater;
 using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Data.Integrations.MSSQL.Extensions;
 

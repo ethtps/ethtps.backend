@@ -8,5 +8,7 @@
         {
             Microservices = microservices;
         }
+
+        public override string Message => $"The following microservices were not found: {string.Join(", ", Microservices)}";
     }
 }

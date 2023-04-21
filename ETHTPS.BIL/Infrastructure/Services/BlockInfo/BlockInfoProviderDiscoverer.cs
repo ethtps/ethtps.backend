@@ -1,11 +1,11 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+﻿using System.Reflection;
+
+using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Integrations.MSSQL;
 
 using Microsoft.Extensions.DependencyInjection;
-
-using System.Reflection;
 
 namespace ETHTPS.API.BIL.Infrastructure.Services.BlockInfo
 {
@@ -22,17 +22,20 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.BlockInfo
 
         public static IServiceCollection AddAutoDiscoveredIHTTPBlockInfoProvidersToDatabase(this IServiceCollection services)
         {
-            var providers = GetBlockInfoProviders("ETHTPS.Services.Ethereum.dll");
-            using (var provider = services.BuildServiceProvider())
+            var providers = GetBlockInfoProviders(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, "ETHTPS.Services.Ethereum.dll"));
+            if (providers != null && providers.Any())
             {
-                var context = provider.GetRequiredService<EthtpsContext>();
-                var statusService = provider.GetRequiredService<IDataUpdaterStatusService>();
-                foreach(var p in providers)
+                using (var provider = services.BuildServiceProvider())
                 {
-                    // BlockInfo means both historical and TPSGPS
-                    statusService.SetStatusFor(p.GetProviderName(), Data.Core.Models.DataUpdater.UpdaterType.BlockInfo, Data.Core.Models.DataUpdater.UpdaterStatus.Idle);
-                    statusService.SetStatusFor(p.GetProviderName(), Data.Core.Models.DataUpdater.UpdaterType.Historical, Data.Core.Models.DataUpdater.UpdaterStatus.Idle);
-                    statusService.SetStatusFor(p.GetProviderName(), Data.Core.Models.DataUpdater.UpdaterType.TPSGPS, Data.Core.Models.DataUpdater.UpdaterStatus.Idle);
+                    var context = provider.GetRequiredService<EthtpsContext>();
+                    var statusService = provider.GetRequiredService<IDataUpdaterStatusService>();
+                    foreach (var p in providers)
+                    {
+                        // BlockInfo means both historical and TPSGPS
+                        statusService.SetStatusFor(p.GetProviderName(), Data.Core.Models.DataUpdater.UpdaterType.BlockInfo, Data.Core.Models.DataUpdater.UpdaterStatus.Idle);
+                        //statusService.SetStatusFor(p.GetProviderName(), Data.Core.Models.DataUpdater.UpdaterType.Historical, Data.Core.Models.DataUpdater.UpdaterStatus.Idle);
+                        //statusService.SetStatusFor(p.GetProviderName(), Data.Core.Models.DataUpdater.UpdaterType.TPSGPS, Data.Core.Models.DataUpdater.UpdaterStatus.Idle);
+                    }
                 }
             }
             return services;
