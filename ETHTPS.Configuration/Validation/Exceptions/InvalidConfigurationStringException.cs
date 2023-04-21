@@ -15,5 +15,7 @@
             ConfigurationStringName = configurationStringName;
             Reason = reason;
         }
+
+        public override string Message => $"Error: {ConfigurationStringName} {Reason}";
     }
 }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("Polygon Hermez")]
-    [RunsEvery(CronConstants.Every13s)]
+    [RunsEvery(CronConstants.EVERY_13_S)]
     public class PolygonHermezBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient = new HttpClient();

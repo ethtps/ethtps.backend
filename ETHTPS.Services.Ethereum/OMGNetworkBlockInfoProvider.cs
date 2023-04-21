@@ -11,7 +11,7 @@ using ETHTPS.Services.Attributes;
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("OMG Network")]
-    [RunsEvery(CronConstants.Every13s)]
+    [RunsEvery(CronConstants.EVERY_13_S)]
     public class OMGNetworkBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;

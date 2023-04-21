@@ -8,9 +8,9 @@ namespace ETHTPS.Tests.ServiceTests
     public class DataUpdaterService : TestBase
     {
         private IDataUpdaterStatusService? _statusService;
-        private const string TEST_PROVIDER_NAME = "Ethereum";
-        private const UpdaterType TEST_UPDATERTYPE_NAME = UpdaterType.BlockInfo;
-        private const UpdaterStatus TEST_STATUS = UpdaterStatus.InTest;
+        private const string _TEST_PROVIDER_NAME = "Ethereum";
+        private const UpdaterType _TEST_UPDATERTYPE_NAME = UpdaterType.BlockInfo;
+        private const UpdaterStatus _TEST_STATUS = UpdaterStatus.InTest;
 
         [SetUp]
         public void Setup()
@@ -34,33 +34,33 @@ namespace ETHTPS.Tests.ServiceTests
             });
             Assert.DoesNotThrow(() =>
             {
-                _statusService?.GetStatusFor(TEST_PROVIDER_NAME);
+                _statusService?.GetStatusFor(_TEST_PROVIDER_NAME);
             });
             Assert.DoesNotThrow(() =>
             {
-                _statusService?.GetStatusFor(TEST_PROVIDER_NAME, TEST_UPDATERTYPE_NAME);
+                _statusService?.GetStatusFor(_TEST_PROVIDER_NAME, _TEST_UPDATERTYPE_NAME);
             });
             Assert.DoesNotThrow(() =>
             {
-                _statusService?.IncrementNumberOfFailures(TEST_PROVIDER_NAME, TEST_UPDATERTYPE_NAME);
+                _statusService?.IncrementNumberOfFailures(_TEST_PROVIDER_NAME, _TEST_UPDATERTYPE_NAME);
             });
             Assert.DoesNotThrow(() =>
             {
-                _statusService?.IncrementNumberOfSuccesses(TEST_PROVIDER_NAME, TEST_UPDATERTYPE_NAME);
+                _statusService?.IncrementNumberOfSuccesses(_TEST_PROVIDER_NAME, _TEST_UPDATERTYPE_NAME);
             });
             Assert.DoesNotThrow(() =>
             {
-                _statusService?.MarkAsRanSuccessfully(TEST_PROVIDER_NAME, TEST_UPDATERTYPE_NAME);
+                _statusService?.MarkAsRanSuccessfully(_TEST_PROVIDER_NAME, _TEST_UPDATERTYPE_NAME);
             });
             Assert.DoesNotThrow(() =>
             {
-                _statusService?.MarkAsFailed(TEST_PROVIDER_NAME, TEST_UPDATERTYPE_NAME);
+                _statusService?.MarkAsFailed(_TEST_PROVIDER_NAME, _TEST_UPDATERTYPE_NAME);
             });
             Assert.DoesNotThrow(() =>
             {
-                _statusService?.SetStatusFor(TEST_PROVIDER_NAME, TEST_UPDATERTYPE_NAME, UpdaterStatus.RanSuccessfully);
+                _statusService?.SetStatusFor(_TEST_PROVIDER_NAME, _TEST_UPDATERTYPE_NAME, UpdaterStatus.RanSuccessfully);
             });
-            _statusService?.SetStatusFor(TEST_PROVIDER_NAME, TEST_UPDATERTYPE_NAME, UpdaterStatus.Idle);
+            _statusService?.SetStatusFor(_TEST_PROVIDER_NAME, _TEST_UPDATERTYPE_NAME, UpdaterStatus.Idle);
             Assert.Pass();
         }
 
@@ -78,16 +78,16 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public void StatusSetTest()
         {
-            _statusService?.SetStatusFor(TEST_PROVIDER_NAME, TEST_UPDATERTYPE_NAME, TEST_STATUS);
-            Assert.That(_statusService?.GetStatusFor(TEST_PROVIDER_NAME, TEST_UPDATERTYPE_NAME)?.Status, Is.EqualTo(TEST_STATUS.ToString()));
+            _statusService?.SetStatusFor(_TEST_PROVIDER_NAME, _TEST_UPDATERTYPE_NAME, _TEST_STATUS);
+            Assert.That(_statusService?.GetStatusFor(_TEST_PROVIDER_NAME, _TEST_UPDATERTYPE_NAME)?.Status, Is.EqualTo(_TEST_STATUS.ToString()));
             Assert.Pass();
         }
 
         [Test]
         public void IComparableTest()
         {
-            _statusService?.SetStatusFor(TEST_PROVIDER_NAME, TEST_UPDATERTYPE_NAME, TEST_STATUS);
-            Assert.IsTrue(_statusService?.GetStatusFor(TEST_PROVIDER_NAME, TEST_UPDATERTYPE_NAME) == TEST_STATUS);
+            _statusService?.SetStatusFor(_TEST_PROVIDER_NAME, _TEST_UPDATERTYPE_NAME, _TEST_STATUS);
+            Assert.IsTrue(_statusService?.GetStatusFor(_TEST_PROVIDER_NAME, _TEST_UPDATERTYPE_NAME) == _TEST_STATUS);
             Assert.Pass();
         }
     }

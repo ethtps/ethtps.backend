@@ -18,7 +18,7 @@ using ETHTPS.Services.Attributes;
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("XDAI")]
-    [RunsEvery(CronConstants.Every5s)]
+    [RunsEvery(CronConstants.EVERY_5_S)]
     public class XDAIHTTPBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;

@@ -1,4 +1,5 @@
-﻿using Coravel.Events.Interfaces;
+﻿using System.Diagnostics;
+
 using Coravel.Queuing.Interfaces;
 
 using ETHTPS.Data.Integrations.MSSQL;
@@ -9,16 +10,13 @@ using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json;
 
-using System.Diagnostics;
-using System.Reactive.Concurrency;
-
 namespace ETHTPS.API.Core.Middlewares
 {
     public class AccesStatsMiddleware
     {
         private readonly RequestDelegate _next;
-        private static int MAX_QUEUE_SIZE = 100;
-        private static int CURRENT_QUEUE_SIZE = 0;
+        private static int _MAX_QUEUE_SIZE = 100;
+        private static int _CURRENT_QUEUE_SIZE = 0;
         private static List<AggregatedEnpointStat> _queueParameters = new();
         private static object _lockObj = new();
 
@@ -54,7 +52,7 @@ namespace ETHTPS.API.Core.Middlewares
                 logger.LogError(JsonConvert.SerializeObject(e));
 #endif
                 context.Response.StatusCode = 400;
-                 throw;
+                throw;
             }
             finally
             {
@@ -73,12 +71,12 @@ namespace ETHTPS.API.Core.Middlewares
             {
                 _queueParameters.Add(payload);
             }
-            CURRENT_QUEUE_SIZE++;
-            if (CURRENT_QUEUE_SIZE >= MAX_QUEUE_SIZE)
+            _CURRENT_QUEUE_SIZE++;
+            if (_CURRENT_QUEUE_SIZE >= _MAX_QUEUE_SIZE)
             {
                 logger.LogTrace("Enqueuing stats..."); queue.QueueInvocableWithPayload<AggregatedEndpointStatsBuilder, IList<AggregatedEnpointStat>>(_queueParameters);
                 queue.QueueBroadcast(new BuildAggregatedStatsEvent());
-                CURRENT_QUEUE_SIZE = 0;
+                _CURRENT_QUEUE_SIZE = 0;
             }
         }
 

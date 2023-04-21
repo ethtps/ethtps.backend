@@ -9,11 +9,14 @@ namespace ETHTPS.Configuration
     public class DBConfigurationProvider : IDBConfigurationProvider
     {
         private readonly ConfigurationContext _context;
+        private readonly ILogger<ConfigurationValidator> _logger;
         private readonly string _environment;
         private readonly int _environmentID;
+
         public DBConfigurationProvider(ConfigurationContext context, ILogger<ConfigurationValidator>? logger, string environment = Constants
             .ENVIRONMENT)
         {
+            _logger = logger;
             _context = context ?? throw new ArgumentNullException(nameof(context));
             if (_context?.Environments == null)
                 throw new ArgumentNullException(nameof(_context.Environments));
@@ -28,7 +31,7 @@ namespace ETHTPS.Configuration
             validator.ThrowIfConfigurationInvalid();
         }
 
-        IDBConfigurationProvider IDBConfigurationProvider.this[string environment] { get => new DBConfigurationProvider(this._context, environment); }
+        IDBConfigurationProvider IDBConfigurationProvider.this[string environment] { get => new DBConfigurationProvider(this._context, _logger, environment); }
 
         public void AddEnvironments(params string[] environments)
         {

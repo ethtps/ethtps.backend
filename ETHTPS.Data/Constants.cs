@@ -6,8 +6,8 @@ namespace ETHTPS.Data.Core
     {
         public static class CacheTimes
         {
-            public static TimeSpan Realtime = TimeSpan.FromSeconds(3);
-            public static TimeSpan LowUpdateRate = TimeSpan.FromMinutes(1);
+            public static TimeSpan REALTIME = TimeSpan.FromSeconds(3);
+            public static TimeSpan LOW_UPDATE_RATE = TimeSpan.FromMinutes(1);
         }
 
         public static class EnvironmentVariables
@@ -34,7 +34,7 @@ namespace ETHTPS.Data.Core
 
         public static class TimeConstants
         {
-            public static TimeSpan OneMinute = TimeSpan.FromSeconds(60);
+            public static TimeSpan ONE_MINUTE = TimeSpan.FromSeconds(60);
         }
 
         public static string All => "All";

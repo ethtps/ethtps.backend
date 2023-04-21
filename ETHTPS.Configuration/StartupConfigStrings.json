@@ -1,0 +1,31 @@
+{
+  "Required": {
+    "MicroserviceConfiguration": [
+      {
+        "Name": "ETHTPS.API.General",
+        "RequiredConfigurationStrings": [ "ConnectionString" ]
+      },
+      {
+        "Name": "ETHTPS.WSAPI",
+        "RequiredConfigurationStrings": [ "ConnectionString" ]
+      },
+      {
+        "Name": "ETHTPS.TaskRunner",
+        "RequiredConfigurationStrings": [ "ConnectionString" ]
+      },
+      {
+        "Name": "ETHTPS.Configuration.IDBConfigurationProvider",
+        "RequiredConfigurationStrings": [ "ConnectionString" ]
+      },
+      {
+        "Name": "ETHTPS.TestsAPI",
+        "RequiredConfigurationStrings": [ "ConnectionString" ]
+      }
+    ],
+    "ProviderConfiguration": []
+  },
+  "Optional": {
+    "MicroserviceConfiguration": [],
+    "ProviderConfiguration": []
+  }
+}

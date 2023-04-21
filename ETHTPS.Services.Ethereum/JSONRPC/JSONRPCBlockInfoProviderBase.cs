@@ -1,7 +1,11 @@
-﻿using ETHTPS.Data.Core.BlockInfo;
+﻿using System;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Core.Models.DataEntries;
-using ETHTPS.Services.BlockchainServices;
 using ETHTPS.Services.Ethereum.JSONRPC.Models;
 using ETHTPS.Services.Ethereum.JSONRPC.Models.Exceptions;
 using ETHTPS.Services.Infrastructure.Serialization;
@@ -10,22 +14,16 @@ using Microsoft.Extensions.Configuration;
 
 using Newtonsoft.Json;
 
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace ETHTPS.Services.Ethereum.JSONRPC
 {
     public abstract class JSONRPCBlockInfoProviderBase : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
-        private static DateTime LastCallTime = DateTime.Now;
-        private static TimeSpan TIME_BETWEEN = TimeSpan.FromMilliseconds(500);
-        private static bool CanCall => TimeSinceLastCall > TIME_BETWEEN;
-        private static bool Busy { get; set; }
-        private static TimeSpan TimeSinceLastCall => DateTime.Now - LastCallTime;
+        private static DateTime _LastCallTime = DateTime.Now;
+        private static TimeSpan _TIME_BETWEEN = TimeSpan.FromMilliseconds(500);
+        private static bool _canCall => _timeSinceLastCall > _TIME_BETWEEN;
+        private static bool _busy { get; set; }
+        private static TimeSpan _timeSinceLastCall => DateTime.Now - _LastCallTime;
         public JSONRPCBlockInfoProviderBase(string endpoint)
         {
             _httpClient = new HttpClient()
@@ -51,8 +49,8 @@ namespace ETHTPS.Services.Ethereum.JSONRPC
         {
             try
             {
-                while (Busy && !CanCall) await Task.Delay(TIME_BETWEEN);
-                Busy = true;
+                while (_busy && !_canCall) await Task.Delay(_TIME_BETWEEN);
+                _busy = true;
                 var requestModel = JSONRPCRequestFactory.CreateGetBlockByBlockNumberRequest("0x" + blockNumber.ToString("X"));
                 var json = requestModel.SerializeAsJsonWithEmptyArray();
                 var message = new HttpRequestMessage()
@@ -80,8 +78,8 @@ namespace ETHTPS.Services.Ethereum.JSONRPC
             }
             finally
             {
-                Busy = false;
-                LastCallTime = DateTime.Now;
+                _busy = false;
+                _LastCallTime = DateTime.Now;
             }
             throw new JSONRPCRequestException(_httpClient.BaseAddress.ToString());
         }

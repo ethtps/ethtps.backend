@@ -20,7 +20,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
 
         protected IEnumerable<ProviderSummaryBase> SafeGetProviderSummaries(ProviderQueryModel model)
         {
-            if (model.Provider.EqualsIgnoreCase(Constants.All))
+            if (model.Provider.EqualsIgnoreCase(Constants.ALL))
             {
                 return AllProviders.Select(x => new Provider()
                 {

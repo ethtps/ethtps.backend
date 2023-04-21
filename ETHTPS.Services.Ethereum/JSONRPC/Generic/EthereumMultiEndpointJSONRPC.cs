@@ -1,29 +1,25 @@
 ﻿
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Services.Attributes;
-using ETHTPS.Services.BlockchainServices;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using static System.Net.Mime.MediaTypeNames;
-
 namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
 {
     [Provider("Ethereum")]
-    [RunsEvery(CronConstants.Every5s)]
+    [RunsEvery(CronConstants.EVERY_5_S)]
     public class EthereumMultiEndpointJSONRPC : IHTTPBlockInfoProvider
     {
         private readonly IEnumerable<(IHTTPBlockInfoProvider Provider, int FailureCount)> _children;
         private static Random _random = new Random();
-        private const int BLACKLIST_AFTER = 5;
+        private const int _BLACKLIST_AFTER = 5;
         private readonly string[] _endpoints;
         private readonly int _totalChildren;
         private int _currentChildIndex = 0;
@@ -55,9 +51,9 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
             do
             {
                 var next = _children.ElementAt(_random.Next(_totalChildren));
-                if (next.FailureCount >= BLACKLIST_AFTER)
+                if (next.FailureCount >= _BLACKLIST_AFTER)
                 {
-                    _logger.LogInformation("Blacklist updated. New size: " + _children.Count(x => x.FailureCount >= BLACKLIST_AFTER));
+                    _logger.LogInformation("Blacklist updated. New size: " + _children.Count(x => x.FailureCount >= _BLACKLIST_AFTER));
                     continue;
                 }
                 result = await next.Provider.GetBlockInfoAsync(blockNumber);

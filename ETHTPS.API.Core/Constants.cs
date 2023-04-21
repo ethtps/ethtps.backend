@@ -7,6 +7,6 @@
         public const string STATUSUPDATERQUEUE = "status";
         public const string HISTORICALUPDATERQUEUE = "historical";
         public const string TIMEWARPUPDATERQUEUE = "timewarp";
-        public const string All = "All";
+        public const string ALL = "All";
     }
 }

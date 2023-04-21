@@ -17,7 +17,7 @@ using ETHTPS.Services.Attributes;
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("Nahmii 2.0")]
-    [RunsEvery(CronConstants.Every13s)]
+    [RunsEvery(CronConstants.EVERY_13_S)]
     public class Nahmii20BlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;

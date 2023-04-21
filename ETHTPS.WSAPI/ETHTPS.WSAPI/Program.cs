@@ -8,18 +8,18 @@ namespace ETHTPS.WSAPI
 {
     public class Program
     {
-        const string APP_NAME = "ETHTPS.WSAPI";
-        private const string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        const string _APP_NAME = "ETHTPS.WSAPI";
+        private const string _myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            
+
             // Add services to the container.
             builder.Services.AddRazorPages();
             var services = builder.Services;
             services.AddEssentialServices();
-            services.AddDatabaseContext(APP_NAME);
+            services.AddDatabaseContext(_APP_NAME);
             services.AddCustomCORSPolicies();
             services.AddControllersWithViews()
                     .AddControllersAsServices()
@@ -47,7 +47,7 @@ namespace ETHTPS.WSAPI
             app.ConfigureSwagger();
             app.UseRouting();
             app.UseAuthorization();
-            app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors(_myAllowSpecificOrigins);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers().RequireAuthorization();

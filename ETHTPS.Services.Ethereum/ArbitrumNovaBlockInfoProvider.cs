@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("Arbitrum Nova")]
-    [RunsEvery(CronConstants.Every10s)]
+    [RunsEvery(CronConstants.EVERY_10_S)]
     public class ArbitrumNovaBlockInfoProvider : JSONRPCBlockInfoProviderBase
     {
         private const string NAME = "Arbitrum Nova";

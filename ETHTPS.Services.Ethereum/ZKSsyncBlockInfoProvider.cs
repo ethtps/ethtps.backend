@@ -11,7 +11,7 @@ using ETHTPS.Services.Attributes;
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("ZKSync")]
-    [RunsEvery(CronConstants.Every5s)]
+    [RunsEvery(CronConstants.EVERY_5_S)]
     public class ZKSsyncBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;

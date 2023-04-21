@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
 {
     [Provider("Ethereum")]
-    [RunsEvery(CronConstants.Every5s)]
+    [RunsEvery(CronConstants.EVERY_5_S)]
     public class EthereumGenericJSONRPCBlockInfoProvider : JSONRPCBlockInfoProviderBase
     {
         public EthereumGenericJSONRPCBlockInfoProvider(string endpoint) : base(endpoint)

@@ -11,7 +11,7 @@ using ETHTPS.Services.Attributes;
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("zkTube")]
-    [RunsEvery(CronConstants.Every30s)]
+    [RunsEvery(CronConstants.EVERY_30_S)]
     public class ZKTubeBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;

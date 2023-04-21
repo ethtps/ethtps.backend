@@ -13,7 +13,7 @@ namespace ETHTPS.Configuration.Validation
     /// <summary>
     /// Represents a validator that makes sure the database provides the necessary configuration strings.
     /// </summary>
-    internal class ConfigurationValidator
+    public class ConfigurationValidator
     {
         private readonly ConfigurationContext _context;
         private StartupConfigurationModel? _startupConfiguration;
@@ -46,12 +46,46 @@ namespace ETHTPS.Configuration.Validation
 
         private void WarnOfMissingOptionalStrings()
         {
-            throw new NotImplementedException();
+            lock (_context.LockObj)
+            {
+                foreach (var microserviceConfiguration in _startupConfiguration.Required.MicroserviceConfiguration)
+                {
+                    foreach (var requiredString in microserviceConfiguration.RequiredConfigurationStrings)
+                    {
+                        var s = _context.MicroserviceConfigurationStrings.FirstOrDefault(x => x.Microservice.Name == microserviceConfiguration.Name && x.ConfigurationString.Name == requiredString);
+                        if (s == null)
+                        {
+                            _logger?.LogWarning($"{requiredString} doesn't exist");
+                        }
+                        else
+                        {
+                            if (string.IsNullOrWhiteSpace(s.ConfigurationString.Value))
+                            {
+                                _logger?.LogWarning($"{requiredString} is null or empty");
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void ValidateRequiredConfigurationStrings()
         {
-            throw new NotImplementedException();
+            lock (_context.LockObj)
+            {
+                foreach (var microserviceConfiguration in _startupConfiguration.Required.MicroserviceConfiguration)
+                {
+                    foreach (var requiredString in microserviceConfiguration.RequiredConfigurationStrings)
+                    {
+                        var s = _context.MicroserviceConfigurationStrings.FirstOrDefault(x => x.Microservice.Name == microserviceConfiguration.Name && x.ConfigurationString.Name == requiredString);
+                        if (s == null)
+                            throw new ConfigurationStringNotFoundException(requiredString, microserviceConfiguration.Name);
+
+                        if (string.IsNullOrWhiteSpace(s.ConfigurationString.Value))
+                            throw new InvalidConfigurationStringException(s.ConfigurationString.Name, "null or empty");
+                    }
+                }
+            }
         }
 
         private void ValidateMicroservices()
