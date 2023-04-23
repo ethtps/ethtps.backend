@@ -1,4 +1,6 @@
-﻿using ETHTPS.Data.Core.Database;
+﻿using ETHTPS.Configuration.Extensions;
+using ETHTPS.Data.Core.Database;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace ETHTPS.Configuration.Database;
@@ -57,6 +59,7 @@ public partial class ConfigurationContext : ContextBase<ConfigurationContext>
 
         modelBuilder.Entity<Microservice>(entity =>
         {
+            modelBuilder.ConfigureEntityPrimaryKey<Microservice>();
             entity.HasKey(e => e.Id).HasName("PK__Microser__3214EC27B5F7310C");
 
             entity.ToTable("Microservices", "Microservices");

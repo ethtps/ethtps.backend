@@ -1,8 +1,12 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Extensions.StringExtensions;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Services.Attributes;
-using ETHTPS.Services.BlockchainServices;
 
 using Fizzler.Systems.HtmlAgilityPack;
 
@@ -12,26 +16,21 @@ using Microsoft.Extensions.Configuration;
 
 using Newtonsoft.Json;
 
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("Boba Network")]
-    [RunsEvery(CronConstants.Every13s)]
+    [RunsEvery(CronConstants.EVERY_13_S)]
     public class BobaNetworkBlockInfoProvider : IHTTPBlockInfoProvider
     {
         public double BlockTimeSeconds { get; set; }
-        private const string NAME = "Boba Network";
+        private const string _NAME = "Boba Network";
         private readonly HttpClient _httpClient;
         private readonly string _transactionCountSelector;
         private readonly string _dateSelector;
         private readonly string _gasSelector;
         public BobaNetworkBlockInfoProvider(IConfiguration configuration)
         {
-            var config = configuration.GetSection("TPSLoggerConfigurations").GetSection("StandardLoggerConfiguration").GetSection(NAME);
+            var config = configuration.GetSection("TPSLoggerConfigurations").GetSection("StandardLoggerConfiguration").GetSection(_NAME);
             _transactionCountSelector = config.GetValue<string>("TransactionCountSelector");
             _dateSelector = config.GetValue<string>("DateSelector");
             _gasSelector = config.GetValue<string>("GasSelector");

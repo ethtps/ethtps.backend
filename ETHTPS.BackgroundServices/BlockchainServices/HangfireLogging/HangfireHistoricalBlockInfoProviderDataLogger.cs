@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualBasic;
-using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.TimeBuckets;
 using ETHTPS.Data.Integrations.MSSQL;

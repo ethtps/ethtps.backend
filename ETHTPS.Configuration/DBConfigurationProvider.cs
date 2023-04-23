@@ -1,16 +1,22 @@
 ﻿using ETHTPS.Configuration.Database;
+using ETHTPS.Configuration.Validation;
 using ETHTPS.Data.Core.Extensions;
+
+using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Configuration
 {
     public class DBConfigurationProvider : IDBConfigurationProvider
     {
         private readonly ConfigurationContext _context;
+        private readonly ILogger<ConfigurationValidator> _logger;
         private readonly string _environment;
         private readonly int _environmentID;
-        public DBConfigurationProvider(ConfigurationContext context, string environment = Constants
+
+        public DBConfigurationProvider(ConfigurationContext context, ILogger<ConfigurationValidator>? logger, string environment = Constants
             .ENVIRONMENT)
         {
+            _logger = logger;
             _context = context ?? throw new ArgumentNullException(nameof(context));
             if (_context?.Environments == null)
                 throw new ArgumentNullException(nameof(_context.Environments));
@@ -21,21 +27,30 @@ namespace ETHTPS.Configuration
             {
                 _environmentID = _context.Environments.First(x => x.Name.ToUpper() == environment.ToUpper()).Id;
             }
+            var validator = new ConfigurationValidator(context, logger);
+            validator.ThrowIfConfigurationInvalid();
         }
 
-        IDBConfigurationProvider IDBConfigurationProvider.this[string environment] { get => new DBConfigurationProvider(this._context, environment); }
+        IDBConfigurationProvider IDBConfigurationProvider.this[string environment] { get => new DBConfigurationProvider(this._context, _logger, environment); }
 
         public void AddEnvironments(params string[] environments)
         {
             lock (_context.LockObj)
             {
-                var existing = _context.Environments?.Select(x => x.Name).ToList();
-                var toAdd = environments?.Where(x => !existing.Contains(x));
-                _context.Environments?.AddRange(toAdd.SafeSelect(x => new Database.Environment()
+                try
                 {
-                    Name = x
-                }));
-                _context.SaveChanges();
+                    var existing = _context.Environments?.Select(x => x.Name).ToList();
+                    var toAdd = environments?.Where(x => !existing.Contains(x));
+                    _context.Environments?.AddRange(toAdd.SafeSelect(x => new Database.Environment()
+                    {
+                        Name = x
+                    }));
+                    _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, $"Error adding environments {string.Join(", ", environments)}");
+                }
             }
         }
 

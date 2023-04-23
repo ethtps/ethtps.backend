@@ -1,27 +1,24 @@
-﻿using ETHTPS.Services.Ethereum.Scan.Implementations;
-using ETHTPS.Services.Ethereum.Starkware;
-using ETHTPS.Services.Ethereum;
-using ETHTPS.Services;
-using Microsoft.Extensions.DependencyInjection;
-using static ETHTPS.API.Core.Constants;
-using ETHTPS.Services.Infrastructure.Extensions;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
-using ETHTPS.API.Core.Integrations.MSSQL.Services.Updater;
-using Hangfire;
-using ETHTPS.Services.BlockchainServices.Status.BackgroundTasks.Discord;
-using ETHTPS.Services.BlockchainServices.Status;
-using ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets.Extensions;
-using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
-using ETHTPS.Services.Ethereum.JSONRPC.Infura;
-using ETHTPS.Services.Ethereum.JSONRPC.Generic;
-using ETHTPS.Services.BlockchainServices.HangfireLogging;
-using ETHTPS.Services.BlockchainServices.CoravelLoggers;
-using Microsoft.AspNetCore.Builder;
+﻿using System.Reflection;
+
 using Coravel;
-using Coravel.Scheduling.Schedule;
 using Coravel.Scheduling.Schedule.Interfaces;
+
+using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+using ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets.Extensions;
+using ETHTPS.API.Core.Integrations.MSSQL.Services.Updater;
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Services.Attributes;
-using System.Reflection;
+using ETHTPS.Services.BlockchainServices.CoravelLoggers;
+using ETHTPS.Services.BlockchainServices.HangfireLogging;
+using ETHTPS.Services.Ethereum;
+using ETHTPS.Services.Ethereum.JSONRPC.Infura;
+using ETHTPS.Services.Ethereum.Scan.Implementations;
+using ETHTPS.Services.Ethereum.Starkware;
+
+using Hangfire;
+
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ETHTPS.API.DependencyInjection
 {
@@ -85,6 +82,10 @@ namespace ETHTPS.API.DependencyInjection
         }
         public static IServiceCollection WithStore(this IServiceCollection services, DatabaseProvider databaseProvider)
         {
+            if (databaseProvider.Equals(0))
+            {
+
+            }
             return services;
         }
         public static void RegisterHangfireBackgroundServiceAndTimeBucket<T, V>(this IServiceCollection services, string cronExpression, string queue)
@@ -131,6 +132,7 @@ namespace ETHTPS.API.DependencyInjection
                             {
                                 interval?.EveryFifteenSeconds();
                             }
+                            Console.WriteLine($"Registered {loggerType.Name}<{loggerType.GetGenericArguments()[0].Name}>");
                         }
                     });
                 }

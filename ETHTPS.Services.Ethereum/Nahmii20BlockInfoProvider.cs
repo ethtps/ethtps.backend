@@ -1,4 +1,4 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+﻿using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Extensions.StringExtensions;
 using ETHTPS.Services.BlockchainServices;
 using ETHTPS.Data.Core.Models.DataEntries;
@@ -17,7 +17,7 @@ using ETHTPS.Services.Attributes;
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("Nahmii 2.0")]
-    [RunsEvery(CronConstants.Every13s)]
+    [RunsEvery(CronConstants.EVERY_13_S)]
     public class Nahmii20BlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;

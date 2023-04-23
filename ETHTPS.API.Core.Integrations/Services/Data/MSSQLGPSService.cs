@@ -64,7 +64,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
             Dictionary<string, IEnumerable<DataResponseModel>> result = new();
             lock (Context.LockObj)
             {
-                if (model.Provider.ToUpper() == Constants.All.ToUpper())
+                if (model.Provider.ToUpper() == Constants.ALL.ToUpper())
                 {
                     foreach (var p in AllProviders.Where(x => x.Enabled).ToList())
                     {

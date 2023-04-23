@@ -1,4 +1,5 @@
 ﻿using ETHTPS.API.BIL.Infrastructure.Services;
+using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
 using ETHTPS.API.BIL.Infrastructure.Services.ChartData;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
@@ -12,18 +13,19 @@ using ETHTPS.API.Security.Core.Humanity.Recaptcha;
 using ETHTPS.Configuration;
 using ETHTPS.Configuration.Database;
 using ETHTPS.Services.BlockchainServices.BlockTime;
-using static ETHTPS.Data.Core.Extensions.EnvironmentExtensions;
-using static ETHTPS.Data.Core.Constants.EnvironmentVariables;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+
+using static ETHTPS.Data.Core.Constants.EnvironmentVariables;
+using static ETHTPS.Data.Core.Extensions.EnvironmentExtensions;
 
 namespace ETHTPS.API.DependencyInjection
 {
     public static partial class CoreServicesExtensions
     {
         public static IServiceCollection AddMixedCoreServices(this IServiceCollection services) =>
-            services.AddEssentialServices()
+            services
             .AddScoped<GeneralService>()
             .AddScoped<TimeWarpService>()
             .AddScoped<EthereumBlockTimeProvider>()
@@ -56,14 +58,18 @@ namespace ETHTPS.API.DependencyInjection
             return services
                 .AddScoped<IPSDataFormatter, DeedleTimeSeriesFormatter>()
                 .AddScoped<IAggregatedDataService, DependencyInjectionAggregatedDataservice>()
-                .AddScoped<GeneralService>();
+                .AddScoped<GeneralService>()
+                .AddDataUpdaterStatusService()
+                .AddAutoDiscoveredIHTTPBlockInfoProvidersToDatabase();
         }
 
-
+        /// <summary>
+        /// Adds services that are required for other services to work. Must be called BEFORE <see cref="AddMixedCoreServices(IServiceCollection)"/>
+        /// </summary>
         public static IServiceCollection AddEssentialServices(this IServiceCollection services) =>
             services.AddScoped<IHumanityCheckService, RecaptchaVerificationService>()
-            .AddDbContext<ConfigurationContext>(options => options.UseSqlServer(GetConfigurationServiceConnectionString()), ServiceLifetime.Singleton)
-            .AddSingleton<IDBConfigurationProvider, DBConfigurationProvider>()
+            .AddDbContext<ConfigurationContext>(options => options.UseSqlServer(GetConfigurationServiceConnectionString()), ServiceLifetime.Scoped)
+            .AddScoped<IDBConfigurationProvider, DBConfigurationProvider>()
             .AddScoped<IWebsiteStatisticsService, WebsiteStatisticsService>();
 
         private static string GetConfigurationServiceConnectionString() => GetEnvVarValue(CONFIGURATION_PROVIDER_CONN_STR);

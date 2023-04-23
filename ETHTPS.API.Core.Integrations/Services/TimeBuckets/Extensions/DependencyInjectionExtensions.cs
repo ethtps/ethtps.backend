@@ -1,4 +1,4 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+﻿using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.TimeBuckets;
 using ETHTPS.Services.BlockchainServices.Status;
 

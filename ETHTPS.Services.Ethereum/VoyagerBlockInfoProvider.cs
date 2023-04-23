@@ -1,4 +1,4 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+﻿using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Services.BlockchainServices;
 using ETHTPS.Data.Core.Models.DataEntries;
@@ -13,7 +13,7 @@ using ETHTPS.Services.Attributes;
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("Starknet")]
-    [RunsEvery(CronConstants.Every13s)]
+    [RunsEvery(CronConstants.EVERY_13_S)]
     public class VoyagerBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;

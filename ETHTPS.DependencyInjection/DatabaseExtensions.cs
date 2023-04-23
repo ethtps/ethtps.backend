@@ -15,16 +15,23 @@ namespace ETHTPS.API.DependencyInjection
             using (var built = services.BuildServiceProvider())
             {
                 var provider = built.GetRequiredService<IDBConfigurationProvider>();
-                return provider.GetConfigurationStringsForMicroservice(appName).First(x => x.Name == connectionStringName).Value;
+                var result = (provider.GetConfigurationStringsForMicroservice(appName).FirstOrDefault(x => x.Name == connectionStringName)?.Value) ?? throw new ArgumentException($"Couldn't find a connection string for {appName} for \"{Constants.ENVIRONMENT}\" environment");
+                return result;
             }
         }
 
         public static IServiceCollection AddDatabaseContext(this IServiceCollection services, string appName)
         {
-            var configurationString = services.GetDefaultConnectionString(appName);
-           // services.AddEntityFrameworkProxies();
-            services.AddDbContext<EthtpsContext>(options => options.UseSqlServer(configurationString), ServiceLifetime.Transient);
-            return services;
+            try
+            {
+                var configurationString = services.GetDefaultConnectionString(appName);
+                services.AddDbContext<EthtpsContext>(options => options.UseSqlServer(configurationString), ServiceLifetime.Scoped);
+                return services;
+            }
+            catch (Exception ex)
+            {
+                throw new UnauthorizedAccessException("Not allowed", ex);
+            }
 
         }
     }

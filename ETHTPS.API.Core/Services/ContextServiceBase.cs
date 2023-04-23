@@ -53,11 +53,11 @@ namespace ETHTPS.API.Core.Services
                     lock (Context.LockObj)
                     {
                         var types = Context.ProviderTypes.AsEnumerable();
-                        _allProviders = Context.Providers.SafeSelect(x => new ProviderResponseModel()
+                        _allProviders = Context.Providers.ToList().SafeSelect(x => new ProviderResponseModel()
                         {
                             Id = x.Id,
                             Name = x.Name,
-                            Type = Context.ProviderTypes.First(y => y.Id == x.Type).Name,
+                            Type = types.First(y => y.Id == x.Type).Name,
                             Color = x.Color,
                             TheoreticalMaxTPS = x.TheoreticalMaxTps,
                             IsGeneralPurpose = types.First(y => y.Id == x.Type).IsGeneralPurpose,

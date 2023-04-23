@@ -1,12 +1,9 @@
-using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
-using ETHTPS.Data.Integrations.InfluxIntegration;
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Models.DataEntries;
-using ETHTPS.Data.Core.Models.DataUpdater;
-using ETHTPS.Data.Core.Models.Queries;
+using ETHTPS.Data.Core.Models.Queries.Data.Requests;
+using ETHTPS.Data.Integrations.InfluxIntegration;
 
 using Microsoft.Extensions.DependencyInjection;
-using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
 namespace ETHTPS.Tests.ServiceTests
 {
@@ -14,8 +11,8 @@ namespace ETHTPS.Tests.ServiceTests
     {
         private IInfluxWrapper? _influxWrapper;
         private IAsyncHistoricalBlockInfoProvider? _asyncHistoricalBlockInfoProvider;
-        private const string DEFAULT_BUCKET_NAME = "blockinfo";
-        private const string DEFAULT_MEASUREMENT_NAME = "blockinfo";
+        private const string _DEFAULT_BUCKET_NAME = "blockinfo";
+        private const string _DEFAULT_MEASUREMENT_NAME = "blockinfo";
 
         [SetUp]
         public void Setup()
@@ -40,12 +37,12 @@ namespace ETHTPS.Tests.ServiceTests
             Assert.DoesNotThrowAsync(async () =>
             {
                 await foreach (var entry in _influxWrapper.GetEntriesBetween<Block
-                    >(DEFAULT_BUCKET_NAME, DEFAULT_MEASUREMENT_NAME, DateTime.Now.Subtract(TimeSpan.FromMinutes(1)), DateTime.Now)) { }
+                    >(_DEFAULT_BUCKET_NAME, _DEFAULT_MEASUREMENT_NAME, DateTime.Now.Subtract(TimeSpan.FromMinutes(1)), DateTime.Now)) { }
             });
             Assert.DoesNotThrowAsync(async () =>
             {
                 await foreach (var entry in _influxWrapper.GetEntriesForPeriod<Block
-                    >(DEFAULT_BUCKET_NAME, DEFAULT_MEASUREMENT_NAME, Data.Core.TimeInterval.OneHour)) { }
+                    >(_DEFAULT_BUCKET_NAME, _DEFAULT_MEASUREMENT_NAME, Data.Core.TimeInterval.OneHour)) { }
             });
             /*
             Assert.DoesNotThrowAsync(async () =>

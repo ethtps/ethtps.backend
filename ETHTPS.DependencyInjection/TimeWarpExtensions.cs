@@ -13,7 +13,7 @@ namespace ETHTPS.API.DependencyInjection
         {
             if (configurationQueues.Contains(TIMEWARPUPDATERQUEUE))
             {
-                services.RegisterTimeWarpHangfireBackgroundService<TimeWarpBlockInfoProviderDataLogger<InfuraBlockInfoProviderBase>, InfuraBlockInfoProviderBase>(CronConstants.Never, TIMEWARPUPDATERQUEUE);
+                services.RegisterTimeWarpHangfireBackgroundService<TimeWarpBlockInfoProviderDataLogger<InfuraBlockInfoProviderBase>, InfuraBlockInfoProviderBase>(CronConstants.NEVER, TIMEWARPUPDATERQUEUE);
             }
             return services;
         }

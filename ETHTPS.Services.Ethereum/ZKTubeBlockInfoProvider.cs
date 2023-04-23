@@ -1,4 +1,4 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+﻿using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Services.BlockchainServices;
 using ETHTPS.Data.Core.Models.DataEntries;
 using Newtonsoft.Json;
@@ -11,7 +11,7 @@ using ETHTPS.Services.Attributes;
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("zkTube")]
-    [RunsEvery(CronConstants.Every30s)]
+    [RunsEvery(CronConstants.EVERY_30_S)]
     public class ZKTubeBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;

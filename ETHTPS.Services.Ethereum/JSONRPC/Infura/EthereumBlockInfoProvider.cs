@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
 {
     [Provider("Ethereum")]
-    [RunsEvery(CronConstants.Every5s)]
+    [RunsEvery(CronConstants.EVERY_5_S)]
     public class EthereumBlockInfoProvider : InfuraBlockInfoProviderBase
     {
         public EthereumBlockInfoProvider(IConfiguration configuration, EthereumBlockTimeProvider ethereumBlockTimeProvider) : base(configuration, "EthereumEndpoint")

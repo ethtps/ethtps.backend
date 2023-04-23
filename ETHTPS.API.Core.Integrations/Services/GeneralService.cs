@@ -46,7 +46,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 
         public IEnumerable<ProviderResponseModel> Providers(string subchainsOf)
         {
-            if (string.IsNullOrWhiteSpace(subchainsOf) || subchainsOf.LossyCompareTo(Constants.All))
+            if (string.IsNullOrWhiteSpace(subchainsOf) || subchainsOf.LossyCompareTo(Constants.ALL))
             {
                 return AllProviders;
             }
@@ -187,7 +187,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
         {
             ProviderQueryModel allDataModel = new()
             {
-                Provider = Constants.All,
+                Provider = Constants.ALL,
                 Network = network
             };
             return new AllDataModel()
