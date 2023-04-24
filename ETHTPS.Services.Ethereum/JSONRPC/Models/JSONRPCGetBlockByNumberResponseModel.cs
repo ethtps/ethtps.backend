@@ -1,11 +1,11 @@
 ﻿namespace ETHTPS.Services.Ethereum.JSONRPC.Models
 {
-    public class JSONRPCGetBlockByNumberResponseModel
+    public sealed class JSONRPCGetBlockByNumberResponseModel
     {
         public double jsonrpc { get; set; }
         public int id { get; set; }
         public Result result { get; set; }
-        public class Result
+        public sealed class Result
         {
             public string baseFeePerGas { get; set; }
             public string difficulty { get; set; }

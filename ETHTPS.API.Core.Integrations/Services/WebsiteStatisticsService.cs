@@ -4,7 +4,7 @@ using ETHTPS.Data.Integrations.MSSQL.Extensions;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {
-    public class WebsiteStatisticsService : IWebsiteStatisticsService
+    public sealed class WebsiteStatisticsService : IWebsiteStatisticsService
     {
         private readonly EthtpsContext _context;
         const string _NAME = "CurrentVisitors";

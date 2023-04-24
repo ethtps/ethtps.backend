@@ -17,7 +17,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Ronin")]
     [RunsEvery(CronConstants.EVERY_5_S)]
-    public class RoninBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class RoninBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
         private readonly string _baseURL;
@@ -79,19 +79,19 @@ namespace ETHTPS.Services.Ethereum
         }
 
 
-        public class TxSummaryResponse
+        public sealed class TxSummaryResponse
         {
             public TxSummaryPageprops pageProps { get; set; }
             public bool __N_SSG { get; set; }
         }
 
-        public class TxSummaryPageprops
+        public sealed class TxSummaryPageprops
         {
             public Overviewdata overviewData { get; set; }
             public Txchartdata txChartData { get; set; }
         }
 
-        public class Overviewdata
+        public sealed class Overviewdata
         {
             public int blockTime { get; set; }
             public int totalAddresses { get; set; }
@@ -99,7 +99,7 @@ namespace ETHTPS.Services.Ethereum
             public int totalTxs { get; set; }
         }
 
-        public class Txchartdata
+        public sealed class Txchartdata
         {
             public int[] txCount { get; set; }
             public string[] label { get; set; }

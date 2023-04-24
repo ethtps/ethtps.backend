@@ -15,7 +15,7 @@ namespace ETHTPS.Tests
     /// <summary>
     /// A base test class for the BIL part of the framework
     /// </summary>
-    public class TestBase
+    public abstract class TestBase
     {
         protected ServiceProvider ServiceProvider { get; private set; }
         protected TestBase()

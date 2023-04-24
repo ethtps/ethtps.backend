@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ETHTPS.API.Controllers
 {
     [Route("/api/v3/TimeWarp/[action]")]
-    public class TimeWarpController
+    public sealed class TimeWarpController
     {
         private readonly TimeWarpService _timeWarpService;
         private const string _DEFAULT_SMOOTHING = "Instant";

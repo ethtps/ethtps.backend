@@ -3,7 +3,7 @@ using Newtonsoft.Json.Converters;
 
 namespace ETHTPS.Services.BlockchainServices.Status
 {
-    public class BlockInfoProviderStatusResult
+    public sealed class BlockInfoProviderStatusResult
     {
         [JsonConverter(typeof(StringEnumConverter))]
         public BlockInfoProviderStatus Status { get; set; }

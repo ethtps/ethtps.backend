@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Configuration
 {
-    public class DBConfigurationProvider : IDBConfigurationProvider
+    public sealed class DBConfigurationProvider : IDBConfigurationProvider
     {
         private readonly ConfigurationContext _context;
         private readonly ILogger<ConfigurationValidator> _logger;

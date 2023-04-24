@@ -5,7 +5,7 @@ using ETHTPS.Data.Integrations.MSSQL;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {
-    public class MarkdownService : EFCoreCRUDServiceBase<MarkdownPage>, IMarkdownService<MarkdownPage>
+    public sealed class MarkdownService : EFCoreCRUDServiceBase<MarkdownPage>, IMarkdownService<MarkdownPage>
     {
         private readonly EthtpsContext _context;
         public MarkdownService(EthtpsContext context) : base(context.MarkdownPages, context)

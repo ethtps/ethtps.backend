@@ -20,7 +20,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("XDAI")]
     [RunsEvery(CronConstants.EVERY_5_S)]
-    public class XDAIHTTPBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class XDAIHTTPBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
         private readonly string _transactionCountSelector;

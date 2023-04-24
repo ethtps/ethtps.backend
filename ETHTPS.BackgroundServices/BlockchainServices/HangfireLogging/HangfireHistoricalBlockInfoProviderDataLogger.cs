@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Services.BlockchainServices.HangfireLogging
 {
-    public class HangfireHistoricalBlockInfoProviderDataLogger<T> : MSSQLLogger<T>
+    public abstract class HangfireHistoricalBlockInfoProviderDataLogger<T> : MSSQLLogger<T>
         where T : IHTTPBlockInfoProvider
     {
         public HangfireHistoricalBlockInfoProviderDataLogger(T instance, ILogger<HangfireBackgroundService> logger, EthtpsContext context, IDataUpdaterStatusService statusService, ITimeBucketDataUpdaterService<T> timeBucketService) : base(instance, logger, context, statusService, timeBucketService)

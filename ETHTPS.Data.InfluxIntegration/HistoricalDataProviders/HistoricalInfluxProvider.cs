@@ -10,7 +10,7 @@ using Block = ETHTPS.Data.Core.Models.DataEntries.Block;
 
 namespace ETHTPS.Data.Integrations.InfluxIntegration.HistoricalDataServices
 {
-    public class HistoricalInfluxProvider : IAsyncHistoricalBlockInfoProvider
+    public sealed class HistoricalInfluxProvider : IAsyncHistoricalBlockInfoProvider
     {
         private readonly IInfluxWrapper _influxWrapper;
         private const string BLOCK_INFO = "blockinfo";

@@ -5,7 +5,7 @@ using ETHTPS.Data.Core.Models.DataUpdater;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
 {
-    public class ProviderDataUpdaterStatusService : IProviderDataUpdaterStatusService
+    public sealed class ProviderDataUpdaterStatusService : IProviderDataUpdaterStatusService
     {
         private readonly IDataUpdaterStatusService _statusService;
 

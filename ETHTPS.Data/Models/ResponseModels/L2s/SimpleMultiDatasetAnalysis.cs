@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace ETHTPS.Data.Core.Models.ResponseModels.L2s
 {
-    public class SimpleMultiDatasetAnalysis : DatasetAnalysisBase
+    public sealed class SimpleMultiDatasetAnalysis : DatasetAnalysisBase
     {
         private readonly IEnumerable<Dataset> _datasets;
         public SimpleMultiDatasetAnalysis(IEnumerable<Dataset> datasets)

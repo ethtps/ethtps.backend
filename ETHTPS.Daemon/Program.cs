@@ -16,7 +16,7 @@ using Utility.CommandLine;
 
 namespace ETHTPS.Daemon
 {
-    public class Program
+    public sealed class Program
     {
         [Argument('s', "scope", "Scope of the daemon")]
         private static string? Scope { get; set; }

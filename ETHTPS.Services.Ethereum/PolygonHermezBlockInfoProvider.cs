@@ -13,7 +13,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Polygon Hermez")]
     [RunsEvery(CronConstants.EVERY_13_S)]
-    public class PolygonHermezBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class PolygonHermezBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient = new HttpClient();
 
@@ -61,13 +61,13 @@ namespace ETHTPS.Services.Ethereum
         }
 
 
-        public class TransactionListResponse
+        public sealed class TransactionListResponse
         {
             public Transaction[] transactions { get; set; }
             public int pendingItems { get; set; }
         }
 
-        public class Transaction
+        public sealed class Transaction
         {
             public string id { get; set; }
             public int itemId { get; set; }
@@ -89,7 +89,7 @@ namespace ETHTPS.Services.Ethereum
             public string L1orL2 { get; set; }
         }
 
-        public class L1info
+        public sealed class L1info
         {
             public int toForgeL1TransactionsNum { get; set; }
             public bool userOrigin { get; set; }
@@ -100,7 +100,7 @@ namespace ETHTPS.Services.Ethereum
             public int ethereumBlockNum { get; set; }
         }
 
-        public class Token
+        public sealed class Token
         {
             public int id { get; set; }
             public int itemId { get; set; }
@@ -114,13 +114,13 @@ namespace ETHTPS.Services.Ethereum
         }
 
 
-        public class BatchResponse
+        public sealed class BatchResponse
         {
             public Batch[] batches { get; set; }
             public int pendingItems { get; set; }
         }
 
-        public class Batch
+        public sealed class Batch
         {
             public int itemId { get; set; }
             public int batchNum { get; set; }
@@ -139,7 +139,7 @@ namespace ETHTPS.Services.Ethereum
             public int forgedTransactions { get; set; }
         }
 
-        public class Collectedfees
+        public sealed class Collectedfees
         {
             public string _1 { get; set; }
         }

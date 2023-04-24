@@ -6,7 +6,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace ETHTPS.Services.Infrastructure.Serialization
 {
-    public class NullToEmptyListResolver : DefaultContractResolver
+    public sealed class NullToEmptyListResolver : DefaultContractResolver
     {
         protected override IValueProvider CreateMemberValueProvider(MemberInfo member)
         {
@@ -25,7 +25,7 @@ namespace ETHTPS.Services.Infrastructure.Serialization
             return provider;
         }
 
-        public class EmptyListValueProvider : IValueProvider
+        public sealed class EmptyListValueProvider : IValueProvider
         {
             private IValueProvider _innerProvider;
             private object _defaultValue;

@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.Data.Core.Models.ResponseModels.ChartData.Streamchart
 {
-    public class StreamchartModel
+    public sealed class StreamchartModel
     {
         public LegendModel Legend { get; set; }
         public double[][] TPSData { get; set; }

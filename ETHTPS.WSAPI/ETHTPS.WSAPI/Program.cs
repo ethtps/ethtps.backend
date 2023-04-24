@@ -6,7 +6,7 @@ using ETHTPS.WSAPI.Infrastructure.LiveData.Connection;
 
 namespace ETHTPS.WSAPI
 {
-    public class Program
+    public sealed class Program
     {
         const string _APP_NAME = "ETHTPS.WSAPI";
         private const string _myAllowSpecificOrigins = "_myAllowSpecificOrigins";

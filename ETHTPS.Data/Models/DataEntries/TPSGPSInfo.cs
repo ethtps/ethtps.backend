@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.Data.Core.Models.DataEntries.BlockchainServices.Models
 {
-    public class TPSGPSInfo : InfoBase
+    public sealed class TPSGPSInfo : InfoBase
     {
         public double TPS { get; set; }
         public double GPS { get; set; }

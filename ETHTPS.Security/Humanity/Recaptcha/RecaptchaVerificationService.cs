@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace ETHTPS.API.Security.Core.Humanity.Recaptcha
 {
-    public class RecaptchaVerificationService : IRecaptchaVerificationService
+    public sealed class RecaptchaVerificationService : IRecaptchaVerificationService
     {
         private readonly string _privateKey;
         private readonly HttpClient _httpClient = new();

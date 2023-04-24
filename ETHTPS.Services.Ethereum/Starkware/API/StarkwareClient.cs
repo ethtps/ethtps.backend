@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace ETHTPS.Services.Ethereum.Starkware.API
 {
-    public class StarkwareClient
+    public sealed class StarkwareClient
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;

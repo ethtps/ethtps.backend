@@ -12,7 +12,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("OMG Network")]
     [RunsEvery(CronConstants.EVERY_13_S)]
-    public class OMGNetworkBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class OMGNetworkBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
 
@@ -49,7 +49,7 @@ namespace ETHTPS.Services.Ethereum
         }
 
 
-        public class OMGResponseObject
+        public sealed class OMGResponseObject
         {
             public BlockData[] data { get; set; }
             public Data_Paging data_paging { get; set; }
@@ -58,13 +58,13 @@ namespace ETHTPS.Services.Ethereum
             public string version { get; set; }
         }
 
-        public class Data_Paging
+        public sealed class Data_Paging
         {
             public int limit { get; set; }
             public int page { get; set; }
         }
 
-        public class BlockData
+        public sealed class BlockData
         {
             public int blknum { get; set; }
             public int eth_height { get; set; }

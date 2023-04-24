@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ETHTPS.Tests.ServiceTests
 {
-    public class InfluxTests : TestBase
+    public sealed class InfluxTests : TestBase
     {
         private IInfluxWrapper? _influxWrapper;
         private IAsyncHistoricalBlockInfoProvider? _asyncHistoricalBlockInfoProvider;

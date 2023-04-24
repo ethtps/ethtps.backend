@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.Data.Integrations.MSSQL.TimeWarp.Models
 {
-    public class TimeWarpSyncProgressModel
+    public sealed class TimeWarpSyncProgressModel
     {
         public int CurrentBlock { get; set; }
 

@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Services.BlockchainServices.HangfireLogging
 {
-    public class MSSQLLogger<T> : BlockInfoProviderDataLoggerBase<T>
+    public abstract class MSSQLLogger<T> : BlockInfoProviderDataLoggerBase<T>
          where T : IHTTPBlockInfoProvider
     {
         protected override string ServiceName { get => $"MSSQLLogger<{typeof(T).Name}>"; }

@@ -5,7 +5,7 @@ using ETHTPS.Data.ResponseModels.SocialMedia;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {
-    public class ExternalWebsitesService : EFCoreCRUDServiceBase<ExternalWebsite>, IExternalWebsitesService<ExternalWebsite>
+    public sealed class ExternalWebsitesService : EFCoreCRUDServiceBase<ExternalWebsite>, IExternalWebsitesService<ExternalWebsite>
     {
         private readonly EthtpsContext _context;
         public ExternalWebsitesService(EthtpsContext context) : base(context.ExternalWebsites, context)

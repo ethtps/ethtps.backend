@@ -3,7 +3,7 @@ using ETHTPS.Data.Integrations.MSSQL;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {
-    public class ProvidersService : EFCoreCRUDServiceBase<Provider>, IProvidersService<Provider>
+    public sealed class ProvidersService : EFCoreCRUDServiceBase<Provider>, IProvidersService<Provider>
     {
         public ProvidersService(EthtpsContext context) : base(context.Providers, context)
         {

@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
 {
-    public class DependencyInjectionAggregatedDataservice : IAggregatedDataService
+    public sealed class DependencyInjectionAggregatedDataservice : IAggregatedDataService
     {
         private readonly ITPSService _tpsService;
         private readonly IGPSService _gpsService;

@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.Runner
 {
-    public class SystemResources
+    public sealed class SystemResources
     {
         private const int _PADDING = 7;
         public SystemResource CPU { get; private set; } = new("CPU", "%", _PADDING)

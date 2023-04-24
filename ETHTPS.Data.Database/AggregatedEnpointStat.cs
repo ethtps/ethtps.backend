@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.Data.Integrations.MSSQL
 {
-    public class AggregatedEnpointStat
+    public sealed class AggregatedEnpointStat
     {
         public int Id { get; set; }
         public string Path { get; set; } = string.Empty;

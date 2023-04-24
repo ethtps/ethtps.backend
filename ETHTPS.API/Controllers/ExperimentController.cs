@@ -12,7 +12,7 @@ namespace ETHTPS.API.Controllers
 {
     [Route("/api/v3/Experiments/[action]")]
     [ApiController]
-    public class ExperimentController : ControllerBase
+    public sealed class ExperimentController : ControllerBase
     {
         private readonly IExperimentService _experimentService;
 

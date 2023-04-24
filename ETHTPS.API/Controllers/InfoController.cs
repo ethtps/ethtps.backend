@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 namespace ETHTPS.API.Controllers
 {
     [Route("/api/v3/info/[action]")]
-    public class InfoController : APIControllerBase
+    public sealed class InfoController : APIControllerBase
     {
         private readonly IInfoService _infoService;
 

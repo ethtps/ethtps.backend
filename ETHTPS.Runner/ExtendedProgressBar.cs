@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Runner
 {
-    public class ExtendedProgressBar
+    public sealed class ExtendedProgressBar
     {
         private readonly ProgressBar _progressBar;
         private readonly SystemResource _systemResource;

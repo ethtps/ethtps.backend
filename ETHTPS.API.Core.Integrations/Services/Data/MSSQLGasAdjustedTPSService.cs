@@ -10,7 +10,7 @@ using ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
 {
-    public class MSSQLGasAdjustedTPSService : HistoricalMethodsServiceBase, IGTPSService
+    public sealed class MSSQLGasAdjustedTPSService : HistoricalMethodsServiceBase, IGTPSService
     {
         private readonly IGPSService _gpsService;
         public MSSQLGasAdjustedTPSService(IGPSService gpsService, EthtpsContext context, IEnumerable<IHistoricalDataProvider> historicalDataServices, IDataUpdaterStatusService dataUpdaterStatusService) : base(context, historicalDataServices, dataUpdaterStatusService)

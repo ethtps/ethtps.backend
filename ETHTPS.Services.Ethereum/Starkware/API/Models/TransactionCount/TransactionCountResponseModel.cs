@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Services.Ethereum.Starkware.API.Models.TransactionCount
 {
-    public class TransactionCountResponseModel
+    public sealed class TransactionCountResponseModel
     {
         [JsonProperty("count")]
         public int Count { get; set; }

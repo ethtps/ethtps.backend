@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.Configuration.Validation.Exceptions
 {
-    public class ConfigurationStringNotFoundException : Exception
+    public sealed class ConfigurationStringNotFoundException : Exception
     {
         public string ConfigurationStringName { get; private set; }
         public string MicroserviceName { get; set; }

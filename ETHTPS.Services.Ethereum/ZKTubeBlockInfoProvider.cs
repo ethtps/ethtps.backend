@@ -12,7 +12,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("zkTube")]
     [RunsEvery(CronConstants.EVERY_30_S)]
-    public class ZKTubeBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class ZKTubeBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
 
@@ -60,7 +60,7 @@ namespace ETHTPS.Services.Ethereum
         }
 
 
-        public class BlockSummary
+        public sealed class BlockSummary
         {
             public int block_number { get; set; }
             public string new_state_root { get; set; }
@@ -72,12 +72,12 @@ namespace ETHTPS.Services.Ethereum
         }
 
 
-        public class TransactionsResponse
+        public sealed class TransactionsResponse
         {
             public Transaction[] Property1 { get; set; }
         }
 
-        public class Transaction
+        public sealed class Transaction
         {
             public string tx_hash { get; set; }
             public int block_number { get; set; }
@@ -87,7 +87,7 @@ namespace ETHTPS.Services.Ethereum
             public DateTime created_at { get; set; }
         }
 
-        public class Op
+        public sealed class Op
         {
             public string to { get; set; }
             public string fee { get; set; }
@@ -101,14 +101,14 @@ namespace ETHTPS.Services.Ethereum
             public Signature signature { get; set; }
         }
 
-        public class Signature
+        public sealed class Signature
         {
             public string pubKey { get; set; }
             public string signature { get; set; }
         }
 
 
-        public class StatusResponse
+        public sealed class StatusResponse
         {
             public object next_block_at_max { get; set; }
             public int last_committed { get; set; }

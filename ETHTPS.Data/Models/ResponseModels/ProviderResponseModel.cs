@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace ETHTPS.Data.ResponseModels
 {
-    public class ProviderResponseModel
+    public sealed class ProviderResponseModel
     {
         [JsonIgnore]
         public int Id { get; set; }

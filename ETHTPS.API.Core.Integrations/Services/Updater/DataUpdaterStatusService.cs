@@ -7,7 +7,7 @@ using ETHTPS.Data.Integrations.MSSQL.Extensions;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
 {
-    public class DataUpdaterStatusService : IDataUpdaterStatusService
+    public sealed class DataUpdaterStatusService : IDataUpdaterStatusService
     {
         private readonly EthtpsContext _context;
 

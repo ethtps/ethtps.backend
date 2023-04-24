@@ -8,7 +8,7 @@ namespace ETHTPS.Data.Core.Models.ResponseModels.L2s
     /// <summary>
     /// An object used for responsding to L2 data requests
     /// </summary>
-    public class L2DataResponseModel : IAnalysisParameters
+    public sealed class L2DataResponseModel : IAnalysisParameters
     {
 
         public L2DataResponseModel() { }

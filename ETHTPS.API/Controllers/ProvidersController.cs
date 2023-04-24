@@ -10,7 +10,7 @@ namespace ETHTPS.API.Controllers
     [Route("api/v3/management/providers")]
     [ApiController]
     [Authorize(Policy = "AdminsOnly")]
-    public class ProvidersController : CRUDServiceControllerBase<Provider>
+    public sealed class ProvidersController : CRUDServiceControllerBase<Provider>
     {
         public ProvidersController(IProvidersService serviceImplementation) : base((ICRUDService<Provider>)serviceImplementation)
         {

@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Runner
 {
-    public class Service
+    public sealed class Service
     {
         private readonly string _filePath;
         private Process _process;

@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Services.BackgroundTasks.Recurring.Aggregated
 {
-    public class BuildAggregatedStatsEvent : IEvent
+    public sealed class BuildAggregatedStatsEvent : IEvent
     {
     }
 }

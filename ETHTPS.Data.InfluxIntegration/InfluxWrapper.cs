@@ -19,7 +19,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
     /// <summary>
     /// Calling it a wrapper so we don't conflict with the library
     /// </summary>
-    public class InfluxWrapper : IInfluxWrapper
+    public sealed class InfluxWrapper : IInfluxWrapper
     {
         private readonly InfluxWrapperConfiguration _configuration;
         private readonly InfluxDBClient _influxClient;

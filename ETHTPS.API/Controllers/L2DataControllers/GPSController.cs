@@ -15,7 +15,7 @@ namespace ETHTPS.API.Controllers.L2DataControllers
 {
     [Route("api/v2/GPS/[action]")]
     [Authorize(AuthenticationSchemes = "APIKey")]
-    public class GPSController : IPSService
+    public sealed class GPSController : IPSService
     {
         private readonly IGPSService _gpsService;
 

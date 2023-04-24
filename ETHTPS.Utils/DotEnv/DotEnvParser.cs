@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Utils.DotEnv
 {
-    public class DotEnvParser
+    public sealed class DotEnvParser
     {
         private readonly Dictionary<string, string> _envVars;
 

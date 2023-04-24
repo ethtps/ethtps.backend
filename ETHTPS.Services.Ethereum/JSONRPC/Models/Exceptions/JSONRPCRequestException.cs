@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Services.Ethereum.JSONRPC.Models.Exceptions
 {
-    public class JSONRPCRequestException : Exception
+    public sealed class JSONRPCRequestException : Exception
     {
         public JSONRPCRequestException() : base()
         {

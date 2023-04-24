@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace ETHTPS.WSAPI.Infrastructure.LiveData.Connection
 {
-    public class LiveDataHub : Hub
+    public sealed class LiveDataHub : Hub
     {
         private static readonly Dictionary<string, SubscriptionModel> _subscriptions = new Dictionary<string, SubscriptionModel>();
 

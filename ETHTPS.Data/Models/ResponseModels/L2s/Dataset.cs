@@ -4,7 +4,7 @@ using ETHTPS.Data.Core.Models.DataPoints.XYPoints;
 
 namespace ETHTPS.Data.Core.Models.ResponseModels.L2s
 {
-    public class Dataset
+    public sealed class Dataset
     {
         public Dataset(IEnumerable<IXYMultiConvertible> dataPoints, string provider, bool simpleDatasetAnalysisIncluded, bool complexDatasetAnalysisIncluded)
         {

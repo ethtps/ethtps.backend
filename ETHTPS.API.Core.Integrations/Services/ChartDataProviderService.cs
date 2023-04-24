@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {
-    public class ChartDataServiceservice : IChartDataServiceservice
+    public sealed class ChartDataServiceservice : IChartDataServiceservice
     {
         private readonly ITPSService _tpsService;
         private readonly IGPSService _gpsService;

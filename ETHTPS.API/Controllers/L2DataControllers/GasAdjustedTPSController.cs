@@ -15,7 +15,7 @@ namespace ETHTPS.API.Controllers.L2DataControllers
 {
     [Route("api/v2/GasAdjustedTPS/[action]")]
     [Authorize(AuthenticationSchemes = "APIKey")]
-    public class GasAdjustedTPSController : IPSService
+    public sealed class GasAdjustedTPSController : IPSService
     {
         private readonly IGTPSService _gtpsService;
 

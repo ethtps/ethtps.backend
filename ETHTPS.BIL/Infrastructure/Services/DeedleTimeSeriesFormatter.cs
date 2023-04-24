@@ -11,7 +11,7 @@ using ETHTPS.Data.Core.Models.ResponseModels.L2s;
 
 namespace ETHTPS.API.BIL.Infrastructure.Services
 {
-    public class DeedleTimeSeriesFormatter : IPSDataFormatter
+    public sealed class DeedleTimeSeriesFormatter : IPSDataFormatter
     {
         public IEnumerable<IXYMultiConvertible> Format(List<DataResponseModel> source, L2DataRequestModel requestModel)
         {

@@ -20,7 +20,7 @@ namespace ETHTPS.Services.BlockchainServices.CoravelLoggers
     /// A simple periodic task update runner
     /// </summary>
     /// <typeparam name="TBlockInfoProvider"></typeparam>
-    public class CoravelBlockLogger<TBlockInfoProvider> : ICoravelBackgroundService
+    public abstract class CoravelBlockLogger<TBlockInfoProvider> : ICoravelBackgroundService
         where TBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private static Dictionary<string, int> _lastBlockNumberDictionary = new();

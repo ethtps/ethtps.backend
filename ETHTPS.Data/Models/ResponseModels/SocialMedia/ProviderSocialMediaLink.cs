@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.Data.ResponseModels.SocialMedia
 {
-    public class ProviderSocialMediaLink
+    public sealed class ProviderSocialMediaLink
     {
 
     }

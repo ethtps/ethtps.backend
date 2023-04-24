@@ -6,7 +6,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
 {
     [Provider("Celo")]
     [RunsEvery(CronConstants.EVERY_30_S)]
-    public class CeloBlockInfoProvider : InfuraBlockInfoProviderBase
+    public sealed class CeloBlockInfoProvider : InfuraBlockInfoProviderBase
     {
         public CeloBlockInfoProvider(IConfiguration configuration) : base(configuration, "CeloEndpoint")
         {

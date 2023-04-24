@@ -4,7 +4,7 @@ using ETHTPS.Data.Core.Extensions;
 
 namespace ETHTPS.Data.Core.Models.DataPoints.XYPoints
 {
-    public class DatedXYDataPoint : XYDataPointBase<DateTime>
+    public sealed class DatedXYDataPoint : XYDataPointBase<DateTime>
     {
         public DatedXYDataPoint() : base() { }
         public DatedXYDataPoint(DateTime x, double y) : base(x, y)

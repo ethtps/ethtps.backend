@@ -16,7 +16,7 @@ namespace ETHTPS.Services.Ethereum.Scan.Implementations
     [Provider("Optimism")]
     [Disabled]
     [Obsolete("Use JSONRPC.OptimismBlockInfoProvider instead", true)]
-    public class OptimisticEthereumBlockInfoProvider : ScanBlockInfoProviderBase
+    public sealed class OptimisticEthereumBlockInfoProvider : ScanBlockInfoProviderBase
     {
         private readonly string _targetElementSelector;
         private readonly string _baseURL;

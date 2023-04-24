@@ -14,7 +14,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Starknet")]
     [RunsEvery(CronConstants.EVERY_13_S)]
-    public class VoyagerBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class VoyagerBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
         public double BlockTimeSeconds { get; set; }
@@ -50,13 +50,13 @@ namespace ETHTPS.Services.Ethereum
         }
 
 
-        public class StarknetResponse
+        public sealed class StarknetResponse
         {
             public StarknetBlockInfo[] items { get; set; }
             public int lastPage { get; set; }
         }
 
-        public class StarknetBlockInfo
+        public sealed class StarknetBlockInfo
         {
             public string id { get; set; }
             public string previousBlockId { get; set; }

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Services.BlockchainServices.Status.BackgroundTasks.Discord.Endpoints
 {
-    public class GPSAPIStatusBackgroundTask : URLMonitoringBackgroundTask
+    public sealed class GPSAPIStatusBackgroundTask : URLMonitoringBackgroundTask
     {
         public GPSAPIStatusBackgroundTask(ILogger<HangfireBackgroundService> logger, EthtpsContext context, IConfiguration configuration) : base(logger, context, configuration, "https://api.ethtps.info/API/GPS/Get")
         {

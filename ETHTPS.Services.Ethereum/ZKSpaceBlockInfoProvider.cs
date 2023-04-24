@@ -13,7 +13,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("ZKSpace")]
     [RunsEvery(CronConstants.EVERY_5_S)]
-    public class ZKSpaceBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class ZKSpaceBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
         public ZKSpaceBlockInfoProvider()

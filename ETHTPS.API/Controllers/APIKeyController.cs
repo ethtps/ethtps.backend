@@ -14,7 +14,7 @@ namespace ETHTPS.API.Controllers
     [Route("/api/v3/APIKeys/[action]")]
     [ApiController]
     [AllowAnonymous]
-    public class APIKeyController : ControllerBase, IAPIKeyService
+    public sealed class APIKeyController : ControllerBase, IAPIKeyService
     {
         private readonly IExtendedAPIKeyService _apiKeyService;
         private readonly IConnectionMultiplexer _connectionMultiplexer;

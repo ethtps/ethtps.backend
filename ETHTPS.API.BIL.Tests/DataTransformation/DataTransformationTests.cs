@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ETHTPS.Tests.DataTransformation
 {
-    public class DataTransformationTests : TestBase
+    public sealed class DataTransformationTests : TestBase
     {
         private IAggregatedDataService? _dataService;
         private readonly L2DataRequestModel _defaultModel = new L2DataRequestModel()

@@ -15,7 +15,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace ETHTPS.API.Controllers.L2DataControllers
 {
     [Route("/api/v3/L2Data/[action]")]
-    public class L2DataController : APIControllerBase
+    public sealed class L2DataController : APIControllerBase
     {
         private readonly IAggregatedDataService _aggregatedDataService;
         private readonly IPSDataFormatter _dataFormatter;

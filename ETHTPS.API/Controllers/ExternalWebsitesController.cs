@@ -11,7 +11,7 @@ namespace ETHTPS.API.Controllers
 {
     [Route("/api/v3/external-websites/")]
     [ApiController]
-    public class ExternalWebsitesController : CRUDServiceControllerBase<IExternalWebsite>
+    public sealed class ExternalWebsitesController : CRUDServiceControllerBase<IExternalWebsite>
     {
         private readonly IExternalWebsitesService _externalWebsitesService;
         public ExternalWebsitesController(IExternalWebsitesService serviceImplementation) : base((ICRUDService<IExternalWebsite>)serviceImplementation)

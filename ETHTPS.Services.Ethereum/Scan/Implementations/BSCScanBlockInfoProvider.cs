@@ -6,7 +6,7 @@ namespace ETHTPS.Services.Ethereum.Scan.Implementations
 {
     [Provider("Binance Smart Chain")]
     [Disabled]
-    public class BSCScanBlockInfoProvider : ScanBlockInfoProviderBase
+    public sealed class BSCScanBlockInfoProvider : ScanBlockInfoProviderBase
     {
         public BSCScanBlockInfoProvider(IConfiguration configuration) : base(configuration, "BSCScan")
         {

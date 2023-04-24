@@ -259,7 +259,7 @@ namespace ETHTPS.Tests.ServiceTests
         }
     }
 }
-public class TestCachedKey : ICachedKey
+public sealed class TestCachedKey : ICachedKey
 {
     public int Id { get; set; }
     public required string Name { get; set; }

@@ -6,7 +6,7 @@ namespace ETHTPS.Data.Core
     /// Specifies how data should be grouped when this is chosen
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-    public class GroupByAttribute : Attribute
+    public sealed class GroupByAttribute : Attribute
     {
         public TimeGrouping Grouping { get; private set; }
 

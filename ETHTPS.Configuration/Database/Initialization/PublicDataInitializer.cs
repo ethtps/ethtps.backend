@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Configuration.Database
 {
-    public class PublicDataInitializer : DataInitializerBase
+    public sealed class PublicDataInitializer : DataInitializerBase
     {
         public PublicDataInitializer(IDBConfigurationProvider provider) : base(provider)
         {

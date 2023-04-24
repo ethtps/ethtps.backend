@@ -3,7 +3,7 @@
 namespace ETHTPS.Services.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    public class ProviderAttribute : Attribute
+    public sealed class ProviderAttribute : Attribute
     {
         public ProviderAttribute(string name)
         {

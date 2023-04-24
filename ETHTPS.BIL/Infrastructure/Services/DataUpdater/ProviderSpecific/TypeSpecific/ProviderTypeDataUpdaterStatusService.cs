@@ -2,7 +2,7 @@
 
 namespace ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.ProviderSpecific.TypeSpecific
 {
-    public class ProviderTypeDataUpdaterStatusService : IProviderTypeDataUpdaterStatusService
+    public sealed class ProviderTypeDataUpdaterStatusService : IProviderTypeDataUpdaterStatusService
     {
         private readonly IProviderDataUpdaterStatusManager _providerDataUpdaterStatusManager;
 

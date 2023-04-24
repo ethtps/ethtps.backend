@@ -22,7 +22,7 @@ namespace ETHTPS.Services.Ethereum
     [Disabled]
     [RunsEvery(CronConstants.EVERY_30_S)]
     [Obsolete("This implementation is obsolete. Please use SnowtraceBlockInfoProvider.", error: true)]
-    public class AVAXCChainBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class AVAXCChainBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private const string _NAME = "AVAX C-chain";
         private readonly HttpClient _httpClient;

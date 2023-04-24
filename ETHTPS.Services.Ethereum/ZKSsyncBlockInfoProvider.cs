@@ -12,7 +12,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("ZKSync")]
     [RunsEvery(CronConstants.EVERY_5_S)]
-    public class ZKSsyncBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class ZKSsyncBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
         public ZKSsyncBlockInfoProvider()

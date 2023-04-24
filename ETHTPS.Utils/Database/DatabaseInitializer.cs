@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Utils.Database
 {
-    public class DatabaseInitializer : IDatabaseInitializer
+    public sealed class DatabaseInitializer : IDatabaseInitializer
     {
         private readonly ILogger<DatabaseInitializer> _logger;
 

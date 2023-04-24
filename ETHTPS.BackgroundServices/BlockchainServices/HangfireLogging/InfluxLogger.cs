@@ -18,7 +18,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Services.BlockchainServices.HangfireLogging
 {
-    public class InfluxLogger<T> : BlockInfoProviderDataLoggerBase<T>
+    public abstract class InfluxLogger<T> : BlockInfoProviderDataLoggerBase<T>
          where T : IHTTPBlockInfoProvider
     {
         private static IBucketCreator _bucketCreator;

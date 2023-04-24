@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Data.ResponseModels.SocialMedia
 {
-    public class ExternalWebsiteBase : IExternalWebsite
+    public abstract class ExternalWebsiteBase : IExternalWebsite
     {
 
         public string Name { get; set; }

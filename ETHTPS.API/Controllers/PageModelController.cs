@@ -19,7 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ETHTPS.API.Controllers
 {
     [Route("api/v2/Pages/[action]")]
-    public class PageModelController : ControllerBase
+    public sealed class PageModelController : ControllerBase
     {
         private readonly GeneralService _generalService;
         private readonly IGTPSService _gasAdjustedTPSService;

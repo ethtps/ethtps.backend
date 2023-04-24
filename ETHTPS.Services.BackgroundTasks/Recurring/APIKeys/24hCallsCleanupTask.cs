@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Services.BackgroundTasks.Recurring.APIKeys
 {
-    public class _24hCallsCleanupTask : HangfireBackgroundService
+    public sealed class _24hCallsCleanupTask : HangfireBackgroundService
     {
         public _24hCallsCleanupTask(ILogger<HangfireBackgroundService> logger, EthtpsContext context) : base(logger, context)
         {

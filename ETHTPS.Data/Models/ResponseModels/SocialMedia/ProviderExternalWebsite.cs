@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Data.ResponseModels.SocialMedia
 {
-    public class ProviderExternalWebsite : IProviderExternalWebsite
+    public sealed class ProviderExternalWebsite : IProviderExternalWebsite
     {
         public string Url { get; set; }
         public string Name { get; set; }

@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 
 namespace ETHTPS.Services.BlockchainServices.Status.BackgroundTasks.Discord
 {
-    public class PlausibleVisitorCountBackgroundTask : BackgroundTaskWithNotifier
+    public sealed class PlausibleVisitorCountBackgroundTask : BackgroundTaskWithNotifier
     {
         private readonly HttpClient _httpClient;
         private readonly string _url;
@@ -61,23 +61,23 @@ namespace ETHTPS.Services.BlockchainServices.Status.BackgroundTasks.Discord
         }
 
 
-        public class MetricsResponseModel
+        public sealed class MetricsResponseModel
         {
             public Results results { get; set; }
         }
 
-        public class Results
+        public sealed class Results
         {
             public Pageviews pageviews { get; set; }
             public Visitors visitors { get; set; }
         }
 
-        public class Pageviews
+        public sealed class Pageviews
         {
             public int value { get; set; }
         }
 
-        public class Visitors
+        public sealed class Visitors
         {
             public int value { get; set; }
         }

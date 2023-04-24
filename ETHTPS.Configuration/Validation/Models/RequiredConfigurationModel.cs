@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.Configuration.Validation.Models
 {
-    public class RequiredConfigurationModel : ConfigurationModelBase
+    public sealed class RequiredConfigurationModel : ConfigurationModelBase
     {
     }
 }

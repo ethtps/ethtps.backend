@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Configuration.ProviderConfiguration
 {
-    public class ProviderConfigurationService : IProviderConfigurationService
+    public sealed class ProviderConfigurationService : IProviderConfigurationService
     {
         private readonly ConfigurationContext _dbContext;
 

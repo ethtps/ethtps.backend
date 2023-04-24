@@ -8,7 +8,7 @@ namespace ETHTPS.Tests.ConfigurationProviderTests
     /// <summary>
     /// Long live ChatGPT. Some of these test cases didn't even cross my mind
     /// </summary>
-    public class BasicConfigurationProviderTests : TestBase
+    public sealed class BasicConfigurationProviderTests : TestBase
     {
 
         [SetUp]

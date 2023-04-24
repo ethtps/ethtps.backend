@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {
-    public class ExperimentService : IExperimentService
+    public sealed class ExperimentService : IExperimentService
     {
         private readonly EthtpsContext _context;
 

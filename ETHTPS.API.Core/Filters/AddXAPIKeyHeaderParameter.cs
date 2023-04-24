@@ -9,7 +9,7 @@ namespace ETHTPS.API.Core.Filters
     /// <summary>
     /// Adds an X-API-Key query parameter to ALL requests (except the one for API key creation)
     /// </summary>
-    public class AddXAPIKeyHeaderParameter : IDocumentFilter
+    public sealed class AddXAPIKeyHeaderParameter : IDocumentFilter
     {
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {

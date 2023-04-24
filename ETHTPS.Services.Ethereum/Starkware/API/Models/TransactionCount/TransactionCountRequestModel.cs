@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Services.Ethereum.Starkware.API.Models.TransactionCount
 {
-    public class TransactionCountRequestModel
+    public sealed class TransactionCountRequestModel
     {
         [JsonProperty("day_start")]
         public int UnixDayStart { get; set; }

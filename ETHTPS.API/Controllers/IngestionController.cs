@@ -9,7 +9,7 @@ namespace ETHTPS.API.Controllers
     /// </summary>
     [Route("/api/v3/Ingestion/[action]")]
     [ApiController]
-    public class IngestionController : ControllerBase
+    public sealed class IngestionController : ControllerBase
     {
         private readonly EthtpsContext _context;
 

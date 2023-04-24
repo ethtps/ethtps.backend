@@ -7,7 +7,7 @@ using Newtonsoft.Json.Converters;
 
 namespace ETHTPS.Data.Core.Models.Pages.Chart
 {
-    public class ChartData : IChartDataType
+    public sealed class ChartData : IChartDataType
     {
         public IDictionary<string, IEnumerable<DataResponseModel>> Data { get; set; }
 

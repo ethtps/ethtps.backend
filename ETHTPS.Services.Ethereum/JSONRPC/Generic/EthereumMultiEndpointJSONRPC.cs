@@ -15,7 +15,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
 {
     [Provider("Ethereum")]
     [RunsEvery(CronConstants.EVERY_5_S)]
-    public class EthereumMultiEndpointJSONRPC : IHTTPBlockInfoProvider
+    public sealed class EthereumMultiEndpointJSONRPC : IHTTPBlockInfoProvider
     {
         private readonly IEnumerable<(IHTTPBlockInfoProvider Provider, int FailureCount)> _children;
         private static Random _random = new Random();

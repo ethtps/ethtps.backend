@@ -17,7 +17,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Services.BlockchainServices.Status
 {
-    public class HistoricalInfluxLogger<T> : BlockInfoProviderDataLoggerBase<T>
+    public abstract class HistoricalInfluxLogger<T> : BlockInfoProviderDataLoggerBase<T>
          where T : IHTTPBlockInfoProvider
     {
         private readonly IInfluxWrapper _influxWrapper;

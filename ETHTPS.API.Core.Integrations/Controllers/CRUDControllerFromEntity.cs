@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Controllers.CRUD
 {
-    public class CRUDControllerFromEntity<TEntity> : EFCoreCRUDServiceBase<TEntity>, ICRUDController<TEntity>
+    public sealed class CRUDControllerFromEntity<TEntity> : EFCoreCRUDServiceBase<TEntity>, ICRUDController<TEntity>
          where TEntity : class, IIndexed
     {
         public CRUDControllerFromEntity(EthtpsContext context, Func<EthtpsContext, DbSet<TEntity>> setSelector) : base(setSelector(context), context)

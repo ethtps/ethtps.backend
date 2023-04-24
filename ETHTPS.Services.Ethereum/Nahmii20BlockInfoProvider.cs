@@ -18,7 +18,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Nahmii 2.0")]
     [RunsEvery(CronConstants.EVERY_13_S)]
-    public class Nahmii20BlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class Nahmii20BlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
 

@@ -7,7 +7,7 @@ namespace ETHTPS.Data.Core.Models.DataPoints.XYPoints.Attributes
     /// </summary>
     /// <typeparam name="TPoint"></typeparam>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-    public class UsesXYPoint<TPoint> : Attribute
+    public sealed class UsesXYPoint<TPoint> : Attribute
         where TPoint : IDataPoint, IXYMultiConvertible, new()
     {
         public Type XPointType { get; private set; }

@@ -7,7 +7,7 @@ namespace ETHTPS.WSAPI.Controllers
 {
     [Route("/api/v3/wsapi/trigger/[action]")]
     [Authorize(Roles = "Microservice")]
-    public class TriggerController : Controller
+    public sealed class TriggerController : Controller
     {
         [HttpPost]
         public IActionResult RegisterUpdate([FromBody] L2DataUpdateModel data)

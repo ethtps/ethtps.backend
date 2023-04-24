@@ -4,7 +4,7 @@ using ETHTPS.Data.Core.Models.DataPoints;
 
 namespace ETHTPS.Data.ResponseModels.HomePage
 {
-    public class HomePageViewModel
+    public sealed class HomePageViewModel
     {
         public IDictionary<string, IEnumerable<DataPoint>> InstantTPS { get; set; }
         public IEnumerable<ProviderInfo> ProviderData { get; set; }

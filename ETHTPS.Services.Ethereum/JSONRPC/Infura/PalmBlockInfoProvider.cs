@@ -6,7 +6,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
 {
     [Provider("Palm")]
     [RunsEvery(CronConstants.EVERY_30_S)]
-    public class PalmBlockInfoProvider : InfuraBlockInfoProviderBase
+    public sealed class PalmBlockInfoProvider : InfuraBlockInfoProviderBase
     {
         public PalmBlockInfoProvider(IConfiguration configuration) : base(configuration, "PalmEndpoint")
         {

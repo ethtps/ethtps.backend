@@ -13,7 +13,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Loopring")]
     [RunsEvery(CronConstants.EVERY_13_S)]
-    public class LoopringBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class LoopringBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
 
@@ -87,17 +87,17 @@ namespace ETHTPS.Services.Ethereum
         }
 
 
-        public class BlocksRootobject
+        public sealed class BlocksRootobject
         {
             public Data data { get; set; }
         }
 
-        public class Data
+        public sealed class Data
         {
             public Block[] blocks { get; set; }
         }
 
-        public class Block
+        public sealed class Block
         {
             public int blockSize { get; set; }
             public string id { get; set; }

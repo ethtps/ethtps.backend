@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Data.Integrations.MSSQL.Initialization
 {
-    public class ETHTPSInitializer : RelationalDatabaseInitializer<EthtpsContext>
+    public sealed class ETHTPSInitializer : RelationalDatabaseInitializer<EthtpsContext>
     {
         public ETHTPSInitializer(EthtpsContext database) : base(database)
         {

@@ -7,7 +7,7 @@ using ETHTPS.Services.BlockchainServices.Extensions;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {
-    public class TimeWarpService : ITimeWarpService
+    public sealed class TimeWarpService : ITimeWarpService
     {
         private readonly EthtpsContext _context;
         private readonly IServiceProvider _services;

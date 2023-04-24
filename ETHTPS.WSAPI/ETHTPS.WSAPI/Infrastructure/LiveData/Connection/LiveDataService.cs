@@ -2,7 +2,7 @@
 
 namespace ETHTPS.WSAPI.Infrastructure.LiveData.Connection
 {
-    public class LiveDataService
+    public sealed class LiveDataService
     {
         private readonly IHubContext<LiveDataHub> _hubContext;
 

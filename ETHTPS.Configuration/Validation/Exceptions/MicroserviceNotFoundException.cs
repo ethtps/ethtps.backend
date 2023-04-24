@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.Configuration.Validation.Exceptions
 {
-    public class MicroserviceNotFoundException : Exception
+    public sealed class MicroserviceNotFoundException : Exception
     {
         public string MicroserviceName { get; private set; }
 

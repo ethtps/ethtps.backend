@@ -3,7 +3,7 @@
 namespace ETHTPS.Data.Core.Models.DataEntries
 {
     [Measurement("gps")]
-    public class GPSInfo : InfoBase
+    public sealed class GPSInfo : InfoBase
     {
         [Column("tps")]
         public double GPS { get; set; }

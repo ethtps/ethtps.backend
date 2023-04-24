@@ -9,7 +9,7 @@ using NLog.Extensions.Hosting;
 
 namespace ETHTPS.API
 {
-    public class Program
+    public sealed class Program
     {
         public static void Main(string[] args)
         {

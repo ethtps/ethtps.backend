@@ -3,7 +3,7 @@ using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
 namespace ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices
 {
-    public class InstantDataProvider : IHistoricalDataProvider
+    public sealed class InstantDataProvider : IHistoricalDataProvider
     {
         private readonly EthtpsContext _context;
 

@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Data.Core.Models.ResponseModels.ChartData.Streamchart
 {
-    public class LegendModel
+    public sealed class LegendModel
     {
         public IEnumerable<string> Keys { get; set; }
         public IEnumerable<string> Colors { get; set; }

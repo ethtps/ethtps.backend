@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Runner
 {
-    public class WindowedService
+    public sealed class WindowedService
     {
         private readonly Service _child;
         private readonly IConsole _window;

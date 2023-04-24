@@ -16,7 +16,7 @@ using ServiceStack;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {
-    public class GeneralService : HistoricalMethodsServiceBase
+    public sealed class GeneralService : HistoricalMethodsServiceBase
     {
         private readonly ITPSService _tpsService;
         private readonly IGPSService _gpsService;

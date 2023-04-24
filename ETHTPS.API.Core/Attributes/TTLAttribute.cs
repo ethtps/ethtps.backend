@@ -1,7 +1,7 @@
 ﻿namespace ETHTPS.API.Core.Attributes
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public class TTLAttribute : Attribute
+    public sealed class TTLAttribute : Attribute
     {
         public TTLAttribute(int ttlSeconds)
         {

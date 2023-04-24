@@ -15,7 +15,7 @@ namespace ETHTPS.Configuration.Validation
     /// <summary>
     /// Represents a validator that makes sure the database provides the necessary configuration strings.
     /// </summary>
-    public class ConfigurationValidator
+    public sealed class ConfigurationValidator
     {
         private readonly ConfigurationContext _context;
         private StartupConfigurationModel? _startupConfiguration;

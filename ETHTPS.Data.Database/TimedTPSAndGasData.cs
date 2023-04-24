@@ -9,11 +9,11 @@
         //public string OclhJson { get; set; }
     }
 
-    public class TpsandGasDataDay : TimedTPSAndGasData { }
-    public class TpsandGasDataHour : TimedTPSAndGasData { }
-    public class TpsandGasDataWeek : TimedTPSAndGasData { }
-    public class TpsandGasDataMinute : TimedTPSAndGasData { }
-    public class TpsandGasDataMonth : TimedTPSAndGasData { }
-    public class TpsandGasDataAll : TimedTPSAndGasData { }
-    public class TpsandGasDataYear : TimedTPSAndGasData { }
+    public sealed class TpsandGasDataDay : TimedTPSAndGasData { }
+    public sealed class TpsandGasDataHour : TimedTPSAndGasData { }
+    public sealed class TpsandGasDataWeek : TimedTPSAndGasData { }
+    public sealed class TpsandGasDataMinute : TimedTPSAndGasData { }
+    public sealed class TpsandGasDataMonth : TimedTPSAndGasData { }
+    public sealed class TpsandGasDataAll : TimedTPSAndGasData { }
+    public sealed class TpsandGasDataYear : TimedTPSAndGasData { }
 }

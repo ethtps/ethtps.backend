@@ -16,7 +16,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Arbitrum Nova")]
     [RunsEvery(CronConstants.EVERY_10_S)]
-    public class ArbitrumNovaBlockInfoProvider : JSONRPCBlockInfoProviderBase
+    public sealed class ArbitrumNovaBlockInfoProvider : JSONRPCBlockInfoProviderBase
     {
         private const string NAME = "Arbitrum Nova";
         private readonly string _transactionCountSelector;

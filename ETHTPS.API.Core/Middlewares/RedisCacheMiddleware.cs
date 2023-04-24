@@ -8,7 +8,7 @@ namespace ETHTPS.API.Core.Middlewares
     /// <summary>
     /// Represents a middleware that caches responses for a specified TTL using Redis. Must be placed AFTER UseRouting(), otherwise the endpoint will be null and nothing will be cached.
     /// </summary>
-    public class RedisCacheMiddleware
+    public sealed class RedisCacheMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly IRedisCacheService _cacheService;

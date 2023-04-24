@@ -4,7 +4,7 @@ using Hangfire;
 
 namespace ETHTPS.Services.Activators
 {
-    public class HangfireActivator : JobActivator
+    public sealed class HangfireActivator : JobActivator
     {
         private readonly IServiceProvider _serviceProvider;
 

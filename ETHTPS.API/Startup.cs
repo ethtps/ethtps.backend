@@ -18,7 +18,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace ETHTPS.API
 {
-    public class Startup
+    public sealed class Startup
     {
         private readonly string _myAllowSpecificOrigins = "_myAllowSpecificOrigins";
         private readonly string _appName = "ETHTPS.API.General";

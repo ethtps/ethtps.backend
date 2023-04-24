@@ -12,7 +12,7 @@ namespace ETHTPS.API.Controllers
 {
     [Route("/api/v3/updater-status/[action]")]
     [ApiController]
-    public class UpdaterStatusController : APIControllerBase
+    public sealed class UpdaterStatusController : APIControllerBase
     {
         private readonly IDataUpdaterStatusGetter _dataUpdaterService;
 

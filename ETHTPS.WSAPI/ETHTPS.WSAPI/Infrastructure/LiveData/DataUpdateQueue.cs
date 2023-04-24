@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.WSAPI.Infrastructure.LiveData
 {
-    public class DataUpdateQueue
+    public sealed class DataUpdateQueue
     {
     }
 }

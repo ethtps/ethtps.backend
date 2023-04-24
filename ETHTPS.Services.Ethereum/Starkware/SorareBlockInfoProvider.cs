@@ -8,7 +8,7 @@ namespace ETHTPS.Services.Ethereum.Starkware
 {
     [Provider("Sorare")]
     [RunsEvery(CronConstants.EVERY_30_S)]
-    public class SorareBlockInfoProvider : StarkwareBlockInfoProviderBase
+    public sealed class SorareBlockInfoProvider : StarkwareBlockInfoProviderBase
     {
         public SorareBlockInfoProvider(EthtpsContext context, IConfiguration configuration) : base(Products.Sorare, context, configuration)
         {

@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.Configuration.Validation.Exceptions
 {
-    public class InvalidConfigurationStringException : Exception
+    public sealed class InvalidConfigurationStringException : Exception
     {
         public string ConfigurationStringName { get; private set; }
         public string? Reason { get; private set; }

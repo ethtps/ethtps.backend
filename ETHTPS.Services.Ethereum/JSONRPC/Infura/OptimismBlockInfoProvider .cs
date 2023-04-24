@@ -6,7 +6,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
 {
     [Provider("Optimism")]
     [RunsEvery(CronConstants.EVERY_5_S)]
-    public class OptimismBlockInfoProvider : InfuraBlockInfoProviderBase
+    public sealed class OptimismBlockInfoProvider : InfuraBlockInfoProviderBase
     {
         public OptimismBlockInfoProvider(IConfiguration configuration) : base(configuration, "OptimismEndpoint")
         {

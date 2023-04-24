@@ -12,7 +12,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace ETHTPS.API.Security.Core.Authentication
 {
-    public class APIKeyAuthenticationSchemeHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+    public sealed class APIKeyAuthenticationSchemeHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         private readonly EthtpsContext _context;
         private readonly ILogger _logger;

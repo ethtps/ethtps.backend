@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Services.BlockchainServices.Status.BackgroundTasks.Discord
 {
-    public class UpdaterStatusBackgroundTask : BackgroundTaskWithNotifier
+    public sealed class UpdaterStatusBackgroundTask : BackgroundTaskWithNotifier
     {
         private readonly IDataUpdaterStatusService _dataUpdaterStatusService;
 

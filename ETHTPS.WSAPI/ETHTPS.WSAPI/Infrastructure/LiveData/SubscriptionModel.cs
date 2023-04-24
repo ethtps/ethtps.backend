@@ -2,7 +2,7 @@
 
 namespace ETHTPS.WSAPI.Infrastructure.LiveData
 {
-    public class SubscriptionModel
+    public sealed class SubscriptionModel
     {
         private DateTime ConnectionTime { get; set; }
         public TimeSpan TimeAlive => DateTime.Now - ConnectionTime;

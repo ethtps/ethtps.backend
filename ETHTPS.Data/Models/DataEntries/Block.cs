@@ -7,7 +7,7 @@ using InfluxDB.Client.Core;
 namespace ETHTPS.Data.Core.Models.DataEntries
 {
     [Measurement("blockinfo")]
-    public class Block : IBlock
+    public sealed class Block : IBlock
     {
         [Column("blocknumber")]
         public int BlockNumber { get; set; }

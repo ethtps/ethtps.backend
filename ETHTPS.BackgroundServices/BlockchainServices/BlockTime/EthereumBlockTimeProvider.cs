@@ -7,7 +7,7 @@ using HtmlAgilityPack;
 
 namespace ETHTPS.Services.BlockchainServices.BlockTime
 {
-    public class EthereumBlockTimeProvider : IBlockTimeProvider
+    public sealed class EthereumBlockTimeProvider : IBlockTimeProvider
     {
         private double _lastBlocktime = 13.5;
 

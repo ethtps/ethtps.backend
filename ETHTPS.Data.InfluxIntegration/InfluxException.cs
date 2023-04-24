@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.Data.Integrations.InfluxIntegration
 {
-    public class InfluxException : Exception
+    public sealed class InfluxException : Exception
     {
         public string Details { get; private set; }
         public InfluxException(string message, string details) : base(message)

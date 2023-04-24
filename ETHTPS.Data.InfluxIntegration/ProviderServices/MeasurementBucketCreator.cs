@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices
 {
-    public class MeasurementBucketCreator : IBucketCreator
+    public sealed class MeasurementBucketCreator : IBucketCreator
     {
         private readonly IInfluxWrapper _influxWrapper;
         public MeasurementBucketCreator(IInfluxWrapper influxWrapper)

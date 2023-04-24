@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ETHTPS.API.Controllers
 {
     [Route("/api/v3/BlockInfo/[action]")]
-    public class BlockInfoController : Controller
+    public sealed class BlockInfoController : Controller
     {
         private readonly IAsyncHistoricalBlockInfoProvider _asyncHistoricalBlockInfoProvider;
 

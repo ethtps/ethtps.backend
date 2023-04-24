@@ -7,7 +7,7 @@ namespace ETHTPS.API.Controllers
 {
 #if DEBUG
     [Route("api/v3/[controller]")]
-    public class DataInitialization : APIControllerBase
+    public sealed class DataInitialization : APIControllerBase
     {
         private readonly PublicDataInitializer _publicDataInitializer;
 

@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.Services.Ethereum.Scan
 {
-    public class GetBlockNumberByTimestampRequestModel : ScanRequestModel
+    public sealed class GetBlockNumberByTimestampRequestModel : ScanRequestModel
     {
 
         public string Closest { get; private set; } = "before";

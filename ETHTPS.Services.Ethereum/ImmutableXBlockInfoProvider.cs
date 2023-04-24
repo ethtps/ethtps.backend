@@ -21,7 +21,7 @@ namespace ETHTPS.Services.Ethereum
     /// </summary>
     [Provider("Immutable X")]
     [RunsEvery(CronConstants.EVERY_13_S)]
-    public class ImmutableXBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class ImmutableXBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
@@ -121,17 +121,17 @@ namespace ETHTPS.Services.Ethereum
             return sum;
         }
 
-        public class Rootobject
+        public sealed class Rootobject
         {
             public Data data { get; set; }
         }
 
-        public class Data
+        public sealed class Data
         {
             public Listtransactions listTransactions { get; set; }
         }
 
-        public class Listtransactions
+        public sealed class Listtransactions
         {
             public Item[] items { get; set; }
             public string nextToken { get; set; }
@@ -139,7 +139,7 @@ namespace ETHTPS.Services.Ethereum
             public string __typename { get; set; }
         }
 
-        public class Item
+        public sealed class Item
         {
             public string txn_time { get; set; }
             public int txn_id { get; set; }
@@ -148,7 +148,7 @@ namespace ETHTPS.Services.Ethereum
             public string __typename { get; set; }
         }
 
-        public class Transfer
+        public sealed class Transfer
         {
             public string from_address { get; set; }
             public string to_address { get; set; }
@@ -156,7 +156,7 @@ namespace ETHTPS.Services.Ethereum
             public string __typename { get; set; }
         }
 
-        public class Token
+        public sealed class Token
         {
             public string type { get; set; }
             public float quantity { get; set; }
@@ -167,14 +167,14 @@ namespace ETHTPS.Services.Ethereum
         }
 
 
-        public class GraphQLPayload
+        public sealed class GraphQLPayload
         {
             public string operationName { get; set; }
             public Variables variables { get; set; }
             public string query { get; set; }
         }
 
-        public class Variables
+        public sealed class Variables
         {
             public string address { get; set; }
         }

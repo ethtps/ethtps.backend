@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Data.Core.Models.DataUpdater
 {
-    public class LiveDataUpdaterStatus : IBasicLiveUpdaterStatus, IComparable<UpdaterStatus>, IEquatable<UpdaterStatus>
+    public sealed class LiveDataUpdaterStatus : IBasicLiveUpdaterStatus, IComparable<UpdaterStatus>, IEquatable<UpdaterStatus>
     {
         private const double UNRELIABILITY_RATIO_THRESHOLD = 1;
         public string Updater { get; set; }

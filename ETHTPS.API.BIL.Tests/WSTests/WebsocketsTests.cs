@@ -9,7 +9,7 @@ using WebSocketSharp;
 
 namespace ETHTPS.Tests.WSTests
 {
-    public class WebsocketsTests : TestBase
+    public sealed class WebsocketsTests : TestBase
     {
         private const string _wsURL = "ws://localhost:2000/LiveData";
         private ILogger<WebsocketsTests>? _logger;

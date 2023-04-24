@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
 {
-    public class ValidationResult
+    public sealed class ValidationResult
     {
         public bool IsValid { get; set; }
         public string? Reason { get; set; }

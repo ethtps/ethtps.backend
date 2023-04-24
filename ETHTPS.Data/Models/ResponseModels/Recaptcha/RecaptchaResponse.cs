@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace ETHTPS.Data.ResponseModels.Recaptcha
 {
-    public class RecaptchaResponse
+    public sealed class RecaptchaResponse
     {
         [JsonProperty("success")]
         public bool Success { get; set; }

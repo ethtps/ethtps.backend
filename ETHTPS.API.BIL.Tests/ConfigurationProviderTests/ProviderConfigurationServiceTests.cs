@@ -9,7 +9,7 @@ using Environment = ETHTPS.Configuration.Database.Environment;
 namespace ETHTPS.Tests.ConfigurationProviderTests
 {
     [TestFixture]
-    public class ProviderConfigurationServiceTests : TestBase
+    public sealed class ProviderConfigurationServiceTests : TestBase
     {
 
         [SetUp]

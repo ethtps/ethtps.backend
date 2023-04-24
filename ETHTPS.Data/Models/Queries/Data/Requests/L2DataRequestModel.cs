@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
 {
-    public class L2DataRequestModel : ProviderQueryModel, IAnalysisParameters
+    public sealed class L2DataRequestModel : ProviderQueryModel, IAnalysisParameters
     {
         [JsonIgnore]
         public TimeInterval AutoInterval

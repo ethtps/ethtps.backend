@@ -15,7 +15,7 @@ namespace ETHTPS.API.Controllers.L2DataControllers
 {
     [Route("api/v2/TPS/[action]")]
     [Authorize(AuthenticationSchemes = "APIKey")]
-    public class TPSController : IPSService
+    public sealed class TPSController : IPSService
     {
         private readonly ITPSService _tpsService;
 

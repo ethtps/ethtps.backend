@@ -13,7 +13,7 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Aztec")]
     [RunsEvery(CronConstants.EVERY_13_S)]
-    public class AztecBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class AztecBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private readonly HttpClient _httpClient;
         public double BlockTimeSeconds { get; set; }
@@ -110,19 +110,19 @@ namespace ETHTPS.Services.Ethereum
             public string query { get; set; }
         }
 
-        public class BlockCountRootObject
+        public sealed class BlockCountRootObject
         {
             public BlockCountResponse data { get; set; }
         }
 
-        public class BlockCountResponse
+        public sealed class BlockCountResponse
         {
             public int totalBlocks { get; set; }
             public int totalTxs { get; set; }
             public Serverstatus serverStatus { get; set; }
         }
 
-        public class Serverstatus
+        public sealed class Serverstatus
         {
             public DateTime nextPublishTime { get; set; }
             public int pendingTxCount { get; set; }
