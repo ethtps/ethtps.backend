@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+using ETHTPS.API.Core.Attributes;
 using ETHTPS.API.Core.Integrations.MSSQL.Services;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Models.DataPoints;
@@ -21,6 +22,7 @@ namespace ETHTPS.API.Controllers.L2DataControllers
         }
 
         [HttpGet]
+        [TTL(300)]
         public IEnumerable<string> Networks()
         {
             return _generalService.Networks();

@@ -9,7 +9,7 @@ using StackExchange.Redis;
 
 namespace ETHTPS.API.Core.Services
 {
-    public sealed class RedisCachedDataService : ICachedDataService
+    public sealed class RedisCachedDataService : IRedisCacheService
     {
         private readonly IConnectionMultiplexer _connectionMultiplexer;
         private readonly IDatabase _database;

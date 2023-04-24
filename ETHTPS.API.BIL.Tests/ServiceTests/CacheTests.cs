@@ -15,7 +15,7 @@ namespace ETHTPS.Tests.ServiceTests
     {
         private IConnectionMultiplexer _connectionMultiplexer;
         private IDatabase _database;
-        private ICachedDataService _cachedDataService;
+        private IRedisCacheService _cachedDataService;
 
         [SetUp]
         public void Setup()

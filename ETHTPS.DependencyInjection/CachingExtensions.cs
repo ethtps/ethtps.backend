@@ -2,7 +2,6 @@
 using ETHTPS.API.Core.Services;
 using ETHTPS.Configuration;
 using ETHTPS.Configuration.Extensions;
-using ETHTPS.Configuration.Validation.Exceptions;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,13 +13,14 @@ namespace ETHTPS.API.DependencyInjection
     {
         public static IServiceCollection AddRedisCache(this IServiceCollection services) =>
             services.AddSingleton<IConnectionMultiplexer>(
-                x => ConnectionMultiplexer.Connect(
-                    x.GetRequiredService<IDBConfigurationProvider>().GetFirstConfigurationString("RedisServer") ?? x.GetRequiredService<IDBConfigurationProvider>().GetFirstConfigurationString("RedisServerAlt")
-                    ?? throw new ConfigurationStringNotFoundException(
-                        "RedisServer/RedisServerAlt",
-                        "Any")
-                    )
-                )
-            .AddSingleton<ICachedDataService, RedisCachedDataService>();
+                x =>
+                {
+                    using (var scope = x.CreateScope())
+                    {
+                        return ConnectionMultiplexer.Connect(scope.ServiceProvider.GetService<IDBConfigurationProvider>()?.GetFirstConfigurationString("RedisServer") ?? scope.ServiceProvider.GetService<IDBConfigurationProvider>()?.GetFirstConfigurationString("RedisServerAlt")
+                        ?? "localhost");
+                    }
+                })
+            .AddSingleton<IRedisCacheService, RedisCachedDataService>();
     }
 }

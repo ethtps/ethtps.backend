@@ -69,6 +69,7 @@ namespace ETHTPS.API
             app.UseMiddleware<AccesStatsMiddleware>();
             app.ConfigureSwagger();
             app.UseRouting();
+            app.UseMiddleware<RedisCacheMiddleware>();
             app.UseAuthorization();
             app.UseCors(_myAllowSpecificOrigins);
             app.UseEndpoints(endpoints =>

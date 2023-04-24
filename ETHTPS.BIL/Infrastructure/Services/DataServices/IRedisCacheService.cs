@@ -2,7 +2,7 @@
 
 namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
 {
-    public interface ICachedDataService
+    public interface IRedisCacheService
     {
         public Task<bool> HasKeyAsync(string key);
         public Task<T?> GetDataAsync<T>(string key);
