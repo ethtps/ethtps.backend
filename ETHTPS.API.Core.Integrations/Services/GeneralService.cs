@@ -1,18 +1,17 @@
-﻿using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices;
-using ETHTPS.Data.Core.Extensions.StringExtensions;
-using ETHTPS.Data.ResponseModels;
-using ETHTPS.Data.Core;
-using ETHTPS.API.Core.Services;
-using ETHTPS.API.Core.Integrations.MSSQL.Services.Data;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
-using ETHTPS.Data.Core.Models.DataUpdater;
+using ETHTPS.API.Core.Services;
+using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.Extensions;
+using ETHTPS.Data.Core.Extensions.StringExtensions;
 using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
-using ETHTPS.Data.Core.Extensions;
+using ETHTPS.Data.Integrations.MSSQL;
+using ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices;
+using ETHTPS.Data.ResponseModels;
+
 using ServiceStack;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
@@ -58,7 +57,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             IDictionary<string, string> result;
             lock (Context.LockObj)
             {
-                result = AllProviders.Select(x => new{x.Name,x.Color,x.Enabled }).Where(x => x.Enabled).ToDictionary(x => x.Name, x => x.Color);
+                result = AllProviders.Select(x => new { x.Name, x.Color, x.Enabled }).Where(x => x.Enabled).ToDictionary(x => x.Name, x => x.Color);
             }
             return result;
         }

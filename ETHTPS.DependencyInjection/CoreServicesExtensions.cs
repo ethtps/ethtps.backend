@@ -12,10 +12,14 @@ using ETHTPS.API.Security.Core.Humanity;
 using ETHTPS.API.Security.Core.Humanity.Recaptcha;
 using ETHTPS.Configuration;
 using ETHTPS.Configuration.Database;
+using ETHTPS.Configuration.Extensions;
+using ETHTPS.Configuration.Validation.Exceptions;
 using ETHTPS.Services.BlockchainServices.BlockTime;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+
+using StackExchange.Redis;
 
 using static ETHTPS.Data.Core.Constants.EnvironmentVariables;
 using static ETHTPS.Data.Core.Extensions.EnvironmentExtensions;
@@ -35,6 +39,7 @@ namespace ETHTPS.API.DependencyInjection
             .AddScoped<IMarkdownService, MarkdownService>()
             .AddScoped<IProvidersService, ProvidersService>()
             .AddScoped<IChartDataServiceservice, ChartDataServiceservice>()
+            .AddTransient<IConnectionMultiplexer>(x => ConnectionMultiplexer.Connect(x.GetRequiredService<IDBConfigurationProvider>().GetFirstConfigurationString("RedisServer") ?? x.GetRequiredService<IDBConfigurationProvider>().GetFirstConfigurationString("RedisServerAlt") ?? throw new ConfigurationStringNotFoundException("RedisServer/RedisServerAlt", "Any")))
             .AddMSSQLHistoricalDataServices();
 
         /// <summary>
