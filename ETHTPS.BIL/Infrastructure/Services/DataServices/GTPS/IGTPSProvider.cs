@@ -6,6 +6,6 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS
 {
     public interface IGTPSProvider
     {
-        List<DataResponseModel> GetGTPS(ProviderQueryModel requestModel, TimeInterval interval);
+        Task<List<DataResponseModel>> GetGTPSAsync(ProviderQueryModel requestModel, TimeInterval interval);
     }
 }

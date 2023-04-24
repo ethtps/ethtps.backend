@@ -6,6 +6,6 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS
 {
     public interface IGPSProvider
     {
-        List<DataResponseModel> GetGPS(ProviderQueryModel requestModel, TimeInterval interval);
+        Task<List<DataResponseModel>> GetGPSAsync(ProviderQueryModel requestModel, TimeInterval interval);
     }
 }

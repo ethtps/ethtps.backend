@@ -5,6 +5,6 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.ChartData
 {
     public interface IStackedChartDataProvider
     {
-        StackedChartModel GetStackedChartData(ChartDataRequestModel model);
+        Task<StackedChartModel> GetStackedChartDataAsync(ChartDataRequestModel model);
     }
 }

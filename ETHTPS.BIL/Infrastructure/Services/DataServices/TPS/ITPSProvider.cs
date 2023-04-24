@@ -6,6 +6,6 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS
 {
     public interface ITPSProvider
     {
-        List<DataResponseModel> GetTPS(ProviderQueryModel requestModel, TimeInterval interval);
+        Task<List<DataResponseModel>> GetTPSAsync(ProviderQueryModel requestModel, TimeInterval interval);
     }
 }

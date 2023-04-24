@@ -10,7 +10,7 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
 {
     public interface IAggregatedDataService : ITPSProvider, IGPSProvider, IGTPSProvider
     {
-        List<DataResponseModel> GetData(L2DataRequestModel requestModel, DataType dataType, TimeInterval interval);
-        L2DataResponseModel GetData(L2DataRequestModel requestModel, DataType dataType, IPSDataFormatter formatter);
+        Task<List<DataResponseModel>> GetDataAsync(L2DataRequestModel requestModel, DataType dataType, TimeInterval interval);
+        Task<L2DataResponseModel> GetDataAsync(L2DataRequestModel requestModel, DataType dataType, IPSDataFormatter formatter);
     }
 }

@@ -26,27 +26,28 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
             _logger = logger;
         }
 
-        public List<DataResponseModel> GetData(L2DataRequestModel requestModel, DataType dataType, TimeInterval interval)
+        public async Task<List<DataResponseModel>> GetDataAsync(L2DataRequestModel requestModel, DataType dataType, TimeInterval interval)
         {
             return dataType switch
             {
-                DataType.TPS => GetTPS(requestModel, interval),
-                DataType.GPS => GetGPS(requestModel, interval),
-                DataType.GasAdjustedTPS => GetGTPS(requestModel, interval),
+                DataType.TPS => await GetTPSAsync(requestModel, interval),
+                DataType.GPS => await GetGPSAsync(requestModel, interval),
+                DataType.GasAdjustedTPS => await GetGTPSAsync(requestModel, interval),
                 _ => throw new ArgumentException($"{dataType} is not supported."),
             };
         }
 
-        public L2DataResponseModel GetData(L2DataRequestModel requestModel, DataType dataType, IPSDataFormatter formatter)
+        public async Task<L2DataResponseModel> GetDataAsync(L2DataRequestModel requestModel, DataType dataType, IPSDataFormatter formatter)
         {
             var result = new L2DataResponseModel(requestModel)
             {
                 DataType = dataType,
-                Datasets = requestModel.Providers?.ToArray().Select(providerName =>
+                Datasets = requestModel.Providers?.ToArray().Select(async providerName =>
                 {
                     requestModel.Provider = providerName;
-                    return new Dataset(formatter.Format(GetData(requestModel, dataType, requestModel.AutoInterval), requestModel), providerName, requestModel.IncludeSimpleAnalysis, requestModel.IncludeComplexAnalysis);
+                    return new Dataset(formatter.Format(await GetDataAsync(requestModel, dataType, requestModel.AutoInterval), requestModel), providerName, requestModel.IncludeSimpleAnalysis, requestModel.IncludeComplexAnalysis);
                 })
+                .Select(task => task.Result)
                 .Where(x => !requestModel.IncludeEmptyDatasets ? x.DataPoints.Count() > 0 : true)
                 .OrderByDescending(x => x.DataPoints.Average(x => x.Y))
                 .ToArray()
@@ -88,19 +89,19 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
             return result;
         }
 
-        public List<DataResponseModel> GetGPS(ProviderQueryModel requestModel, TimeInterval interval)
+        public async Task<List<DataResponseModel>> GetGPSAsync(ProviderQueryModel requestModel, TimeInterval interval)
         {
-            return _gpsService.GetGPS(requestModel, interval);
+            return await _gpsService.GetGPSAsync(requestModel, interval);
         }
 
-        public List<DataResponseModel> GetGTPS(ProviderQueryModel requestModel, TimeInterval interval)
+        public async Task<List<DataResponseModel>> GetGTPSAsync(ProviderQueryModel requestModel, TimeInterval interval)
         {
-            return _gtpsService.GetGTPS(requestModel, interval);
+            return await _gtpsService.GetGTPSAsync(requestModel, interval);
         }
 
-        public List<DataResponseModel> GetTPS(ProviderQueryModel requestModel, TimeInterval interval)
+        public async Task<List<DataResponseModel>> GetTPSAsync(ProviderQueryModel requestModel, TimeInterval interval)
         {
-            return _tpsService.GetTPS(requestModel, interval);
+            return await _tpsService.GetTPSAsync(requestModel, interval);
         }
     }
 }

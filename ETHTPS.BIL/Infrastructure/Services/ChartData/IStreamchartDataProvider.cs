@@ -5,6 +5,6 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.ChartData
 {
     public interface IStreamchartDataProvider
     {
-        StreamchartModel GetStreamchartData(ChartDataRequestModel model);
+        Task<StreamchartModel> GetStreamchartDataAsync(ChartDataRequestModel model);
     }
 }

@@ -18,9 +18,9 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
             _gpsService = gpsService;
         }
 
-        public IDictionary<string, IEnumerable<DataResponseModel>> Get(ProviderQueryModel model, TimeInterval interval)
+        public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetAsync(ProviderQueryModel model, TimeInterval interval)
         {
-            var data = _gpsService.Get(model, interval);
+            var data = await _gpsService.GetAsync(model, interval);
             foreach (var key in data.Keys)
             {
                 data[key] = data[key].Select(x => new DataResponseModel()
@@ -39,10 +39,10 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
             return data;
         }
 
-        public IDictionary<string, IEnumerable<DataPoint>> Instant(ProviderQueryModel model)
+        public async Task<IDictionary<string, IEnumerable<DataPoint>>> InstantAsync(ProviderQueryModel model)
         {
             Dictionary<string, List<DataPoint>> gasAdjustedTPS = new();
-            var instantGPS = _gpsService.Instant(model);
+            var instantGPS = await _gpsService.InstantAsync(model);
             foreach (var entry in instantGPS)
             {
                 gasAdjustedTPS.Add(entry.Key, new List<DataPoint>()
@@ -57,9 +57,9 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
             return gasAdjustedTPS.ToDictionary(x => x.Key, x => x.Value.AsEnumerable());
         }
 
-        public IDictionary<string, IEnumerable<DataResponseModel>> GetMonthlyDataByYear(ProviderQueryModel model, int year)
+        public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetMonthlyDataByYearAsync(ProviderQueryModel model, int year)
         {
-            var data = Get(model, TimeInterval.All);
+            var data = await GetAsync(model, TimeInterval.All);
             foreach (var key in data.Keys)
             {
                 data[key] = data[key].Where(x => x.Data.First().Date.Year == year);
@@ -67,10 +67,10 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
             return data;
         }
 
-        public IDictionary<string, DataPoint> Max(ProviderQueryModel model)
+        public async Task<IDictionary<string, DataPoint>> MaxAsync(ProviderQueryModel model)
         {
             Dictionary<string, DataPoint> gasAdjustedTPS = new();
-            var maxGPS = _gpsService.Max(model);
+            var maxGPS = await _gpsService.MaxAsync(model);
             foreach (var entry in maxGPS)
             {
                 gasAdjustedTPS.Add(entry.Key, new DataPoint()
@@ -82,6 +82,6 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
             return gasAdjustedTPS;
         }
 
-        public List<DataResponseModel> GetGTPS(ProviderQueryModel requestModel, TimeInterval interval) => Get(requestModel, interval).SelectMany((x) => x.Value).ToList();
+        public async Task<List<DataResponseModel>> GetGTPSAsync(ProviderQueryModel requestModel, TimeInterval interval) => (await GetAsync(requestModel, interval)).SelectMany((x) => x.Value).ToList();
     }
 }

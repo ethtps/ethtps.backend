@@ -29,11 +29,11 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             _logger = logger;
         }
 
-        public StreamchartModel GetStreamchartData(ChartDataRequestModel model)
+        public async Task<StreamchartModel> GetStreamchartDataAsync(ChartDataRequestModel model)
         {
-            var tpsData = _tpsService.Get(model, model.Interval).RemoveEmptyValues().OrderEachSet().TakeLatestN(model.Count).Flatten();
-            var gpsData = _gpsService.Get(model, model.Interval).RemoveEmptyValues().OrderEachSet().TakeLatestN(model.Count).Flatten();
-            var gtpsData = _gtpsService.Get(model, model.Interval).RemoveEmptyValues().OrderEachSet().TakeLatestN(model.Count).Flatten();
+            var tpsData = (await _tpsService.GetAsync(model, model.Interval)).RemoveEmptyValues().OrderEachSet().TakeLatestN(model.Count).Flatten();
+            var gpsData = (await _gpsService.GetAsync(model, model.Interval)).RemoveEmptyValues().OrderEachSet().TakeLatestN(model.Count).Flatten();
+            var gtpsData = (await _gtpsService.GetAsync(model, model.Interval)).RemoveEmptyValues().OrderEachSet().TakeLatestN(model.Count).Flatten();
             var providers = tpsData.SelectMany(x => x.Keys).Concat(gpsData.SelectMany(y => y.Keys)).Distinct();
 
             double maxtps = 0;
@@ -98,7 +98,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
         /// <summary>
         /// Example series: [{ x: "2020-01-03", y: 20 }]
         /// </summary>
-        public StackedChartModel GetStackedChartData(ChartDataRequestModel model)
+        public async Task<StackedChartModel> GetStackedChartDataAsync(ChartDataRequestModel model)
         {
             IPSService? service = default;
             switch (model.DataType.ToUpper())
@@ -115,7 +115,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
                 default:
                     throw new ArgumentException($"Invalid data type \"{model.DataType}\"");
             }
-            var data = service.Get(ProviderQueryModel.All, model.Interval).RemoveEmptyValues();
+            var data = (await service.GetAsync(ProviderQueryModel.All, model.Interval)).RemoveEmptyValues();
             foreach (var key in data.Keys)
             {
                 data[key] = data[key].OrderBy(x => x.Data.FirstOrDefault()?.Date);

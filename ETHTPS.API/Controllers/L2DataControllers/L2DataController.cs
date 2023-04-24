@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.API.Core.Controllers;
@@ -36,7 +37,7 @@ namespace ETHTPS.API.Controllers.L2DataControllers
         [HttpPost]
         [SwaggerResponse(200, Type = typeof(L2DataResponseModel))]
         [SwaggerResponse(400, "Invalid parameter(s)", Type = typeof(ValidationResult))]
-        public IActionResult Get([FromBody] L2DataRequestModel requestModel, DataType dataType)
+        public async Task<IActionResult> GetAsync([FromBody] L2DataRequestModel requestModel, DataType dataType)
         {
             var providers = _generalService.AllProviders.Select(x => (x.Name, x.Type == "Sidechain")).Where(x => !requestModel.IncludeSidechains ? !x.Item2 : true);
             if (requestModel.Providers != null)
@@ -48,7 +49,7 @@ namespace ETHTPS.API.Controllers.L2DataControllers
             {
                 return BadRequest(validationResult.Reason);
             }
-            return Ok(_aggregatedDataService.GetData(requestModel, dataType, _dataFormatter));
+            return Ok(await _aggregatedDataService.GetDataAsync(requestModel, dataType, _dataFormatter));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using ETHTPS.API.Core.Attributes;
 using ETHTPS.API.Core.Integrations.MSSQL.Services;
@@ -62,38 +63,38 @@ namespace ETHTPS.API.Controllers.L2DataControllers
 
         [HttpGet]
         [TTL(1)]
-        public IDictionary<string, object> InstantData([FromQuery] ProviderQueryModel model, string smoothing = "")
+        public async Task<IDictionary<string, object>> InstantDataAsync([FromQuery] ProviderQueryModel model, string smoothing = "")
         {
-            return _generalService.InstantData(model, smoothing);
+            return await _generalService.InstantDataAsync(model, smoothing);
         }
 
         [HttpGet]
         [TTL(30)]
-        public IDictionary<string, object> Max([FromQuery] ProviderQueryModel model)
+        public async Task<IDictionary<string, object>> MaxAsync([FromQuery] ProviderQueryModel model)
         {
-            return _generalService.Max(model);
+            return await _generalService.MaxAsync(model);
         }   /// <summary>
             /// Used for displaying chart buttons.
             /// </summary>
         [HttpGet]
         [TTL(60)]
-        public IEnumerable<TimeInterval> GetIntervalsWithData([FromQuery] ProviderQueryModel model)
+        public async Task<IEnumerable<TimeInterval>> GetIntervalsWithDataAsync([FromQuery] ProviderQueryModel model)
         {
-            return _generalService.GetIntervalsWithData(model);
+            return await _generalService.GetIntervalsWithDataAsync(model);
         }
 
         [HttpGet]
         [TTL(60)]
-        public IEnumerable<string> GetUniqueDataYears([FromQuery] ProviderQueryModel model)
+        public async Task<IEnumerable<string>> GetUniqueDataYearsAsync([FromQuery] ProviderQueryModel model)
         {
-            return _generalService.GetUniqueDataYears(model);
+            return await _generalService.GetUniqueDataYearsAsync(model);
         }
 
         [HttpGet]
         [TTL(30)]
-        public AllDataModel AllData(string network = "Mainnet")
+        public async Task<AllDataModel> AllDataAsync(string network = "Mainnet")
         {
-            return _generalService.GetAllData(network);
+            return await _generalService.GetAllDataAsync(network);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
@@ -7,43 +8,48 @@ using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Controllers.L2DataControllers
 {
     [Route("api/v2/GasAdjustedTPS/[action]")]
+    [Authorize(AuthenticationSchemes = "APIKey")]
     public class GasAdjustedTPSController : IPSService
     {
-        private readonly IGTPSService _gasAdjustedTPSService;
+        private readonly IGTPSService _gtpsService;
 
-        public GasAdjustedTPSController(IGTPSService gasAdjustedTPSService)
+        public GasAdjustedTPSController(IGTPSService gtpsService)
         {
-            _gasAdjustedTPSService = gasAdjustedTPSService;
+            _gtpsService = gtpsService;
         }
 
         [HttpGet]
         [TTL(3600)]
-        public IDictionary<string, IEnumerable<DataResponseModel>> GetMonthlyDataByYear([FromQuery] ProviderQueryModel model, int year)
+        public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetMonthlyDataByYearAsync([FromQuery] ProviderQueryModel model, int year)
         {
-            return _gasAdjustedTPSService.GetMonthlyDataByYear(model, year);
+            return await _gtpsService.GetMonthlyDataByYearAsync(model, year);
         }
+
         [HttpGet]
         [TTL(10)]
-        public IDictionary<string, IEnumerable<DataResponseModel>> Get([FromQuery] ProviderQueryModel model, TimeInterval interval)
+        public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetAsync([FromQuery] ProviderQueryModel model, TimeInterval interval)
         {
-            return _gasAdjustedTPSService.Get(model, interval);
+            return await _gtpsService.GetAsync(model, interval);
         }
+
         [HttpGet]
         [TTL(1)]
-        public IDictionary<string, IEnumerable<DataPoint>> Instant([FromQuery] ProviderQueryModel model)
+        public async Task<IDictionary<string, IEnumerable<DataPoint>>> InstantAsync([FromQuery] ProviderQueryModel model)
         {
-            return _gasAdjustedTPSService.Instant(model);
+            return await _gtpsService.InstantAsync(model);
         }
+
         [HttpGet]
         [TTL(30)]
-        public IDictionary<string, DataPoint> Max([FromQuery] ProviderQueryModel model)
+        public async Task<IDictionary<string, DataPoint>> MaxAsync([FromQuery] ProviderQueryModel model)
         {
-            return _gasAdjustedTPSService.Max(model);
+            return await _gtpsService.MaxAsync(model);
         }
     }
 }
