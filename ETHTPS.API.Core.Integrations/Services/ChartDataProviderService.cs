@@ -1,21 +1,14 @@
-﻿using Castle.Core.Logging;
-
-using ETHTPS.API.BIL.Infrastructure.Services.ChartData;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.ChartData;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
-using ETHTPS.API.Core.Integrations.MSSQL.Services.Data;
-using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Data.Core.Models.ResponseModels.ChartData.StackedChart;
 using ETHTPS.Data.Core.Models.ResponseModels.ChartData.Streamchart;
 using ETHTPS.Data.Core.Models.ResponseModels.ChartData.Streamchart.Extensions;
-using ETHTPS.Data.ResponseModels;
 
 using Microsoft.Extensions.Logging;
-
-using System.Linq;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {

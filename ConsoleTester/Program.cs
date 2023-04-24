@@ -1,6 +1,4 @@
-﻿using ETHTPS.Tests.WSTests;
-
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 using WebSocketSharp;
 

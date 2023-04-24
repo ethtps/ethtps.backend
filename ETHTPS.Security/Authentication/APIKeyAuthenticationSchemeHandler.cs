@@ -1,4 +1,7 @@
-﻿using ETHTPS.Data.Core.Extensions;
+﻿using System.Security.Claims;
+using System.Text.Encodings.Web;
+
+using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Data.Integrations.MSSQL.Extensions;
 
@@ -6,10 +9,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
-
-using System.Security.Claims;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 
 namespace ETHTPS.API.Security.Core.Authentication
 {
@@ -52,7 +51,7 @@ namespace ETHTPS.API.Security.Core.Authentication
             _context.IncrementNumberOfCalls(apiKey);
             Claim[] claims = new[] { new Claim(ClaimTypes.Name, "VALID USER") };
             ClaimsIdentity identity = new(claims, Scheme.Name);
-            ClaimsPrincipal principal = new (identity);
+            ClaimsPrincipal principal = new(identity);
             AuthenticationTicket ticket = new(principal, Scheme.Name);
             return Task.FromResult(AuthenticateResult.Success(ticket));
         }

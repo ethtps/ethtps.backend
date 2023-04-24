@@ -1,7 +1,7 @@
-﻿using ETHTPS.Data.Integrations.InfluxIntegration;
-using ETHTPS.Data.Core.Models.DataEntries;
+﻿using System.Threading.Tasks;
 
-using System.Threading.Tasks;
+using ETHTPS.Data.Core.Models.DataEntries;
+using ETHTPS.Data.Integrations.InfluxIntegration;
 
 using static ETHTPS.Data.Integrations.InfluxIntegration.Extensions.IntegrationExtensions;
 

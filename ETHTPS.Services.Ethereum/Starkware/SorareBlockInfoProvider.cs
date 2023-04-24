@@ -1,6 +1,5 @@
 ﻿using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Services.Attributes;
-using ETHTPS.Services.BlockchainServices;
 using ETHTPS.Services.Ethereum.Starkware.API.Models;
 
 using Microsoft.Extensions.Configuration;

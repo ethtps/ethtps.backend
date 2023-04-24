@@ -1,21 +1,20 @@
-﻿using ETHTPS.Data.Integrations.MSSQL;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Data.Core.Models.DataEntries;
+using ETHTPS.Data.Core.Models.DataEntries.BlockchainServices.Models;
+using ETHTPS.Data.Core.Models.DataUpdater;
 using ETHTPS.Data.Integrations.InfluxIntegration;
 using ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices;
-using ETHTPS.Data.Core.Attributes;
-using ETHTPS.Data.Core.Models.DataEntries;
+using ETHTPS.Data.Integrations.MSSQL;
+using ETHTPS.Services.BlockchainServices.Extensions;
 
 using Hangfire;
 
 using Microsoft.Extensions.Logging;
-
-using System.Threading.Tasks;
-using System;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
-using ETHTPS.Data.Core.Models.DataUpdater;
-using System.Collections.Generic;
-using ETHTPS.Data.Core.BlockInfo;
-using ETHTPS.Data.Core.Models.DataEntries.BlockchainServices.Models;
-using ETHTPS.Services.BlockchainServices.Extensions;
 
 namespace ETHTPS.Services.BlockchainServices.HangfireLogging
 {

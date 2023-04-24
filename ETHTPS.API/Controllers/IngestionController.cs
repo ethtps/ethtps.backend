@@ -1,10 +1,6 @@
-﻿using ETHTPS.Data;
-using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.Core.Models;
+﻿using ETHTPS.Data.Integrations.MSSQL;
 
 using Microsoft.AspNetCore.Mvc;
-
-using System.Linq;
 
 namespace ETHTPS.API.Controllers
 {

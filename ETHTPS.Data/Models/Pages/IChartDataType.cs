@@ -1,6 +1,4 @@
-﻿using ETHTPS.Data.Core;
-
-namespace ETHTPS.Data.Core.Models.Pages
+﻿namespace ETHTPS.Data.Core.Models.Pages
 {
     public interface IChartDataType
     {

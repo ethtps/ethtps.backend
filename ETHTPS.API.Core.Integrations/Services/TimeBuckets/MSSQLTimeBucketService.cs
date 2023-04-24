@@ -1,9 +1,9 @@
-﻿using ETHTPS.Data.Core.BlockInfo;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.TimeBuckets;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.TimeBuckets;
+using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Data.Core.Models.DataEntries.BlockchainServices.Models;
 using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Data.Integrations.MSSQL.Extensions;
-using ETHTPS.Data.Core.Models.DataEntries.BlockchainServices.Models;
-using ETHTPS.Data.Core.Attributes;
 
 using Microsoft.Extensions.Logging;
 

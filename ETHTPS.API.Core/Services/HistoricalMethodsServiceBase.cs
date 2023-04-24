@@ -1,8 +1,8 @@
-﻿using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices;
-using ETHTPS.Data.Core.Models.Queries.Data.Requests;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.Data.Core;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+using ETHTPS.Data.Core.Models.Queries.Data.Requests;
+using ETHTPS.Data.Integrations.MSSQL;
+using ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices;
 
 namespace ETHTPS.API.Core.Services
 {

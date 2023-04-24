@@ -1,17 +1,18 @@
-﻿using ETHTPS.Services.Ethereum.Scan.Implementations;
-using ETHTPS.Services.Ethereum.Starkware;
-using ETHTPS.Services.Ethereum;
-using ETHTPS.Services;
-using Microsoft.Extensions.DependencyInjection;
-using static ETHTPS.API.Core.Constants;
-using ETHTPS.Services.Infrastructure.Extensions;
-using ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices;
-using ETHTPS.Services.Ethereum.JSONRPC.Infura;
-using ETHTPS.Data.Core.BlockInfo;
-using ETHTPS.Data.Integrations.InfluxIntegration.HistoricalDataServices;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Integrations.InfluxIntegration;
+using ETHTPS.Data.Integrations.InfluxIntegration.HistoricalDataServices;
+using ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices;
+using ETHTPS.Services;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
+using ETHTPS.Services.Ethereum;
+using ETHTPS.Services.Ethereum.JSONRPC.Infura;
+using ETHTPS.Services.Ethereum.Starkware;
+using ETHTPS.Services.Infrastructure.Extensions;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+
+using static ETHTPS.API.Core.Constants;
 
 namespace ETHTPS.API.DependencyInjection
 {

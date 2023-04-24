@@ -1,8 +1,8 @@
-﻿using ETHTPS.Data.Core.BlockInfo;
-using ETHTPS.Services.Attributes;
-
-using System;
+﻿using System;
 using System.Linq;
+
+using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Services.Attributes;
 
 namespace ETHTPS.Data.Core.Attributes
 {

@@ -1,12 +1,13 @@
-﻿using ETHTPS.API.Core.Services;
-using ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices;
-using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.Core.Models.Queries.Data.Requests;
-using ETHTPS.Data.Core.Models.Providers;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+using ETHTPS.API.Core.Services;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Models.DataPoints;
+using ETHTPS.Data.Core.Models.Providers;
+using ETHTPS.Data.Core.Models.Queries.Data.Requests;
+using ETHTPS.Data.Integrations.MSSQL;
+using ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices;
+
 using ServiceStack;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
 {
@@ -29,7 +30,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
                 });
             }
             var target = AllProviders.FirstOrDefault(x => x.Name.EqualsIgnoreCase(model.Provider));
-            return target == null? Enumerable.Empty<ProviderSummaryBase>(): new ProviderSummaryBase[]
+            return target == null ? Enumerable.Empty<ProviderSummaryBase>() : new ProviderSummaryBase[]
             {
                  new Provider()
                 {
@@ -41,7 +42,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
 
         protected DataPoint SafeGetMax(DataType dataType, ProviderSummaryBase providerSummary, ProviderQueryModel model)
         {
-            var entry =  Context.TpsandGasDataMaxes.FirstOrDefault(x => x
+            var entry = Context.TpsandGasDataMaxes.FirstOrDefault(x => x
             .Provider != providerSummary.Id);
             if (entry == null)
             {

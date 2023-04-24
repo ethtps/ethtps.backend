@@ -1,13 +1,10 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
-using ETHTPS.API.Core.Services;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
+using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.Models.DataPoints;
+using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices;
-using ETHTPS.Data.Core.Models.Queries.Data.Requests;
-using ETHTPS.Data.Core.Models.DataPoints;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
-using ETHTPS.Data.Core;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
 {
@@ -28,7 +25,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
                 {
                     if (!model.IncludeSidechains)
                     {
-                        if (p.Type== "Sidechain")
+                        if (p.Type == "Sidechain")
                         {
                             continue;
                         }

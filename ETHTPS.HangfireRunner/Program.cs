@@ -1,16 +1,12 @@
-using ETHTPS.API.Core.Integrations.MSSQL.Services;
+using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.DependencyInjection;
 using ETHTPS.API.Security.Core.Authentication;
 using ETHTPS.API.Security.Core.Policies;
-using ETHTPS.Configuration.Extensions;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
-using static ETHTPS.TaskRunner.Constants;
+using ETHTPS.Data.Integrations.InfluxIntegration;
 
 using NLog.Extensions.Hosting;
-using ETHTPS.Configuration;
-using ETHTPS.Data.Integrations.InfluxIntegration;
-using Coravel;
-using ETHTPS.Data.Core.BlockInfo;
+
+using static ETHTPS.TaskRunner.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseNLog();
@@ -30,7 +26,7 @@ services.AddSwagger()
         .AddDataServices()
         .WithStore(DatabaseProvider.MSSQL)
         .AddRunner(BackgroundServiceType.Coravel);
-        ;//.RegisterMicroservice(CURRENT_APP_NAME, "Task runner web app");
+;//.RegisterMicroservice(CURRENT_APP_NAME, "Task runner web app");
 
 var app = builder.Build();
 

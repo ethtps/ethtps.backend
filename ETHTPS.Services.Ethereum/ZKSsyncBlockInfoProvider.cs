@@ -1,12 +1,12 @@
-﻿using ETHTPS.Data.Core.BlockInfo;
-using ETHTPS.Services.BlockchainServices;
-using ETHTPS.Data.Core.Models.DataEntries;
-using Newtonsoft.Json;
-
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+
+using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Services.Attributes;
+
+using Newtonsoft.Json;
 
 namespace ETHTPS.Services.Ethereum
 {

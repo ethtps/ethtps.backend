@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ETHTPS.Configuration.Database.Initialization
+﻿namespace ETHTPS.Configuration.Database.Initialization
 {
     public abstract class DataInitializerBase
     {

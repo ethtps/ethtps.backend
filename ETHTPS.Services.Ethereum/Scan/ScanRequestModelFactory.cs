@@ -1,6 +1,6 @@
-﻿using ETHTPS.Data.Core.Extensions;
+﻿using System;
 
-using System;
+using ETHTPS.Data.Core.Extensions;
 
 namespace ETHTPS.Services.Ethereum.Scan
 {

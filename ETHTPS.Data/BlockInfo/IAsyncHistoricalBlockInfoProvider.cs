@@ -1,9 +1,8 @@
-﻿using ETHTPS.Data.Core;
-using ETHTPS.Data.Core.Models.Queries.Data.Requests;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
+using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
 namespace ETHTPS.Data.Core.BlockInfo
 {

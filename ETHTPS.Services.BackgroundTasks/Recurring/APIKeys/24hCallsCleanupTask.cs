@@ -1,14 +1,9 @@
 ﻿using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
+
 using Hangfire;
 
 using Microsoft.Extensions.Logging;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ETHTPS.Services.BackgroundTasks.Recurring.APIKeys
 {

@@ -1,5 +1,4 @@
-﻿using ETHTPS.Data.Core.BlockInfo;
-using ETHTPS.Data.Core;
+﻿using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Extensions;

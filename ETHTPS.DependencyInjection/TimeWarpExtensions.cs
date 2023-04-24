@@ -1,9 +1,11 @@
 ﻿using ETHTPS.Services;
-using Microsoft.Extensions.DependencyInjection;
-using static ETHTPS.API.Core.Constants;
-using ETHTPS.Services.Infrastructure.Extensions;
-using ETHTPS.Services.Ethereum.JSONRPC.Infura;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
+using ETHTPS.Services.Ethereum.JSONRPC.Infura;
+using ETHTPS.Services.Infrastructure.Extensions;
+
+using Microsoft.Extensions.DependencyInjection;
+
+using static ETHTPS.API.Core.Constants;
 
 namespace ETHTPS.API.DependencyInjection
 {

@@ -1,6 +1,5 @@
 ﻿using ETHTPS.API.Security.Core.APIKeyProvider;
 using ETHTPS.API.Security.Core.APIKeys;
-using ETHTPS.API.Security.Core.Humanity;
 using ETHTPS.API.Security.Core.Humanity.Recaptcha;
 using ETHTPS.API.Security.Core.Policies;
 using ETHTPS.Configuration;

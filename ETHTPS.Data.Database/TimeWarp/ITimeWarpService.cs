@@ -1,10 +1,6 @@
-﻿using ETHTPS.Data.Integrations.MSSQL.TimeWarp.Models;
+﻿using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
-using ETHTPS.Data.Core.Models.DataPoints;
-
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using ETHTPS.Data.Integrations.MSSQL.TimeWarp.Models;
 
 namespace ETHTPS.Data.Integrations.MSSQL.TimeWarp
 {

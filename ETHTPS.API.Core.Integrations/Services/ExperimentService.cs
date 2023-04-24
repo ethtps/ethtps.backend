@@ -1,10 +1,10 @@
-﻿using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.Integrations.MSSQL.Extensions;
+﻿using ETHTPS.API.BIL.Infrastructure.Services;
 using ETHTPS.Data.Core.Extensions;
+using ETHTPS.Data.Core.Models;
+using ETHTPS.Data.Integrations.MSSQL;
+using ETHTPS.Data.Integrations.MSSQL.Extensions;
 
 using Microsoft.AspNetCore.Http;
-using ETHTPS.API.BIL.Infrastructure.Services;
-using ETHTPS.Data.Core.Models;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {

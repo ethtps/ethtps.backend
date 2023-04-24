@@ -1,12 +1,11 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+﻿using System;
+using System.Collections.Generic;
+
+using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.Core.Controllers;
-using ETHTPS.Data.Core.Models;
 using ETHTPS.Data.Core.Models.DataUpdater;
 
 using Microsoft.AspNetCore.Mvc;
-
-using System;
-using System.Collections.Generic;
 
 namespace ETHTPS.API.Controllers
 {

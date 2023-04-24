@@ -1,11 +1,7 @@
-﻿using ETHTPS.Data.Core.Models.DataPoints.XYPoints;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using Newtonsoft.Json;
-
-using Swashbuckle.AspNetCore.Annotations;
-
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ETHTPS.Data.Core.Models.ResponseModels.L2s
 {

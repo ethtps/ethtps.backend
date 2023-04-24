@@ -1,18 +1,18 @@
-﻿using ETHTPS.Data.Core.BlockInfo;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Extensions.StringExtensions;
-using ETHTPS.Services.BlockchainServices;
 using ETHTPS.Data.Core.Models.DataEntries;
+using ETHTPS.Services.Attributes;
+
 using Fizzler.Systems.HtmlAgilityPack;
 
 using HtmlAgilityPack;
 
 using Newtonsoft.Json;
-
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using ETHTPS.Services.Attributes;
 
 namespace ETHTPS.Services.Ethereum
 {

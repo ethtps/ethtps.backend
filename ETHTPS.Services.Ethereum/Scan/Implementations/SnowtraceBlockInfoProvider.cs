@@ -1,9 +1,8 @@
-﻿using ETHTPS.Services.Attributes;
-using ETHTPS.Services.BlockchainServices;
+﻿using System;
+
+using ETHTPS.Services.Attributes;
 
 using Microsoft.Extensions.Configuration;
-
-using System;
 
 namespace ETHTPS.Services.Ethereum.Scan.Implementations
 {

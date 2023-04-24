@@ -7,7 +7,7 @@ namespace ETHTPS.Utils.DotEnv
         private readonly Dictionary<string, string> _envVars;
 
         public DotEnvParser(string path =
-            #if DEBUG
+#if DEBUG
             ".env.development"
 #else
             ".env"

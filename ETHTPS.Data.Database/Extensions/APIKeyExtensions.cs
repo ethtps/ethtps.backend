@@ -3,13 +3,11 @@ using ETHTPS.Data.Core.Extensions.StringExtensions;
 
 using Microsoft.AspNetCore.Http;
 
-using System.Linq;
-
 namespace ETHTPS.Data.Integrations.MSSQL.Extensions
 {
     public static class APIKeyExtensions
     {
-        public static int GetAPIKeyID(this EthtpsContext context, HttpContext httpContext)=>context.GetAPIKeyID(httpContext.ExtractAPIKey());
+        public static int GetAPIKeyID(this EthtpsContext context, HttpContext httpContext) => context.GetAPIKeyID(httpContext.ExtractAPIKey());
         public static int GetAPIKeyID(this EthtpsContext context, string apiKey)
         {
             lock (context.LockObj)

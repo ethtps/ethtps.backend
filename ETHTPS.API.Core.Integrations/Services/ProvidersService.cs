@@ -1,6 +1,5 @@
 ﻿using ETHTPS.API.BIL.Infrastructure.Services;
 using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.Core.Models.Providers;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {

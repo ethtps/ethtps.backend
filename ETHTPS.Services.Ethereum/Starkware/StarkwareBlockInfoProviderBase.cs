@@ -1,15 +1,15 @@
-﻿using ETHTPS.Data.Core.BlockInfo;
-using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.Integrations.MSSQL.Extensions;
-using ETHTPS.Services.BlockchainServices;
-using ETHTPS.Services.Ethereum.Starkware.API;
-using ETHTPS.Data.Core.Models.DataEntries;
-using Microsoft.Extensions.Configuration;
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+
+using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Data.Core.Models.DataEntries;
+using ETHTPS.Data.Integrations.MSSQL;
+using ETHTPS.Data.Integrations.MSSQL.Extensions;
 using ETHTPS.Services.Attributes;
+using ETHTPS.Services.Ethereum.Starkware.API;
+
+using Microsoft.Extensions.Configuration;
 
 namespace ETHTPS.Services.Ethereum.Starkware
 {

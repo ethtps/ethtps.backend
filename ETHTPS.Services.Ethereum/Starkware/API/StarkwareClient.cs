@@ -1,15 +1,15 @@
-﻿using ETHTPS.Services.Ethereum.Starkware.API.Models;
+﻿using System;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+
+using ETHTPS.Services.Ethereum.Starkware.API.Models;
 using ETHTPS.Services.Ethereum.Starkware.API.Models.TransactionCount;
 using ETHTPS.Services.Extensions;
 
 using Microsoft.Extensions.Configuration;
 
 using Newtonsoft.Json;
-
-using System;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ETHTPS.Services.Ethereum.Starkware.API
 {

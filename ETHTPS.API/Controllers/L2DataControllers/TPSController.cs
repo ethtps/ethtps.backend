@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
 
-using System.Collections.Generic;
-using ETHTPS.API.Core.Integrations.MSSQL.Services.Data;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
-using ETHTPS.Data.Core.Models.DataPoints;
-using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
 using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.Models.DataPoints;
+using ETHTPS.Data.Core.Models.Queries.Data.Requests;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Controllers.L2DataControllers
 {

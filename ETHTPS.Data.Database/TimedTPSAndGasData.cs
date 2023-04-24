@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ETHTPS.Data.Integrations.MSSQL
+﻿namespace ETHTPS.Data.Integrations.MSSQL
 {
     public class TimedTPSAndGasData : TPSAndGasDataBase
     {
@@ -14,7 +12,7 @@ namespace ETHTPS.Data.Integrations.MSSQL
     public class TpsandGasDataDay : TimedTPSAndGasData { }
     public class TpsandGasDataHour : TimedTPSAndGasData { }
     public class TpsandGasDataWeek : TimedTPSAndGasData { }
-    public class TpsandGasDataMinute:  TimedTPSAndGasData { }
+    public class TpsandGasDataMinute : TimedTPSAndGasData { }
     public class TpsandGasDataMonth : TimedTPSAndGasData { }
     public class TpsandGasDataAll : TimedTPSAndGasData { }
     public class TpsandGasDataYear : TimedTPSAndGasData { }

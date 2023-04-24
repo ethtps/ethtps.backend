@@ -1,10 +1,11 @@
 ﻿
+using System.Diagnostics;
+
 using ETHTPS.Configuration;
 using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Integrations.InfluxIntegration.Extensions;
-using ETHTPS.Data.Core.Models;
-using ETHTPS.Data.Core.Models.DataEntries;
 
 using Flux.Net;
 
@@ -12,9 +13,6 @@ using InfluxDB.Client;
 using InfluxDB.Client.Api.Domain;
 
 using Microsoft.Extensions.Logging;
-
-using System.Diagnostics;
-using ETHTPS.Data.Core.Attributes;
 
 namespace ETHTPS.Data.Integrations.InfluxIntegration
 {

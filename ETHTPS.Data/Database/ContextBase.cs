@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
 
-using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace ETHTPS.Data.Core.Database
 {

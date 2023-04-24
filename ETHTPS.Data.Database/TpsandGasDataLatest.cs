@@ -1,6 +1,5 @@
 ﻿#nullable disable
 
-using System;
 
 namespace ETHTPS.Data.Integrations.MSSQL
 {
@@ -11,7 +10,7 @@ namespace ETHTPS.Data.Integrations.MSSQL
 
         public bool Equals(TimedTPSAndGasData other)
         {
-           return other.AverageTps == Tps && other.AverageGps == Gps && other.Provider == Provider;
+            return other.AverageTps == Tps && other.AverageGps == Gps && other.Provider == Provider;
         }
 
         public static implicit operator TimedTPSAndGasData(TpsandGasDataLatest entry) => new()

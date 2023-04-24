@@ -1,18 +1,7 @@
-﻿using ETHTPS.Data.Core.BlockInfo;
-using ETHTPS.Data.Integrations.InfluxIntegration;
-using ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices;
-using ETHTPS.Data.Core.Models.Queries;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
+using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
 using Microsoft.Extensions.DependencyInjection;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
-using ETHTPS.Data.Core.Models.Queries.Data.Requests;
-using ETHTPS.Data.Integrations.MSSQL;
 
 namespace ETHTPS.Tests.DataTransformation
 {

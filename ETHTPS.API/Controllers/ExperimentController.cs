@@ -1,12 +1,11 @@
 ﻿
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using ETHTPS.API.BIL.Infrastructure.Services;
 using ETHTPS.Data.Core.Models;
 
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ETHTPS.API.Controllers
 {

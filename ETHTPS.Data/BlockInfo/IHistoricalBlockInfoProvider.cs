@@ -1,7 +1,7 @@
-﻿using ETHTPS.Data.Core.Models.DataEntries;
-
-using System;
+﻿using System;
 using System.Threading.Tasks;
+
+using ETHTPS.Data.Core.Models.DataEntries;
 
 namespace ETHTPS.Data.Core.BlockInfo
 {

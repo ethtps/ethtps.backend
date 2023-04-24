@@ -1,5 +1,4 @@
 ﻿using ETHTPS.Data.Core.BlockInfo;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.TimeBuckets;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
 using ETHTPS.Services.BlockchainServices.Status;
 

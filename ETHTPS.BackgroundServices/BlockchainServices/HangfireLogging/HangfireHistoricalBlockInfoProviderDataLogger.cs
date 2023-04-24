@@ -1,16 +1,15 @@
-﻿using Microsoft.VisualBasic;
-using ETHTPS.Data.Core.BlockInfo;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.TimeBuckets;
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Integrations.MSSQL;
 
 using Hangfire;
 
 using Microsoft.Extensions.Logging;
-
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ETHTPS.Services.BlockchainServices.HangfireLogging
 {

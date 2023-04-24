@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using ETHTPS.Data.Core.Models.LiveData.Triggers;
-using ETHTPS.Data.Core;
+﻿using ETHTPS.Data.Core;
+
+using Microsoft.AspNetCore.SignalR;
 
 namespace ETHTPS.WSAPI.Infrastructure.LiveData.Connection
 {
@@ -12,7 +12,7 @@ namespace ETHTPS.WSAPI.Infrastructure.LiveData.Connection
         {
             Task.Run(async () => await SubscribeAsync(new SubscriptionModel()
             {
-                DataTypes = new[] {DataType.TPS, DataType.GasAdjustedTPS, DataType.GPS},
+                DataTypes = new[] { DataType.TPS, DataType.GasAdjustedTPS, DataType.GPS },
                 IncludeSidechains = true,
                 IncludeTransactions = true,
             })).Wait();
@@ -48,6 +48,6 @@ namespace ETHTPS.WSAPI.Infrastructure.LiveData.Connection
         }
 
         public async Task SendNotificationsToEveryoneAsync() => await Clients.All.SendAsync("DataUpdate");
-        
+
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using System.Reactive;
 
 namespace ETHTPS.WSAPI.Infrastructure.LiveData.Connection
 {

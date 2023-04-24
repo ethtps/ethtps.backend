@@ -1,20 +1,18 @@
-﻿using ETHTPS.API.Core.Integrations.MSSQL.Services;
-using ETHTPS.Data;
+﻿using System.Linq;
+
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
+using ETHTPS.API.Core.Integrations.MSSQL.Services;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Extensions.StringExtensions;
 using ETHTPS.Data.Core.Models.Pages.Chart;
 using ETHTPS.Data.Core.Models.Pages.HomePage;
 using ETHTPS.Data.Core.Models.Pages.ProviderPage;
+using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
 using Microsoft.AspNetCore.Mvc;
-
-using System.Linq;
-using ETHTPS.API.Core.Integrations.MSSQL.Services.Data;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
-using ETHTPS.Data.Core.Models.Queries.Data.Requests;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
 
 namespace ETHTPS.API.Controllers
 {

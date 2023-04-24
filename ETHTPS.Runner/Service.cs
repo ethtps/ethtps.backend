@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Design.Serialization;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace ETHTPS.Runner
 {

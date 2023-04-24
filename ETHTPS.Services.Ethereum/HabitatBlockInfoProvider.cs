@@ -1,6 +1,5 @@
 ﻿
 using ETHTPS.Services.Attributes;
-using ETHTPS.Services.BlockchainServices;
 using ETHTPS.Services.Ethereum.JSONRPC;
 
 using Microsoft.Extensions.Configuration;

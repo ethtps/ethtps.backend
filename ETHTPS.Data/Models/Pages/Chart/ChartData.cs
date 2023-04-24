@@ -1,10 +1,9 @@
-﻿using ETHTPS.Data.Core;
+﻿using System.Collections.Generic;
+
 using ETHTPS.Data.Core.Models.DataPoints;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-
-using System.Collections.Generic;
 
 namespace ETHTPS.Data.Core.Models.Pages.Chart
 {

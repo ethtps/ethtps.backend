@@ -1,6 +1,4 @@
-﻿using ETHTPS.Data.Core;
-
-using System;
+﻿using System;
 
 namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
 {

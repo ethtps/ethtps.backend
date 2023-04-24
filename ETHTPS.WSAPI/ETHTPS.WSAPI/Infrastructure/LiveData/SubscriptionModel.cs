@@ -6,7 +6,7 @@ namespace ETHTPS.WSAPI.Infrastructure.LiveData
     {
         private DateTime ConnectionTime { get; set; }
         public TimeSpan TimeAlive => DateTime.Now - ConnectionTime;
-        
+
         public SubscriptionModel()
         {
             ConnectionTime = DateTime.Now;

@@ -1,4 +1,5 @@
 ﻿using ETHTPS.Data.Integrations.MSSQL;
+
 using static ETHTPS.Data.Integrations.InfluxIntegration.Extensions.IntegrationExtensions;
 
 namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices

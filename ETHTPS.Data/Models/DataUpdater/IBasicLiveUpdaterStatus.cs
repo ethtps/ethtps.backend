@@ -4,6 +4,6 @@
     {
         string Status { get; }
         bool IsUnreliable { get; }
-        bool IsProbablyDown{ get; }
+        bool IsProbablyDown { get; }
     }
 }

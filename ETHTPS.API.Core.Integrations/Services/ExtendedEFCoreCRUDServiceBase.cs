@@ -1,7 +1,8 @@
-﻿using ETHTPS.Data.Integrations.MSSQL;
-using Microsoft.EntityFrameworkCore;
-using ETHTPS.API.BIL.Infrastructure.Services;
+﻿using ETHTPS.API.BIL.Infrastructure.Services;
 using ETHTPS.Data.Core;
+using ETHTPS.Data.Integrations.MSSQL;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {

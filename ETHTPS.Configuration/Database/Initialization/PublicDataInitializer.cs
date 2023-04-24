@@ -1,5 +1,4 @@
 ﻿using ETHTPS.Configuration.Database.Initialization;
-using ETHTPS.Data.Core;
 
 namespace ETHTPS.Configuration.Database
 {
@@ -7,7 +6,7 @@ namespace ETHTPS.Configuration.Database
     {
         public PublicDataInitializer(IDBConfigurationProvider provider) : base(provider)
         {
-           
+
         }
 
         public override void Initialize()

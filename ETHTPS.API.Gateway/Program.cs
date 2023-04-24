@@ -1,6 +1,7 @@
+using NLog.Extensions.Logging;
+
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using NLog.Extensions.Logging;
 
 namespace ETHTPS.API.Gateway
 {

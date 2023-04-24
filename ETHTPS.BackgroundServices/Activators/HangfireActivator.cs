@@ -1,6 +1,6 @@
-﻿using Hangfire;
+﻿using System;
 
-using System;
+using Hangfire;
 
 namespace ETHTPS.Services.Activators
 {

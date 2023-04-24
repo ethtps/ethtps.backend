@@ -1,12 +1,12 @@
-﻿using ETHTPS.Data.Core.BlockInfo;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
 using Microsoft.AspNetCore.Mvc;
-
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ETHTPS.API.Controllers
 {

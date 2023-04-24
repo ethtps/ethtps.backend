@@ -1,8 +1,7 @@
-﻿using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.Core.Extensions.StringExtensions;
-using ETHTPS.Data.ResponseModels.SocialMedia;
-using ETHTPS.API.BIL.Infrastructure.Services;
+﻿using ETHTPS.API.BIL.Infrastructure.Services;
 using ETHTPS.Data.Core.Models.ExternalWebsites;
+using ETHTPS.Data.Integrations.MSSQL;
+using ETHTPS.Data.ResponseModels.SocialMedia;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {

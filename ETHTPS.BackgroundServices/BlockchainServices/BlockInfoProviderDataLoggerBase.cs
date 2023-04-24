@@ -1,17 +1,18 @@
-﻿using ETHTPS.Data.Core.BlockInfo;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.ProviderSpecific;
-using ETHTPS.Data.Integrations.MSSQL;
+using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Data.Core.Models.DataEntries.BlockchainServices.Models;
 using ETHTPS.Data.Core.Models.DataUpdater;
-using ETHTPS.Data.Core.Attributes;
-using Microsoft.Extensions.Logging;
-
-using System;
-using System.Linq;
-using System.Threading.Tasks;
+using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
+
+using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Services.BlockchainServices
 {

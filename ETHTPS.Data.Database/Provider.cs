@@ -1,7 +1,5 @@
 ﻿using ETHTPS.Data.Core.Models.Providers;
 
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace ETHTPS.Data.Integrations.MSSQL;
 
 public partial class Provider : ProviderSummaryBase

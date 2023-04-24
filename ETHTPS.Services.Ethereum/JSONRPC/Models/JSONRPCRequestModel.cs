@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
+
+using Newtonsoft.Json;
 
 namespace ETHTPS.Services.Ethereum.JSONRPC.Models
 {

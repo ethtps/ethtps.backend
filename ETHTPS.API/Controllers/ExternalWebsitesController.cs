@@ -1,13 +1,10 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services;
+﻿using System.Collections.Generic;
+
+using ETHTPS.API.BIL.Infrastructure.Services;
 using ETHTPS.API.Core.Integrations.MSSQL.Controllers.CRUD;
-using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.Core.Models;
 using ETHTPS.Data.Core.Models.ExternalWebsites;
-using ETHTPS.Data.ResponseModels.SocialMedia;
 
 using Microsoft.AspNetCore.Mvc;
-
-using System.Collections.Generic;
 
 namespace ETHTPS.API.Controllers
 {

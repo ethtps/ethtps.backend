@@ -1,9 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
+
+using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Utils.Database
 {
-    public class DatabaseInitializer: IDatabaseInitializer
+    public class DatabaseInitializer : IDatabaseInitializer
     {
         private readonly ILogger<DatabaseInitializer> _logger;
 

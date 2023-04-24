@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
-using ETHTPS.Data.ResponseModels.Recaptcha;
-using ETHTPS.Configuration;
+﻿using ETHTPS.Configuration;
 using ETHTPS.Configuration.Extensions;
+using ETHTPS.Data.ResponseModels.Recaptcha;
+
+using Newtonsoft.Json;
 
 namespace ETHTPS.API.Security.Core.Humanity.Recaptcha
 {

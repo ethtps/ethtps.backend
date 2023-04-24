@@ -1,6 +1,4 @@
-﻿using ETHTPS.Data.Core;
-using ETHTPS.Data.Core.Models;
-using ETHTPS.Data.Core.Models.Markdown;
+﻿using ETHTPS.Data.Core.Models.Markdown;
 
 namespace ETHTPS.Data.Integrations.MSSQL;
 

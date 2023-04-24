@@ -1,7 +1,7 @@
 ﻿using ETHTPS.API.BIL.Infrastructure.Services;
 using ETHTPS.Data.Core.Extensions.StringExtensions;
-using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Data.Core.Models.Markdown;
+using ETHTPS.Data.Integrations.MSSQL;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {

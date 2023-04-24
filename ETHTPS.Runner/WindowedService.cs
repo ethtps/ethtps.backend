@@ -1,6 +1,4 @@
-﻿using ETHTPS.Runner.Extensions;
-
-using Konsole;
+﻿using Konsole;
 
 namespace ETHTPS.Runner
 {

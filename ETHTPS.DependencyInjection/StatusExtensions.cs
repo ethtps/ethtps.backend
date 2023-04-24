@@ -1,9 +1,11 @@
-﻿using ETHTPS.Services.BlockchainServices.Status.BackgroundTasks.Discord.Endpoints;
+﻿using ETHTPS.Services;
 using ETHTPS.Services.BlockchainServices.Status.BackgroundTasks.Discord;
-using ETHTPS.Services;
-using Microsoft.Extensions.DependencyInjection;
-using static ETHTPS.API.Core.Constants;
+using ETHTPS.Services.BlockchainServices.Status.BackgroundTasks.Discord.Endpoints;
 using ETHTPS.Services.Infrastructure.Extensions;
+
+using Microsoft.Extensions.DependencyInjection;
+
+using static ETHTPS.API.Core.Constants;
 
 namespace ETHTPS.API.DependencyInjection
 {

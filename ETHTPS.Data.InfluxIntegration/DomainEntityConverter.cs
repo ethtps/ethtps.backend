@@ -1,7 +1,8 @@
-﻿using InfluxDB.Client.Core.Flux.Domain;
-using InfluxDB.Client.Writes;
+﻿using ETHTPS.Data.Core.Models.DataEntries;
+
 using InfluxDB.Client;
-using ETHTPS.Data.Core.Models.DataEntries;
+using InfluxDB.Client.Core.Flux.Domain;
+using InfluxDB.Client.Writes;
 
 namespace ETHTPS.Data.Integrations.InfluxIntegration
 {

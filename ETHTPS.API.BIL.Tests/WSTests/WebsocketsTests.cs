@@ -1,14 +1,9 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+﻿using System.Diagnostics;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-using NLog;
-
 using NUnit.Framework.Internal;
-
-using System;
-using System.Diagnostics;
 
 using WebSocketSharp;
 

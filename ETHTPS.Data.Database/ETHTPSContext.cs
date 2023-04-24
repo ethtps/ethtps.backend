@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using ETHTPS.Data.Core.Database;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace ETHTPS.Data.Integrations.MSSQL;
 
-public partial class EthtpsContext : ETHTPSContextBase 
-{ 
+public partial class EthtpsContext : ETHTPSContextBase
+{
 #pragma warning disable CS8618
     public EthtpsContext()
     {
@@ -727,7 +724,7 @@ public partial class EthtpsContext : ETHTPSContextBase
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(255);
-            
+
             entity.Property(e => e.Website)
                 .IsRequired()
                 .HasMaxLength(255);

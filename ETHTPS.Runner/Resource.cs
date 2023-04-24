@@ -1,6 +1,4 @@
-﻿using Konsole;
-
-namespace ETHTPS.Runner
+﻿namespace ETHTPS.Runner
 {
     public class SystemResource
     {

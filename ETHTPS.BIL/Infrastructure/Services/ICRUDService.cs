@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ETHTPS.API.BIL.Infrastructure.Services
+﻿namespace ETHTPS.API.BIL.Infrastructure.Services
 {
     public interface ICRUDService<T>
     {

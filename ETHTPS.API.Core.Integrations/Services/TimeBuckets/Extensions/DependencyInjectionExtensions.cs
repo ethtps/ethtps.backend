@@ -1,6 +1,5 @@
-﻿using ETHTPS.Data.Core.BlockInfo;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.TimeBuckets;
-using ETHTPS.Services.BlockchainServices.Status;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.TimeBuckets;
+using ETHTPS.Data.Core.BlockInfo;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

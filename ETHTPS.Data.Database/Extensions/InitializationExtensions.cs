@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace ETHTPS.Data.Integrations.MSSQL.Extensions
 {
@@ -20,7 +21,7 @@ namespace ETHTPS.Data.Integrations.MSSQL.Extensions
                     var tableExistsQuery = $@"SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{schema}' AND TABLE_NAME = '{tableName}'";
                     var tableExistsCommand = connection.CreateCommand();
                     tableExistsCommand.CommandText = tableExistsQuery;
-                    var tableExists = (int)(tableExistsCommand.ExecuteScalar()??0) > 0;
+                    var tableExists = (int)(tableExistsCommand.ExecuteScalar() ?? 0) > 0;
 
                     if (!tableExists)
                     {
@@ -28,7 +29,7 @@ namespace ETHTPS.Data.Integrations.MSSQL.Extensions
                         var userHasPermissionToCreateTablesQuery = "SELECT HAS_PERMS_BY_NAME(NULL, NULL, 'CREATE TABLE')";
                         var userHasPermissionToCreateTablesCommand = connection.CreateCommand();
                         userHasPermissionToCreateTablesCommand.CommandText = userHasPermissionToCreateTablesQuery;
-                        var userHasPermissionToCreateTables = (int)(userHasPermissionToCreateTablesCommand.ExecuteScalar()??0) > 0;
+                        var userHasPermissionToCreateTables = (int)(userHasPermissionToCreateTablesCommand.ExecuteScalar() ?? 0) > 0;
 
                         if (userHasPermissionToCreateTables)
                         {

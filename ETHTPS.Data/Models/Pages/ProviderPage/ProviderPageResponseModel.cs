@@ -1,6 +1,6 @@
-﻿using ETHTPS.Data.Core.Models.Pages.Chart;
+﻿using System.Collections.Generic;
 
-using System.Collections.Generic;
+using ETHTPS.Data.Core.Models.Pages.Chart;
 
 namespace ETHTPS.Data.Core.Models.Pages.ProviderPage
 {

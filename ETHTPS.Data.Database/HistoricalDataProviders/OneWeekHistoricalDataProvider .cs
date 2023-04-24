@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices
+﻿namespace ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices
 {
     public class OneWeekHistoricalDataProvider : HistoricalTimedTPSAndGasDataProviderBase<TpsandGasDataWeek>
     {

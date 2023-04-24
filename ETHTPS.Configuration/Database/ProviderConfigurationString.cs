@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ETHTPS.Configuration.Database;
+﻿namespace ETHTPS.Configuration.Database;
 
 public partial class ProviderConfigurationString
 {

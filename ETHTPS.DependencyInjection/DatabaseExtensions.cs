@@ -3,7 +3,6 @@ using ETHTPS.Data.Integrations.MSSQL;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.API.DependencyInjection
 {

@@ -1,8 +1,6 @@
 ﻿using ETHTPS.Configuration;
 using ETHTPS.Configuration.Extensions;
 
-using System;
-
 namespace ETHTPS.Data.Integrations.InfluxIntegration
 {
     public sealed class InfluxWrapperConfiguration

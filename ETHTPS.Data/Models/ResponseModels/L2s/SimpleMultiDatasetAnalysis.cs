@@ -1,10 +1,10 @@
-﻿using ETHTPS.Data.Core.Models.DataPoints.XYPoints;
-
-using Newtonsoft.Json;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+
+using ETHTPS.Data.Core.Models.DataPoints.XYPoints;
+
+using Newtonsoft.Json;
 
 namespace ETHTPS.Data.Core.Models.ResponseModels.L2s
 {

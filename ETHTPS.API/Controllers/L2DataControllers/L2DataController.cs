@@ -1,14 +1,15 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
-using ETHTPS.Data.Core.Models.Queries.Data.Requests;
-using ETHTPS.Data.Core;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.API.Core.Controllers;
 using ETHTPS.API.Core.Integrations.MSSQL.Services;
-using System.Linq;
-using Swashbuckle.AspNetCore.Annotations;
+using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Data.Core.Models.ResponseModels.L2s;
-using Swashbuckle.AspNetCore.Filters;
-using ETHTPS.Data.Core.Models.DataPoints.XYPoints;
+
+using Microsoft.AspNetCore.Mvc;
+
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace ETHTPS.API.Controllers.L2DataControllers
 {

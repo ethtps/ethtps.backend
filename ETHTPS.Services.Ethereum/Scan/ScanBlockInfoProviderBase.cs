@@ -1,8 +1,13 @@
-﻿using ETHTPS.Data.Core.BlockInfo;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Extensions.StringExtensions;
-using ETHTPS.Services.BlockchainServices;
-using ETHTPS.Services.Ethereum.Scan.Extensions;
 using ETHTPS.Data.Core.Models.DataEntries;
+using ETHTPS.Services.Ethereum.Scan.Extensions;
+
 using Fizzler.Systems.HtmlAgilityPack;
 
 using HtmlAgilityPack;
@@ -10,11 +15,6 @@ using HtmlAgilityPack;
 using Microsoft.Extensions.Configuration;
 
 using Newtonsoft.Json;
-
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace ETHTPS.Services.Ethereum.Scan
 {

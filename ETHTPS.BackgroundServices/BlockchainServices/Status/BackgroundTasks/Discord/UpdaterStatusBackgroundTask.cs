@@ -1,13 +1,14 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+﻿using System.Linq;
+using System.Threading.Tasks;
+
+using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.Data.Core.Extensions;
-using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Data.Core.Models.DataUpdater;
+using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ETHTPS.Services.BlockchainServices.Status.BackgroundTasks.Discord
 {

@@ -1,9 +1,9 @@
-﻿using Fizzler.Systems.HtmlAgilityPack;
+﻿using System;
+using System.Linq;
+
+using Fizzler.Systems.HtmlAgilityPack;
 
 using HtmlAgilityPack;
-
-using System;
-using System.Linq;
 
 namespace ETHTPS.Services.BlockchainServices.BlockTime
 {

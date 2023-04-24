@@ -1,18 +1,17 @@
-﻿using ETHTPS.API.Core.Filters;
+﻿using System.Reflection;
+
+using ETHTPS.API.Core.Filters;
 using ETHTPS.Data.Core.Models.DataPoints.XYPoints;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-using System.Reflection;
-using System.Xml.Linq;
-
 namespace ETHTPS.API.DependencyInjection
 {
     public static class SwaggerExtensions
     {
-        public static IServiceCollection AddSwagger(this IServiceCollection services, string title= "ETHTPS.info API", string description= "Backend definition for ethtps.info; you're free to play around", bool addExtraFilters = true, bool usePublicFilter = false) => services.AddSwaggerGen(c =>
+        public static IServiceCollection AddSwagger(this IServiceCollection services, string title = "ETHTPS.info API", string description = "Backend definition for ethtps.info; you're free to play around", bool addExtraFilters = true, bool usePublicFilter = false) => services.AddSwaggerGen(c =>
         {
             if (addExtraFilters)
             {

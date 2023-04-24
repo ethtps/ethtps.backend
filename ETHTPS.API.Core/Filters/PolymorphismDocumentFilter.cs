@@ -1,9 +1,9 @@
-﻿using Microsoft.OpenApi.Any;
+﻿using System.Reflection;
+
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
-
-using System.Reflection;
 
 namespace ETHTPS.API.Core.Filters
 {

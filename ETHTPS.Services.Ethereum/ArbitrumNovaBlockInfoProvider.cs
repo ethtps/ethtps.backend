@@ -1,6 +1,9 @@
-﻿using ETHTPS.Data.Core.Models.DataEntries;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Services.Attributes;
-using ETHTPS.Services.BlockchainServices;
 using ETHTPS.Services.Ethereum.JSONRPC;
 
 using Fizzler.Systems.HtmlAgilityPack;
@@ -8,10 +11,6 @@ using Fizzler.Systems.HtmlAgilityPack;
 using HtmlAgilityPack;
 
 using Microsoft.Extensions.Configuration;
-
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ETHTPS.Services.Ethereum
 {
