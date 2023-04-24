@@ -6,12 +6,10 @@ using ETHTPS.Data.Core.Models.ResponseModels.ChartData.Streamchart;
 
 using Microsoft.AspNetCore.Mvc;
 
-using System.Linq;
-
 namespace ETHTPS.API.Controllers
 {
     [Route("/api/v3/ChartData/[action]")]
-    public class ChartDataController : APIControllerBase
+    public sealed class ChartDataController : APIControllerBase
     {
         private readonly IChartDataServiceservice _chartDataServiceservice;
 

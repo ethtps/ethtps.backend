@@ -1,11 +1,9 @@
-﻿using ETHTPS.Data.Core;
-
-namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
+﻿namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
 {
     /// <summary>
     /// Represents a filtering model based on a provider, network and whether to include sidechains. Also has an APIKey property.
     /// </summary>
-    public class ProviderQueryModel
+    public class ProviderQueryModel : ICachedKey
     {
         /// <summary>
         /// All hell breaks loose if we don't initially set this to "All"
@@ -23,5 +21,10 @@ namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
         {
             Provider = Constants.All
         };
+
+        public string ToCacheKey()
+        {
+            return $"{Provider}:{Network}:{IncludeSidechains}";
+        }
     }
 }

@@ -33,7 +33,8 @@ namespace ETHTPS.Tests
                     .AddScoped<IAsyncHistoricalBlockInfoProvider, HistoricalInfluxProvider>()
                     .AddMSSQLHistoricalDataServices()
                     .AddDataProviderServices(DatabaseProvider.MSSQL)
-                    .AddTransient<IProviderConfigurationService, ProviderConfigurationService>();
+                    .AddTransient<IProviderConfigurationService, ProviderConfigurationService>()
+                    .AddRedisCache();
             ServiceProvider = services.BuildServiceProvider();
         }
     }

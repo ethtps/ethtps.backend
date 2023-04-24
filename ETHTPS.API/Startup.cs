@@ -34,7 +34,7 @@ namespace ETHTPS.API
             services.AddEssentialServices();
             services.AddDatabaseContext(_appName);
             services.AddCustomCORSPolicies();
-
+            services.AddResponseCompression();
             services.AddControllersWithViews()
                     .AddControllersAsServices()
                     .ConfigureNewtonsoftJson();
@@ -48,7 +48,8 @@ namespace ETHTPS.API
                     .AddCache()
                     .AddScoped<AggregatedEndpointStatsBuilder>()
                     .AddInfluxHistoricalDataProvider() //Not working r/n
-                    .AddMSSQLHistoricalDataServices();
+                    .AddMSSQLHistoricalDataServices()
+                    .AddRedisCache();
             //.RegisterMicroservice(APP_NAME, "General API");
             services.AddDataUpdaterStatusService();
 

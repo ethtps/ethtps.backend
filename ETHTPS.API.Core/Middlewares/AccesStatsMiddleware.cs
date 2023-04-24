@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace ETHTPS.API.Core.Middlewares
 {
-    public class AccesStatsMiddleware
+    public sealed class AccesStatsMiddleware
     {
         private readonly RequestDelegate _next;
         private static int _MAX_QUEUE_SIZE = 100;

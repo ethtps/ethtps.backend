@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ETHTPS.Tests.ServiceTests
 {
-    public class DataUpdaterService : TestBase
+    public sealed class DataUpdaterService : TestBase
     {
         private IDataUpdaterStatusService? _statusService;
         private const string _TEST_PROVIDER_NAME = "Ethereum";
