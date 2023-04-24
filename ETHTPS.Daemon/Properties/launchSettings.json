@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ETHTPS.Daemon": {
+      "commandName": "Project",
+      "commandLineArgs": "--scope=BlockDataAggregator"
+    }
+  }
+}
