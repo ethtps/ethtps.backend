@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.Data.Integrations.MSSQL
 {
-    public class TimedTPSAndGasData : TPSAndGasDataBase
+    public partial class TimedTPSAndGasData : TPSAndGasDataBase
     {
         public DateTime StartDate { get; set; }
         public double AverageTps { get; set; }
@@ -9,11 +9,11 @@
         //public string OclhJson { get; set; }
     }
 
-    public sealed class TpsandGasDataDay : TimedTPSAndGasData { }
-    public sealed class TpsandGasDataHour : TimedTPSAndGasData { }
-    public sealed class TpsandGasDataWeek : TimedTPSAndGasData { }
-    public sealed class TpsandGasDataMinute : TimedTPSAndGasData { }
-    public sealed class TpsandGasDataMonth : TimedTPSAndGasData { }
-    public sealed class TpsandGasDataAll : TimedTPSAndGasData { }
-    public sealed class TpsandGasDataYear : TimedTPSAndGasData { }
+    public partial class TpsandGasDataDay : TimedTPSAndGasData { }
+    public partial class TpsandGasDataHour : TimedTPSAndGasData { }
+    public partial class TpsandGasDataWeek : TimedTPSAndGasData { }
+    public partial class TpsandGasDataMinute : TimedTPSAndGasData { }
+    public partial class TpsandGasDataMonth : TimedTPSAndGasData { }
+    public partial class TpsandGasDataAll : TimedTPSAndGasData { }
+    public partial class TpsandGasDataYear : TimedTPSAndGasData { }
 }
