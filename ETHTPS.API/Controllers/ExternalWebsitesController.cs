@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using ETHTPS.API.BIL.Infrastructure.Services;
+using ETHTPS.API.Core.Attributes;
 using ETHTPS.API.Core.Integrations.MSSQL.Controllers.CRUD;
 using ETHTPS.Data.Core.Models.ExternalWebsites;
 
@@ -19,6 +20,7 @@ namespace ETHTPS.API.Controllers
         }
 
         [HttpGet]
+        [TTL(60)]
         public IEnumerable<IProviderExternalWebsite> GetExternalWebsitesFor(string providerName)
         {
             return _externalWebsitesService.GetExternalWebsitesFor(providerName);

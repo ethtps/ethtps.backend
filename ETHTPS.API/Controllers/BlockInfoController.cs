@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using ETHTPS.API.Core.Attributes;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
@@ -21,12 +22,14 @@ namespace ETHTPS.API.Controllers
         }
 
         [HttpGet]
+        [TTL(10)]
         public async Task<IEnumerable<IBlock>> GetBlocksBetweenAsync(ProviderQueryModel model, DateTime start, DateTime end)
         {
             return await _asyncHistoricalBlockInfoProvider.GetBlocksBetweenAsync(model, start, end);
         }
 
         [HttpGet]
+        [TTL(10)]
         public async Task<IEnumerable<IBlock>> GetLatestBlocksAsync(ProviderQueryModel model, string period)
         {
             var result = TryParse(period);

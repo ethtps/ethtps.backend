@@ -4,6 +4,7 @@ using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
+using ETHTPS.API.Core.Attributes;
 using ETHTPS.API.Core.Integrations.MSSQL.Services;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Extensions.StringExtensions;
@@ -35,6 +36,7 @@ namespace ETHTPS.API.Controllers
         }
 
         [HttpGet]
+        [TTL(10)]
         public HomePageResponseModel Home([FromQuery] HomePageRequestModel model) => new HomePageResponseModel()
         {
             ChartData = FromRequestModel(model),
@@ -46,6 +48,7 @@ namespace ETHTPS.API.Controllers
         };
 
         [HttpGet]
+        [TTL(10)]
         public IActionResult Provider([FromQuery] ProviderPageRequestModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Provider) || model.Provider.LossyCompareTo(Constants.All) || !_generalService.AllProviders.Any(x => x.Name.LossyCompareTo(model.Provider)))
