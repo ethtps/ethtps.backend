@@ -29,6 +29,11 @@ namespace ETHTPS.Daemon
             "BlockDataAggregator"
         };
 
+        private static Dictionary<string, string> _queueCorrespondence = new()
+        {
+            { _allowedScopes[0], "L2DataRequestQueue" }
+        };
+
         static void Main(string[] args)
         {
             Arguments.Populate();
@@ -60,7 +65,7 @@ namespace ETHTPS.Daemon
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
             LogVerbose("Connected to RabbitMQ");
-            channel.QueueDeclare(queue: Scope,
+            channel.QueueDeclare(queue: _queueCorrespondence[Scope],
                      durable: false,
                      exclusive: false,
                      autoDelete: false,
@@ -75,13 +80,14 @@ namespace ETHTPS.Daemon
                 cancel = true;
                 eventArgs.Cancel = true;
             };
-            Log("Listening for messages...");
+            Log($"Listening for messages on {_queueCorrespondence[Scope]}...");
             consumer.Received += (model, ea) =>
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
                 Log($" [x] Received {message}");
             };
+            channel.BasicConsume(queue: _queueCorrespondence[Scope], autoAck: true, consumer: consumer);
             while (!cancel) Thread.Sleep(100);
             Log("Exiting...");
             channel.Close();

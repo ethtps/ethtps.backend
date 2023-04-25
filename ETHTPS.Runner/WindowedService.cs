@@ -11,6 +11,7 @@ namespace ETHTPS.Runner
         private List<ExtendedProgressBar> _resourceProgressBars;
         public bool Running => _child.IsRunning;
         public ServiceState State => _child.State;
+        public string Name => _child.Name;
 
         public WindowedService(Service child, IConsole window)
         {

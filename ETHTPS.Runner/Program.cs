@@ -43,10 +43,22 @@ namespace ETHTPS.Runner
             {
                 e.Cancel = true;
                 await Task.WhenAll(windowedServices.Select(s => Task.Run(() => s.Kill())));
+                Console.SetCursorPosition(0, Console.WindowHeight - 1);
                 Environment.Exit(0);
             };
-            await Task.WhenAll(windowedServices.Select(s => Task.Run(() => s.Start())));
-            while (windowedServices.All(x => x.Running) && !exit)
+            await Task.WhenAll(windowedServices.Select(s =>
+            {
+                try
+                {
+                    return Task.Run(() => s.Start());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"{s.Name} failed to start: {e}");
+                    return Task.FromException(e);
+                }
+            }));
+            while (windowedServices.Any(x => x.Running) && !exit)
             {
                 await Task.Delay(-1);
             }
