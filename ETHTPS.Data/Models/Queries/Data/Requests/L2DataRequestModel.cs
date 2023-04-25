@@ -82,6 +82,22 @@ namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
                     return ValidationResult.InvalidFor($"Provider \"{provider}\" is not supported. Spelling is case-sensitive.");
                 }
             }
+            if (BucketOptions.CustomBucketSize.HasValue)
+            {
+                if (BucketOptions.BucketSize != TimeInterval.Auto)
+                {
+                    return ValidationResult.InvalidFor($"Can't specify both {nameof(BucketOptions.BucketSize)} and {nameof(BucketOptions.CustomBucketSize)}");
+                }
+
+                if (BucketOptions.CustomBucketSize.Value < TimeSpan.FromMinutes(1))
+                {
+                    return ValidationResult.InvalidFor($"Custom bucket size is too small. Minimum allowed value is 1 minute.");
+                }
+            }
+            if (AllDistinctProviders.Count() == 0)
+            {
+                return ValidationResult.InvalidFor("No provider(s) specified");
+            }
             return ValidationResult.Valid;
         }
     }

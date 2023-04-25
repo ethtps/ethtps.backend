@@ -1,9 +1,10 @@
 ﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
+using ETHTPS.Data.Core.Models.DataPoints.XYPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ETHTPS.Tests.DataTransformation
+namespace ETHTPS.Tests.Data.DataTransformation
 {
     public sealed class DataTransformationTests : TestBase
     {
@@ -13,7 +14,7 @@ namespace ETHTPS.Tests.DataTransformation
             Provider = "Ethereum",
             StartDate = DateTime.Now.Subtract(TimeSpan.FromDays(2)),
             EndDate = DateTime.Now.Subtract(TimeSpan.FromDays(1)),
-            ReturnXAxisType = Data.Core.Models.DataPoints.XYPoints.XPointType.Date,
+            ReturnXAxisType = XPointType.Date,
             Network = "Mainnet",
             BucketOptions = new BucketOptions()
             {

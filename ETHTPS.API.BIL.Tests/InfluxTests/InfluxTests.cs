@@ -1,3 +1,4 @@
+using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
@@ -42,7 +43,7 @@ namespace ETHTPS.Tests.ServiceTests
             Assert.DoesNotThrowAsync(async () =>
             {
                 await foreach (var entry in _influxWrapper.GetEntriesForPeriod<Block
-                    >(_DEFAULT_BUCKET_NAME, _DEFAULT_MEASUREMENT_NAME, Data.Core.TimeInterval.OneHour)) { }
+                    >(_DEFAULT_BUCKET_NAME, _DEFAULT_MEASUREMENT_NAME, ETHTPS.Data.Core.TimeInterval.OneHour)) { }
             });
             /*
             Assert.DoesNotThrowAsync(async () =>
@@ -63,7 +64,7 @@ namespace ETHTPS.Tests.ServiceTests
             if (_asyncHistoricalBlockInfoProvider == null)
                 return;
 
-            var x = await _asyncHistoricalBlockInfoProvider.GetLatestBlocksAsync(new ProviderQueryModel(), Data.Core.TimeInterval.OneWeek);
+            var x = await _asyncHistoricalBlockInfoProvider.GetLatestBlocksAsync(new ProviderQueryModel(), TimeInterval.OneWeek);
             Assert.That(x.Any(x => x.TransactionCount > 0));
             Assert.Pass();
         }

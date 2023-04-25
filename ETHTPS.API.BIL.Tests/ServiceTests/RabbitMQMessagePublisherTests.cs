@@ -14,7 +14,7 @@ using RabbitMQ.Client.Events;
 namespace ETHTPS.Tests.ServiceTests
 {
     [TestFixture]
-    public class RabbitMQMessagePublisherTests : TestBase
+    public sealed class RabbitMQMessagePublisherTests : TestBase
     {
         private static string _host = "localhost";
         private static string _queue = "test_queue";

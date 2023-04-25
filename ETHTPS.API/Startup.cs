@@ -9,6 +9,7 @@ using ETHTPS.API.Security.Core.Authentication;
 using ETHTPS.API.Security.Core.Policies;
 using ETHTPS.Configuration.Database;
 using ETHTPS.Services.BackgroundTasks.Recurring.Aggregated;
+using ETHTPS.Services.Infrastructure.Messaging;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -49,7 +50,8 @@ namespace ETHTPS.API
                     .AddScoped<AggregatedEndpointStatsBuilder>()
                     .AddInfluxHistoricalDataProvider() //Not working r/n
                     .AddMSSQLHistoricalDataServices()
-                    .AddRedisCache();
+                    .AddRedisCache()
+                    .AddRabbitMQMessagePublisher();
             //.RegisterMicroservice(APP_NAME, "General API");
             services.AddDataUpdaterStatusService();
 

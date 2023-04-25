@@ -9,7 +9,7 @@ using RabbitMQ.Client;
 
 namespace ETHTPS.Services.Infrastructure.Messaging
 {
-    public class RabbitMQMessagePublisher : IMessagePublisher
+    public sealed class RabbitMQMessagePublisher : IMessagePublisher
     {
         private readonly string? _host;
 
@@ -18,9 +18,13 @@ namespace ETHTPS.Services.Infrastructure.Messaging
             _host = configurationProvider.GetFirstConfigurationString("RabbitMQ_Host_Dev");
         }
 
-        public void PublishJSONMessage<T>(T message, string queue, string? host) => PublishMessage(JsonConvert.SerializeObject(message), queue, host ?? _host);
+        public void PublishMessage(string message, string queue) => PublishMessage(message, queue, _host);
 
-        public void PublishMessage(string message, string queue, string host = "localhost")
+        public void PublishJSONMessage<T>(T message, string queue, string host) => PublishMessage(JsonConvert.SerializeObject(message), queue, host ?? _host);
+
+        public void PublishJSONMessage<T>(T message, string queue) => PublishJSONMessage(message, queue, _host ?? "localhost");
+
+        public void PublishMessage(string message, string queue, string host)
         {
             var factory = new ConnectionFactory() { HostName = _host ?? host };
             using (var connection = factory.CreateConnection())
