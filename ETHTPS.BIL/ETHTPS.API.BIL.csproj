@@ -18,6 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\ETHTPS.Configuration\ETHTPS.Configuration.csproj" />
 	  <ProjectReference Include="..\ETHTPS.Data.Database\ETHTPS.Data.Integrations.MSSQL.csproj" />
 	  <ProjectReference Include="..\ETHTPS.Data\ETHTPS.Data.Core.csproj" />
 	</ItemGroup>
