@@ -31,7 +31,7 @@ namespace ETHTPS.Services.Infrastructure.Messaging
             using (var channel = connection.CreateModel())
             {
                 channel.QueueDeclare(queue: queue,
-                                     durable: false,
+                                     false,
                                      exclusive: false,
                                      autoDelete: false,
                                      arguments: null);

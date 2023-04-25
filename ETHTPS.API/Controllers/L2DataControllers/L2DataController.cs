@@ -61,9 +61,9 @@ namespace ETHTPS.API.Controllers.L2DataControllers
         {
             if (!await _redisCacheService.HasKeyAsync(guid))
             {
-                if (await _redisCacheService.HasKeyAsync(L2DataRequestStatus.PREFIX + guid))
+                if (await _redisCacheService.HasKeyAsync(L2DataRequestStatus.GenerateCacheKeyFromGuid(guid)))
                 {
-                    var status = await _redisCacheService.GetDataAsync<L2DataRequestStatus>(L2DataRequestStatus.PREFIX + guid);
+                    var status = await _redisCacheService.GetDataAsync<L2DataRequestStatus>(L2DataRequestStatus.GenerateCacheKeyFromGuid(guid));
                     if (status.State != L2DataRequestState.Failed && status.State != L2DataRequestState.Completed)
                     {
                         return Accepted(status);
@@ -80,11 +80,11 @@ namespace ETHTPS.API.Controllers.L2DataControllers
         [SwaggerResponse(404)]
         public async Task<IActionResult> GetDataRequestStatusAsync(string guid)
         {
-            if (!await _redisCacheService.HasKeyAsync(L2DataRequestStatus.PREFIX + guid))
+            if (!await _redisCacheService.HasKeyAsync(L2DataRequestStatus.GenerateCacheKeyFromGuid(guid)))
             {
                 return NotFound(guid);
             }
-            return Ok(await _redisCacheService.GetDataAsync<L2DataRequestStatus>(L2DataRequestStatus.PREFIX + guid)); //Not implemented yet
+            return Ok(await _redisCacheService.GetDataAsync<L2DataRequestStatus>(L2DataRequestStatus.GenerateCacheKeyFromGuid(guid))); //Not implemented yet
         }
 
         /// <summary>
@@ -111,17 +111,28 @@ namespace ETHTPS.API.Controllers.L2DataControllers
                 IncludeSimpleAnalysis = true,
             };
             var validationResult = Validate(requestModel);
+            var guid = requestModel.Guid;
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Reason);
             }
-            var guid = Guid.NewGuid();
-            await _redisCacheService.SetDataAsync(L2DataRequestStatus.PREFIX + guid.ToString(), new L2DataRequestStatus(), TimeSpan.FromHours(1));
-            await _redisCacheService.SetDataAsync(L2DataRequestModel.PREFIX + guid.ToString(), requestModel, TimeSpan.FromMinutes(15));
+            await _redisCacheService.SetDataAsync(L2DataRequestStatus.GenerateCacheKeyFromGuid(guid), new L2DataRequestStatus(guid), TimeSpan.FromHours(1));
+            await _redisCacheService.SetDataAsync(L2DataRequestModel.GenerateCacheKeyFromGuid(guid), requestModel, TimeSpan.FromMinutes(15));
             _messagePublisher.PublishJSONMessage(requestModel, "L2DataRequestQueue");
             return Created(nameof(GetDataRequestAsync), guid);
         }
-
+#if DEBUG
+        [HttpPost]
+        [SwaggerResponse(201)]
+        public async Task<IActionResult> CreateLotsOfDummyRequests()
+        {
+            await Task.WhenAll(Enumerable.Range(0, 15).Select(i => Task.Run(async () =>
+                {
+                    await CreateDataRequestAsync(null, DataType.TPS);
+                })));
+            return StatusCode(201);
+        }
+#endif
         /// <summary>
         /// Checks if the request is valid and sets the default values for the request if they are not already set.
         /// </summary>

@@ -1,16 +1,19 @@
 ﻿using System.Text;
 
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.API.DependencyInjection;
 using ETHTPS.Configuration;
 using ETHTPS.Configuration.Extensions;
+using ETHTPS.Daemon.Infra;
+using ETHTPS.Data.Core.Models.Queries.Data.Requests;
+using ETHTPS.Services.Infrastructure.Messaging;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-using NLog.Extensions.Hosting;
+using Newtonsoft.Json;
 
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
+using NLog.Extensions.Hosting;
 
 using Utility.CommandLine;
 
@@ -23,6 +26,13 @@ namespace ETHTPS.Daemon
 
         [Argument('v', "verbose", "Verbose output")]
         private static bool Verbose { get; set; } = false;
+
+        [Argument('l', "limit", "Task limit")]
+        public static int TaskLimit { get; set; } = 10;
+
+        public static int RunningTasks = 0;
+
+        public static bool SlotAvailable => RunningTasks < TaskLimit;
 
         private static string[] _allowedScopes = new[]
         {
@@ -53,26 +63,77 @@ namespace ETHTPS.Daemon
             var services = builder.Services;
             services.AddEssentialServices()
                     .AddDatabaseContext("ETHTPS.Tests")
-                    .AddMixedCoreServices();
+                    .AddMixedCoreServices()
+                    .AddRabbitMQMessagePublisher()
+                    .AddRedisCache()
+                    .AddSingleton<IRabbitMQSubscriptionService>(x =>
+                    {
+                        using (var scope = x.CreateScope())
+                            return new RabbitMQSubscriptionService(new RabbitMQSubscriptionConfig()
+                            {
+                                AutoAck = false,
+                                QueueName = _queueCorrespondence[Scope],
+                                Host = x.GetRequiredService<IDBConfigurationProvider>().GetFirstConfigurationString("RabbitMQ_Host_Dev")
+                            });
+                    });
 
             var serviceProvider = services.BuildServiceProvider();
+            var consumer = serviceProvider.GetRequiredService<IRabbitMQSubscriptionService>();
+            var channel = consumer.Channel;
+            consumer.MessageReceived += (model, ea) =>
+            {
+                try
+                {
+                    if (!SlotAvailable)
+                    {
+                        LogVerbose($"[{ea.RoutingKey}]: No slots available, skipping message");
+                        channel.BasicNack(ea.DeliveryTag, false, true);
+                        return;
+                    }
+                    Interlocked.Increment(ref RunningTasks);
+                    channel.BasicAck(ea.DeliveryTag, false);
+                    LogVerbose($"[{ea.RoutingKey}][{ea.DeliveryTag}] ack");
 
-            Log($"Starting ETHTPS daemon in {Scope} mode...");
-            IDBConfigurationProvider? configProvider = serviceProvider.GetRequiredService<IDBConfigurationProvider>();
-
-            LogVerbose("Connecting to RabbitMQ...");
-            var factory = new ConnectionFactory { HostName = configProvider.GetFirstConfigurationString("RabbitMQ_Host_Dev") };
-            using var connection = factory.CreateConnection();
-            using var channel = connection.CreateModel();
-            LogVerbose("Connected to RabbitMQ");
-            channel.QueueDeclare(queue: _queueCorrespondence[Scope],
-                     durable: false,
-                     exclusive: false,
-                     autoDelete: false,
-                     arguments: null);
-            LogVerbose("Declared queue for scope");
-            var consumer = new EventingBasicConsumer(channel);
-            LogVerbose("Created consumer");
+                    var body = ea.Body.ToArray();
+                    var message = Encoding.UTF8.GetString(body);
+                    Log($"[{ea.RoutingKey}]: Received message");
+                    switch (ea.RoutingKey)
+                    {
+                        case "L2DataRequestQueue":
+                            LogVerbose($"[{ea.RoutingKey}]: Processing message");
+                            var request = JsonConvert.DeserializeObject<L2DataRequestModel>(message);
+                            var requestKey = request?.ToCacheKey();
+                            if (string.IsNullOrWhiteSpace(requestKey))
+                            {
+                                LogVerbose($"[{ea.RoutingKey}]: Invalid request - no request key");
+                                return;
+                            }
+                            var preprocessor = new DataRequestPreprocessor(requestKey, serviceProvider.GetRequiredService<IMessagePublisher>(), serviceProvider.GetRequiredService<IRedisCacheService>(), request);
+                            Task.Run(async () =>
+                            {
+                                try
+                                {
+                                    await preprocessor.RunAsync();
+                                }
+                                catch (Exception e)
+                                {
+                                    Log($"Exception occurred while processing queue message: {e}");
+                                }
+                                finally
+                                {
+                                    Interlocked.Decrement(ref RunningTasks);
+                                    LogVerbose($"Released slot");
+                                    LogVerbose($"Slots available: {TaskLimit - RunningTasks}");
+                                }
+                            });
+                            break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log($"Exception occurred while processing queue message: {e}");
+                }
+            };
             var cancel = false;
             Console.CancelKeyPress += (sender, eventArgs) =>
             {
@@ -80,26 +141,18 @@ namespace ETHTPS.Daemon
                 cancel = true;
                 eventArgs.Cancel = true;
             };
-            Log($"Listening for messages on {_queueCorrespondence[Scope]}...");
-            consumer.Received += (model, ea) =>
-            {
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-                Log($" [x] Received {message}");
-            };
-            channel.BasicConsume(queue: _queueCorrespondence[Scope], autoAck: true, consumer: consumer);
+            Log("Listening...");
             while (!cancel) Thread.Sleep(100);
             Log("Exiting...");
             channel.Close();
-            connection.Close();
         }
 
-        private static void Log(string message)
+        public static void Log(string message)
         {
             Console.WriteLine($"{DateTime.Now.ToLongTimeString()}: {message}");
         }
 
-        private static void LogVerbose(string message)
+        public static void LogVerbose(string message)
         {
             if (Verbose)
             {

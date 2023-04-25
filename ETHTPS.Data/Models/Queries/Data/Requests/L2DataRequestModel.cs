@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
 {
-    public sealed class L2DataRequestModel : ProviderQueryModel, IAnalysisParameters
+    public sealed class L2DataRequestModel : ProviderQueryModel, IAnalysisParameters, ICachedKey, IGuidEntity
     {
         [JsonIgnore]
         public TimeInterval AutoInterval
@@ -49,6 +49,9 @@ namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
         public List<string>? Providers { get; set; }
         [JsonIgnore]
         public IEnumerable<string> AllDistinctProviders => (Providers ?? Enumerable.Empty<string>()).Concat(new string[] { Provider }).Distinct().Where(x => !string.IsNullOrWhiteSpace(x));
+
+        public string Guid { get; set; } = System.Guid.NewGuid().ToString();
+
         public ValidationResult Validate(IEnumerable<string> availableProviders)
         {
             if (StartDate == null && EndDate == null)
@@ -100,7 +103,8 @@ namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
             }
             return ValidationResult.Valid;
         }
+        public static string GenerateCacheKeyFromGuid(string guid) => $"L2DataRequest:{guid}";
 
-        public const string PREFIX = "L2DataRequest:";
+        public new string ToCacheKey() => GenerateCacheKeyFromGuid(Guid);
     }
 }

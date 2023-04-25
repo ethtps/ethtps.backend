@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace ETHTPS.Tests.ServiceTests
+namespace ETHTPS.Tests.ServiceTests.RabbitMQ
 {
     [TestFixture]
     public sealed class RabbitMQMessagePublisherTests : TestBase

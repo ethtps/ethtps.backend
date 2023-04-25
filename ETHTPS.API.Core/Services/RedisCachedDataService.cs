@@ -42,7 +42,28 @@ namespace ETHTPS.API.Core.Services
             return default(T);
         }
 
+        public T? GetData<T>(string key)
+        {
+            if (HasKey(key))
+            {
+                var value = _database.StringGet(key);
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    return JsonConvert.DeserializeObject<T>(value.ToString(), new JsonSerializerSettings()
+                    {
+                        Error = (sender, args) =>
+                        {
+                            _logger?.Error(args);
+                            args.ErrorContext.Handled = true;
+                        }
+                    });
+                }
+            }
+            return default(T);
+        }
+
         public async Task<bool> HasKeyAsync(string key) => await _database.KeyExistsAsync(key);
+        public bool HasKey(string key) => _database.KeyExists(key);
 
         public async Task<bool> SetDataAsync(string key, string value)
         {
@@ -89,6 +110,24 @@ namespace ETHTPS.API.Core.Services
         public async Task<bool> ExpireAsync(string key, TimeSpan expiration)
         {
             return await _database.KeyExpireAsync(key, expiration);
+        }
+
+        public void UpdateData<T>(string key, Action<T> updateAction)
+            where T : ICachedKey => Task.Run(async () => await UpdateDataAsync(key, updateAction));
+
+        public async Task UpdateDataAsync<T>(string key, Action<T> updateAction)
+            where T : ICachedKey
+        {
+            if (!await HasKeyAsync(key)) return;
+
+            var existing = await GetDataAsync<T>(key);
+            if (existing == null)
+            {
+                await _database.KeyDeleteAsync(key);
+                return;
+            }
+            updateAction(existing);
+            await SetDataAsync<T>(key, existing);
         }
     }
 

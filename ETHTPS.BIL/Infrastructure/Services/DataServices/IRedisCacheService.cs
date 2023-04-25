@@ -5,7 +5,11 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
     public interface IRedisCacheService
     {
         public Task<bool> HasKeyAsync(string key);
+        public bool HasKey(string key);
         public Task<T?> GetDataAsync<T>(string key);
+        public T? GetData<T>(string key);
+        public void UpdateData<T>(string key, Action<T> updateAction) where T : ICachedKey;
+        public Task UpdateDataAsync<T>(string key, Action<T> updateAction) where T : ICachedKey;
         public Task<bool> SetDataAsync(string key, string value);
         public Task<bool> SetDataAsync<T>(string key, T value);
         public Task<bool> SetDataAsync<T>(T value) where T : ICachedKey;

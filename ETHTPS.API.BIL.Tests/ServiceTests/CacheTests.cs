@@ -6,6 +6,8 @@ using ETHTPS.Data.Core;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using Moq;
+
 using StackExchange.Redis;
 
 namespace ETHTPS.Tests.ServiceTests
@@ -17,6 +19,9 @@ namespace ETHTPS.Tests.ServiceTests
         private IDatabase _database;
         private IRedisCacheService _cachedDataService;
 
+        private Mock<IRedisCacheService> _mockRedisCacheService;
+        private IRedisCacheService _redisCacheService;
+
         [SetUp]
         public void Setup()
         {
@@ -24,6 +29,8 @@ namespace ETHTPS.Tests.ServiceTests
             _connectionMultiplexer = ConnectionMultiplexer.Connect(ServiceProvider.GetRequiredService<IDBConfigurationProvider>().GetFirstConfigurationString("RedisServer") ?? "localhost");
             _database = _connectionMultiplexer.GetDatabase();
             _cachedDataService = new RedisCachedDataService(_connectionMultiplexer);
+            _mockRedisCacheService = new Mock<IRedisCacheService>();
+            _redisCacheService = _mockRedisCacheService.Object;
         }
 
         [TearDown]
@@ -256,6 +263,54 @@ namespace ETHTPS.Tests.ServiceTests
 
             // Assert
             Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task UpdateDataAsync_KeyExists_CallsUpdateActionAndSetsDataAsync()
+        {
+            // Arrange
+            var key = "test_key";
+            var existingValue = new CachedKey { Id = 1, Name = "Test" };
+            var updatedValue = new CachedKey { Id = 1, Name = "New Name" };
+            var updateAction = new Action<CachedKey>(x => x.Name = "New Name");
+            _mockRedisCacheService.Setup(x => x.HasKeyAsync(key)).ReturnsAsync(true);
+            _mockRedisCacheService.Setup(x => x.GetDataAsync<CachedKey>(key)).ReturnsAsync(existingValue);
+            _mockRedisCacheService.Setup(x => x.SetDataAsync(key, updatedValue)).ReturnsAsync(true);
+
+            // Act
+            await _redisCacheService.UpdateDataAsync<CachedKey>(key, updateAction);
+
+            // Assert
+            _mockRedisCacheService.Verify(x => x.SetDataAsync(key, updatedValue), Times.Once);
+        }
+
+        [Test]
+        public async Task UpdateDataAsync_KeyExists_DataIsSetCorrectly()
+        {
+            // Arrange
+            var key = "test_key";
+            var existingValue = new CachedKey { Id = 1, Name = "Test" };
+            var updatedValue = new CachedKey { Id = 1, Name = "New Name" };
+            var updateAction = new Action<CachedKey>(x => x.Name = "New Name");
+            _mockRedisCacheService.Setup(x => x.HasKeyAsync(key)).ReturnsAsync(true);
+            _mockRedisCacheService.Setup(x => x.GetDataAsync<CachedKey>(key)).ReturnsAsync(existingValue);
+            _mockRedisCacheService.Setup(x => x.SetDataAsync(key, updatedValue)).ReturnsAsync(true);
+
+            // Act
+            await _redisCacheService.UpdateDataAsync<CachedKey>(key, updateAction);
+
+            // Assert
+            var result = await _redisCacheService.GetDataAsync<CachedKey>(key);
+            Assert.That(result?.Id, Is.EqualTo(updatedValue.Id));
+            Assert.That(result?.Name, Is.EqualTo(updatedValue.Name));
+        }
+
+        public class CachedKey : ICachedKey
+        {
+            public int Id;
+            public string Name;
+
+            public string ToCacheKey() => $"test-cached-key-{Id}";
         }
     }
 }
