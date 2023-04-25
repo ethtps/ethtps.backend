@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
@@ -97,15 +98,28 @@ namespace ETHTPS.API.Controllers.L2DataControllers
         [SwaggerResponse(400, "Invalid parameter(s)", Type = typeof(ValidationResult))]
         public async Task<IActionResult> CreateDataRequestAsync([FromBody] L2DataRequestModel requestModel, DataType dataType)
         {
+            requestModel ??= new L2DataRequestModel()
+            {
+                Providers = new()
+                    {
+                        "Ethereum"
+                    },
+                StartDate = DateTime.Now.Subtract(TimeSpan.FromDays(1)),
+                IncludeEmptyDatasets = true,
+                IncludeSidechains = true,
+                IncludeComplexAnalysis = true,
+                IncludeSimpleAnalysis = true,
+            };
             var validationResult = Validate(requestModel);
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Reason);
             }
-            var guid = new System.Guid();
-            await _redisCacheService.SetDataAsync(L2DataRequestStatus.PREFIX + guid.ToString(), new L2DataRequestStatus());
-            _messagePublisher.PublishMessage("L2DataRequest", "L2DataRequestQueue");
-            return CreatedAtAction("GetDataRequestStatusAsync", guid);
+            var guid = Guid.NewGuid();
+            await _redisCacheService.SetDataAsync(L2DataRequestStatus.PREFIX + guid.ToString(), new L2DataRequestStatus(), TimeSpan.FromHours(1));
+            await _redisCacheService.SetDataAsync(L2DataRequestModel.PREFIX + guid.ToString(), requestModel, TimeSpan.FromMinutes(15));
+            _messagePublisher.PublishJSONMessage(requestModel, "L2DataRequestQueue");
+            return Created(nameof(GetDataRequestAsync), guid);
         }
 
         /// <summary>
@@ -113,6 +127,9 @@ namespace ETHTPS.API.Controllers.L2DataControllers
         /// </summary>
         private ValidationResult Validate(L2DataRequestModel requestModel)
         {
+            if (requestModel == null)
+                return new ValidationResult(false, "Request model is null");
+
             var providers = _generalService.AllProviders.Select(x => (x.Name, x.Type == "Sidechain")).Where(x => !requestModel.IncludeSidechains ? !x.Item2 : true);
             if (requestModel.Providers != null)
                 if (requestModel.Providers.Contains(Constants.All))

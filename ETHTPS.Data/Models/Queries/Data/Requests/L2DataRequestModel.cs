@@ -100,5 +100,7 @@ namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
             }
             return ValidationResult.Valid;
         }
+
+        public const string PREFIX = "L2DataRequest:";
     }
 }
