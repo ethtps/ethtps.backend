@@ -22,7 +22,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NLog.Database" Version="5.1.3" />
+    <PackageReference Include="NLog.Database" Version="5.1.4" />
     <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.3" />
   </ItemGroup>
 

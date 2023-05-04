@@ -2,12 +2,16 @@
 
 using Coravel;
 
+using EntityGraphQL.AspNet;
+using EntityGraphQL.Schema;
+
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.Core.Middlewares;
 using ETHTPS.API.DependencyInjection;
 using ETHTPS.API.Security.Core.Authentication;
 using ETHTPS.API.Security.Core.Policies;
 using ETHTPS.Configuration.Database;
+using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Services.BackgroundTasks.Recurring.Aggregated;
 using ETHTPS.Services.Infrastructure.Messaging;
 
@@ -51,7 +55,8 @@ namespace ETHTPS.API
                     .AddInfluxHistoricalDataProvider() //Not working r/n
                     .AddMSSQLHistoricalDataServices()
                     .AddRedisCache()
-                    .AddRabbitMQMessagePublisher();
+                    .AddRabbitMQMessagePublisher()
+                    .AddGraphQLSchema<EthtpsContext>();
             //.RegisterMicroservice(APP_NAME, "General API");
             services.AddDataUpdaterStatusService();
 
@@ -77,6 +82,11 @@ namespace ETHTPS.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers().RequireAuthorization();
+                endpoints.MapGraphQL<EthtpsContext>(options: new ExecutionOptions()
+                {
+                    EnableQueryCache = true,
+                    ExecuteServiceFieldsSeparately = true,
+                });
             });
         }
     }

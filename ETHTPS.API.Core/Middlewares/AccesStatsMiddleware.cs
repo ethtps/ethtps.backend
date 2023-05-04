@@ -59,7 +59,7 @@ namespace ETHTPS.API.Core.Middlewares
                 stopwatch.Stop();
             }
 
-            logger.LogInformation($"{DateTime.Now.ToLongTimeString()} | {Math.Round((double)RequestsLastPeriod / (_period / 1000), 2)} hreq/s | {context.Connection.RemoteIpAddress?.MapToIPv4().ToString()} | {context.Request.Method} {context.Request.Path} | {stopwatch.Elapsed.TotalMilliseconds}ms");
+            logger.LogInformation($"{DateTime.Now.ToLongTimeString()} | {Math.Round((double)RequestsLastPeriod / (_period / 1000), 2)} hreq/s | {context.Connection.RemoteIpAddress?.MapToIPv4().ToString()} | {context.Request.Method} {context.Request.Path} | {context.Response.StatusCode} | {stopwatch.Elapsed.TotalMilliseconds}ms");
 
             var payload = new AggregatedEnpointStat()
             {
