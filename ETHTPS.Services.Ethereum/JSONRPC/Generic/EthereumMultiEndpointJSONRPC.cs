@@ -34,14 +34,14 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
             _logger = logger;
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public Task<Block> GetLatestBlockInfoAsync()
         {
             Block result = default;
             for (int i = 0; i < _totalChildren; i++)
             {
-                if (result != null) return result;
+                if (result != null) return Task.FromResult(result);
             }
-            return result;
+            return Task.FromResult(result);
         }
 
         public async Task<Block> GetBlockInfoAsync(int blockNumber)
@@ -71,14 +71,14 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
             while (result == null && ++c < _totalChildren);
             return result;
         }
-        public async Task<Block> GetBlockInfoAsync(DateTime time)
+        public Task<Block> GetBlockInfoAsync(DateTime time)
         {
             Block result = default;
             for (int i = 0; i < _totalChildren; i++)
             {
-                if (result != null) return result;
+                if (result != null) return Task.FromResult(result);
             }
-            return result;
+            return Task.FromResult(result);
         }
     }
 }

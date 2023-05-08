@@ -1,6 +1,5 @@
-﻿using ETHTPS.Services.Attributes;
-
-using Microsoft.Extensions.Configuration;
+﻿using ETHTPS.Configuration;
+using ETHTPS.Services.Attributes;
 
 namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
 {
@@ -8,9 +7,8 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
     [RunsEvery(CronConstants.EVERY_5_S)]
     public sealed class PolygonBlockInfoProvider : InfuraBlockInfoProviderBase
     {
-        public PolygonBlockInfoProvider(IConfiguration configuration) : base(configuration, "PolygonEndpoint")
+        public PolygonBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Polygon")
         {
-
         }
     }
 }
