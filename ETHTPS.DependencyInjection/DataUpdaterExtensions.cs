@@ -6,7 +6,9 @@ using Coravel.Scheduling.Schedule.Interfaces;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets.Extensions;
 using ETHTPS.API.Core.Integrations.MSSQL.Services.Updater;
+using ETHTPS.Configuration;
 using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Services;
 using ETHTPS.Services.Attributes;
 using ETHTPS.Services.BlockchainServices.CoravelLoggers;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
@@ -26,6 +28,7 @@ namespace ETHTPS.API.DependencyInjection
     {
         public static IServiceCollection AddDataUpdaterStatusService(this IServiceCollection services) =>
             services.AddTransient<IDataUpdaterStatusService, DataUpdaterStatusService>();
+
         private static Type[] _enabledUpdaters = new[]
         {
             typeof(EthereumBlockInfoProvider),
@@ -68,9 +71,15 @@ namespace ETHTPS.API.DependencyInjection
                     services.AddScheduler();
                     services.AddScoped(_enabledUpdaters.Select(x => typeof(CoravelBlockLogger<>).MakeGenericType(x)));
                     break;
+                case BackgroundServiceType.Hangfire:
+                    services.AddHangfireServer("ETHTPS.TaskRunner");
+                    _enabledUpdaters.ToList().ForEach(updater =>
+                        services.RegisterHangfireBackgroundService(updater));
+                    break;
             }
             return services;
         }
+
         public static void UseRunner(this IApplicationBuilder app, BackgroundServiceType type)
         {
             switch (type)
@@ -78,25 +87,56 @@ namespace ETHTPS.API.DependencyInjection
                 case BackgroundServiceType.Coravel:
                     app.UseCoravel();
                     break;
+                case BackgroundServiceType.Hangfire:
+                    using (var scope = app.ApplicationServices.CreateScope())
+                    {
+                        var provider = scope.ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
+                        string[] queues = provider.GetConfigurationStrings("HangfireQueue").Select(x => x.Value).ToArray();
+                        if (queues.Count() == 0)
+                        {
+                            queues = new string[] { "default" };
+                        }
+                        app.ConfigureHangfire(queues);
+                        app.UseHangfireDashboard();
+                        break;
+                    }
             }
         }
-        public static IServiceCollection WithStore(this IServiceCollection services, DatabaseProvider databaseProvider)
-        {
-            if (databaseProvider.Equals(0))
-            {
 
+        public static IServiceCollection WithStore(this IServiceCollection services, DatabaseProvider databaseProvider, string appName)
+        {
+            switch (databaseProvider)
+            {
+                case DatabaseProvider.MSSQL:
+                    services.InitializeHangfire(appName);
+                    break;
             }
             return services;
         }
+
+        public static void RegisterHangfireBackgroundService(this IServiceCollection services, Type sourceType)
+        {
+            if (!typeof(IHTTPBlockInfoProvider).IsAssignableFrom(sourceType))
+            {
+                throw new ArgumentException("The provided type must implement IHTTPBlockInfoProvider.", nameof(sourceType));
+            }
+            var runsEveryAttribute = sourceType.GetCustomAttribute<RunsEveryAttribute>();
+            var cronExpression = runsEveryAttribute?.CronExpression ?? CronConstants.EVERY_MINUTE;
+            var genericMethod = typeof(DataUpdaterExtensions).GetMethod(nameof(RegisterHangfireBackgroundServiceAndTimeBucket));
+            var loggerType = typeof(MSSQLLogger<>).MakeGenericType(sourceType);
+            var constructedMethod = genericMethod?.MakeGenericMethod(loggerType, sourceType);
+            constructedMethod?.Invoke(null, new object[] { services, cronExpression, "tpsdata" });
+        }
+
         public static void RegisterHangfireBackgroundServiceAndTimeBucket<T, V>(this IServiceCollection services, string cronExpression, string queue)
-            where V : class, IHTTPBlockInfoProvider
             where T : MSSQLLogger<V>
+            where V : class, IHTTPBlockInfoProvider
         {
             services.AddScoped<V>();
             services.InjectTimeBucketService<V>();
             services.AddScoped<T>();
 #pragma warning disable CS0618 // Type or member is obsolete
-            RecurringJob.AddOrUpdate<T>(typeof(V).Name, x => x.RunAsync(), cronExpression, queue: queue);
+            Hangfire.RecurringJob.AddOrUpdate<T>(typeof(V).Name, x => x.RunAsync(), cronExpression, queue: queue);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 

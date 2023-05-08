@@ -1,11 +1,10 @@
 ﻿using ETHTPS.Configuration.Extensions;
-using ETHTPS.Data.Core.Database;
 
 using Microsoft.EntityFrameworkCore;
 
 namespace ETHTPS.Configuration.Database;
 
-public partial class ConfigurationContext : ContextBase<ConfigurationContext>
+public partial class ConfigurationContext : ConfigurationContextBase
 {
     public ConfigurationContext()
     {

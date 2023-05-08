@@ -24,6 +24,5 @@ namespace ETHTPS.Data.Core.Database
             base.OnConfiguring(optionsBuilder);
             optionsBuilder.UseLazyLoadingProxies().EnableThreadSafetyChecks();
         }
-
     }
 }
