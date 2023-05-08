@@ -15,7 +15,8 @@ namespace ETHTPS.Configuration.Database
         public ConfigurationContextBase(DbContextOptions<ConfigurationContext> options)
             : base(options)
         {
-            Database.SetCommandTimeout(TimeSpan.FromSeconds(60));
+            Database.AutoTransactionBehavior = AutoTransactionBehavior.WhenNeeded;
+            Database.SetCommandTimeout(TimeSpan.FromSeconds(10));
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

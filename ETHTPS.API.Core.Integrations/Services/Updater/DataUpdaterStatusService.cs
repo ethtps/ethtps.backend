@@ -98,8 +98,11 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
 
                 var x = _context.LiveDataUpdaterStatuses.First(x => x.UpdaterId == updater.Id);
                 x.StatusId = s.Id;
-                if (status == UpdaterStatus.Running)
-                    x.LastRunTime = DateTime.Now;
+                x.LastRunTime = DateTime.Now;
+                if (status == UpdaterStatus.RanSuccessfully || status == UpdaterStatus.Idle)
+                {
+                    x.LastSuccessfulRunTime = DateTime.Now;
+                }
                 _context.Update(x);
                 _context.SaveChanges();
             }

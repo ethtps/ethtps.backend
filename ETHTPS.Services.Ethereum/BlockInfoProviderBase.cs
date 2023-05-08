@@ -53,7 +53,7 @@ namespace ETHTPS.Services.Ethereum
                     return configString.Value;
                 }
             }
-            throw new ConfigurationStringNotFoundException(string.Join(", ", partialNames), "ETHTPS.Services.Ethereum");
+            throw new ConfigurationStringNotFoundException(string.Join(", ", _providerName, partialNames), "ETHTPS.Services.Ethereum");
         }
 
         #endregion

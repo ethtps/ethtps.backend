@@ -1,9 +1,6 @@
 ﻿using System.Reflection;
 
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
-using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.BlockInfo;
-using ETHTPS.Data.Integrations.MSSQL;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,6 +20,7 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.BlockInfo
         public static IServiceCollection AddAutoDiscoveredIHTTPBlockInfoProvidersToDatabase(this IServiceCollection services)
         {
             var providers = GetBlockInfoProviders(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, "ETHTPS.Services.Ethereum.dll"));
+            /*
             if (providers != null && providers.Any())
             {
                 using (var provider = services.BuildServiceProvider())
@@ -37,7 +35,7 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.BlockInfo
                         //statusService.SetStatusFor(p.GetProviderName(), Data.Core.Models.DataUpdater.UpdaterType.TPSGPS, Data.Core.Models.DataUpdater.UpdaterStatus.Idle);
                     }
                 }
-            }
+            }*/
             return services;
         }
     }

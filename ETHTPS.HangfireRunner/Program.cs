@@ -2,6 +2,7 @@ using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.DependencyInjection;
 using ETHTPS.API.Security.Core.Policies;
 using ETHTPS.Data.Integrations.InfluxIntegration;
+using ETHTPS.Data.Integrations.MSSQL;
 
 using NLog.Extensions.Hosting;
 
@@ -29,6 +30,11 @@ services.AddSwagger()
 ;//.RegisterMicroservice(CURRENT_APP_NAME, "Task runner web app");
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    scope.ServiceProvider.GetRequiredService<EthtpsContext>().DeleteAllJobsAsync().Wait();
+}
 
 if (!app.Environment.IsDevelopment())
 {

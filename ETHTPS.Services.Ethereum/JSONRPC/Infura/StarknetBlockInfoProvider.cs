@@ -6,7 +6,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
     [Provider("Starknet")]
     public sealed class StarknetBlockInfoProvider : InfuraBlockInfoProviderBase
     {
-        public StarknetBlockInfoProvider(IDBConfigurationProvider configurationProvider, string providerName) : base(configurationProvider, "Starknet")
+        public StarknetBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Starknet")
         {
         }
     }

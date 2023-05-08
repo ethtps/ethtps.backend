@@ -10,6 +10,7 @@ using ETHTPS.Configuration;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Services;
 using ETHTPS.Services.Attributes;
+using ETHTPS.Services.BlockchainServices.BlockTime;
 using ETHTPS.Services.BlockchainServices.CoravelLoggers;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
 using ETHTPS.Services.Ethereum;
@@ -65,6 +66,7 @@ namespace ETHTPS.API.DependencyInjection
         public static IServiceCollection AddDataServices(this IServiceCollection services) => services.AddScoped(_enabledUpdaters);
         public static IServiceCollection AddRunner(this IServiceCollection services, BackgroundServiceType type)
         {
+            services.AddScoped<EthereumBlockTimeProvider>();
             switch (type)
             {
                 case BackgroundServiceType.Coravel:
@@ -73,8 +75,10 @@ namespace ETHTPS.API.DependencyInjection
                     break;
                 case BackgroundServiceType.Hangfire:
                     services.AddHangfireServer("ETHTPS.TaskRunner");
-                    _enabledUpdaters.ToList().ForEach(updater =>
-                        services.RegisterHangfireBackgroundService(updater));
+                    //_enabledUpdaters.ToList().ForEach(updater => services.RegisterHangfireBackgroundService(updater));
+                    services.RegisterHangfireBackgroundServiceAndTimeBucket<MSSQLLogger<EthereumBlockInfoProvider>, EthereumBlockInfoProvider>(CronConstants.EVERY_5_S, "tpsdata");
+
+
                     break;
             }
             return services;
