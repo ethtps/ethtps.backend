@@ -1,8 +1,7 @@
 ﻿using System;
 
+using ETHTPS.Configuration;
 using ETHTPS.Services.Attributes;
-
-using Microsoft.Extensions.Configuration;
 
 namespace ETHTPS.Services.Ethereum.Scan.Implementations
 {
@@ -11,7 +10,7 @@ namespace ETHTPS.Services.Ethereum.Scan.Implementations
     [Obsolete("Use JSONRPC.AVAXBlockInfoProvider instead", true)]
     public sealed class SnowTraceBlockInfoProvider : ScanBlockInfoProviderBase
     {
-        public SnowTraceBlockInfoProvider(IConfiguration configuration) : base(configuration, "Snowtrace")
+        public SnowTraceBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Snowtrace")
         {
         }
     }

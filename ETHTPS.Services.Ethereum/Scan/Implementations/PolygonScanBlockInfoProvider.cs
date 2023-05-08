@@ -1,8 +1,7 @@
 ﻿using System;
 
+using ETHTPS.Configuration;
 using ETHTPS.Services.Attributes;
-
-using Microsoft.Extensions.Configuration;
 
 namespace ETHTPS.Services.Ethereum.Scan.Implementations
 {
@@ -11,7 +10,7 @@ namespace ETHTPS.Services.Ethereum.Scan.Implementations
     [Obsolete("Use JSONRPC.PolygonBlockInfoProvider instead", true)]
     public sealed class PolygonScanBlockInfoProvider : ScanBlockInfoProviderBase
     {
-        public PolygonScanBlockInfoProvider(IConfiguration configuration) : base(configuration, "Polygonscan")
+        public PolygonScanBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Polygonscan")
         {
         }
     }

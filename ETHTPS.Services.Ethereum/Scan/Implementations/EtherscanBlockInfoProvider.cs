@@ -1,8 +1,7 @@
 ﻿using System;
 
+using ETHTPS.Configuration;
 using ETHTPS.Services.Attributes;
-
-using Microsoft.Extensions.Configuration;
 
 namespace ETHTPS.Services.Ethereum.Scan.Implementations
 {
@@ -11,7 +10,7 @@ namespace ETHTPS.Services.Ethereum.Scan.Implementations
     [Obsolete("Use JSONRPC.EthereumBlockInfoProvider instead", true)]
     public sealed class EtherscanBlockInfoProvider : ScanBlockInfoProviderBase
     {
-        public EtherscanBlockInfoProvider(IConfiguration configuration) : base(configuration, "Etherscan")
+        public EtherscanBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Etherscan")
         {
 
         }

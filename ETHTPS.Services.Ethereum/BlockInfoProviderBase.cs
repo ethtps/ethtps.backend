@@ -17,7 +17,7 @@ namespace ETHTPS.Services.Ethereum
     {
         protected IProviderConfigurationStringProvider _configurationProvider;
         protected IEnumerable<IConfigurationString> _configurationStrings;
-
+        protected string _providerName;
         #region Common properties and selectors
 
         protected string Endpoint
@@ -61,9 +61,25 @@ namespace ETHTPS.Services.Ethereum
         protected BlockInfoProviderBase(IDBConfigurationProvider configurationProvider, string providerName)
         {
             _configurationStrings = configurationProvider.GetConfigurationStringsForProvider(providerName);
+            _providerName = providerName;
         }
 
-        public abstract double BlockTimeSeconds { get; set; }
+        private double _blockTimeSeconds = double.NaN;
+        public double BlockTimeSeconds
+        {
+            get
+            {
+                if (double.IsNaN(_blockTimeSeconds))
+                {
+                    _blockTimeSeconds = double.Parse(PartialMatchOrThrow("BlockTime"));
+                }
+                return _blockTimeSeconds;
+            }
+            set
+            {
+                _blockTimeSeconds = value;
+            }
+        }
 
         public abstract Task<Block> GetBlockInfoAsync(int blockNumber);
         public abstract Task<Block> GetBlockInfoAsync(DateTime time);

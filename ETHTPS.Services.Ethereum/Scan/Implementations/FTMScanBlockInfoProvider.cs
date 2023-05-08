@@ -1,6 +1,5 @@
-﻿using ETHTPS.Services.Attributes;
-
-using Microsoft.Extensions.Configuration;
+﻿using ETHTPS.Configuration;
+using ETHTPS.Services.Attributes;
 
 namespace ETHTPS.Services.Ethereum.Scan.Implementations
 {
@@ -8,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.Scan.Implementations
     [RunsEvery(CronConstants.EVERY_10_S)]
     public sealed class FTMScanBlockInfoProvider : ScanBlockInfoProviderBase
     {
-        public FTMScanBlockInfoProvider(IConfiguration configuration) : base(configuration, "FTMScan")
+        public FTMScanBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "FTMScan")
         {
         }
     }

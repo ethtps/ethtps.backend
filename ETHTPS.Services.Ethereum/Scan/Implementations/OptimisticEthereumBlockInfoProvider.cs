@@ -2,14 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 
+using ETHTPS.Configuration;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Services.Attributes;
 
 using Fizzler.Systems.HtmlAgilityPack;
 
 using HtmlAgilityPack;
-
-using Microsoft.Extensions.Configuration;
 
 namespace ETHTPS.Services.Ethereum.Scan.Implementations
 {
@@ -19,18 +18,15 @@ namespace ETHTPS.Services.Ethereum.Scan.Implementations
     public sealed class OptimisticEthereumBlockInfoProvider : ScanBlockInfoProviderBase
     {
         private readonly string _targetElementSelector;
-        private readonly string _baseURL;
-        public OptimisticEthereumBlockInfoProvider(IConfiguration configuration) : base(configuration, "Optimistic Ethereum")
+        public OptimisticEthereumBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Optimistic Ethereum")
         {
-            var config = configuration.GetSection("BlockInfoProviders").GetSection("Optimistic Ethereum").GetSection("InstantTPS");
-            _targetElementSelector = config.GetValue<string>("Selector");
-            _baseURL = config.GetValue<string>("URL");
+
         }
 
         public override Task<Block> GetLatestBlockInfoAsync()
         {
             HtmlWeb web = new();
-            HtmlDocument doc = web.Load(_baseURL);
+            HtmlDocument doc = web.Load(Endpoint);
 
             var nodes = doc.DocumentNode.QuerySelectorAll(_targetElementSelector);
             var x = new string(nodes.First().InnerText.Where(c => char.IsNumber(c) || c == '.').ToArray());

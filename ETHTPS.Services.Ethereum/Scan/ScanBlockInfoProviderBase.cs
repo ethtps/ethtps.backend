@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Configuration;
 using ETHTPS.Data.Core.Extensions.StringExtensions;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Services.Ethereum.Scan.Extensions;
@@ -12,62 +12,36 @@ using Fizzler.Systems.HtmlAgilityPack;
 
 using HtmlAgilityPack;
 
-using Microsoft.Extensions.Configuration;
-
 using Newtonsoft.Json;
 
 namespace ETHTPS.Services.Ethereum.Scan
 {
-    public abstract class ScanBlockInfoProviderBase : IHTTPBlockInfoProvider
+    public abstract class ScanBlockInfoProviderBase : BlockInfoProviderBase
     {
         protected readonly HttpClient _httpClient;
-        private readonly string _apiKey;
-        private readonly string _blockInfoEndpointBase;
         private readonly ScanRequestModelFactory _requestModelFactory;
-        private readonly string _txCountSelector;
-        private readonly string _gasUsedSelector;
-        private readonly string _dateSelector;
-        private readonly string _providerName;
-
-        protected ScanBlockInfoProviderBase(IConfiguration configuration, string providerName)
+        protected ScanBlockInfoProviderBase(IDBConfigurationProvider configuration, string providerName) : base(configuration, providerName)
         {
-            _providerName = providerName;
-            var config = configuration.GetSection("BlockInfoProviders").GetSection(providerName);
-            _httpClient = new HttpClient()
-            {
-                BaseAddress = new Uri(config.GetValue<string>("Endpoint"))
-            };
-            _apiKey = config.GetValue<string>("APIKey");
-            _requestModelFactory = new ScanRequestModelFactory(_apiKey);
-            _blockInfoEndpointBase = config.GetValue<string>("BlockInfoEndpointBase");
-            _txCountSelector = config.GetValue<string>("TXCountSelector");
-            _gasUsedSelector = config.GetValue<string>("GasUsedSelector");
-            _dateSelector = config.GetValue<string>("DateSelector");
-            if (config.GetSection("BlockTime").Exists())
-            {
-                BlockTimeSeconds = config.GetValue<double>("BlockTime");
-            }
+            _requestModelFactory = new ScanRequestModelFactory(APIKey);
         }
 
-        public double BlockTimeSeconds { get; set; }
-
-        public Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override Task<Block> GetBlockInfoAsync(int blockNumber)
         {
 
             HtmlWeb web = new HtmlWeb();
-            HtmlDocument doc = web.Load(_blockInfoEndpointBase + blockNumber);
+            HtmlDocument doc = web.Load(Endpoint + blockNumber);
             if (_providerName == "Optimistic Ethereum") {; }
-            var txCountNode = doc.DocumentNode.QuerySelectorAll(_txCountSelector);
+            var txCountNode = doc.DocumentNode.QuerySelectorAll(TXCountSelector);
             var txCount = new string(txCountNode.First().InnerText.RemoveAllNonNumericCharacters());
 
             string gasUsed = "0";
-            if (!string.IsNullOrWhiteSpace(_gasUsedSelector))
+            if (!string.IsNullOrWhiteSpace(GasUsedSelector))
             {
-                var gasUsedNode = doc.DocumentNode.QuerySelectorAll(_gasUsedSelector);
+                var gasUsedNode = doc.DocumentNode.QuerySelectorAll(GasUsedSelector);
                 gasUsed = new string(gasUsedNode.First().InnerText.UntilParanthesis().RemoveAllNonNumericCharacters());
             }
 
-            var dateNode = doc.DocumentNode.QuerySelectorAll(_dateSelector);
+            var dateNode = doc.DocumentNode.QuerySelectorAll(DateSelector);
             var dateString = dateNode.First().InnerText.BetweenParantheses().Replace(" +UTC", "");
             DateTime date;
             //(Sep-17-2021 06:40:08 AM +UTC) 
@@ -92,7 +66,7 @@ namespace ETHTPS.Services.Ethereum.Scan
             });
         }
 
-        public async Task<Block> GetBlockInfoAsync(DateTime time)
+        public override async Task<Block> GetBlockInfoAsync(DateTime time)
         {
             var requestModel = _requestModelFactory.CreateGetBlockNumberByTimestampRequest(time);
             var requestString = requestModel.ToQueryString();
@@ -106,6 +80,6 @@ namespace ETHTPS.Services.Ethereum.Scan
             return await GetBlockInfoAsync(blockNumber);
         }
 
-        public virtual async Task<Block> GetLatestBlockInfoAsync() => await GetBlockInfoAsync(DateTime.Now.ToUniversalTime());
+        public override async Task<Block> GetLatestBlockInfoAsync() => await GetBlockInfoAsync(DateTime.Now.ToUniversalTime());
     }
 }

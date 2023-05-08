@@ -1,6 +1,5 @@
-﻿using ETHTPS.Services.Attributes;
-
-using Microsoft.Extensions.Configuration;
+﻿using ETHTPS.Configuration;
+using ETHTPS.Services.Attributes;
 
 namespace ETHTPS.Services.Ethereum.Scan.Implementations
 {
@@ -8,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.Scan.Implementations
     [Disabled]
     public sealed class BSCScanBlockInfoProvider : ScanBlockInfoProviderBase
     {
-        public BSCScanBlockInfoProvider(IConfiguration configuration) : base(configuration, "BSCScan")
+        public BSCScanBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "BSCScan")
         {
         }
     }
