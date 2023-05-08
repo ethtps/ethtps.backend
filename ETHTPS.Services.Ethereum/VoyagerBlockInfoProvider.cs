@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Configuration;
 using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Services.Attributes;
@@ -14,27 +14,26 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Starknet")]
     [RunsEvery(CronConstants.EVERY_13_S)]
-    public sealed class VoyagerBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class VoyagerBlockInfoProvider : BlockInfoProviderBase
     {
         private readonly HttpClient _httpClient;
-        public double BlockTimeSeconds { get; set; }
 
-        public VoyagerBlockInfoProvider()
+        public VoyagerBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Starknet")
         {
             _httpClient = new HttpClient();
         }
 
-        public Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override async Task<Block> GetLatestBlockInfoAsync()
         {
             var responseString = await _httpClient.GetStringAsync("https://voyager.online/api/blocks?ps=10&p=1");
             var response = JsonConvert.DeserializeObject<StarknetResponse>(responseString);

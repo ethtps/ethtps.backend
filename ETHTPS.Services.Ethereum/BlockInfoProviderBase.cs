@@ -44,7 +44,7 @@ namespace ETHTPS.Services.Ethereum
         protected string Secret => PartialMatchOrThrow("Secret");
         protected string ProjectID => PartialMatchOrThrow("ProjectID");
 
-        private string PartialMatchOrThrow(params string[] partialNames)
+        protected string PartialMatchOrThrow(params string[] partialNames)
         {
             foreach (var configString in _configurationStrings)
             {

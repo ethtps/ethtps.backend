@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Configuration;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Services.Attributes;
 
@@ -12,17 +12,15 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("ZKSync")]
     [RunsEvery(CronConstants.EVERY_5_S)]
-    public sealed class ZKSsyncBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class ZKSsyncBlockInfoProvider : BlockInfoProviderBase
     {
         private readonly HttpClient _httpClient;
-        public ZKSsyncBlockInfoProvider()
+        public ZKSsyncBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "ZKSync")
         {
             _httpClient = new HttpClient();
         }
 
-        public double BlockTimeSeconds { get; set; }
-
-        public async Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override async Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             var obj = JsonConvert.DeserializeObject<dynamic>(await _httpClient.GetStringAsync($"https://api.zksync.io/api/v0.1/blocks/{blockNumber}"));
             var txs = JsonConvert.DeserializeObject<dynamic>(await _httpClient.GetStringAsync($"https://api.zksync.io/api/v0.1/blocks/{blockNumber}/transactions"));
@@ -35,12 +33,12 @@ namespace ETHTPS.Services.Ethereum
             };
         }
 
-        public Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override async Task<Block> GetLatestBlockInfoAsync()
         {
             var blocks = JsonConvert.DeserializeObject<dynamic>(await _httpClient.GetStringAsync("https://api.zksync.io/api/v0.1/blocks?limit=2"));
             return await GetBlockInfoAsync(int.Parse(blocks[0].block_number.ToString()));

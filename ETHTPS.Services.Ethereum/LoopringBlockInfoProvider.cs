@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Configuration;
 using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Services.Attributes;
 
@@ -13,16 +13,17 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Loopring")]
     [RunsEvery(CronConstants.EVERY_13_S)]
-    public sealed class LoopringBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class LoopringBlockInfoProvider : BlockInfoProviderBase
     {
         private readonly HttpClient _httpClient;
 
-        public double BlockTimeSeconds { get; set; }
-
-        public LoopringBlockInfoProvider()
+        public LoopringBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base
+            (configurationProvider, "Loopring")
         {
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("https://api.thegraph.com/subgraphs/name/loopring/loopring");
+            _httpClient = new HttpClient
+            {
+                BaseAddress = new Uri(Endpoint)
+            };
         }
 
         private async Task<int> GetLatestBlockHeightAsync()
@@ -46,9 +47,9 @@ namespace ETHTPS.Services.Ethereum
             return 0;
         }
 
-        public async Task<ETHTPS.Data.Core.Models.DataEntries.Block> GetLatestBlockInfoAsync() => await GetBlockInfoAsync(await GetLatestBlockHeightAsync());
+        public override async Task<ETHTPS.Data.Core.Models.DataEntries.Block> GetLatestBlockInfoAsync() => await GetBlockInfoAsync(await GetLatestBlockHeightAsync());
 
-        public async Task<ETHTPS.Data.Core.Models.DataEntries.Block> GetBlockInfoAsync(int blockNumber)
+        public override async Task<ETHTPS.Data.Core.Models.DataEntries.Block> GetBlockInfoAsync(int blockNumber)
         {
             var payload = new GraphQLPayload()
             {
@@ -75,7 +76,7 @@ namespace ETHTPS.Services.Ethereum
             return null;
         }
 
-        public Task<ETHTPS.Data.Core.Models.DataEntries.Block> GetBlockInfoAsync(DateTime time)
+        public override Task<ETHTPS.Data.Core.Models.DataEntries.Block> GetBlockInfoAsync(DateTime time)
         {
             throw new NotImplementedException();
         }

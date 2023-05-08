@@ -5,12 +5,10 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Configuration;
 using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Services.Attributes;
-
-using Microsoft.Extensions.Configuration;
 
 using Newtonsoft.Json;
 
@@ -21,33 +19,30 @@ namespace ETHTPS.Services.Ethereum
     /// </summary>
     [Provider("Immutable X")]
     [RunsEvery(CronConstants.EVERY_13_S)]
-    public sealed class ImmutableXBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class ImmutableXBlockInfoProvider : BlockInfoProviderBase
     {
         private readonly HttpClient _httpClient;
-        private readonly string _apiKey;
 
-        public double BlockTimeSeconds { get; set; } = 60;
-
-        public ImmutableXBlockInfoProvider(IConfiguration configuration)
+        public ImmutableXBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Immutable X")
         {
-            var config = configuration.GetSection("BlockInfoProviders").GetSection("Immutascan");
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri(config.GetValue<string>("BaseURL"));
-            _apiKey = config.GetValue<string>("APIKey");
-            _httpClient.DefaultRequestHeaders.Add("x-api-key", _apiKey);
+            _httpClient = new HttpClient
+            {
+                BaseAddress = new Uri(Endpoint)
+            };
+            BlockTimeSeconds = 60;
         }
 
-        public Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override async Task<Block> GetLatestBlockInfoAsync()
         {
             var txLimit = 200;
             var block = await GenerateFakeBlockAsync(txLimit);

@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Configuration;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Services.Attributes;
 
@@ -12,28 +12,26 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("OMG Network")]
     [RunsEvery(CronConstants.EVERY_13_S)]
-    public sealed class OMGNetworkBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class OMGNetworkBlockInfoProvider : BlockInfoProviderBase
     {
         private readonly HttpClient _httpClient;
 
-        public OMGNetworkBlockInfoProvider()
+        public OMGNetworkBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "OMG Network")
         {
             _httpClient = new HttpClient();
         }
 
-        public double BlockTimeSeconds { get; set; }
-
-        public Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override async Task<Block> GetLatestBlockInfoAsync()
         {
             var response = await _httpClient.PostAsync("https://watcher-info.mainnet.v1.omg.network/block.all", null);
             var responseObject = JsonConvert.DeserializeObject<OMGResponseObject>(await response.Content.ReadAsStringAsync());

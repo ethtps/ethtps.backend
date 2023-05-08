@@ -1,8 +1,7 @@
-﻿using ETHTPS.Data.Integrations.MSSQL;
+﻿using ETHTPS.Configuration;
+using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Services.Attributes;
 using ETHTPS.Services.Ethereum.Starkware.API.Models;
-
-using Microsoft.Extensions.Configuration;
 
 namespace ETHTPS.Services.Ethereum.Starkware
 {
@@ -10,7 +9,7 @@ namespace ETHTPS.Services.Ethereum.Starkware
     [RunsEvery(CronConstants.EVERY_30_S)]
     public sealed class SorareBlockInfoProvider : StarkwareBlockInfoProviderBase
     {
-        public SorareBlockInfoProvider(EthtpsContext context, IConfiguration configuration) : base(Products.Sorare, context, configuration)
+        public SorareBlockInfoProvider(EthtpsContext context, IDBConfigurationProvider configuration) : base(Products.Sorare, context, configuration)
         {
         }
     }

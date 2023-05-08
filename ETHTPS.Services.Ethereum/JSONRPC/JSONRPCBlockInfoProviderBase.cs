@@ -34,8 +34,6 @@ namespace ETHTPS.Services.Ethereum.JSONRPC
             _httpClient.DefaultRequestHeaders.Add("Authorization", "Basic " + base64EncodedAuthenticationString);
         }
 
-        public override double BlockTimeSeconds { get; set; }
-
         public override async Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             try

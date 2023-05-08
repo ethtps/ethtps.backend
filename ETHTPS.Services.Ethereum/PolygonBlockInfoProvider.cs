@@ -1,4 +1,5 @@
-﻿using ETHTPS.Data.Core.BlockInfo;
+﻿using ETHTPS.Configuration;
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Services.Attributes;
 
 namespace ETHTPS.Services.Ethereum.JSONRPC
@@ -6,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC
     [Provider("Polygon")]
     public sealed class PolygonBlockInfoProvider : JSONRPCBlockInfoProviderBase, IHTTPBlockInfoProvider
     {
-        public PolygonBlockInfoProvider(string endpoint) : base(endpoint)
+        public PolygonBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Polygon")
         {
         }
     }

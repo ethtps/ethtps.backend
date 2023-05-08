@@ -4,18 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using ETHTPS.Configuration;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Services.Attributes;
 
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
 {
     [Provider("Ethereum")]
+    [Obsolete("Implementation not adapted to use IDBConfigurationProvider", true)]
+    [Disabled]
     [RunsEvery(CronConstants.EVERY_5_S)]
-    public sealed class EthereumMultiEndpointJSONRPC : IHTTPBlockInfoProvider
+    public sealed class EthereumMultiEndpointJSONRPC : BlockInfoProviderBase
     {
         private readonly IEnumerable<(IHTTPBlockInfoProvider Provider, int FailureCount)> _children;
         private static Random _random = new Random();
@@ -24,17 +26,15 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
         private readonly int _totalChildren;
         private int _currentChildIndex = 0;
         private readonly ILogger<EthereumMultiEndpointJSONRPC> _logger;
-        public double BlockTimeSeconds { get; set; }
 
-        public EthereumMultiEndpointJSONRPC(IConfiguration configuration, ILogger<EthereumMultiEndpointJSONRPC> logger)
+        public EthereumMultiEndpointJSONRPC(IDBConfigurationProvider configuration, ILogger<EthereumMultiEndpointJSONRPC> logger) : base(configuration, "Ethereum")
         {
-            _endpoints = configuration.GetSection("MultiEndpointJSONRPC").GetSection("Ethereum").Get<string[]>();
-            _children = _endpoints.Select(x => (Provider: (IHTTPBlockInfoProvider)(new EthereumGenericJSONRPCBlockInfoProvider(x)), FailureCount: 0));
+            _children = _endpoints.Select(x => (Provider: (IHTTPBlockInfoProvider)(new EthereumGenericJSONRPCBlockInfoProvider(configuration)), FailureCount: 0));
             _totalChildren = _endpoints.Length;
             _logger = logger;
         }
 
-        public Task<Block> GetLatestBlockInfoAsync()
+        public override Task<Block> GetLatestBlockInfoAsync()
         {
             Block result = default;
             for (int i = 0; i < _totalChildren; i++)
@@ -44,7 +44,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
             return Task.FromResult(result);
         }
 
-        public async Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override async Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             Block result = default;
             int c = 0;
@@ -71,7 +71,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
             while (result == null && ++c < _totalChildren);
             return result;
         }
-        public Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             Block result = default;
             for (int i = 0; i < _totalChildren; i++)

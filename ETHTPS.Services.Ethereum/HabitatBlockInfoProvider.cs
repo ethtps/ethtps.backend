@@ -1,8 +1,7 @@
 ﻿
+using ETHTPS.Configuration;
 using ETHTPS.Services.Attributes;
 using ETHTPS.Services.Ethereum.JSONRPC;
-
-using Microsoft.Extensions.Configuration;
 
 namespace ETHTPS.Services.Ethereum
 {
@@ -10,7 +9,7 @@ namespace ETHTPS.Services.Ethereum
     [Disabled]
     public sealed class HabitatBlockInfoProvider : JSONRPCBlockInfoProviderBase
     {
-        public HabitatBlockInfoProvider(IConfiguration configuration) : base(configuration, "Habitat")
+        public HabitatBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Habitat")
         {
         }
     }

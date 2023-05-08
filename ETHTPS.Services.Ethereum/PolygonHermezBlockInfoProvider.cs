@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Configuration;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Services.Attributes;
 
@@ -13,13 +13,15 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Polygon Hermez")]
     [RunsEvery(CronConstants.EVERY_13_S)]
-    public sealed class PolygonHermezBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class PolygonHermezBlockInfoProvider : BlockInfoProviderBase
     {
         private readonly HttpClient _httpClient = new HttpClient();
 
-        public double BlockTimeSeconds { get; set; }
+        public PolygonHermezBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Polygon Hermez")
+        {
+        }
 
-        public async Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override async Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             var response = await _httpClient.GetAsync($"https://api.hermez.io/v1/batches/{blockNumber}");
             if (response.IsSuccessStatusCode)
@@ -40,12 +42,12 @@ namespace ETHTPS.Services.Ethereum
             }
         }
 
-        public Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override async Task<Block> GetLatestBlockInfoAsync()
         {
             var response = await _httpClient.GetAsync("https://api.hermez.io/v1/batches?order=DESC&limit=20");
             if (response.IsSuccessStatusCode)

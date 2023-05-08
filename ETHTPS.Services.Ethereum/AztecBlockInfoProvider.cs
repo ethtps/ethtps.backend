@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Configuration;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Services.Attributes;
 
@@ -13,18 +13,19 @@ namespace ETHTPS.Services.Ethereum
 {
     [Provider("Aztec")]
     [RunsEvery(CronConstants.EVERY_13_S)]
-    public sealed class AztecBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class AztecBlockInfoProvider : BlockInfoProviderBase
     {
         private readonly HttpClient _httpClient;
-        public double BlockTimeSeconds { get; set; }
 
-        public AztecBlockInfoProvider()
+        public AztecBlockInfoProvider(IDBConfigurationProvider provider) : base(provider, "Aztec")
         {
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("https://api.aztec.network/falafel-mainnet/graphql");
+            _httpClient = new HttpClient
+            {
+                BaseAddress = new Uri("https://api.aztec.network/falafel-mainnet/graphql")
+            };
         }
 
-        public async Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override async Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             var payload = new GraphQLPayload()
             {
@@ -63,12 +64,12 @@ namespace ETHTPS.Services.Ethereum
             return null;
         }
 
-        public Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override async Task<Block> GetLatestBlockInfoAsync()
         {
             var payload = new GraphQLPayload()
             {
