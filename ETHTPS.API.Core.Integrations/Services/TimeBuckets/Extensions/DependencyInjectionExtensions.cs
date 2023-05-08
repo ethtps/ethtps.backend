@@ -14,5 +14,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets.Extensions
             services.TryAddScoped<V>();
             services.AddScoped<ITimeBucketDataUpdaterService<V>, MSSQLTimeBucketService<V>>();
         }
+
+        public static void InjectTimeBucketService(this IServiceCollection serviceCollection) => serviceCollection.AddScoped(typeof(ITimeBucketDataUpdaterService<>), typeof(MSSQLTimeBucketService<>));
     }
 }

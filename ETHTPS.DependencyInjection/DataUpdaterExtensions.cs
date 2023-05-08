@@ -76,7 +76,7 @@ namespace ETHTPS.API.DependencyInjection
                 case BackgroundServiceType.Hangfire:
                     services.AddHangfireServer("ETHTPS.TaskRunner");
                     //_enabledUpdaters.ToList().ForEach(updater => services.RegisterHangfireBackgroundService(updater));
-                    services.RegisterHangfireBackgroundServiceAndTimeBucket<MSSQLLogger<EthereumBlockInfoProvider>, EthereumBlockInfoProvider>(CronConstants.EVERY_5_S, "tpsdata");
+                    services.InjectTimeBucketService(); services.RegisterHangfireBackgroundServiceAndTimeBucket<MSSQLLogger<EthereumBlockInfoProvider>, EthereumBlockInfoProvider>(CronConstants.EVERY_5_S, "tpsdata");
 
 
                     break;
@@ -137,7 +137,6 @@ namespace ETHTPS.API.DependencyInjection
             where V : class, IHTTPBlockInfoProvider
         {
             services.AddScoped<V>();
-            services.InjectTimeBucketService<V>();
             services.AddScoped<T>();
 #pragma warning disable CS0618 // Type or member is obsolete
             Hangfire.RecurringJob.AddOrUpdate<T>(typeof(V).Name, x => x.RunAsync(), cronExpression, queue: queue);

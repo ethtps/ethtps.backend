@@ -21,14 +21,8 @@ namespace ETHTPS.Services.Ethereum
     [RunsEvery(CronConstants.EVERY_13_S)]
     public sealed class ImmutableXBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
-
         public ImmutableXBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Immutable X")
         {
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri(Endpoint)
-            };
             BlockTimeSeconds = 60;
         }
 

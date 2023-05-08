@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 using ETHTPS.Configuration;
@@ -20,13 +19,11 @@ namespace ETHTPS.Services.Ethereum
     [RunsEvery(CronConstants.EVERY_5_S)]
     public sealed class XDAIHTTPBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
         private readonly string _transactionCountSelector;
         private readonly string _dateSelector;
         private readonly string _gasSelector;
         public XDAIHTTPBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "XDAI")
         {
-            _httpClient = new HttpClient();
             BlockTimeSeconds = 5.2;
         }
 

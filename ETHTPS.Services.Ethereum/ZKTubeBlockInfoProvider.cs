@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 using ETHTPS.Configuration;
@@ -14,19 +13,18 @@ namespace ETHTPS.Services.Ethereum
     [RunsEvery(CronConstants.EVERY_30_S)]
     public sealed class ZKTubeBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
 
         public ZKTubeBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "zkTube")
         {
-            _httpClient = new HttpClient();
+
         }
 
         public override async Task<Block> GetBlockInfoAsync(int blockNumber)
         {
-            var responseString = await _httpClient.GetStringAsync($"https://api.zktube.io/api/v0.1/blocks/{blockNumber}/transactions");
+            var responseString = await _httpClient.GetStringAsync($"{Endpoint}/blocks/{blockNumber}/transactions");
             var transactionsResponse = JsonConvert.DeserializeObject<dynamic>(responseString);
 
-            responseString = await _httpClient.GetStringAsync($"https://api.zktube.io/api/v0.1/blocks/{blockNumber}");
+            responseString = await _httpClient.GetStringAsync($"{Endpoint}/blocks/{blockNumber}");
             var blockSummary = JsonConvert.DeserializeObject<BlockSummary>(responseString);
             var txCount = 0;
             try
@@ -52,7 +50,7 @@ namespace ETHTPS.Services.Ethereum
 
         public override async Task<Block> GetLatestBlockInfoAsync()
         {
-            var responseString = await _httpClient.GetStringAsync("https://api.zktube.io/api/v0.1/status");
+            var responseString = await _httpClient.GetStringAsync($"{Endpoint}/status");
             var response = JsonConvert.DeserializeObject<StatusResponse>(responseString);
             return await GetBlockInfoAsync(response.last_verified);
         }

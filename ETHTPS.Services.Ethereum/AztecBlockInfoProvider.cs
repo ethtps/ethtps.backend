@@ -15,14 +15,10 @@ namespace ETHTPS.Services.Ethereum
     [RunsEvery(CronConstants.EVERY_13_S)]
     public sealed class AztecBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
 
         public AztecBlockInfoProvider(IDBConfigurationProvider provider) : base(provider, "Aztec")
         {
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("https://api.aztec.network/falafel-mainnet/graphql")
-            };
+
         }
 
         public override async Task<Block> GetBlockInfoAsync(int blockNumber)

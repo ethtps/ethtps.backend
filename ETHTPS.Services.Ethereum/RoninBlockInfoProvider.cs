@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 using ETHTPS.Configuration;
@@ -17,14 +16,12 @@ namespace ETHTPS.Services.Ethereum
     [RunsEvery(CronConstants.EVERY_5_S)]
     public sealed class RoninBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
         private readonly string _baseURL;
         private readonly string _txSummaryPath;
 
         public RoninBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Ronin")
         {
             _txSummaryPath = PartialMatchOrThrow("TXSummary");
-            _httpClient = new HttpClient();
             BlockTimeSeconds = 3;
         }
 

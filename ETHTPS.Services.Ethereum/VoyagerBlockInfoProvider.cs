@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 using ETHTPS.Configuration;
@@ -16,11 +15,9 @@ namespace ETHTPS.Services.Ethereum
     [RunsEvery(CronConstants.EVERY_13_S)]
     public sealed class VoyagerBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
 
         public VoyagerBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Starknet")
         {
-            _httpClient = new HttpClient();
         }
 
         public override Task<Block> GetBlockInfoAsync(int blockNumber)

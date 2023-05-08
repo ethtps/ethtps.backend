@@ -15,15 +15,10 @@ namespace ETHTPS.Services.Ethereum
     [RunsEvery(CronConstants.EVERY_13_S)]
     public sealed class LoopringBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
 
         public LoopringBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base
             (configurationProvider, "Loopring")
         {
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri(Endpoint)
-            };
         }
 
         private async Task<int> GetLatestBlockHeightAsync()

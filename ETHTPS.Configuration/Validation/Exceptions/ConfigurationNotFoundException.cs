@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Configuration.Validation.Exceptions
 {
-    public sealed class ConfigurationNotFoundException : FileNotFoundException
+    public class ConfigurationNotFoundException : FileNotFoundException
     {
         public ConfigurationNotFoundException()
         {

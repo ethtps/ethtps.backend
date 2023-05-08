@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 using ETHTPS.Configuration;
@@ -21,10 +20,9 @@ namespace ETHTPS.Services.Ethereum
     public sealed class BobaNetworkBlockInfoProvider : BlockInfoProviderBase
     {
         private const string _NAME = "Boba Network";
-        private readonly HttpClient _httpClient;
         public BobaNetworkBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, _NAME)
         {
-            _httpClient = new HttpClient();
+
         }
         private static int GetBlockNumberFromHTML(string html)
         {

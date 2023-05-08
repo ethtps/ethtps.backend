@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 using ETHTPS.Configuration;
@@ -18,7 +17,6 @@ namespace ETHTPS.Services.Ethereum.Scan
 {
     public abstract class ScanBlockInfoProviderBase : BlockInfoProviderBase
     {
-        protected readonly HttpClient _httpClient;
         private readonly ScanRequestModelFactory _requestModelFactory;
         protected ScanBlockInfoProviderBase(IDBConfigurationProvider configuration, string providerName) : base(configuration, providerName)
         {

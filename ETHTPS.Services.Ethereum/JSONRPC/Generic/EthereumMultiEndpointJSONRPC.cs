@@ -24,7 +24,6 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
         private const int _BLACKLIST_AFTER = 5;
         private readonly string[] _endpoints;
         private readonly int _totalChildren;
-        private int _currentChildIndex = 0;
         private readonly ILogger<EthereumMultiEndpointJSONRPC> _logger;
 
         public EthereumMultiEndpointJSONRPC(IDBConfigurationProvider configuration, ILogger<EthereumMultiEndpointJSONRPC> logger) : base(configuration, "Ethereum")

@@ -36,5 +36,50 @@ namespace ETHTPS.Data.Core.Models.DataUpdater
         public bool Equals(UpdaterStatus other) => this == other;
         public static bool operator ==(LiveDataUpdaterStatus? status, UpdaterStatus other) => status?.Status == other.ToString();
         public static bool operator !=(LiveDataUpdaterStatus? status, UpdaterStatus other) => !(status == other);
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj is null)
+            {
+                return false;
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool operator <(LiveDataUpdaterStatus left, LiveDataUpdaterStatus right)
+        {
+            return left is null ? right is not null : left.CompareTo(right) < 0;
+        }
+
+        public static bool operator <=(LiveDataUpdaterStatus left, LiveDataUpdaterStatus right)
+        {
+            return left is null || left.CompareTo(right) <= 0;
+        }
+
+        private int CompareTo(LiveDataUpdaterStatus right)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool operator >(LiveDataUpdaterStatus left, LiveDataUpdaterStatus right)
+        {
+            return left is not null && left.CompareTo(right) > 0;
+        }
+
+        public static bool operator >=(LiveDataUpdaterStatus left, LiveDataUpdaterStatus right)
+        {
+            return left is null ? right is null : left.CompareTo(right) >= 0;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using ETHTPS.Configuration;
@@ -18,6 +19,7 @@ namespace ETHTPS.Services.Ethereum
         protected IProviderConfigurationStringProvider _configurationProvider;
         protected IEnumerable<IConfigurationString> _configurationStrings;
         protected string _providerName;
+        protected readonly HttpClient _httpClient;
         #region Common properties and selectors
 
         protected string Endpoint
@@ -62,6 +64,10 @@ namespace ETHTPS.Services.Ethereum
         {
             _configurationStrings = configurationProvider.GetConfigurationStringsForProvider(providerName);
             _providerName = providerName;
+            _httpClient = new HttpClient()
+            {
+                BaseAddress = new Uri(Endpoint)
+            };
         }
 
         private double _blockTimeSeconds = double.NaN;

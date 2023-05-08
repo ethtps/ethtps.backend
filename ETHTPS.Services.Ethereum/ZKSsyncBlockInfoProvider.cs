@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 using ETHTPS.Configuration;
@@ -14,10 +13,9 @@ namespace ETHTPS.Services.Ethereum
     [RunsEvery(CronConstants.EVERY_5_S)]
     public sealed class ZKSsyncBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
         public ZKSsyncBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "ZKSync")
         {
-            _httpClient = new HttpClient();
+
         }
 
         public override async Task<Block> GetBlockInfoAsync(int blockNumber)

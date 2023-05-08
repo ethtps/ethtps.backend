@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 using ETHTPS.Configuration;
@@ -15,12 +14,9 @@ namespace ETHTPS.Services.Ethereum
     [RunsEvery(CronConstants.EVERY_5_S)]
     public sealed class ZKSwapBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
         public ZKSwapBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "ZKSwap")
         {
-            _httpClient = new HttpClient();
         }
-        public double BlockTimeSeconds { get; set; }
 
         public override async Task<Block> GetBlockInfoAsync(int blockNumber)
         {

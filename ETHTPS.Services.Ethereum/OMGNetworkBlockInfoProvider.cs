@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 using ETHTPS.Configuration;
@@ -14,11 +13,10 @@ namespace ETHTPS.Services.Ethereum
     [RunsEvery(CronConstants.EVERY_13_S)]
     public sealed class OMGNetworkBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
 
         public OMGNetworkBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "OMG Network")
         {
-            _httpClient = new HttpClient();
+
         }
 
         public override Task<Block> GetBlockInfoAsync(int blockNumber)
@@ -33,7 +31,7 @@ namespace ETHTPS.Services.Ethereum
 
         public override async Task<Block> GetLatestBlockInfoAsync()
         {
-            var response = await _httpClient.PostAsync("https://watcher-info.mainnet.v1.omg.network/block.all", null);
+            var response = await _httpClient.PostAsync(Endpoint, null);
             var responseObject = JsonConvert.DeserializeObject<OMGResponseObject>(await response.Content.ReadAsStringAsync());
             var latestBlock = responseObject.data[0];
             var secondToLatestBlock = responseObject.data[1];

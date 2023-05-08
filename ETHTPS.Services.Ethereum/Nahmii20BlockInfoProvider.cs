@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 using ETHTPS.Configuration;
@@ -20,11 +19,10 @@ namespace ETHTPS.Services.Ethereum
     [RunsEvery(CronConstants.EVERY_13_S)]
     public sealed class Nahmii20BlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
 
         public Nahmii20BlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Nahmii 2.0")
         {
-            _httpClient = new HttpClient();
+
         }
 
         public override Task<Block> GetBlockInfoAsync(int blockNumber)

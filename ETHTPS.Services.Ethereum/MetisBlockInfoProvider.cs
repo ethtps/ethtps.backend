@@ -22,14 +22,9 @@ namespace ETHTPS.Services.Ethereum
     [RunsEvery(CronConstants.EVERY_13_S)]
     public sealed class MetisBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
 
         public MetisBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Metis")
         {
-            _httpClient = new HttpClient()
-            {
-                BaseAddress = new Uri(Endpoint)
-            };
         }
 
         public override async Task<Block> GetBlockInfoAsync(int blockNumber)

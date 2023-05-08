@@ -16,7 +16,6 @@ namespace ETHTPS.Services.Ethereum.JSONRPC
 {
     public abstract class JSONRPCBlockInfoProviderBase : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
         private static DateTime _LastCallTime = DateTime.Now;
         private static TimeSpan _TIME_BETWEEN = TimeSpan.FromMilliseconds(500);
         private static bool _canCall => _timeSinceLastCall > _TIME_BETWEEN;
@@ -25,10 +24,6 @@ namespace ETHTPS.Services.Ethereum.JSONRPC
 
         public JSONRPCBlockInfoProviderBase(IDBConfigurationProvider configurationProvider, string providerName) : base(configurationProvider, providerName)
         {
-            _httpClient = new HttpClient()
-            {
-                BaseAddress = new Uri(Endpoint)
-            };
             var authenticationString = $"{ProjectID}:{Secret}";
             var base64EncodedAuthenticationString = Convert.ToBase64String(Encoding.UTF8.GetBytes(authenticationString));
             _httpClient.DefaultRequestHeaders.Add("Authorization", "Basic " + base64EncodedAuthenticationString);

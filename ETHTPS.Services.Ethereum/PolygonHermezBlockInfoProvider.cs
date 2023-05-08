@@ -15,7 +15,6 @@ namespace ETHTPS.Services.Ethereum
     [RunsEvery(CronConstants.EVERY_13_S)]
     public sealed class PolygonHermezBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient = new HttpClient();
 
         public PolygonHermezBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Polygon Hermez")
         {
@@ -23,7 +22,7 @@ namespace ETHTPS.Services.Ethereum
 
         public override async Task<Block> GetBlockInfoAsync(int blockNumber)
         {
-            var response = await _httpClient.GetAsync($"https://api.hermez.io/v1/batches/{blockNumber}");
+            var response = await _httpClient.GetAsync($"{Endpoint}/{blockNumber}");
             if (response.IsSuccessStatusCode)
             {
                 var res = JsonConvert.DeserializeObject<Batch>(await response.Content.ReadAsStringAsync());
@@ -49,7 +48,7 @@ namespace ETHTPS.Services.Ethereum
 
         public override async Task<Block> GetLatestBlockInfoAsync()
         {
-            var response = await _httpClient.GetAsync("https://api.hermez.io/v1/batches?order=DESC&limit=20");
+            var response = await _httpClient.GetAsync($"{Endpoint}?order=DESC&limit=20");
             if (response.IsSuccessStatusCode)
             {
                 var res = JsonConvert.DeserializeObject<BatchResponse>(await response.Content.ReadAsStringAsync());

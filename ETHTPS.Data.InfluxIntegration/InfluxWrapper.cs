@@ -74,7 +74,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
 
         public async Task<IEnumerable<string>> GetBucketsAsync() => (await _bucketsApi.FindBucketsAsync(org: _configuration.Org))?.Select(x => x.Name);
 
-        public async Task LogAsync<T>(T entry, string bucket = null)
+        public async Task LogAsync<T>(T entry, string bucket = "")
             where T : IMeasurement
         {
             try
@@ -189,7 +189,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             }
         }
 
-        public async Task<IEnumerable<T>> QueryAsync<T>(string query, IDomainObjectMapper mapper)
+        public async Task<IEnumerable<T>> QueryAsync<T>(string query, IDomainObjectMapper? mapper)
             where T : IMeasurement
         {
             await WaitForClientAsync();
