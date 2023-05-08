@@ -87,5 +87,26 @@ namespace ETHTPS.Data.Integrations.MSSQL
                 return result;
             }
         }
+
+        public async Task<int> InsertNewDataUpdaterAsync(
+        string typeName,
+        int providerId)
+        {
+            using (var command = Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.CommandText = "[DataUpdaters].[InsertNewDataUpdater]";
+
+                command.Parameters.AddRange(new SqlParameter[]
+                {
+                new SqlParameter("@TypeName", typeName),
+                new SqlParameter("@ProviderID", providerId)
+                });
+
+                await Database.OpenConnectionAsync();
+                var result = await command.ExecuteNonQueryAsync();
+                return result;
+            }
+        }
     }
 }

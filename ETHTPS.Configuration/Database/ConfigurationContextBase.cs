@@ -48,5 +48,16 @@ namespace ETHTPS.Configuration.Database
                 return result;
             }
         }
+
+        public async Task InsertOrUpdateProviderConfigurationStringAsync(string providerName, string configurationStringName, string configurationStringValue, string environmentName)
+        {
+            var providerNameParam = new SqlParameter("@ProviderName", providerName);
+            var configurationStringNameParam = new SqlParameter("@ConfigurationStringName", configurationStringName);
+            var configurationStringValueParam = new SqlParameter("@ConfigurationStringValue", configurationStringValue);
+            var environmentNameParam = new SqlParameter("@EnvironmentName", environmentName);
+
+            await Database.ExecuteSqlRawAsync("EXEC [Configuration].[InsertOrUpdateProviderConfigurationString] @ProviderName, @ConfigurationStringName, @ConfigurationStringValue, @EnvironmentName",
+                providerNameParam, configurationStringNameParam, configurationStringValueParam, environmentNameParam);
+        }
     }
 }

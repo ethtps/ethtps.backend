@@ -3,20 +3,18 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Configuration;
 using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Services.Ethereum.JSONRPC.Models;
 using ETHTPS.Services.Ethereum.JSONRPC.Models.Exceptions;
 using ETHTPS.Services.Infrastructure.Serialization;
 
-using Microsoft.Extensions.Configuration;
-
 using Newtonsoft.Json;
 
 namespace ETHTPS.Services.Ethereum.JSONRPC
 {
-    public abstract class JSONRPCBlockInfoProviderBase : IHTTPBlockInfoProvider
+    public abstract class JSONRPCBlockInfoProviderBase : BlockInfoProviderBase
     {
         private readonly HttpClient _httpClient;
         private static DateTime _LastCallTime = DateTime.Now;
@@ -24,28 +22,21 @@ namespace ETHTPS.Services.Ethereum.JSONRPC
         private static bool _canCall => _timeSinceLastCall > _TIME_BETWEEN;
         private static bool _busy { get; set; }
         private static TimeSpan _timeSinceLastCall => DateTime.Now - _LastCallTime;
-        public JSONRPCBlockInfoProviderBase(string endpoint)
+
+        public JSONRPCBlockInfoProviderBase(IDBConfigurationProvider configurationProvider, string providerName) : base(configurationProvider, providerName)
         {
             _httpClient = new HttpClient()
             {
-                BaseAddress = new Uri(endpoint)
+                BaseAddress = new Uri(Endpoint)
             };
-        }
-        public JSONRPCBlockInfoProviderBase(IConfiguration configuration, string sectionName, string endpointFieldName = "Endpoint")
-        {
-            var config = configuration.GetSection(sectionName);
-            _httpClient = new HttpClient()
-            {
-                BaseAddress = new Uri(config.GetValue<string>(endpointFieldName))
-            };
-            var authenticationString = $"{config.GetValue<string>("APIKeyID")}:{config.GetValue<string>("Secret")}";
+            var authenticationString = $"{ProjectID}:{Secret}";
             var base64EncodedAuthenticationString = Convert.ToBase64String(Encoding.UTF8.GetBytes(authenticationString));
             _httpClient.DefaultRequestHeaders.Add("Authorization", "Basic " + base64EncodedAuthenticationString);
         }
 
-        public double BlockTimeSeconds { get; set; }
+        public override double BlockTimeSeconds { get; set; }
 
-        public virtual async Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override async Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             try
             {
@@ -84,12 +75,12 @@ namespace ETHTPS.Services.Ethereum.JSONRPC
             throw new JSONRPCRequestException(_httpClient.BaseAddress.ToString());
         }
 
-        public Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override async Task<Block> GetLatestBlockInfoAsync()
         {
             var requestModel = JSONRPCRequestFactory.CreateGetBlockHeightRequest();
             var json = requestModel.SerializeAsJsonWithEmptyArray();

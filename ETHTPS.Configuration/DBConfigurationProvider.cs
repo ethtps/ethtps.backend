@@ -107,11 +107,13 @@ namespace ETHTPS.Configuration
         {
             lock (_context.LockObj)
             {
-                return _context.ProviderConfigurationStrings
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
+                return _context.ProviderConfigurationStrings?
                     .Where(x => x.Provider.Name.ToUpper() == provider.ToUpper() && x.Environment.Name.ToUpper() == _environment.ToUpper() || x.Environment.Name.ToUpper() == "ALL")
                     .WhereNotNull()
-                    .Select(x => (IConfigurationString)x.ConfigurationString)
-                    .ToList();
+                    .Select(x => (IConfigurationString?)x.ConfigurationString)
+                    .ToList() ?? Enumerable.Empty<IConfigurationString>();
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
             }
         }
 
