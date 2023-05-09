@@ -1,9 +1,11 @@
 ﻿using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.DependencyInjection;
+using ETHTPS.Configuration;
 using ETHTPS.Configuration.ProviderConfiguration;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Integrations.InfluxIntegration;
 using ETHTPS.Data.Integrations.InfluxIntegration.HistoricalDataServices;
+using ETHTPS.Services.BlockchainServices.BlockTime;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +20,9 @@ namespace ETHTPS.Tests
     public abstract class TestBase
     {
         protected ServiceProvider ServiceProvider { get; private set; }
+        protected IDBConfigurationProvider ConfigurationProvider => ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
+
+        const string APP_NAME = "ETHTPS.Tests";
         protected TestBase()
         {
             var builder = WebApplication.CreateBuilder(new WebApplicationOptions() { });
@@ -25,7 +30,7 @@ namespace ETHTPS.Tests
             var services = builder.Services;
             services
                     .AddEssentialServices()
-                    .AddDatabaseContext("ETHTPS.Tests")
+                    .AddDatabaseContext(APP_NAME)
                     .AddMixedCoreServices()
                     .AddDataProviderServices(DatabaseProvider.MSSQL)
                     .AddDataUpdaterStatusService()
@@ -33,7 +38,8 @@ namespace ETHTPS.Tests
                     .AddScoped<IAsyncHistoricalBlockInfoProvider, HistoricalInfluxProvider>()
                     .AddMSSQLHistoricalDataServices()
                     .AddTransient<IProviderConfigurationService, ProviderConfigurationService>()
-                    .AddRedisCache();
+                    .AddRedisCache()
+                    .AddSingleton<EthereumBlockTimeProvider>();
             ServiceProvider = services.BuildServiceProvider();
         }
     }

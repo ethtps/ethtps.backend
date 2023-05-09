@@ -24,8 +24,8 @@ services.AddSwagger()
         .AddScoped<IInfluxWrapper, InfluxWrapper>()
         .AddDataUpdaterStatusService()
         .AddDataServices()
+        .AddRunner(runnerType, CURRENT_APP_NAME)
         .WithStore(DatabaseProvider.MSSQL, CURRENT_APP_NAME)
-        .AddRunner(runnerType)
         .AddDataProviderServices(DatabaseProvider.MSSQL);
 ;//.RegisterMicroservice(CURRENT_APP_NAME, "Task runner web app");
 

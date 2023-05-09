@@ -22,19 +22,20 @@ namespace ETHTPS.Services.Ethereum
         protected readonly HttpClient _httpClient;
         #region Common properties and selectors
 
+        private string _endpoint;
         protected string Endpoint
         {
             get
             {
-                var valid = new string[] { "Endpoint", "EndpointBase", "BaseURL", "URL" };
-                foreach (var configString in _configurationStrings)
+                if (string.IsNullOrWhiteSpace(_endpoint))
                 {
-                    if (valid.Select(x => x.ToUpper()).Any(x => configString.Name.ToUpper().EndsWith(x)))
-                    {
-                        return configString.Value;
-                    }
+                    _endpoint = GetEndpoint();
                 }
-                throw new ConfigurationStringNotFoundException("Endpoint", "ETHTPS.Services.Ethereum");
+                return _endpoint;
+            }
+            set
+            {
+                _endpoint = value;
             }
         }
 
@@ -45,7 +46,19 @@ namespace ETHTPS.Services.Ethereum
         protected string APIKey => PartialMatchOrThrow("APIKey");
         protected string Secret => PartialMatchOrThrow("Secret");
         protected string ProjectID => PartialMatchOrThrow("ProjectID");
+        private string GetEndpoint()
+        {
 
+            var valid = new string[] { "Endpoint", "EndpointBase", "BaseURL", "URL" };
+            foreach (var configString in _configurationStrings)
+            {
+                if (valid.Select(x => x.ToUpper()).Any(x => configString.Name.ToUpper().EndsWith(x)))
+                {
+                    return configString.Value;
+                }
+            }
+            throw new ConfigurationStringNotFoundException("Endpoint", "ETHTPS.Services.Ethereum");
+        }
         protected string PartialMatchOrThrow(params string[] partialNames)
         {
             foreach (var configString in _configurationStrings)

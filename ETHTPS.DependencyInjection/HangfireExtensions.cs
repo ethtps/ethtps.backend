@@ -17,6 +17,7 @@ namespace ETHTPS.API.DependencyInjection
 
         public static IServiceCollection AddHangfireServer(this IServiceCollection services, string appName)
         {
+            Hangfire.JobStorage.Current = new SqlServerStorage(services.GetConnectionString(appName, _DEFAULT_CONNECTION_STRING_NAME));
             services.AddHangfire(x => x.UseSqlServerStorage(services.GetConnectionString(appName, _DEFAULT_CONNECTION_STRING_NAME)));
             services.AddHangfireServer(options =>
             {
@@ -27,10 +28,12 @@ namespace ETHTPS.API.DependencyInjection
 
         public static IApplicationBuilder ConfigureHangfire(this IApplicationBuilder app, string[] configurationQueues)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             app.UseHangfireServer(options: new BackgroundJobServerOptions()
             {
                 Queues = configurationQueues
             });
+#pragma warning restore CS0618 // Type or member is obsolete
             return app;
         }
     }

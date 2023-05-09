@@ -1,36 +1,56 @@
-﻿using ETHTPS.Services.Ethereum;
-
-using Microsoft.Extensions.DependencyInjection;
+﻿using ETHTPS.Data.Core.Models.DataEntries;
+using ETHTPS.Services.Ethereum;
 
 namespace ETHTPS.Tests.ProviderTests
 {
     public abstract class ProviderTestBase<T> : TestBase
         where T : BlockInfoProviderBase
     {
-        private T _provider;
+        protected T? _provider;
 
         [SetUp]
-        public void SetUp()
+        public abstract void SetUp();
+
+        [Test]
+        public void NotNullTest()
         {
-            _provider = ServiceProvider.GetRequiredService<T>();
+            Assert.NotNull(_provider);
         }
 
         [Test]
-        public void LatestBlockDoesNotThrow_Test()
+        public void LatestBlock_NoException_ResultOk_Test()
         {
-            Assert.DoesNotThrowAsync(async () => await _provider.GetLatestBlockInfoAsync());
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            Block? result;
+            Assert.DoesNotThrowAsync(async () =>
+            {
+                result = await _provider.GetLatestBlockInfoAsync();
+                Assert.NotNull(result);
+            });
         }
 
         [Test]
-        public void GetBlockInfoAsyncDoesNotThrow_Test()
+        public void GetBlockInfoAsync_NoException_ResultOk_Test()
         {
-            Assert.DoesNotThrowAsync(async () => await _provider.GetBlockInfoAsync((await _provider.GetLatestBlockInfoAsync()).BlockNumber));
+            Block? result;
+            Assert.DoesNotThrowAsync(async () =>
+            {
+                result = await _provider.GetBlockInfoAsync((await _provider.GetLatestBlockInfoAsync()).BlockNumber);
+                Assert.NotNull(result);
+            });
         }
 
         [Test]
-        public void GetBlockInfoByDateAsyncDoesNotThrow_Test()
+        public void GetBlockInfoByDateAsync_NoException_ResultOk_Test()
         {
-            Assert.DoesNotThrowAsync(async () => await _provider.GetBlockInfoAsync((await _provider.GetLatestBlockInfoAsync()).Date));
+            Block? result;
+            Assert.DoesNotThrowAsync(async () =>
+            {
+                result = await _provider.GetBlockInfoAsync((await _provider.GetLatestBlockInfoAsync()).Date);
+                Assert.NotNull(result);
+            });
         }
     }
 }
+
+#pragma warning restore CS8602 // Dereference of a possibly null reference.

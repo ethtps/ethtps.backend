@@ -64,7 +64,7 @@ namespace ETHTPS.API.DependencyInjection
             typeof(PolygonHermezBlockInfoProvider),
         };
         public static IServiceCollection AddDataServices(this IServiceCollection services) => services.AddScoped(_enabledUpdaters);
-        public static IServiceCollection AddRunner(this IServiceCollection services, BackgroundServiceType type)
+        public static IServiceCollection AddRunner(this IServiceCollection services, BackgroundServiceType type, string appName)
         {
             services.AddScoped<EthereumBlockTimeProvider>();
             switch (type)
@@ -74,7 +74,7 @@ namespace ETHTPS.API.DependencyInjection
                     services.AddScoped(_enabledUpdaters.Select(x => typeof(CoravelBlockLogger<>).MakeGenericType(x)));
                     break;
                 case BackgroundServiceType.Hangfire:
-                    services.AddHangfireServer("ETHTPS.TaskRunner");
+                    services.AddHangfireServer(appName);
                     //_enabledUpdaters.ToList().ForEach(updater => services.RegisterHangfireBackgroundService(updater));
                     services.InjectTimeBucketService(); services.RegisterHangfireBackgroundServiceAndTimeBucket<MSSQLLogger<EthereumBlockInfoProvider>, EthereumBlockInfoProvider>(CronConstants.EVERY_5_S, "tpsdata");
 

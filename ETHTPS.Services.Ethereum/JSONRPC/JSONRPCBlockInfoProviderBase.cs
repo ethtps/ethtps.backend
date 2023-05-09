@@ -24,9 +24,6 @@ namespace ETHTPS.Services.Ethereum.JSONRPC
 
         public JSONRPCBlockInfoProviderBase(IDBConfigurationProvider configurationProvider, string providerName) : base(configurationProvider, providerName)
         {
-            var authenticationString = $"{ProjectID}:{Secret}";
-            var base64EncodedAuthenticationString = Convert.ToBase64String(Encoding.UTF8.GetBytes(authenticationString));
-            _httpClient.DefaultRequestHeaders.Add("Authorization", "Basic " + base64EncodedAuthenticationString);
         }
 
         public override async Task<Block> GetBlockInfoAsync(int blockNumber)
@@ -87,6 +84,8 @@ namespace ETHTPS.Services.Ethereum.JSONRPC
             {
                 var responseString = await response.Content.ReadAsStringAsync();
                 var responseObject = JsonConvert.DeserializeObject<JSONRPCResponseModel>(responseString);
+                if (responseObject.Result.ToUpper().Contains("ERROR"))
+                    throw new JSONRPCRequestException(responseObject.Result);
                 var blockNumber = Convert.ToInt32(responseObject.Result, 16);
                 return await GetBlockInfoAsync(blockNumber);
             }

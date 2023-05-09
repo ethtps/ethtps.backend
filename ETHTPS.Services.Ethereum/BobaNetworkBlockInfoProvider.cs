@@ -37,7 +37,7 @@ namespace ETHTPS.Services.Ethereum
         public override Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             HtmlWeb web = new HtmlWeb();
-            HtmlDocument doc = web.Load($"https://blockexplorer.boba.network/blocks/{blockNumber}/transactions");
+            HtmlDocument doc = web.Load($"{Endpoint}/{blockNumber}/transactions");
             var txCountNode = doc.DocumentNode.QuerySelectorAll(TXCountSelector);
             var txCount = new string(string.Join(" ", txCountNode.Select(x => x.InnerText)).Where(Char.IsNumber).ToArray());
 
