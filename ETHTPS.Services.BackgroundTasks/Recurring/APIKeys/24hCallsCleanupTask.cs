@@ -11,14 +11,15 @@ namespace ETHTPS.Services.BackgroundTasks.Recurring.APIKeys
     {
         public _24hCallsCleanupTask(ILogger<HangfireBackgroundService> logger, EthtpsContext context) : base(logger, context)
         {
+
         }
 
         protected override string? ServiceName => "24h Calls cleanup task";
 
         [AutomaticRetry(Attempts = 5, OnAttemptsExceeded = AttemptsExceededAction.Fail)]
-        public override Task RunAsync()
+        public override async Task RunAsync()
         {
-            return Task.CompletedTask;
+            await _context.DeleteAllJobsAsync();
         }
     }
 }

@@ -9,6 +9,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
     {
         public AVAXBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "AVAX C-chain")
         {
+
         }
     }
 }

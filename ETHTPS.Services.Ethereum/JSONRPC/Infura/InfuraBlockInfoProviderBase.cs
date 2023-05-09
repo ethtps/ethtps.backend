@@ -36,7 +36,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
                     return "https://celo-mainnet.infura.io/v3";
                 case "Polygon":
                     return "https://polygon-mainnet.infura.io/v3";
-                case "Arbitrum":
+                case "Arbitrum One":
                     return "https://arbitrum-mainnet.infura.io/v3";
 
                 default:

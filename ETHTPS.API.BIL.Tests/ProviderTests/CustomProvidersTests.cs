@@ -6,7 +6,7 @@ using ETHTPS.Services.Ethereum.JSONRPC.Infura;
 /// </summary>
 namespace ETHTPS.Tests.ProviderTests
 {
-    public class ArbitrumNovaTests : ProviderTestBase<ArbitrumNovaBlockInfoProvider>
+    public sealed class ArbitrumNovaTests : ProviderTestBase<ArbitrumNovaBlockInfoProvider>
     {
         [SetUp]
         public override void SetUp()
@@ -15,7 +15,7 @@ namespace ETHTPS.Tests.ProviderTests
         }
     }
 
-    public class AVAXTests : ProviderTestBase<AVAXBlockInfoProvider>
+    public sealed class AVAXTests : ProviderTestBase<AVAXBlockInfoProvider>
     {
         [SetUp]
         public override void SetUp()
@@ -24,7 +24,7 @@ namespace ETHTPS.Tests.ProviderTests
         }
     }
 
-    public class AztecTests : ProviderTestBase<AztecBlockInfoProvider>
+    public sealed class AztecTests : ProviderTestBase<AztecBlockInfoProvider>
     {
         [SetUp]
         public override void SetUp()
@@ -33,7 +33,7 @@ namespace ETHTPS.Tests.ProviderTests
         }
     }
 
-    public class BobaNetworkTests : ProviderTestBase<BobaNetworkBlockInfoProvider>
+    public sealed class BobaNetworkTests : ProviderTestBase<BobaNetworkBlockInfoProvider>
     {
         [SetUp]
         public override void SetUp()
@@ -42,7 +42,7 @@ namespace ETHTPS.Tests.ProviderTests
         }
     }
 
-    public class HabitatTests : ProviderTestBase<HabitatBlockInfoProvider>
+    public sealed class HabitatTests : ProviderTestBase<HabitatBlockInfoProvider>
     {
         [SetUp]
         public override void SetUp()
@@ -51,7 +51,7 @@ namespace ETHTPS.Tests.ProviderTests
         }
     }
 
-    public class ImmutableXTests : ProviderTestBase<ImmutableXBlockInfoProvider>
+    public sealed class ImmutableXTests : ProviderTestBase<ImmutableXBlockInfoProvider>
     {
         [SetUp]
         public override void SetUp()
@@ -60,7 +60,7 @@ namespace ETHTPS.Tests.ProviderTests
         }
     }
 
-    public class LoopringTests : ProviderTestBase<LoopringBlockInfoProvider>
+    public sealed class LoopringTests : ProviderTestBase<LoopringBlockInfoProvider>
     {
         [SetUp]
         public override void SetUp()
@@ -69,7 +69,7 @@ namespace ETHTPS.Tests.ProviderTests
         }
     }
 
-    public class MetisTests : ProviderTestBase<MetisBlockInfoProvider>
+    public sealed class MetisTests : ProviderTestBase<MetisBlockInfoProvider>
     {
         [SetUp]
         public override void SetUp()
@@ -78,7 +78,7 @@ namespace ETHTPS.Tests.ProviderTests
         }
     }
 
-    public class Nahmii20Tests : ProviderTestBase<Nahmii20BlockInfoProvider>
+    public sealed class Nahmii20Tests : ProviderTestBase<Nahmii20BlockInfoProvider>
     {
         [SetUp]
         public override void SetUp()
@@ -87,7 +87,7 @@ namespace ETHTPS.Tests.ProviderTests
         }
     }
 
-    public class OMGNetworkTests : ProviderTestBase<OMGNetworkBlockInfoProvider>
+    public sealed class OMGNetworkTests : ProviderTestBase<OMGNetworkBlockInfoProvider>
     {
         [SetUp]
         public override void SetUp()
@@ -96,7 +96,7 @@ namespace ETHTPS.Tests.ProviderTests
         }
     }
 
-    public class PolygonHermezTests : ProviderTestBase<PolygonHermezBlockInfoProvider>
+    public sealed class PolygonHermezTests : ProviderTestBase<PolygonHermezBlockInfoProvider>
     {
         [SetUp]
         public override void SetUp()
@@ -105,7 +105,7 @@ namespace ETHTPS.Tests.ProviderTests
         }
     }
 
-    public class RoninTests : ProviderTestBase<RoninBlockInfoProvider>
+    public sealed class RoninTests : ProviderTestBase<RoninBlockInfoProvider>
     {
         [SetUp]
         public override void SetUp()
@@ -114,7 +114,7 @@ namespace ETHTPS.Tests.ProviderTests
         }
     }
 
-    public class XDAITests : ProviderTestBase<XDAIHTTPBlockInfoProvider>
+    public sealed class XDAITests : ProviderTestBase<XDAIHTTPBlockInfoProvider>
     {
         [SetUp]
         public override void SetUp()
@@ -123,7 +123,7 @@ namespace ETHTPS.Tests.ProviderTests
         }
     }
 
-    public class ZKSpaceTests : ProviderTestBase<ZKSpaceBlockInfoProvider>
+    public sealed class ZKSpaceTests : ProviderTestBase<ZKSpaceBlockInfoProvider>
     {
         [SetUp]
         public override void SetUp()
@@ -132,7 +132,7 @@ namespace ETHTPS.Tests.ProviderTests
         }
     }
 
-    public class ZKSyncTests : ProviderTestBase<ZKSsyncBlockInfoProvider>
+    public sealed class ZKSyncTests : ProviderTestBase<ZKSsyncBlockInfoProvider>
     {
         [SetUp]
         public override void SetUp()
@@ -141,7 +141,7 @@ namespace ETHTPS.Tests.ProviderTests
         }
     }
 
-    public class ZKSwapTests : ProviderTestBase<ZKSwapBlockInfoProvider>
+    public sealed class ZKSwapTests : ProviderTestBase<ZKSwapBlockInfoProvider>
     {
         [SetUp]
         public override void SetUp()
@@ -150,7 +150,7 @@ namespace ETHTPS.Tests.ProviderTests
         }
     }
 
-    public class ZKTubeTests : ProviderTestBase<ZKTubeBlockInfoProvider>
+    public sealed class ZKTubeTests : ProviderTestBase<ZKTubeBlockInfoProvider>
     {
         [SetUp]
         public override void SetUp()
