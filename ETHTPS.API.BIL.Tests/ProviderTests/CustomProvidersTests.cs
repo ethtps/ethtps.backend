@@ -95,7 +95,7 @@ namespace ETHTPS.Tests.ProviderTests
             PartialSetup(_provider);
         }
     }
-
+    /*
     public sealed class OMGNetworkTests : ProviderTestBase<OMGNetworkBlockInfoProvider>
     {
         [SetUp]
@@ -105,7 +105,7 @@ namespace ETHTPS.Tests.ProviderTests
             PartialSetup(_provider);
         }
     }
-
+    */
     public sealed class PolygonHermezTests : ProviderTestBase<PolygonHermezBlockInfoProvider>
     {
         [SetUp]

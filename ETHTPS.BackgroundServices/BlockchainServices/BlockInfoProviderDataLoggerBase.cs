@@ -54,14 +54,14 @@ namespace ETHTPS.Services.BlockchainServices
                 _logger?.LogWarning($"Latest block was null for {_provider}");
                 return null;
             }
-            if (_instance.BlockTimeSeconds > 0)
+            if (_instance.BlockTimeSeconds != null && _instance.BlockTimeSeconds > 0)
             {
                 return new TPSGPSInfo()
                 {
                     BlockNumber = latestBlock.BlockNumber,
                     Date = latestBlock.Date,
-                    GPS = latestBlock.GasUsed / _instance.BlockTimeSeconds,
-                    TPS = latestBlock.TransactionCount / _instance.BlockTimeSeconds,
+                    GPS = latestBlock.GasUsed / (double)_instance.BlockTimeSeconds,
+                    TPS = latestBlock.TransactionCount / (double)_instance.BlockTimeSeconds,
                     Provider = _provider,
                     TransactionCount = latestBlock.TransactionCount,
                     GasUsed = latestBlock.GasUsed,

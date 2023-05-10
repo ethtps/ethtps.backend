@@ -6,6 +6,6 @@ namespace ETHTPS.Data.Core.BlockInfo
     /// </summary>
     public interface IHTTPBlockInfoProvider : IInstantBlockInfoProvider, IHistoricalBlockInfoProvider
     {
-        public double BlockTimeSeconds { get; set; }
+        public double? BlockTimeSeconds { get; set; }
     }
 }

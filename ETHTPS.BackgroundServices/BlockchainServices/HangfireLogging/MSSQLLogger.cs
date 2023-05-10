@@ -64,7 +64,7 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
                 _statusService.SetStatusFor(UpdaterType.BlockInfo, UpdaterStatus.Failed);
             }
         }
-#if DEBUG
+
         public async Task RunWithoutExceptionHandlingAsync()
         {
             _logger.LogInformation($"RunWithoutExceptionHandlingAsync({_provider})");
@@ -79,6 +79,5 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
 
             _statusService.SetStatusFor(UpdaterType.BlockInfo, UpdaterStatus.RanSuccessfully);
         }
-#endif
     }
 }

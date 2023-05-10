@@ -84,7 +84,7 @@ namespace ETHTPS.Tests.ProviderTests
         {
             Assert.NotNull(_statusService);
         }
-#if DEBUG
+
         [Test]
         public void LoggerRunAsync_NoException_Test()
         {
@@ -93,12 +93,14 @@ namespace ETHTPS.Tests.ProviderTests
                 await _blockInfoLogger.RunWithoutExceptionHandlingAsync();
             });
         }
-#endif
+
         [Test]
         public void LoggerRunAsync_ResultOk_Test()
         {
             Assert.DoesNotThrowAsync(async () =>
             {
+                // Running this first because RunAsync swallows exceptions 
+                await _blockInfoLogger.RunWithoutExceptionHandlingAsync();
                 await _blockInfoLogger.RunAsync();
                 var s = _statusService.GetStatusFor(_provider.GetProviderName(), UpdaterType.TPSGPS)?.Status;
 

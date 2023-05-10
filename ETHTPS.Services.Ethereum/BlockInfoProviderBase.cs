@@ -82,19 +82,27 @@ namespace ETHTPS.Services.Ethereum
         }
 
         private double _blockTimeSeconds = double.NaN;
-        public double BlockTimeSeconds
+        public double? BlockTimeSeconds
         {
             get
             {
                 if (double.IsNaN(_blockTimeSeconds))
                 {
-                    _blockTimeSeconds = double.Parse(PartialMatchOrThrow("BlockTime"));
+                    try
+                    {
+                        _blockTimeSeconds = double.Parse(PartialMatchOrThrow("BlockTime"));
+                    }
+                    catch
+                    {
+                        return null;
+                    }
                 }
                 return _blockTimeSeconds;
             }
             set
             {
-                _blockTimeSeconds = value;
+                if (value != null)
+                    _blockTimeSeconds = (double)value;
             }
         }
 

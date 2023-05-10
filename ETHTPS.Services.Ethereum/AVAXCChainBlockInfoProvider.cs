@@ -30,7 +30,7 @@ namespace ETHTPS.Services.Ethereum
         private readonly string _dateSelector;
         private readonly string _gasSelector;
 
-        public double BlockTimeSeconds { get; set; }
+        public double? BlockTimeSeconds { get; set; }
 
         public AVAXCChainBlockInfoProvider(IConfiguration configuration)
         {
