@@ -33,6 +33,7 @@ namespace ETHTPS.Services.Ethereum
         {
             var response = await _httpClient.PostAsync(Endpoint, null);
             var responseObject = JsonConvert.DeserializeObject<OMGResponseObject>(await response.Content.ReadAsStringAsync());
+            if (responseObject == null) return null;
             var latestBlock = responseObject.data[0];
             var secondToLatestBlock = responseObject.data[1];
             BlockTimeSeconds = latestBlock.inserted_at.Subtract(secondToLatestBlock.inserted_at).TotalSeconds;

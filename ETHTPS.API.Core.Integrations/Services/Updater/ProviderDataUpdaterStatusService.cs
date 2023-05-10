@@ -18,6 +18,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
         public static IProviderDataUpdaterStatusService From(IDataUpdaterStatusService statusService, string provider) => new ProviderDataUpdaterStatusService(statusService, provider);
 
         public string ProviderName { get; private set; }
+        public bool Enabled => _statusService.GetStatusFor(ProviderName, UpdaterType.BlockInfo) != null;
 
         public IEnumerable<LiveDataUpdaterStatus> GetAllStatuses()
         {

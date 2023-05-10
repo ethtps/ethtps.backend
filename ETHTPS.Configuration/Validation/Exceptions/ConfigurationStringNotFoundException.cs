@@ -3,14 +3,14 @@
     public sealed class ConfigurationStringNotFoundException : Exception
     {
         public string ConfigurationStringName { get; private set; }
-        public string MicroserviceName { get; set; }
+        public string Requester { get; set; }
 
-        public ConfigurationStringNotFoundException(string configurationStringName, string microserviceName)
+        public ConfigurationStringNotFoundException(string configurationStringName, string requester)
         {
             ConfigurationStringName = configurationStringName;
-            MicroserviceName = microserviceName;
+            Requester = requester;
         }
 
-        public override string Message => $"Configuration string {ConfigurationStringName} for {MicroserviceName} not found";
+        public override string Message => $"Configuration string {ConfigurationStringName} for {Requester} not found";
     }
 }

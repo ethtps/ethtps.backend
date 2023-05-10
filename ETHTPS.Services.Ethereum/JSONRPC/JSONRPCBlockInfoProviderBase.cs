@@ -52,7 +52,8 @@ namespace ETHTPS.Services.Ethereum.JSONRPC
                         Date = DateTimeExtensions.FromUnixTime(Convert.ToInt64(responseObject.result.timestamp, 16)),
                         TransactionCount = responseObject.result.transactions.Length,
                         Settled = true,
-                        GasUsed = Convert.ToInt64(responseObject.result.gasUsed, 16)
+                        TXHashes = responseObject.result.transactions,
+                        GasUsed = Convert.ToInt32(responseObject.result.gasUsed, 16)
                     };
                     return result;
                 }

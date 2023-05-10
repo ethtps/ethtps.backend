@@ -58,7 +58,7 @@ namespace ETHTPS.Services.Ethereum.Scan
             return Task.FromResult(new Block()
             {
                 BlockNumber = blockNumber,
-                GasUsed = double.Parse(gasUsed),
+                GasUsed = int.Parse(gasUsed),
                 TransactionCount = transactionCount,
                 Date = date
             });

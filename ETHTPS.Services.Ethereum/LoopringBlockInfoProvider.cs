@@ -65,7 +65,7 @@ namespace ETHTPS.Services.Ethereum
                     TransactionCount = int.Parse(obj.data.blocks[0].transactionCount),
                     Date = DateTimeExtensions.FromUnixTime(int.Parse(obj.data.blocks[0].timestamp)),
                     BlockNumber = blockNumber,
-                    GasUsed = double.Parse(obj.data.blocks[0].gasLimit)
+                    GasUsed = int.Parse(obj.data.blocks[0].gasLimit)
                 };
             }
             return null;

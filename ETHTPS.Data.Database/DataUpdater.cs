@@ -7,6 +7,7 @@ public partial class DataUpdater
     public int TypeId { get; set; }
 
     public int ProviderId { get; set; }
+    public bool Enabled { get; set; }
 
     public virtual ICollection<LiveDataUpdaterStatus> LiveDataUpdaterStatuses { get; } = new List<LiveDataUpdaterStatus>();
 

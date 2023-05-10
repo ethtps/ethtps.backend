@@ -46,7 +46,7 @@ namespace ETHTPS.Services.Ethereum
             {
                 BlockNumber = blockNumber,
                 Date = dateTime,
-                GasUsed = double.Parse(gas),
+                GasUsed = int.Parse(gas),
                 Settled = true,
                 TransactionCount = txCount
             };

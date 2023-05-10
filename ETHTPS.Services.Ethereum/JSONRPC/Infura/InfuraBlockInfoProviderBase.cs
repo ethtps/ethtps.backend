@@ -7,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
 {
     public abstract class InfuraBlockInfoProviderBase : JSONRPCBlockInfoProviderBase
     {
-        protected InfuraBlockInfoProviderBase(IDBConfigurationProvider configurationProvider, string providerName) : base(configurationProvider, "Infura")
+        protected InfuraBlockInfoProviderBase(IDBConfigurationProvider configurationProvider, string providerName) : base(configurationProvider, providerName)
         {
             var authenticationString = $"{ProjectID}:{Secret}";
             var base64EncodedAuthenticationString = Convert.ToBase64String(Encoding.UTF8.GetBytes(authenticationString));
@@ -38,7 +38,8 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
                     return "https://polygon-mainnet.infura.io/v3";
                 case "Arbitrum One":
                     return "https://arbitrum-mainnet.infura.io/v3";
-
+                case "AVAX C-chain":
+                    return "https://avalanche-mainnet.infura.io/v3";
                 default:
                     throw new ArgumentException($"Unknown provider name: {providerName}");
             }

@@ -12,8 +12,8 @@ namespace ETHTPS.Data.Integrations.MSSQL
         public double AverageTps { get; set; }
         public double AverageGps { get; set; }
 
-        public virtual Network? NetworkNavigation { get; set; } = new();
-        public virtual Provider? ProviderNavigation { get; set; } = new();
+        public virtual Network? NetworkNavigation { get; set; }
+        public virtual Provider? ProviderNavigation { get; set; }
     }
 
     public partial class TimeWarpDataWeek : TimeWarpDataBase { }

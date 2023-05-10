@@ -80,7 +80,7 @@ namespace ETHTPS.Configuration.Validation
                 {
                     foreach (var requiredString in microserviceConfiguration.RequiredConfigurationStrings)
                     {
-                        var s = _context.MicroserviceConfigurationStrings.FirstOrDefault(x => x.Microservice.Name == microserviceConfiguration.Name && x.ConfigurationString.Name == requiredString);
+                        var s = _context.MicroserviceConfigurationStrings?.FirstOrDefault(x => x.Microservice.Name == microserviceConfiguration.Name && x.ConfigurationString.Name == requiredString);
                         if (s == null)
                             throw new ConfigurationStringNotFoundException(requiredString, microserviceConfiguration.Name);
 

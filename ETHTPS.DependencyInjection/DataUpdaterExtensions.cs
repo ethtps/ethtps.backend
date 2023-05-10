@@ -55,7 +55,6 @@ namespace ETHTPS.API.DependencyInjection
             typeof(RoninBlockInfoProvider),
             typeof(VoyagerBlockInfoProvider),
             typeof(Nahmii20BlockInfoProvider),
-            typeof(BSCScanBlockInfoProvider),
             typeof(OMGNetworkBlockInfoProvider),
             typeof(ZKTubeBlockInfoProvider),
             typeof(FTMScanBlockInfoProvider),
@@ -75,8 +74,8 @@ namespace ETHTPS.API.DependencyInjection
                     break;
                 case BackgroundServiceType.Hangfire:
                     services.AddHangfireServer(appName);
-                    //_enabledUpdaters.ToList().ForEach(updater => services.RegisterHangfireBackgroundService(updater));
-                    services.InjectTimeBucketService(); services.RegisterHangfireBackgroundServiceAndTimeBucket<MSSQLLogger<EthereumBlockInfoProvider>, EthereumBlockInfoProvider>(CronConstants.EVERY_5_S, "tpsdata");
+                    _enabledUpdaters.ToList().ForEach(updater => services.RegisterHangfireBackgroundService(updater));
+                    services.InjectTimeBucketService(); //services.RegisterHangfireBackgroundServiceAndTimeBucket<MSSQLLogger<EthereumBlockInfoProvider>, EthereumBlockInfoProvider>(CronConstants.EVERY_5_S, "tpsdata");
 
 
                     break;

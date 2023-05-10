@@ -60,5 +60,14 @@ namespace ETHTPS.Configuration.Database
             await Database.ExecuteSqlRawAsync("EXEC [Configuration].[InsertOrUpdateProviderConfigurationString] @ProviderName, @ConfigurationStringName, @ConfigurationStringValue, @EnvironmentName",
                 providerNameParam, configurationStringNameParam, configurationStringValueParam, environmentNameParam);
         }
+
+        public List<ConfigurationString> GetConfigurationStrings(string providerName, string environmentName)
+        {
+            return Set<ConfigurationString>()
+                .FromSqlRaw("EXECUTE Configuration.GetConfigurationStringsByProviderAndEnvironment @ProviderName, @EnvironmentName",
+                    new SqlParameter("@ProviderName", providerName),
+                    new SqlParameter("@EnvironmentName", environmentName))
+                .ToList();
+        }
     }
 }

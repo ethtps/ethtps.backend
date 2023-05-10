@@ -7,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.Scan.Implementations
     [RunsEvery(CronConstants.EVERY_10_S)]
     public sealed class FTMScanBlockInfoProvider : ScanBlockInfoProviderBase
     {
-        public FTMScanBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "FTMScan")
+        public FTMScanBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Fantom")
         {
         }
     }

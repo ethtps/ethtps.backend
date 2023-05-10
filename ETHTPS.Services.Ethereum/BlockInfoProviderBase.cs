@@ -46,7 +46,7 @@ namespace ETHTPS.Services.Ethereum
         protected string APIKey => PartialMatchOrThrow("APIKey");
         protected string Secret => PartialMatchOrThrow("Secret");
         protected string ProjectID => PartialMatchOrThrow("ProjectID");
-        private string GetEndpoint()
+        private string? GetEndpoint()
         {
 
             var valid = new string[] { "Endpoint", "EndpointBase", "BaseURL", "URL" };
@@ -57,7 +57,7 @@ namespace ETHTPS.Services.Ethereum
                     return configString.Value;
                 }
             }
-            throw new ConfigurationStringNotFoundException("Endpoint", "ETHTPS.Services.Ethereum");
+            return null;
         }
         protected string PartialMatchOrThrow(params string[] partialNames)
         {
@@ -68,7 +68,7 @@ namespace ETHTPS.Services.Ethereum
                     return configString.Value;
                 }
             }
-            throw new ConfigurationStringNotFoundException(string.Join(", ", _providerName, partialNames), "ETHTPS.Services.Ethereum");
+            throw new ConfigurationStringNotFoundException(string.Join(", ", string.Join(", ", partialNames)), _providerName);
         }
 
         #endregion
@@ -77,10 +77,8 @@ namespace ETHTPS.Services.Ethereum
         {
             _configurationStrings = configurationProvider.GetConfigurationStringsForProvider(providerName);
             _providerName = providerName;
-            _httpClient = new HttpClient()
-            {
-                BaseAddress = new Uri(Endpoint)
-            };
+            _httpClient = new HttpClient();
+            if (Endpoint != null) _httpClient.BaseAddress = new Uri(Endpoint);
         }
 
         private double _blockTimeSeconds = double.NaN;

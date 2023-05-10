@@ -27,7 +27,7 @@ services.AddSwagger()
         .AddRunner(runnerType, CURRENT_APP_NAME)
         .WithStore(DatabaseProvider.MSSQL, CURRENT_APP_NAME)
         .AddDataProviderServices(DatabaseProvider.MSSQL);
-;//.RegisterMicroservice(CURRENT_APP_NAME, "Task runner web app");
+//.RegisterMicroservice(CURRENT_APP_NAME, "Task runner web app");
 
 var app = builder.Build();
 

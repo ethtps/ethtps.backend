@@ -8,9 +8,9 @@ public partial class Network
 
     public virtual ICollection<OldestLoggedHistoricalEntry> OldestLoggedHistoricalEntries { get; } = new List<OldestLoggedHistoricalEntry>();
 
-    public virtual ICollection<OldestLoggedTimeWarpBlock> OldestLoggedTimeWarpBlocks { get; } = new List<OldestLoggedTimeWarpBlock>();
+    public virtual ICollection<OldestLoggedTimeWarpBlock>? OldestLoggedTimeWarpBlocks { get; }
 
-    public virtual ICollection<StarkwareTransactionCountDatum> StarkwareTransactionCountData { get; } = new List<StarkwareTransactionCountDatum>();
+    public virtual ICollection<StarkwareTransactionCountDatum>? StarkwareTransactionCountData { get; }
 
     public virtual ICollection<TimeWarpDatum> TimeWarpData { get; } = new List<TimeWarpDatum>();
 

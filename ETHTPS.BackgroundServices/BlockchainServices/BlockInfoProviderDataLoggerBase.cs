@@ -49,6 +49,11 @@ namespace ETHTPS.Services.BlockchainServices
         protected async Task<TPSGPSInfo> CalculateTPSGPSAsync(DateTime atTime) => await CalculateTPSGPSAsync(await _instance.GetBlockInfoAsync(atTime));
         protected async Task<TPSGPSInfo> CalculateTPSGPSAsync(Block latestBlock)
         {
+            if (latestBlock == null)
+            {
+                _logger?.LogWarning($"Latest block was null for {_provider}");
+                return null;
+            }
             if (_instance.BlockTimeSeconds > 0)
             {
                 return new TPSGPSInfo()
@@ -57,7 +62,10 @@ namespace ETHTPS.Services.BlockchainServices
                     Date = latestBlock.Date,
                     GPS = latestBlock.GasUsed / _instance.BlockTimeSeconds,
                     TPS = latestBlock.TransactionCount / _instance.BlockTimeSeconds,
-                    Provider = _provider
+                    Provider = _provider,
+                    TransactionCount = latestBlock.TransactionCount,
+                    GasUsed = latestBlock.GasUsed,
+                    TransactionHashes = latestBlock.TXHashes
                 };
             }
             else //Add up all blocks submitted at the same time
@@ -65,7 +73,9 @@ namespace ETHTPS.Services.BlockchainServices
                 TPSGPSInfo result = new()
                 {
                     Date = latestBlock.Date,
-                    Provider = _provider
+                    Provider = _provider,
+                    BlockNumber = latestBlock.BlockNumber,
+                    TransactionHashes = latestBlock.TXHashes
                 };
                 Block secondToLatestBlock;
                 int count = 0;
@@ -80,6 +90,10 @@ namespace ETHTPS.Services.BlockchainServices
                         result.TPS /= Math.Abs(secondToLatestBlock.Date.Subtract(result.Date).TotalSeconds);
                         result.GPS /= Math.Abs(secondToLatestBlock.Date.Subtract(result.Date).TotalSeconds);
                         break;
+                    }
+                    if (secondToLatestBlock.TXHashes?.Length > 0)
+                    {
+                        result.TransactionHashes = result.TransactionHashes.Concat(secondToLatestBlock.TXHashes).ToArray();
                     }
                     latestBlock = secondToLatestBlock;
                     await Task.Delay(200);

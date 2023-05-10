@@ -14,14 +14,14 @@ namespace ETHTPS.Data.Core.Models.DataEntries
         [Column("transactioncount")]
         public int TransactionCount { get; set; }
         [Column("gasused")]
-        public double GasUsed { get; set; }
+        public int GasUsed { get; set; }
         [Column("date", IsTimestamp = true)]
         public DateTime Date { get; set; }
         [Column("settled")]
         public bool Settled { get; set; } = true;
         [Column("provider", IsTag = true)]
         public string Provider { get; set; }
-
+        public string[]? TXHashes { get; set; }
         public override string ToString() => $"{Provider} #{BlockNumber}";
         public static TPSGPSInfo operator -(Block a, Block b) => new()
         {

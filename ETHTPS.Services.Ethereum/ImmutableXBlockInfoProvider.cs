@@ -83,9 +83,9 @@ namespace ETHTPS.Services.Ethereum
             return null;
         }
 
-        private double CalculateGasCost(IEnumerable<Item> items)
+        private int CalculateGasCost(IEnumerable<Item> items)
         {
-            double sum = 0;
+            int sum = 0;
             foreach (var item in items)
             {
                 switch (item.txn_type)

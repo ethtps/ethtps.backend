@@ -6,6 +6,6 @@
         IProviderDataUpdaterManager,
         IProviderTypeDataUpdaterManager
     {
-
+        bool? Enabled { get; }
     }
 }

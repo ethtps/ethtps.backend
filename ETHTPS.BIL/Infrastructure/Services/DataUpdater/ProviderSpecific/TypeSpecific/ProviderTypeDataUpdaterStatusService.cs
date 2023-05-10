@@ -17,6 +17,8 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.ProviderSpecific.Ty
         public UpdaterType UpdaterType { get; private set; }
         public string ProviderName => _providerDataUpdaterStatusManager.ProviderName;
 
+        public bool? Enabled => _providerDataUpdaterStatusManager.GetStatusFor(UpdaterType)?.Enabled;
+
         public IEnumerable<LiveDataUpdaterStatus> GetAllStatuses()
         {
             return _providerDataUpdaterStatusManager.GetAllStatuses();

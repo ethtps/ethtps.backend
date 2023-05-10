@@ -1,5 +1,14 @@
-﻿using ETHTPS.Data.Core.Models.DataEntries;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+using ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets;
+using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.Models.DataEntries;
+using ETHTPS.Data.Core.Models.DataUpdater;
+using ETHTPS.Data.Integrations.MSSQL;
+using ETHTPS.Services.BlockchainServices.HangfireLogging;
 using ETHTPS.Services.Ethereum;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Tests.ProviderTests
 {
@@ -7,9 +16,22 @@ namespace ETHTPS.Tests.ProviderTests
         where T : BlockInfoProviderBase
     {
         protected T? _provider;
+        protected MSSQLLogger<T>? _blockInfoLogger;
+        protected IDataUpdaterStatusService? _statusService;
 
         [SetUp]
         public abstract void SetUp();
+
+        protected void PartialSetup(T provider)
+        {
+
+            var context = ServiceProvider.GetRequiredService<EthtpsContext>();
+            ILogger<HangfireBackgroundService> logger = ServiceProvider.GetRequiredService<ILogger<HangfireBackgroundService>>();
+            ILogger<MSSQLTimeBucketService<T>> logger2 = ServiceProvider.GetRequiredService<ILogger<MSSQLTimeBucketService<T>>>();
+            var timeBucketService = new MSSQLTimeBucketService<T>(provider, context, logger2);
+            _statusService = ServiceProvider.GetRequiredService<IDataUpdaterStatusService>();
+            _blockInfoLogger = new Services.BlockchainServices.HangfireLogging.MSSQLLogger<T>(provider, logger, context, _statusService, timeBucketService);
+        }
 
         [Test]
         public void NotNullTest()
@@ -48,6 +70,40 @@ namespace ETHTPS.Tests.ProviderTests
             {
                 result = await _provider.GetBlockInfoAsync((await _provider.GetLatestBlockInfoAsync()).Date);
                 Assert.NotNull(result);
+            });
+        }
+
+        [Test]
+        public void LoggerNotNull_Test()
+        {
+            Assert.NotNull(_blockInfoLogger);
+        }
+
+        [Test]
+        public void StatusService_NotNull_Test()
+        {
+            Assert.NotNull(_statusService);
+        }
+#if DEBUG
+        [Test]
+        public void LoggerRunAsync_NoException_Test()
+        {
+            Assert.DoesNotThrowAsync(async () =>
+            {
+                await _blockInfoLogger.RunWithoutExceptionHandlingAsync();
+            });
+        }
+#endif
+        [Test]
+        public void LoggerRunAsync_ResultOk_Test()
+        {
+            Assert.DoesNotThrowAsync(async () =>
+            {
+                await _blockInfoLogger.RunAsync();
+                var s = _statusService.GetStatusFor(_provider.GetProviderName(), UpdaterType.TPSGPS)?.Status;
+
+                if (s != null)
+                    Assert.That(Enum.Parse<UpdaterStatus>(s), Is.EqualTo(UpdaterStatus.RanSuccessfully));
             });
         }
     }

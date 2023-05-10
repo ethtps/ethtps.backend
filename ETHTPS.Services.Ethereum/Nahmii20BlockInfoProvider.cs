@@ -48,13 +48,13 @@ namespace ETHTPS.Services.Ethereum
             });
         }
 
-        private double ValueOrZero(string value)
+        private int ValueOrZero(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
                 return 0;
             }
-            else return double.Parse(value);
+            else return int.Parse(value);
         }
 
         public override Task<Block> GetBlockInfoAsync(DateTime time)

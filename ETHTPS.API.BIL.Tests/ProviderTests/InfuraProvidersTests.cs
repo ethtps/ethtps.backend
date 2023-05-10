@@ -12,6 +12,7 @@ namespace ETHTPS.Tests.ProviderTests.InfuraProviderTests
         public override void SetUp()
         {
             _provider = new EthereumBlockInfoProvider(ConfigurationProvider, ServiceProvider.GetRequiredService<EthereumBlockTimeProvider>());
+            PartialSetup(_provider);
         }
     }
 
@@ -21,6 +22,7 @@ namespace ETHTPS.Tests.ProviderTests.InfuraProviderTests
         public override void SetUp()
         {
             _provider = new PalmBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -30,6 +32,7 @@ namespace ETHTPS.Tests.ProviderTests.InfuraProviderTests
         public override void SetUp()
         {
             _provider = new OptimismBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -39,6 +42,7 @@ namespace ETHTPS.Tests.ProviderTests.InfuraProviderTests
         public override void SetUp()
         {
             _provider = new NEARBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -48,6 +52,7 @@ namespace ETHTPS.Tests.ProviderTests.InfuraProviderTests
         public override void SetUp()
         {
             _provider = new StarknetBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -57,6 +62,7 @@ namespace ETHTPS.Tests.ProviderTests.InfuraProviderTests
         public override void SetUp()
         {
             _provider = new AuroraBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -66,6 +72,7 @@ namespace ETHTPS.Tests.ProviderTests.InfuraProviderTests
         public override void SetUp()
         {
             _provider = new CeloBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -75,6 +82,7 @@ namespace ETHTPS.Tests.ProviderTests.InfuraProviderTests
         public override void SetUp()
         {
             _provider = new PolygonBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -84,6 +92,7 @@ namespace ETHTPS.Tests.ProviderTests.InfuraProviderTests
         public override void SetUp()
         {
             _provider = new ArbitrumBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 }

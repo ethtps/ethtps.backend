@@ -6,7 +6,7 @@ namespace ETHTPS.Data.Core
     {
         int BlockNumber { get; set; }
         int TransactionCount { get; set; }
-        double GasUsed { get; set; }
+        int GasUsed { get; set; }
         DateTime Date { get; set; }
         bool Settled { get; set; }
         string Provider { get; set; }

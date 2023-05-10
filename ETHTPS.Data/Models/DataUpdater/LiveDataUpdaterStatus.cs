@@ -11,6 +11,7 @@ namespace ETHTPS.Data.Core.Models.DataUpdater
         public DateTime? LastSuccessfulRunTime { get; set; }
         public int NumberOfSuccesses { get; set; }
         public int NumberOfFailures { get; set; }
+        public bool? Enabled { get; set; }
         public bool IsUnreliable
         {
             get

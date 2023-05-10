@@ -5,6 +5,9 @@
         public double TPS { get; set; }
         public double GPS { get; set; }
         public string Provider { get; set; }
+        public int TransactionCount { get; set; }
+        public int? GasUsed { get; set; }
+        public string[]? TransactionHashes { get; set; }
         public (TPSInfo TPSInfo, GPSInfo GPSInfo) Split()
         {
             return (new TPSInfo()

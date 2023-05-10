@@ -12,6 +12,7 @@ namespace ETHTPS.Tests.ProviderTests
         public override void SetUp()
         {
             _provider = new ArbitrumNovaBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -21,6 +22,7 @@ namespace ETHTPS.Tests.ProviderTests
         public override void SetUp()
         {
             _provider = new AVAXBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -30,6 +32,7 @@ namespace ETHTPS.Tests.ProviderTests
         public override void SetUp()
         {
             _provider = new AztecBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -39,6 +42,7 @@ namespace ETHTPS.Tests.ProviderTests
         public override void SetUp()
         {
             _provider = new BobaNetworkBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -48,6 +52,7 @@ namespace ETHTPS.Tests.ProviderTests
         public override void SetUp()
         {
             _provider = new HabitatBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -57,6 +62,7 @@ namespace ETHTPS.Tests.ProviderTests
         public override void SetUp()
         {
             _provider = new ImmutableXBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -66,6 +72,7 @@ namespace ETHTPS.Tests.ProviderTests
         public override void SetUp()
         {
             _provider = new LoopringBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -75,6 +82,7 @@ namespace ETHTPS.Tests.ProviderTests
         public override void SetUp()
         {
             _provider = new MetisBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -84,6 +92,7 @@ namespace ETHTPS.Tests.ProviderTests
         public override void SetUp()
         {
             _provider = new Nahmii20BlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -93,6 +102,7 @@ namespace ETHTPS.Tests.ProviderTests
         public override void SetUp()
         {
             _provider = new OMGNetworkBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -102,6 +112,7 @@ namespace ETHTPS.Tests.ProviderTests
         public override void SetUp()
         {
             _provider = new PolygonHermezBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -111,6 +122,7 @@ namespace ETHTPS.Tests.ProviderTests
         public override void SetUp()
         {
             _provider = new RoninBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -120,6 +132,7 @@ namespace ETHTPS.Tests.ProviderTests
         public override void SetUp()
         {
             _provider = new XDAIHTTPBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -129,6 +142,7 @@ namespace ETHTPS.Tests.ProviderTests
         public override void SetUp()
         {
             _provider = new ZKSpaceBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -138,6 +152,7 @@ namespace ETHTPS.Tests.ProviderTests
         public override void SetUp()
         {
             _provider = new ZKSsyncBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -147,6 +162,7 @@ namespace ETHTPS.Tests.ProviderTests
         public override void SetUp()
         {
             _provider = new ZKSwapBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 
@@ -156,6 +172,7 @@ namespace ETHTPS.Tests.ProviderTests
         public override void SetUp()
         {
             _provider = new ZKTubeBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
         }
     }
 }

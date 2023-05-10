@@ -25,7 +25,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             {
                 TransactionCount = Convert.ToInt32(fluxRecord.GetValueByKey("type")),
                 BlockNumber = Convert.ToInt32(fluxRecord.GetValueByKey("transactioncount")),
-                GasUsed = Convert.ToDouble(fluxRecord.GetValueByKey("gasused")),
+                GasUsed = Convert.ToInt32(fluxRecord.GetValueByKey("gasused")),
                 Provider = fluxRecord.GetValueByKey("provider").ToString() ?? "",
                 Settled = Convert.ToBoolean(fluxRecord.GetValueByKey("settled")),
                 Date = fluxRecord.GetTime().GetValueOrDefault().ToDateTimeUtc(),

@@ -5,6 +5,9 @@ using ETHTPS.Data.Core.Models.DataUpdater;
 using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Data.Integrations.MSSQL.Extensions;
 
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
 {
     public sealed class DataUpdaterStatusService : IDataUpdaterStatusService
@@ -28,7 +31,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
         {
             lock (_context.LockObj)
             {
-                var result = _context.LiveDataUpdaterStatuses.FirstIfAny(x => x.Updater.Provider.Name == provider && x.Updater.Type.TypeName == updaterType.ToString());
+                var result = _context.LiveDataUpdaterStatuses.FirstIfAny(x => x.Updater?.Provider?.Name == provider && x.Updater?.Type?.TypeName == updaterType.ToString());
                 if (result == null)
                     return null;
                 return Convert(result);
@@ -39,7 +42,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
         {
             lock (_context.LockObj)
             {
-                return _context.DataUpdaters.SafeWhere(x => x.Provider.Name == provider).SelectMany(result => result.LiveDataUpdaterStatuses.Select(y => Convert(y)));
+                return _context.DataUpdaters.SafeWhere(x => x.Provider?.Name == provider).SelectMany(result => result.LiveDataUpdaterStatuses.Select(y => Convert(y)));
             }
         }
 
@@ -71,41 +74,20 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
         public void MarkAsRanSuccessfully(string provider, UpdaterType updaterType)
         {
             SetStatusFor(provider, updaterType, UpdaterStatus.RanSuccessfully);
-            IncrementNumberOfSuccesses(provider, updaterType);
         }
 
         public void MarkAsFailed(string provider, UpdaterType updaterType)
         {
             SetStatusFor(provider, updaterType, UpdaterStatus.Failed);
-            IncrementNumberOfFailures(provider, updaterType);
         }
 
         public void SetStatusFor(string provider, UpdaterType updaterType, UpdaterStatus status)
         {
-            var updater = GetUpdater(provider, updaterType);
-            var s = GetStatus(status);
-            lock (_context.LockObj)
-            {
-                if (!_context.LiveDataUpdaterStatuses.Any(x => x.UpdaterId == updater.Id))
-                {
-                    _context.LiveDataUpdaterStatuses.Add(new ETHTPS.Data.Integrations.MSSQL.LiveDataUpdaterStatus()
-                    {
-                        StatusId = s.Id,
-                        UpdaterId = updater.Id,
-                    });
-                    _context.SaveChanges();
-                }
+            var providerNameParam = new SqlParameter("@ProviderName", provider);
+            var updaterTypeParam = new SqlParameter("@UpdaterType", updaterType.ToString());
+            var updaterStatusParam = new SqlParameter("@UpdaterStatus", status.ToString());
 
-                var x = _context.LiveDataUpdaterStatuses.First(x => x.UpdaterId == updater.Id);
-                x.StatusId = s.Id;
-                x.LastRunTime = DateTime.Now;
-                if (status == UpdaterStatus.RanSuccessfully || status == UpdaterStatus.Idle)
-                {
-                    x.LastSuccessfulRunTime = DateTime.Now;
-                }
-                _context.Update(x);
-                _context.SaveChanges();
-            }
+            _context.Database.ExecuteSqlRaw("EXEC DataUpdaters.SetStatusFor @ProviderName, @UpdaterType, @UpdaterStatus", providerNameParam, updaterTypeParam, updaterStatusParam);
         }
 
         private DataUpdater GetUpdater(string provider, UpdaterType updaterType)
@@ -173,9 +155,10 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
             LastSuccessfulRunTime = result.LastSuccessfulRunTime,
             NumberOfFailures = result.NumberOfFailures,
             NumberOfSuccesses = result.NumberOfSuccesses,
-            Status = result.Status.Name,
-            Updater = result.Updater.Provider.Name,
-            UpdaterType = result.Updater.Type.TypeName
+            Status = result.Status?.Name,
+            Updater = result.Updater?.Provider?.Name,
+            UpdaterType = result.Updater?.Type?.TypeName,
+            Enabled = result.Updater?.Enabled
         };
 
         public void MarkAsRunning(string provider, UpdaterType updaterType) => SetStatusFor(provider, updaterType, UpdaterStatus.Running);
