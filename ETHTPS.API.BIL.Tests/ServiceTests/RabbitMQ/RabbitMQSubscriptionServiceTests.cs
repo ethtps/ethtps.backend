@@ -26,7 +26,7 @@ namespace ETHTPS.Tests.ServiceTests.RabbitMQ
             var service = new RabbitMQSubscriptionService(config);
 
             bool eventRaised = false;
-            string receivedMessage = null;
+            string? receivedMessage = null;
 
             service.MessageReceived += (sender, args) =>
             {

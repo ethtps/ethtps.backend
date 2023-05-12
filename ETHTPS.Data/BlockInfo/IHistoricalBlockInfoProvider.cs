@@ -20,7 +20,6 @@ namespace ETHTPS.Data.Core.BlockInfo
         /// Gets information about a block asynchronously.
         /// </summary>
         /// <param name="time">The time of the block.</param>
-        /// <returns></returns>
         Task<Block> GetBlockInfoAsync(DateTime time);
     }
 }

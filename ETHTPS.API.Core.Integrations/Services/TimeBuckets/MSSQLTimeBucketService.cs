@@ -362,7 +362,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets
             AddOrUpdateMonthTPSEntry(entry);
             AddOrUpdateYearTPSEntry(entry);
             AddOrUpdateAllTPSEntry(entry);
-            _logger.LogInformation("Updated all time buckets");
+            _logger.LogDebug("Updated all time buckets");
         }
     }
 }

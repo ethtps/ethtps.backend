@@ -13,4 +13,10 @@
         public const string NEVER = "0 0 5 31 2 ?";
         public const string EVERY_MIDNIGHT = "0 0 * * *";
     }
+
+    public static class MessagingQueues
+    {
+        public const string LIVEDATA_NEWDATAPOINT_QUEUE = "LiveData.NewDataPoints";
+        public const string LIVEDATA_MULTIPLENEWDATAPOINTS_QUEUE = "LiveData.MultpleNewDataPoints";
+    }
 }

@@ -6,11 +6,14 @@ using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Integrations.InfluxIntegration;
 using ETHTPS.Data.Integrations.InfluxIntegration.HistoricalDataServices;
 using ETHTPS.Services.BlockchainServices.BlockTime;
+using ETHTPS.Services.LiveData;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 using NLog.Extensions.Hosting;
+
+using Steeltoe.Common.Http.Discovery;
 
 namespace ETHTPS.Tests
 {
@@ -39,7 +42,11 @@ namespace ETHTPS.Tests
                     .AddMSSQLHistoricalDataServices()
                     .AddTransient<IProviderConfigurationService, ProviderConfigurationService>()
                     .AddRedisCache()
-                    .AddSingleton<EthereumBlockTimeProvider>();
+                    .AddSingleton<EthereumBlockTimeProvider>()
+                    .AddSingleton<WSAPIPublisher>()
+                    .AddHttpClient("ETHTPS-WSAPI")
+                    .AddServiceDiscovery()
+                    .AddTypedClient<WSAPIPublisher>();
             ServiceProvider = services.BuildServiceProvider();
         }
     }

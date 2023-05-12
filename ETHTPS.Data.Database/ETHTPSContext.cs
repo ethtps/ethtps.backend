@@ -144,7 +144,6 @@ public partial class EthtpsContext : ETHTPSContextBase
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.ProviderId).HasColumnName("ProviderID");
             entity.Property(e => e.TypeId).HasColumnName("TypeID");
-
             entity.HasOne(d => d.Provider).WithMany(p => p.DataUpdaters)
                 .HasForeignKey(d => d.ProviderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -173,6 +172,7 @@ public partial class EthtpsContext : ETHTPSContextBase
             entity.ToTable("LiveDataUpdaterStatuses", "DataUpdaters");
 
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(x => x.Enabled).HasColumnName("Enabled");
             entity.Property(e => e.LastSuccessfulRunTime).HasColumnType("datetime");
             entity.Property(e => e.LastRunTime).HasColumnType("datetime");
             entity.Property(e => e.StatusId).HasColumnName("StatusID");

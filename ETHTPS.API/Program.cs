@@ -7,6 +7,9 @@ using Microsoft.Extensions.Hosting;
 
 using NLog.Extensions.Hosting;
 
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Consul;
+
 namespace ETHTPS.API
 {
     public sealed class Program
@@ -24,6 +27,7 @@ namespace ETHTPS.API
                 {
                     webBuilder.UseStartup<Startup>();
                 })
-            .UseNLog();
+            .UseNLog()
+            .AddServiceDiscovery(o => o.UseConsul());
     }
 }

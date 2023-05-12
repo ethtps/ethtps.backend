@@ -6,6 +6,7 @@ using ETHTPS.Data.Core.Models.DataUpdater;
 using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
 using ETHTPS.Services.Ethereum;
+using ETHTPS.Services.LiveData;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -18,6 +19,7 @@ namespace ETHTPS.Tests.ProviderTests
         protected T? _provider;
         protected MSSQLLogger<T>? _blockInfoLogger;
         protected IDataUpdaterStatusService? _statusService;
+        protected WSAPIPublisher? _wsapiClient;
 
         [SetUp]
         public abstract void SetUp();
@@ -29,8 +31,9 @@ namespace ETHTPS.Tests.ProviderTests
             ILogger<HangfireBackgroundService> logger = ServiceProvider.GetRequiredService<ILogger<HangfireBackgroundService>>();
             ILogger<MSSQLTimeBucketService<T>> logger2 = ServiceProvider.GetRequiredService<ILogger<MSSQLTimeBucketService<T>>>();
             var timeBucketService = new MSSQLTimeBucketService<T>(provider, context, logger2);
+            _wsapiClient = ServiceProvider.GetRequiredService<WSAPIPublisher>();
             _statusService = ServiceProvider.GetRequiredService<IDataUpdaterStatusService>();
-            _blockInfoLogger = new Services.BlockchainServices.HangfireLogging.MSSQLLogger<T>(provider, logger, context, _statusService, timeBucketService);
+            _blockInfoLogger = new MSSQLLogger<T>(provider, logger, context, _statusService, timeBucketService, _wsapiClient);
         }
 
         [Test]

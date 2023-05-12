@@ -31,20 +31,28 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
         {
             lock (_context.LockObj)
             {
-                var result = _context.LiveDataUpdaterStatuses.FirstIfAny(x => x.Updater?.Provider?.Name == provider && x.Updater?.Type?.TypeName == updaterType.ToString());
-                if (result == null)
-                    return null;
-                return Convert(result);
+                var providerNameParam = new SqlParameter("@ProviderName", provider);
+                var updaterTypeParam = new SqlParameter("@UpdaterType", updaterType);
+                var temp = _context.Set<ETHTPS.Data.Integrations.MSSQL.LiveDataUpdaterStatus>()
+                    .FromSqlRaw("EXEC [DataUpdaters].[GetLiveDataUpdaterStatus] @ProviderName, @UpdaterType", providerNameParam, updaterTypeParam)
+                    .AsEnumerable().FirstOrDefault();
+                if (temp == null) return null;
+                return new ETHTPS.Data.Core.Models.DataUpdater.LiveDataUpdaterStatus()
+                {
+                    Enabled = temp?.Enabled,
+                    LastSuccessfulRunTime = temp?.LastRunTime,
+                    NumberOfFailures = temp?.NumberOfFailures ?? 0,
+                    NumberOfSuccesses = temp?.NumberOfSuccesses ?? 0,
+                    UpdaterType = temp?.Updater?.Type?.TypeName,
+                    Status = temp?.Status?.Name,
+                };
             }
         }
 
-        public IEnumerable<ETHTPS.Data.Core.Models.DataUpdater.LiveDataUpdaterStatus> GetStatusFor(string provider)
+        public IEnumerable<ETHTPS.Data.Core.Models.DataUpdater.LiveDataUpdaterStatus?> GetStatusFor(string provider) => new[]
         {
-            lock (_context.LockObj)
-            {
-                return _context.DataUpdaters.SafeWhere(x => x.Provider?.Name == provider).SelectMany(result => result.LiveDataUpdaterStatuses.Select(y => Convert(y)));
-            }
-        }
+            GetStatusFor(provider, UpdaterType.TPSGPS)
+        };
 
         public void IncrementNumberOfFailures(string provider, UpdaterType updaterType)
         {

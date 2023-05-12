@@ -1,14 +1,29 @@
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.DependencyInjection;
 using ETHTPS.API.Security.Core.Policies;
+using ETHTPS.Configuration;
 using ETHTPS.Data.Integrations.InfluxIntegration;
 using ETHTPS.Data.Integrations.MSSQL;
+using ETHTPS.Services.BackgroundTasks.Static.WSAPI;
+using ETHTPS.Services.Infrastructure.Messaging;
+using ETHTPS.Services.LiveData;
+using ETHTPS.TaskRunner.BackgroundServices;
+
+using Hangfire;
 
 using NLog.Extensions.Hosting;
+
+using Steeltoe.Common.Http.Discovery;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Consul;
 
 using static ETHTPS.TaskRunner.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.AddServiceDiscovery(options =>
+{
+    options.UseConsul();
+});
 builder.Host.UseNLog();
 var services = builder.Services;
 services.AddEssentialServices()
@@ -26,9 +41,20 @@ services.AddSwagger()
         .AddDataServices()
         .AddRunner(runnerType, CURRENT_APP_NAME)
         .WithStore(DatabaseProvider.MSSQL, CURRENT_APP_NAME)
-        .AddDataProviderServices(DatabaseProvider.MSSQL);
-//.RegisterMicroservice(CURRENT_APP_NAME, "Task runner web app");
-
+        .AddDataProviderServices(DatabaseProvider.MSSQL)
+        .AddRabbitMQMessagePublisher()
+        .AddScoped<WSAPIPublisher>()
+        .AddScoped<NewDatapointPublisherTask>();
+services.AddHostedService<NewDatapointHandler>(x =>
+{
+    using (var scope = x.CreateScope())
+    {
+        return new NewDatapointHandler(
+        scope.ServiceProvider.GetRequiredService<ILogger<NewDatapointHandler>>(),
+        scope.ServiceProvider.GetRequiredService<IDBConfigurationProvider>(),
+        scope.ServiceProvider.GetRequiredService<IMessagePublisher>());
+    }
+});
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -42,6 +68,7 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseStaticFiles();
 app.UseRouting();
+app.UseHangfireDashboard();
 app.ConfigureSwagger();
 app.UseRunner(runnerType);
 app.MapControllers();

@@ -1,8 +1,15 @@
 using Coravel;
 
+using ETHTPS.API.Core.Services.LiveData;
 using ETHTPS.API.DependencyInjection;
 using ETHTPS.API.Security.Core.Policies;
 using ETHTPS.WSAPI.Infrastructure.LiveData.Connection;
+
+using NLog.Extensions.Hosting;
+
+using Steeltoe.Common.Http.Discovery;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Consul;
 
 namespace ETHTPS.WSAPI
 {
@@ -14,7 +21,11 @@ namespace ETHTPS.WSAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            builder.Host.UseNLog();
+            builder.Host.AddServiceDiscovery(options =>
+            {
+                options.UseConsul();
+            });
             // Add services to the container.
             builder.Services.AddRazorPages();
             var services = builder.Services;
@@ -23,13 +34,16 @@ namespace ETHTPS.WSAPI
             services.AddCustomCORSPolicies();
             services.AddControllersWithViews()
                     .AddControllersAsServices()
+                    .AddNewtonsoftJson()
                     .ConfigureNewtonsoftJson();
             services.AddSwagger("ETHTPS.WSAPI", "Backend definition for ETHTPS's SignalR API; you're free to play around :)", false)
                    .AddMemoryCache()
                    .AddQueue()
                    .AddCache()
                    .AddScheduler()
-                   .AddMSSQLHistoricalDataServices();
+                   .AddEvents()
+                   .AddMSSQLHistoricalDataServices()
+                   .AddSingleton<LiveDataAggregator>();
             services.AddSignalR();
 
             var app = builder.Build();
@@ -39,6 +53,10 @@ namespace ETHTPS.WSAPI
             {
                 app.UseExceptionHandler("/Error");
             }
+            var eventRegistration = app.Services.ConfigureEvents();
+            eventRegistration
+                .Register<LiveDataChanged>()
+                .Subscribe<LiveDataHub>();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();

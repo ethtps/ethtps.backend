@@ -6,6 +6,7 @@ using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.TimeBuckets;
 using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Integrations.MSSQL;
+using ETHTPS.Services.LiveData;
 
 using Hangfire;
 
@@ -16,7 +17,13 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
     public abstract class HangfireDateHistoricalBlockInfoProviderDataLogger<T> : MSSQLLogger<T>
         where T : IHTTPBlockInfoProvider
     {
-        public HangfireDateHistoricalBlockInfoProviderDataLogger(T instance, ILogger<HangfireBackgroundService> logger, EthtpsContext context, IDataUpdaterStatusService statusService, ITimeBucketDataUpdaterService<T> timeBucketService) : base(instance, logger, context, statusService, timeBucketService)
+        public HangfireDateHistoricalBlockInfoProviderDataLogger(
+            T instance,
+            ILogger<HangfireBackgroundService> logger,
+            EthtpsContext context,
+            IDataUpdaterStatusService statusService,
+            ITimeBucketDataUpdaterService<T> timeBucketService,
+            WSAPIPublisher wsapiClient) : base(instance, logger, context, statusService, timeBucketService, wsapiClient)
         {
         }
 

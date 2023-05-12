@@ -20,12 +20,12 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
         public string ProviderName { get; private set; }
         public bool Enabled => _statusService.GetStatusFor(ProviderName, UpdaterType.BlockInfo) != null;
 
-        public IEnumerable<LiveDataUpdaterStatus> GetAllStatuses()
+        public IEnumerable<LiveDataUpdaterStatus?> GetAllStatuses()
         {
             return _statusService.GetAllStatuses();
         }
 
-        public IEnumerable<LiveDataUpdaterStatus> GetStatusFor(string provider)
+        public IEnumerable<LiveDataUpdaterStatus?> GetStatusFor(string provider)
         {
             return _statusService.GetStatusFor(provider);
         }

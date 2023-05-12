@@ -16,6 +16,10 @@ using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Services.BlockchainServices
 {
+    /// <summary>
+    /// A base class for handling logic in order to transform block data into TPS/GPS data
+    /// </summary>
+    /// <typeparam name="T">Data provider type</typeparam>
     public abstract class BlockInfoProviderDataLoggerBase<T> : HangfireBackgroundService
         where T : IHTTPBlockInfoProvider
     {
