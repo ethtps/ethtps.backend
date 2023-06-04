@@ -6,6 +6,8 @@ using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.API.Core.Controllers;
 using ETHTPS.API.Core.Integrations.MSSQL.Services;
 using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.Extensions.DateTimeExtensions;
+using ETHTPS.Data.Core.Models.DataPoints.XYPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Data.Core.Models.ResponseModels.L2s;
 using ETHTPS.Services.Infrastructure.Messaging;
@@ -24,7 +26,7 @@ namespace ETHTPS.API.Controllers.L2DataControllers
         private readonly GeneralService _generalService;
         private readonly IRedisCacheService _redisCacheService;
         private readonly IMessagePublisher _messagePublisher;
-
+        private static Random _RANDOM = new();
         public L2DataController(IAggregatedDataService aggregatedDataService, IPSDataFormatter dataFormatter, GeneralService generalService, IRedisCacheService redisCacheService, IMessagePublisher messagePublisher)
         {
             _aggregatedDataService = aggregatedDataService;
@@ -33,6 +35,22 @@ namespace ETHTPS.API.Controllers.L2DataControllers
             _redisCacheService = redisCacheService;
             _messagePublisher = messagePublisher;
         }
+
+#if DEBUG        
+        /// <summary>
+        /// A method for testing the charting API. Returns a response with junk values after an artificial delay.
+        /// </summary>
+        [HttpPost]
+        [SwaggerResponse(200, Type = typeof(L2DataResponseModel))]
+        [SwaggerResponse(400, "Invalid parameter(s)", Type = typeof(ValidationResult))]
+        public async Task<IActionResult> GetSingleDatasetJunkAsync([FromBody] L2DataRequestModel requestModel, DataType dataType)
+        {
+            var result = new L2DataResponseModel();
+            await Task.Delay(_RANDOM.Next(1000, 5000));
+            result.Data = new Dataset(Enumerable.Range(0, 50).Select(x => new DatedXYDataPoint(DateTimeExtensions.FromUnixTime(x), _RANDOM.Next(100))), "JunkL2", true, true);
+            return Ok(result);
+        }
+#endif
 
         /// <summary>
         /// Provides a catch-all endpoint for data requests. There are many ways requests can be customized; invalid parameters will

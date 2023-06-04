@@ -1,7 +1,7 @@
 ﻿using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
-namespace ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices
+namespace ETHTPS.Data.Integrations.MSSQL.HistoricalDataProviders
 {
     public sealed class InstantDataProvider : IHistoricalDataProvider
     {

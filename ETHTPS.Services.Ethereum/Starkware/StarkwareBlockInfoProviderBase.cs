@@ -6,7 +6,7 @@ using ETHTPS.Configuration;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Data.Integrations.MSSQL.Extensions;
-using ETHTPS.Services.Attributes;
+using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Services.Ethereum.Starkware.API;
 
 namespace ETHTPS.Services.Ethereum.Starkware

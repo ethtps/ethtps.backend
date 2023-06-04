@@ -6,11 +6,11 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 using ETHTPS.Configuration;
-using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Core.Models.DataEntries;
-using ETHTPS.Services.Attributes;
+using ETHTPS.Data.Core.Attributes;
 
 using Newtonsoft.Json;
+using ETHTPS.Data.Core.Extensions.DateTimeExtensions;
 
 namespace ETHTPS.Services.Ethereum
 {

@@ -1,6 +1,6 @@
 ﻿using ETHTPS.Data.Core.Models.ExternalWebsites;
 
-namespace ETHTPS.Data.ResponseModels.SocialMedia
+namespace ETHTPS.Data.Core.Models.ResponseModels.SocialMedia
 {
     public abstract class ExternalWebsiteBase : IExternalWebsite
     {

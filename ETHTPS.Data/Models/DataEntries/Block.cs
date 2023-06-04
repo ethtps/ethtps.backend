@@ -1,7 +1,5 @@
 ﻿using System;
 
-using ETHTPS.Data.Core.Models.DataEntries.BlockchainServices.Models;
-
 using InfluxDB.Client.Core;
 
 namespace ETHTPS.Data.Core.Models.DataEntries

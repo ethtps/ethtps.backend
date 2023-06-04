@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using ETHTPS.Data.Core.Models.Pages.Chart;
-using ETHTPS.Data.ResponseModels;
+using ETHTPS.Data.Core.Models.ResponseModels;
 
 namespace ETHTPS.Data.Core.Models.Pages.HomePage
 {

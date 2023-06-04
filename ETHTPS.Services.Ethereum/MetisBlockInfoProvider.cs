@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using ETHTPS.Configuration;
 using ETHTPS.Data.Core.Models.DataEntries;
-using ETHTPS.Services.Attributes;
+using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Services.Ethereum.JSONRPC.Models;
 using ETHTPS.Services.Infrastructure.Serialization;
 

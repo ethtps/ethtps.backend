@@ -1,6 +1,6 @@
 ﻿using ETHTPS.Data.Core.Database;
 using ETHTPS.Data.Core.Database.Relational;
-using ETHTPS.Data.Core.Models.DataEntries.BlockchainServices.Models;
+using ETHTPS.Data.Core.Models.DataEntries;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;

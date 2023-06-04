@@ -3,7 +3,7 @@ using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices
+namespace ETHTPS.Data.Integrations.MSSQL.HistoricalDataProviders
 {
     public abstract class HistoricalTimedTPSAndGasDataProviderBase<TTargetHistoricalData> : IHistoricalDataProvider
         where TTargetHistoricalData : TimedTPSAndGasData

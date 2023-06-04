@@ -1,4 +1,5 @@
 ﻿using ETHTPS.Configuration.Extensions;
+using ETHTPS.Data.Core.Models.Configuration;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -95,7 +96,7 @@ public partial class ConfigurationContext : ConfigurationContextBase
                 .HasConstraintName("FK__Microserv__Micro__4865BE2A");
         });
 
-
+        modelBuilder.Entity<AllConfigurationStringsModel>(e => e.HasNoKey());
 
         modelBuilder.Entity<Provider>(entity =>
         {

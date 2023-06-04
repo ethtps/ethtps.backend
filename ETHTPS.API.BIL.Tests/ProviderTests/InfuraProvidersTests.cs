@@ -4,7 +4,7 @@ using ETHTPS.Services.Ethereum.JSONRPC.Infura;
 using Microsoft.Extensions.DependencyInjection;
 
 // Putting all of these in a single file
-namespace ETHTPS.Tests.ProviderTests.InfuraProviderTests
+namespace ETHTPS.Tests.ProviderTests
 {
     public sealed class EthereumTests : ProviderTestBase<EthereumBlockInfoProvider>
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ETHTPS.Data.ResponseModels.SocialMedia
+namespace ETHTPS.Data.Core.Models.ResponseModels.SocialMedia
 {
     public sealed class ProviderSocialMediaLinksResponseModel
     {

@@ -7,9 +7,9 @@ using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets.Extensions;
 using ETHTPS.API.Core.Integrations.MSSQL.Services.Updater;
 using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Services;
-using ETHTPS.Services.Attributes;
 using ETHTPS.Services.BlockchainServices.BlockTime;
 using ETHTPS.Services.BlockchainServices.CoravelLoggers;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
@@ -38,9 +38,8 @@ namespace ETHTPS.API.DependencyInjection
             typeof(CeloBlockInfoProvider),
             typeof(NEARBlockInfoProvider),
             typeof(PalmBlockInfoProvider),
-            typeof(PolygonBlockInfoProvider),
+            typeof(Services.Ethereum.JSONRPC.Infura.PolygonBlockInfoProvider),
             typeof(StarknetBlockInfoProvider),
-            typeof(PolygonBlockInfoProvider),
             typeof(ArbitrumBlockInfoProvider),
             typeof(OptimismBlockInfoProvider),
             typeof(LoopringBlockInfoProvider),
@@ -49,6 +48,7 @@ namespace ETHTPS.API.DependencyInjection
             typeof(ZKSwapBlockInfoProvider),
             typeof(ZKSpaceBlockInfoProvider),
             typeof(ZKSsyncBlockInfoProvider),
+            typeof(ZKSsyncEraBlockInfoProvider),
             typeof(AztecBlockInfoProvider),
             typeof(ImmutableXBlockInfoProvider),
             typeof(MetisBlockInfoProvider),

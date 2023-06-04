@@ -1,4 +1,4 @@
-﻿using ETHTPS.Data.ResponseModels.SocialMedia;
+﻿using ETHTPS.Data.Core.Models.ResponseModels.SocialMedia;
 
 namespace ETHTPS.API.BIL.Infrastructure.Services
 {

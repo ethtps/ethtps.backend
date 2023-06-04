@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.TimeBuckets;
 using ETHTPS.Data.Core.BlockInfo;
-using ETHTPS.Data.Core.Models.DataEntries.BlockchainServices.Models;
+using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Data.Core.Models.DataUpdater;
 using ETHTPS.Data.Core.Models.LiveData;
 using ETHTPS.Data.Core.Models.LiveData.Triggers;
@@ -44,11 +44,10 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
         /// <summary>
         /// Gathers data from the provider and logs it to the database
         /// </summary>
-        /// <returns></returns>
         [AutomaticRetry(Attempts = 1, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
         public override async Task RunAsync()
         {
-            if (!_statusService.Enabled ?? false)
+            if (!_statusService.Enabled ?? true)
             {
                 _logger.LogInformation($"Not running MSSQLLogger<{_provider}> because it is disabled");
                 return; //TODO: remove self from hangfire
@@ -65,8 +64,7 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
                 }
                 _statusService.SetStatusFor(UpdaterType.BlockInfo, UpdaterStatus.Running);
 
-                TPSGPSInfo delta = await CalculateTPSGPSAsync();
-                if (delta == null) throw new ArgumentNullException($"MSSQLLogger<{_provider}> returned null");
+                TPSGPSInfo delta = await CalculateTPSGPSAsync() ?? throw new ArgumentNullException($"MSSQLLogger<{_provider}> returned null");
                 _timeBucketService.UpdateAllEntries(delta);
                 await _context.SaveChangesAsync();
                 await _context.TryCreateNewBlockSummaryAsync(delta);
@@ -90,7 +88,7 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
             }
             catch (Exception e)
             {
-                _logger.LogError("MSSQLLogger", e);
+                _logger.LogError("MSSQLLogger", e.ToString());
                 _statusService.SetStatusFor(UpdaterType.BlockInfo, UpdaterStatus.Failed);
             }
         }

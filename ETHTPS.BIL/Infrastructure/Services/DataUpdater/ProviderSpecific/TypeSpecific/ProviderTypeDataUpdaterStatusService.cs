@@ -5,6 +5,7 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.ProviderSpecific.Ty
     public sealed class ProviderTypeDataUpdaterStatusService : IProviderTypeDataUpdaterStatusService
     {
         private readonly IProviderDataUpdaterStatusManager _providerDataUpdaterStatusManager;
+        private string _providerName => _providerDataUpdaterStatusManager.ProviderName;
 
         public ProviderTypeDataUpdaterStatusService(IProviderDataUpdaterStatusManager providerDataUpdaterStatusManager, UpdaterType type)
         {
@@ -17,7 +18,7 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.ProviderSpecific.Ty
         public UpdaterType UpdaterType { get; private set; }
         public string ProviderName => _providerDataUpdaterStatusManager.ProviderName;
 
-        public bool? Enabled => _providerDataUpdaterStatusManager.GetStatusFor(UpdaterType)?.Enabled;
+        public bool? Enabled => _providerDataUpdaterStatusManager.GetStatusFor(_providerName, UpdaterType)?.Enabled;
 
         public IEnumerable<LiveDataUpdaterStatus> GetAllStatuses()
         {

@@ -1,5 +1,5 @@
 ﻿using ETHTPS.API.Core.Controllers;
-using ETHTPS.Configuration.Database;
+using ETHTPS.Configuration.Database.Initialization;
 
 using Microsoft.AspNetCore.Mvc;
 

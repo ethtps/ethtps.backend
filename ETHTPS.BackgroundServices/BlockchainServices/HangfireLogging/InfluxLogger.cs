@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Models.DataEntries;
-using ETHTPS.Data.Core.Models.DataEntries.BlockchainServices.Models;
 using ETHTPS.Data.Core.Models.DataUpdater;
 using ETHTPS.Data.Integrations.InfluxIntegration;
 using ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices;

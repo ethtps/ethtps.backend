@@ -1,7 +1,7 @@
 ﻿using System;
 
 using ETHTPS.Configuration;
-using ETHTPS.Services.Attributes;
+using ETHTPS.Data.Core.Attributes;
 
 namespace ETHTPS.Services.Ethereum.Scan.Implementations
 {

@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using ETHTPS.API.BIL.Infrastructure.Services.APIKeys;
-using ETHTPS.API.Security.Core.APIKeyProvider;
-using ETHTPS.Data.ResponseModels.APIKey;
+using ETHTPS.Data.Core.Models.ResponseModels.APIKey;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

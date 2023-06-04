@@ -10,7 +10,7 @@ using ETHTPS.API.Core.Middlewares;
 using ETHTPS.API.DependencyInjection;
 using ETHTPS.API.Security.Core.Authentication;
 using ETHTPS.API.Security.Core.Policies;
-using ETHTPS.Configuration.Database;
+using ETHTPS.Configuration.Database.Initialization;
 using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Services.BackgroundTasks.Recurring.Aggregated;
 using ETHTPS.Services.Infrastructure.Messaging;

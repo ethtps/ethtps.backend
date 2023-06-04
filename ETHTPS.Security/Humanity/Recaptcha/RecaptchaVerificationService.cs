@@ -1,6 +1,6 @@
 ﻿using ETHTPS.Configuration;
 using ETHTPS.Configuration.Extensions;
-using ETHTPS.Data.ResponseModels.Recaptcha;
+using ETHTPS.Data.Core.Models.ResponseModels.Recaptcha;
 
 using Newtonsoft.Json;
 

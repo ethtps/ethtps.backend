@@ -6,7 +6,7 @@ using ETHTPS.API.Core.Integrations.MSSQL.Services;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
-using ETHTPS.Data.ResponseModels;
+using ETHTPS.Data.Core.Models.ResponseModels;
 
 using Microsoft.AspNetCore.Mvc;
 

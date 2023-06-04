@@ -1,15 +1,12 @@
-﻿using Coravel.Events.Interfaces;
+﻿using System.Collections.Concurrent;
 
-using ETHTPS.API.Core.Services.LiveData;
 using ETHTPS.Data.Core;
 
 using Microsoft.AspNetCore.SignalR;
 
-using Newtonsoft.Json;
-
 namespace ETHTPS.WSAPI.Infrastructure.LiveData.Connection
 {
-    public sealed class LiveDataHub : Hub, IListener<LiveDataChanged>
+    public sealed class LiveDataHub : Hub
     {
         private static ILogger<LiveDataHub>? _logger;
 
@@ -18,9 +15,8 @@ namespace ETHTPS.WSAPI.Infrastructure.LiveData.Connection
             _logger = logger;
         }
 
-        private static readonly Dictionary<string, SubscriptionModel> _subscriptions = new Dictionary<string, SubscriptionModel>();
-        private LiveDataChanged? _lastBroadcast;
-
+        private static readonly ConcurrentDictionary<string, SubscriptionModel> _subscriptions = new();
+        private string _lastBroadcast = string.Empty;
 
         public override async Task OnConnectedAsync()
         {
@@ -33,27 +29,14 @@ namespace ETHTPS.WSAPI.Infrastructure.LiveData.Connection
             await base.OnConnectedAsync();
         }
 
-        public override async Task OnDisconnectedAsync(Exception? exception)
-        {
-            await UnsubscribeAsync();
-            await base.OnDisconnectedAsync(exception);
-        }
-
         public async Task SubscribeAsync(SubscriptionModel subscription)
         {
             if (Context == null || Context.ConnectionId == null)
                 return;
 
-            if (!_subscriptions.ContainsKey(Context.ConnectionId))
-            {
-                _subscriptions.Add(Context.ConnectionId, subscription);
-                await Clients.Client(Context.ConnectionId).SendAsync("ConnectionEstablished");
-                _logger?.LogInformation($"New connection: {Context.ConnectionId}");
-            }
-            else
-            {
-                _subscriptions[Context.ConnectionId] = subscription;
-            }
+            _subscriptions.AddOrUpdate(Context.ConnectionId, subscription, (k, v) => v);
+            await Clients.Client(Context.ConnectionId).SendAsync("ConnectionEstablished");
+            _logger?.LogInformation($"New connection: {Context.ConnectionId}");
         }
 
         public async Task UnsubscribeAsync() => await UnsubscribeAsync(Context.ConnectionId);
@@ -63,26 +46,9 @@ namespace ETHTPS.WSAPI.Infrastructure.LiveData.Connection
             if (_subscriptions.ContainsKey(connectionID))
             {
                 _logger?.LogInformation($"Terminating connection {connectionID} after {_subscriptions[connectionID].TimeAlive}");
-                _subscriptions.Remove(connectionID);
+                _subscriptions.Remove(connectionID, out _);
             }
             return Task.CompletedTask;
-        }
-
-        public async Task SendNotificationsToEveryoneAsync()
-        {
-            if (_lastBroadcast != null && Clients?.All != null)
-            {
-                await Clients.All.SendAsync(JsonConvert.SerializeObject(_lastBroadcast));
-            }
-        }
-
-        public async Task HandleAsync(LiveDataChanged broadcasted)
-        {
-            if (broadcasted == null)
-                return;
-
-            _lastBroadcast = broadcasted;
-            await SendNotificationsToEveryoneAsync();
         }
     }
 }

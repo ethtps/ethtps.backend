@@ -3,7 +3,6 @@ using ETHTPS.API.DependencyInjection;
 using ETHTPS.API.Security.Core.Policies;
 using ETHTPS.Configuration;
 using ETHTPS.Data.Integrations.InfluxIntegration;
-using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Services.BackgroundTasks.Static.WSAPI;
 using ETHTPS.Services.Infrastructure.Messaging;
 using ETHTPS.Services.LiveData;
@@ -59,7 +58,7 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    scope.ServiceProvider.GetRequiredService<EthtpsContext>().DeleteAllJobsAsync().Wait();
+    //scope.ServiceProvider.GetRequiredService<EthtpsContext>().DeleteAllJobsAsync().Wait();
 }
 
 if (!app.Environment.IsDevelopment())

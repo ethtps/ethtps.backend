@@ -1,5 +1,5 @@
 ﻿
-using ETHTPS.Data.ResponseModels.SocialMedia;
+using ETHTPS.Data.Core.Models.ResponseModels.SocialMedia;
 
 using Newtonsoft.Json;
 

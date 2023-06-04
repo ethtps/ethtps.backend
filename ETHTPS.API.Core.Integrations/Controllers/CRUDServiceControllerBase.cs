@@ -5,7 +5,7 @@ using ETHTPS.API.Core.Controllers.CRUD;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ETHTPS.API.Core.Integrations.MSSQL.Controllers.CRUD
+namespace ETHTPS.API.Core.Integrations.MSSQL.Controllers
 {
     public abstract class CRUDServiceControllerBase<T> : APIControllerBase, ICRUDController<T> where T : class
     {

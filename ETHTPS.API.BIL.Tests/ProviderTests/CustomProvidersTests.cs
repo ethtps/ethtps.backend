@@ -16,6 +16,16 @@ namespace ETHTPS.Tests.ProviderTests
         }
     }
 
+    public sealed class ZKSyncEraTests : ProviderTestBase<ZKSsyncEraBlockInfoProvider>
+    {
+        [SetUp]
+        public override void SetUp()
+        {
+            _provider = new ZKSsyncEraBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
+        }
+    }
+
     public sealed class AVAXTests : ProviderTestBase<AVAXBlockInfoProvider>
     {
         [SetUp]

@@ -4,16 +4,15 @@ using ETHTPS.Configuration;
 using ETHTPS.Configuration.ProviderConfiguration;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Integrations.InfluxIntegration;
-using ETHTPS.Data.Integrations.InfluxIntegration.HistoricalDataServices;
+using ETHTPS.Data.Integrations.InfluxIntegration.HistoricalDataProviders;
 using ETHTPS.Services.BlockchainServices.BlockTime;
+using ETHTPS.Services.Infrastructure.Messaging;
 using ETHTPS.Services.LiveData;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 using NLog.Extensions.Hosting;
-
-using Steeltoe.Common.Http.Discovery;
 
 namespace ETHTPS.Tests
 {
@@ -36,17 +35,16 @@ namespace ETHTPS.Tests
                     .AddDatabaseContext(APP_NAME)
                     .AddMixedCoreServices()
                     .AddDataProviderServices(DatabaseProvider.MSSQL)
+                    .WithStore(DatabaseProvider.MSSQL, APP_NAME)
                     .AddDataUpdaterStatusService()
                     .AddScoped<IInfluxWrapper, InfluxWrapper>()
                     .AddScoped<IAsyncHistoricalBlockInfoProvider, HistoricalInfluxProvider>()
                     .AddMSSQLHistoricalDataServices()
                     .AddTransient<IProviderConfigurationService, ProviderConfigurationService>()
                     .AddRedisCache()
+                    .AddRabbitMQMessagePublisher()
                     .AddSingleton<EthereumBlockTimeProvider>()
-                    .AddSingleton<WSAPIPublisher>()
-                    .AddHttpClient("ETHTPS-WSAPI")
-                    .AddServiceDiscovery()
-                    .AddTypedClient<WSAPIPublisher>();
+                    .AddScoped<WSAPIPublisher>();
             ServiceProvider = services.BuildServiceProvider();
         }
     }

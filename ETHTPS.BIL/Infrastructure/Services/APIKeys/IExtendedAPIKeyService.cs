@@ -1,8 +1,6 @@
-﻿
-using ETHTPS.API.BIL.Infrastructure.Services.APIKeys;
-using ETHTPS.Data.ResponseModels.APIKey;
+﻿using ETHTPS.Data.Core.Models.ResponseModels.APIKey;
 
-namespace ETHTPS.API.Security.Core.APIKeyProvider
+namespace ETHTPS.API.BIL.Infrastructure.Services.APIKeys
 {
     public interface IExtendedAPIKeyService : IAPIKeyService
     {

@@ -18,7 +18,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
         public static IProviderDataUpdaterStatusService From(IDataUpdaterStatusService statusService, string provider) => new ProviderDataUpdaterStatusService(statusService, provider);
 
         public string ProviderName { get; private set; }
-        public bool Enabled => _statusService.GetStatusFor(ProviderName, UpdaterType.BlockInfo) != null;
+        public bool? Enabled => _statusService.Enabled;
 
         public IEnumerable<LiveDataUpdaterStatus?> GetAllStatuses()
         {
@@ -78,5 +78,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
         {
             return _statusService.GetLastRunTimeFor(provider, updaterType);
         }
+
+        public async Task<IEnumerable<DataUpdaterDTO>> GetAllAsync() => (await _statusService.GetAllAsync()).Where(x => x.Provider == ProviderName);
     }
 }

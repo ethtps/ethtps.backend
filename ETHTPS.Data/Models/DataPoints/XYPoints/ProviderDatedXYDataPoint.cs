@@ -1,6 +1,6 @@
 ﻿using System;
 
-using ETHTPS.Data.Core.Extensions;
+using ETHTPS.Data.Core.Extensions.DateTimeExtensions;
 
 namespace ETHTPS.Data.Core.Models.DataPoints.XYPoints
 {

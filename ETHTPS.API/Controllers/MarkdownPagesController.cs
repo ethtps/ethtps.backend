@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using ETHTPS.API.BIL.Infrastructure.Services;
-using ETHTPS.API.Core.Integrations.MSSQL.Controllers.CRUD;
+using ETHTPS.API.Core.Integrations.MSSQL.Controllers;
 using ETHTPS.Data.Core.Models.Markdown;
 using ETHTPS.Data.Integrations.MSSQL;
 

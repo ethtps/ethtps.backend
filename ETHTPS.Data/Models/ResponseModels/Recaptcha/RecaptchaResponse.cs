@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace ETHTPS.Data.ResponseModels.Recaptcha
+namespace ETHTPS.Data.Core.Models.ResponseModels.Recaptcha
 {
     public sealed class RecaptchaResponse
     {

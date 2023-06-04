@@ -3,6 +3,8 @@ using Coravel;
 using ETHTPS.API.Core.Services.LiveData;
 using ETHTPS.API.DependencyInjection;
 using ETHTPS.API.Security.Core.Policies;
+using ETHTPS.Services.Infrastructure.Messaging;
+using ETHTPS.WSAPI.BackgroundServices;
 using ETHTPS.WSAPI.Infrastructure.LiveData.Connection;
 
 using NLog.Extensions.Hosting;
@@ -42,11 +44,13 @@ namespace ETHTPS.WSAPI
                    .AddCache()
                    .AddScheduler()
                    .AddEvents()
-                   .AddMSSQLHistoricalDataServices()
-                   .AddSingleton<LiveDataAggregator>();
+                   .AddRabbitMQMessagePublisher()
+                   .AddMSSQLHistoricalDataServices();
             services.AddSignalR();
 
+            services.AddHostedService<LiveDataService>();
             var app = builder.Build();
+            app.UseCustomCORSPolicies();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -55,26 +59,19 @@ namespace ETHTPS.WSAPI
             }
             var eventRegistration = app.Services.ConfigureEvents();
             eventRegistration
-                .Register<LiveDataChanged>()
-                .Subscribe<LiveDataHub>();
+                .Register<LiveDataChanged>();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
-            app.RequestsAreForwardedByReverseProxy();
-            app.MapRazorPages();
-            app.ConfigureSwagger();
-            app.UseRouting();
-            app.UseAuthorization();
-            app.UseCors(_myAllowSpecificOrigins);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers().RequireAuthorization();
+                endpoints.MapHub<LiveDataHub>("/api/v3/wsapi/live-data");
             });
-            app.MapHub<LiveDataHub>("/api/v3/wsapi/live-data");
-            app.Services.UseScheduler(scheduler =>
-            {
-
-            });
+            //app.UseAuthorization();
+            app.RequestsAreForwardedByReverseProxy();
+            app.MapRazorPages();
+            app.ConfigureSwagger();
             app.Run();
         }
     }

@@ -1,6 +1,4 @@
-﻿using ETHTPS.Data.Core.Models.ResponseModels.APIKey;
-
-namespace ETHTPS.Data.ResponseModels.APIKey
+﻿namespace ETHTPS.Data.Core.Models.ResponseModels.APIKey
 {
     public sealed class APIKeyResponseModel : SimpleAPIKey
     {
@@ -20,6 +18,6 @@ namespace ETHTPS.Data.ResponseModels.APIKey
         }
 
         public bool Success { get; private set; }
-        public string? FailureReason { get; private set; }
+        public string FailureReason { get; private set; }
     }
 }

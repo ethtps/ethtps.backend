@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using ETHTPS.Data.Core.Extensions;
+using ETHTPS.Data.Core.Extensions.DateTimeExtensions;
 using ETHTPS.Data.Core.Models.DataPoints.XYPoints;
 using ETHTPS.Data.Core.Models.ResponseModels.L2s;
 

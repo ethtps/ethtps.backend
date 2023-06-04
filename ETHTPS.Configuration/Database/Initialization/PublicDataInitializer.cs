@@ -1,6 +1,4 @@
-﻿using ETHTPS.Configuration.Database.Initialization;
-
-namespace ETHTPS.Configuration.Database
+﻿namespace ETHTPS.Configuration.Database.Initialization
 {
     public sealed class PublicDataInitializer : DataInitializerBase
     {

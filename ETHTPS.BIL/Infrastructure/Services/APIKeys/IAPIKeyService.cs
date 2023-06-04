@@ -1,4 +1,4 @@
-﻿using ETHTPS.Data.ResponseModels.APIKey;
+﻿using ETHTPS.Data.Core.Models.ResponseModels.APIKey;
 
 namespace ETHTPS.API.BIL.Infrastructure.Services.APIKeys
 {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Extensions.StringExtensions;
 using ETHTPS.Data.Core.Models.DataEntries;
-using ETHTPS.Services.Attributes;
+using ETHTPS.Data.Core.Attributes;
 
 using Fizzler.Systems.HtmlAgilityPack;
 

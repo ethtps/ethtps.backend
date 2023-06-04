@@ -4,6 +4,7 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataUpdater
 {
     public interface IDataUpdaterStatusGetter
     {
+        bool? Enabled { get; }
         IEnumerable<LiveDataUpdaterStatus?> GetAllStatuses();
         IEnumerable<LiveDataUpdaterStatus?> GetStatusFor(string provider);
         LiveDataUpdaterStatus? GetStatusFor(string provider, UpdaterType updaterType);

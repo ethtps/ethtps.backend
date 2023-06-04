@@ -85,10 +85,9 @@ namespace ETHTPS.TaskRunner.BackgroundServices
                     var latestEntries = _latestEntryAggregator.ToList();
                     if (latestEntries.Count > 0)
                     {
-                        var message = JsonConvert.SerializeObject(_latestEntryAggregator);
                         if (_latestEntryAggregator.Count() > 0)
                         {
-                            _messagePublisher.PublishJSONMessage(message, MessagingQueues.LIVEDATA_MULTIPLENEWDATAPOINTS_QUEUE);
+                            _messagePublisher.PublishJSONMessage(_latestEntryAggregator.ToArray(), MessagingQueues.LIVEDATA_MULTIPLENEWDATAPOINTS_QUEUE);
                             _logger.LogInformation($"NewDatapointHandler: published latest entries. Count: {_latestEntryAggregator.Count()}");
                             _latestEntryAggregator.Clear();
                         }

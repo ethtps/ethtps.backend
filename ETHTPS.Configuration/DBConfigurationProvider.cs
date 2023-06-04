@@ -1,7 +1,9 @@
 ﻿using ETHTPS.Configuration.Database;
 using ETHTPS.Configuration.Validation;
 using ETHTPS.Data.Core.Extensions;
+using ETHTPS.Data.Core.Models.Configuration;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Configuration
@@ -9,7 +11,7 @@ namespace ETHTPS.Configuration
     public sealed class DBConfigurationProvider : IDBConfigurationProvider
     {
         private readonly ConfigurationContext _context;
-        private readonly ILogger<ConfigurationValidator> _logger;
+        private readonly ILogger<ConfigurationValidator>? _logger;
         private readonly string _environment;
         private readonly int _environmentID;
 
@@ -76,21 +78,23 @@ namespace ETHTPS.Configuration
 
         }
 
-        public IEnumerable<IConfigurationString> GetConfigurationStrings(string name)
+        public IEnumerable<AllConfigurationStringsModel> GetAllConfigurationStrings() => _context.Database.SqlQueryRaw<AllConfigurationStringsModel>("EXEC [Configuration].[GetAllConfigurationStrings]").AsEnumerable();
+
+        public IEnumerable<IConfigurationString>? GetConfigurationStrings(string name)
         {
             lock (_context.LockObj)
             {
-                return _context.ConfigurationStrings.Where(x => x.Name.ToUpper() == name.ToUpper()).ToList();
+                return _context.ConfigurationStrings?.Where(x => x.Name.ToUpper() == name.ToUpper()).ToList();
             }
         }
 
-        public IEnumerable<IConfigurationString> GetConfigurationStringsForMicroservice(IMicroservice microservice) => GetConfigurationStringsForMicroservice(microservice.Name);
+        public IEnumerable<IConfigurationString>? GetConfigurationStringsForMicroservice(IMicroservice microservice) => GetConfigurationStringsForMicroservice(microservice.Name);
 
-        public IEnumerable<IConfigurationString> GetConfigurationStringsForMicroservice(string microserviceName)
+        public IEnumerable<IConfigurationString>? GetConfigurationStringsForMicroservice(string microserviceName)
         {
             lock (_context.LockObj)
             {
-                return _context.MicroserviceConfigurationStrings
+                return _context.MicroserviceConfigurationStrings?
                     .Where(x => x.Microservice.Name.ToUpper() == microserviceName.ToUpper() && x.Environment.Name.ToUpper() == _environment.ToUpper() || x.Environment.Name.ToUpper() == "ALL")
                     .Select(x => (IConfigurationString)x.ConfigurationString)
                     .WhereNotNull()
@@ -105,24 +109,24 @@ namespace ETHTPS.Configuration
 
         public IEnumerable<IConfigurationString> GetConfigurationStringsForProvider(string provider) => _context.GetConfigurationStrings(provider, _environment);
 
-        public int GetEnvironmentID(string name)
+        public int? GetEnvironmentID(string name)
         {
             lock (_context.LockObj)
             {
-                return _context.Environments.First(x => x.Name.ToUpper() == name.ToUpper()).Id
+                return _context.Environments?.First(x => x.Name.ToUpper() == name.ToUpper()).Id
                     ;
             }
         }
 
-        public IEnumerable<string> GetEnvironments()
+        public IEnumerable<string>? GetEnvironments()
         {
             lock (_context.LockObj)
             {
-                return _context.Environments.Select(x => x.Name).ToList();
+                return _context.Environments?.Select(x => x.Name).ToList();
             }
         }
 
-        public int GetMicroserviceID(string name, bool addIfItDoesntExist = false)
+        public int? GetMicroserviceID(string name, bool addIfItDoesntExist = false)
         {
             lock (_context.LockObj)
             {

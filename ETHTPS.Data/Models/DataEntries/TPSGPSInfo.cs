@@ -1,4 +1,4 @@
-﻿namespace ETHTPS.Data.Core.Models.DataEntries.BlockchainServices.Models
+﻿namespace ETHTPS.Data.Core.Models.DataEntries
 {
     public sealed class TPSGPSInfo : InfoBase
     {
@@ -7,7 +7,7 @@
         public string Provider { get; set; }
         public int TransactionCount { get; set; }
         public int? GasUsed { get; set; }
-        public string[]? TransactionHashes { get; set; }
+        public string[] TransactionHashes { get; set; }
         public (TPSInfo TPSInfo, GPSInfo GPSInfo) Split()
         {
             return (new TPSInfo()

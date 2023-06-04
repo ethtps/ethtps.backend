@@ -2,6 +2,6 @@
 {
     public interface IConfigurationStringProvider
     {
-        IEnumerable<IConfigurationString> GetConfigurationStrings(string name);
+        IEnumerable<IConfigurationString>? GetConfigurationStrings(string name);
     }
 }

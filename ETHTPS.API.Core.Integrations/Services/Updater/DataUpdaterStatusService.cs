@@ -14,6 +14,8 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
     {
         private readonly EthtpsContext _context;
 
+        public bool? Enabled { get; }
+
         public DataUpdaterStatusService(EthtpsContext context)
         {
             _context = context;
@@ -32,7 +34,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
             lock (_context.LockObj)
             {
                 var providerNameParam = new SqlParameter("@ProviderName", provider);
-                var updaterTypeParam = new SqlParameter("@UpdaterType", updaterType);
+                var updaterTypeParam = new SqlParameter("@UpdaterType", updaterType.ToString());
                 var temp = _context.Set<ETHTPS.Data.Integrations.MSSQL.LiveDataUpdaterStatus>()
                     .FromSqlRaw("EXEC [DataUpdaters].[GetLiveDataUpdaterStatus] @ProviderName, @UpdaterType", providerNameParam, updaterTypeParam)
                     .AsEnumerable().FirstOrDefault();
@@ -178,5 +180,8 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
             var info = GetStatusFor(provider, updaterType);
             return info?.LastSuccessfulRunTime;
         }
+
+        public async Task<IEnumerable<DataUpdaterDTO>> GetAllAsync() => await _context.Set<DataUpdaterDTO>().FromSqlRaw("EXECUTE [DataUpdaters].[GetAllDataUpdaters]")
+         .ToListAsync();
     }
 }

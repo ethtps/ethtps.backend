@@ -1,4 +1,4 @@
-﻿namespace ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.ProviderSpecific
+﻿namespace ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.ProviderSpecific.TypeSpecific
 {
     public interface IProviderTypeDataUpdaterStatusService :
         IDataUpdaterManager,
@@ -6,6 +6,6 @@
         IProviderDataUpdaterManager,
         IProviderTypeDataUpdaterManager
     {
-        bool? Enabled { get; }
+
     }
 }

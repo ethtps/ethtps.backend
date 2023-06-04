@@ -8,9 +8,9 @@ namespace ETHTPS.API.Core.Services.LiveData
     {
         public List<L2DataUpdateModel> Updates { get; private set; } = new List<L2DataUpdateModel>();
 
-        public LiveDataChanged(List<L2DataUpdateModel> updates)
+        public LiveDataChanged(IEnumerable<L2DataUpdateModel> updates)
         {
-            Updates = updates;
+            Updates = updates.ToList();
         }
     }
 }

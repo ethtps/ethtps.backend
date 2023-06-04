@@ -8,9 +8,9 @@ using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Core.Extensions.StringExtensions;
 using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
+using ETHTPS.Data.Core.Models.ResponseModels;
 using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices;
-using ETHTPS.Data.ResponseModels;
+using ETHTPS.Data.Integrations.MSSQL.HistoricalDataProviders;
 
 using ServiceStack;
 

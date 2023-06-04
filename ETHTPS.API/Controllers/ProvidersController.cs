@@ -1,5 +1,5 @@
 ﻿using ETHTPS.API.BIL.Infrastructure.Services;
-using ETHTPS.API.Core.Integrations.MSSQL.Controllers.CRUD;
+using ETHTPS.API.Core.Integrations.MSSQL.Controllers;
 using ETHTPS.Data.Integrations.MSSQL;
 
 using Microsoft.AspNetCore.Authorization;

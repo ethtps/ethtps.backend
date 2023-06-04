@@ -4,7 +4,7 @@ using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices;
+using ETHTPS.Data.Integrations.MSSQL.HistoricalDataProviders;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
 {

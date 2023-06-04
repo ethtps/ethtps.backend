@@ -2,7 +2,7 @@
 
 using ETHTPS.Data.Core.Models.DataPoints;
 
-namespace ETHTPS.Data.ResponseModels.HomePage
+namespace ETHTPS.Data.Core.Models.ResponseModels.HomePage
 {
     public sealed class HomePageViewModel
     {

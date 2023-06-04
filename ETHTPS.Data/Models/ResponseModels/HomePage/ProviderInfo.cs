@@ -1,4 +1,4 @@
-﻿namespace ETHTPS.Data.ResponseModels.HomePage
+﻿namespace ETHTPS.Data.Core.Models.ResponseModels.HomePage
 {
     public sealed class ProviderInfo
     {

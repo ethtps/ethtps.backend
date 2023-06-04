@@ -1,5 +1,5 @@
 ﻿using ETHTPS.Configuration;
-using ETHTPS.Services.Attributes;
+using ETHTPS.Data.Core.Attributes;
 
 namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
 {

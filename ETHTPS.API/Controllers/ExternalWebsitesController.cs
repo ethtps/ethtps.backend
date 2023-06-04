@@ -2,7 +2,7 @@
 
 using ETHTPS.API.BIL.Infrastructure.Services;
 using ETHTPS.API.Core.Attributes;
-using ETHTPS.API.Core.Integrations.MSSQL.Controllers.CRUD;
+using ETHTPS.API.Core.Integrations.MSSQL.Controllers;
 using ETHTPS.Data.Core.Models.ExternalWebsites;
 
 using Microsoft.AspNetCore.Mvc;

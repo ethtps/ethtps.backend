@@ -2,8 +2,8 @@
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Core.Models.DataUpdater;
+using ETHTPS.Data.Core.Models.ResponseModels;
 using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.ResponseModels;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -61,7 +61,10 @@ namespace ETHTPS.API.Core.Services
                             TheoreticalMaxTPS = x.TheoreticalMaxTps,
                             IsGeneralPurpose = types.First(y => y.Id == x.Type).IsGeneralPurpose,
                             IsSubchainOf = "Ethereum",
-                            Status = _dataUpdaterStatusService.GetStatusFor(x.Name, UpdaterType.BlockInfo),
+                            Status = _dataUpdaterStatusService.GetStatusFor(x.Name, UpdaterType.BlockInfo) ?? new()
+                            {
+                                Status = "Failed"
+                            },
                             Enabled = x.Enabled
                         }).SafeWhere(x => x.Enabled).ToList();
                     }

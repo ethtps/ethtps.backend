@@ -6,7 +6,7 @@ using ETHTPS.Data.Integrations.InfluxIntegration;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ETHTPS.Tests.ServiceTests
+namespace ETHTPS.Tests.InfluxTests
 {
     public sealed class InfluxTests : TestBase
     {
@@ -43,7 +43,7 @@ namespace ETHTPS.Tests.ServiceTests
             Assert.DoesNotThrowAsync(async () =>
             {
                 await foreach (var entry in _influxWrapper.GetEntriesForPeriod<Block
-                    >(_DEFAULT_BUCKET_NAME, _DEFAULT_MEASUREMENT_NAME, ETHTPS.Data.Core.TimeInterval.OneHour)) { }
+                    >(_DEFAULT_BUCKET_NAME, _DEFAULT_MEASUREMENT_NAME, TimeInterval.OneHour)) { }
             });
             /*
             Assert.DoesNotThrowAsync(async () =>

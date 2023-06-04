@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace ETHTPS.API.Core.Integrations.MSSQL.Controllers.CRUD
+namespace ETHTPS.API.Core.Integrations.MSSQL.Controllers
 {
     public sealed class CRUDControllerFromEntity<TEntity> : EFCoreCRUDServiceBase<TEntity>, ICRUDController<TEntity>
          where TEntity : class, IIndexed

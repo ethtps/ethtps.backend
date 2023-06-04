@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace ETHTPS.Data.ResponseModels
+namespace ETHTPS.Data.Core.Models.ResponseModels
 {
     public sealed class ProviderResponseModel
     {
@@ -13,8 +13,8 @@ namespace ETHTPS.Data.ResponseModels
         public int TheoreticalMaxTPS { get; set; }
         public string Type { get; set; }
         public bool IsGeneralPurpose { get; set; }
-        public string? IsSubchainOf { get; set; }
-        public IBasicLiveUpdaterStatus? Status { get; set; }
+        public string IsSubchainOf { get; set; }
+        public IBasicLiveUpdaterStatus Status { get; set; }
         [JsonIgnore]
         public bool Enabled { get; set; }
     }

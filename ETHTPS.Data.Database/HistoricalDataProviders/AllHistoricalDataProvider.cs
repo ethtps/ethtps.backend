@@ -1,4 +1,4 @@
-﻿namespace ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices
+﻿namespace ETHTPS.Data.Integrations.MSSQL.HistoricalDataProviders
 {
     public sealed class AllHistoricalDataProvider : HistoricalTimedTPSAndGasDataProviderBase<TpsandGasDataAll>
     {

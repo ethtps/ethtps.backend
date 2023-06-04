@@ -1,7 +1,7 @@
 ﻿using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Integrations.InfluxIntegration;
-using ETHTPS.Data.Integrations.InfluxIntegration.HistoricalDataServices;
-using ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices;
+using ETHTPS.Data.Integrations.InfluxIntegration.HistoricalDataProviders;
+using ETHTPS.Data.Integrations.MSSQL.HistoricalDataProviders;
 using ETHTPS.Services;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
 using ETHTPS.Services.Ethereum;
@@ -27,7 +27,7 @@ namespace ETHTPS.API.DependencyInjection
                 services.RegisterHistoricalHangfireBackgroundService<HangfireHistoricalBlockInfoProviderDataLogger<MetisBlockInfoProvider>, MetisBlockInfoProvider>(CronConstants.NEVER, HISTORICALUPDATERQUEUE);
                 services.RegisterHistoricalHangfireBackgroundService<HangfireHistoricalBlockInfoProviderDataLogger<ArbitrumBlockInfoProvider>, ArbitrumBlockInfoProvider>(CronConstants.NEVER, HISTORICALUPDATERQUEUE);
                 services.RegisterHistoricalHangfireBackgroundService<HangfireHistoricalBlockInfoProviderDataLogger<OptimismBlockInfoProvider>, OptimismBlockInfoProvider>(CronConstants.NEVER, HISTORICALUPDATERQUEUE);
-                services.RegisterHistoricalHangfireBackgroundService<HangfireHistoricalBlockInfoProviderDataLogger<PolygonBlockInfoProvider>, PolygonBlockInfoProvider>(CronConstants.NEVER, HISTORICALUPDATERQUEUE);
+                services.RegisterHistoricalHangfireBackgroundService<HangfireHistoricalBlockInfoProviderDataLogger<Services.Ethereum.JSONRPC.Infura.PolygonBlockInfoProvider>, Services.Ethereum.JSONRPC.Infura.PolygonBlockInfoProvider>(CronConstants.NEVER, HISTORICALUPDATERQUEUE);
                 services.RegisterHistoricalHangfireBackgroundService<HangfireHistoricalBlockInfoProviderDataLogger<XDAIHTTPBlockInfoProvider>, XDAIHTTPBlockInfoProvider>(CronConstants.NEVER, HISTORICALUPDATERQUEUE);
                 services.RegisterHistoricalHangfireBackgroundService<HangfireHistoricalBlockInfoProviderDataLogger<ZKSwapBlockInfoProvider>, ZKSwapBlockInfoProvider>(CronConstants.NEVER, HISTORICALUPDATERQUEUE);
                 services.RegisterHistoricalHangfireBackgroundService<HangfireHistoricalBlockInfoProviderDataLogger<ZKSsyncBlockInfoProvider>, ZKSsyncBlockInfoProvider>(CronConstants.NEVER, HISTORICALUPDATERQUEUE);

@@ -1,5 +1,5 @@
 ﻿using ETHTPS.Data.Core.BlockInfo;
-using ETHTPS.Data.Core.Models.DataEntries.BlockchainServices.Models;
+using ETHTPS.Data.Core.Models.DataEntries;
 
 namespace ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.TimeBuckets
 {
