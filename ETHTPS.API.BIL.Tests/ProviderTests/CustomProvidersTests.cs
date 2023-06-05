@@ -1,4 +1,5 @@
 ﻿using ETHTPS.Services.Ethereum;
+using ETHTPS.Services.Ethereum.JSONRPC.Implementations;
 using ETHTPS.Services.Ethereum.JSONRPC.Infura;
 
 /// <summary>
@@ -6,6 +7,16 @@ using ETHTPS.Services.Ethereum.JSONRPC.Infura;
 /// </summary>
 namespace ETHTPS.Tests.ProviderTests
 {
+    public sealed class GnosisTests : ProviderTestBase<GnosisJSONRPCBlockInfoProvider>
+    {
+        [SetUp]
+        public override void SetUp()
+        {
+            _provider = new GnosisJSONRPCBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
+        }
+    }
+
     public sealed class ArbitrumNovaTests : ProviderTestBase<ArbitrumNovaBlockInfoProvider>
     {
         [SetUp]
