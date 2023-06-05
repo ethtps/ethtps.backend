@@ -15,6 +15,7 @@ using ETHTPS.Services.BlockchainServices.BlockTime;
 using ETHTPS.Services.BlockchainServices.CoravelLoggers;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
 using ETHTPS.Services.Ethereum;
+using ETHTPS.Services.Ethereum.JSONRPC.Implementations;
 using ETHTPS.Services.Ethereum.JSONRPC.Infura;
 using ETHTPS.Services.Ethereum.Scan.Implementations;
 using ETHTPS.Services.Ethereum.Starkware;
@@ -34,7 +35,7 @@ namespace ETHTPS.API.DependencyInjection
         private static Type[] _enabledUpdaters = new[]
         {
             typeof(EthereumBlockInfoProvider),
-            typeof(AuroraBlockInfoProvider),
+            typeof(AuroraJSONRPCBlockInfoProvider),
             typeof(AVAXBlockInfoProvider),
             typeof(CeloBlockInfoProvider),
             typeof(NEARBlockInfoProvider),
@@ -62,6 +63,7 @@ namespace ETHTPS.API.DependencyInjection
             typeof(SorareBlockInfoProvider),
             typeof(DeversiFIHTTPBlockInfoProvider),
             typeof(PolygonHermezBlockInfoProvider),
+            typeof(GnosisJSONRPCBlockInfoProvider)
         };
         public static IServiceCollection AddDataServices(this IServiceCollection services) => services.AddScoped(_enabledUpdaters);
         public static IServiceCollection AddRunner(this IServiceCollection services, BackgroundServiceType type, string appName)

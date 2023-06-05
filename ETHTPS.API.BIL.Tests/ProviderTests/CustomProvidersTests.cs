@@ -7,6 +7,36 @@ using ETHTPS.Services.Ethereum.JSONRPC.Infura;
 /// </summary>
 namespace ETHTPS.Tests.ProviderTests
 {
+    public sealed class BobaNetworkJSONRPCBlockInfoProviderTests : ProviderTestBase<BobaNetworkJSONRPCBlockInfoProvider>
+    {
+        [SetUp]
+        public override void SetUp()
+        {
+            _provider = new BobaNetworkJSONRPCBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
+        }
+    }
+
+    public sealed class AuroraJSONRPCBlockInfoProviderTests : ProviderTestBase<AuroraJSONRPCBlockInfoProvider>
+    {
+        [SetUp]
+        public override void SetUp()
+        {
+            _provider = new AuroraJSONRPCBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
+        }
+    }
+
+    public sealed class OptimismJSONRPCTests : ProviderTestBase<OptimismJSONRPCBlockInfoProvider>
+    {
+        [SetUp]
+        public override void SetUp()
+        {
+            _provider = new OptimismJSONRPCBlockInfoProvider(ConfigurationProvider);
+            PartialSetup(_provider);
+        }
+    }
+
     public sealed class GnosisTests : ProviderTestBase<GnosisJSONRPCBlockInfoProvider>
     {
         [SetUp]

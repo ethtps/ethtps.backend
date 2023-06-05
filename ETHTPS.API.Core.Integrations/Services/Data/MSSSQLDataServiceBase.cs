@@ -43,7 +43,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
         protected DataPoint SafeGetMax(DataType dataType, ProviderSummaryBase providerSummary, ProviderQueryModel model)
         {
             var entry = Context.TpsandGasDataMaxes.FirstOrDefault(x => x
-            .Provider != providerSummary.Id);
+            .Provider == providerSummary.Id);
             if (entry == null)
             {
                 return new DataPoint()
