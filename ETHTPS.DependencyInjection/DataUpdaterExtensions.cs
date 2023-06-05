@@ -7,6 +7,7 @@ using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets.Extensions;
 using ETHTPS.API.Core.Integrations.MSSQL.Services.Updater;
 using ETHTPS.Configuration;
+using ETHTPS.Configuration.Validation.Exceptions;
 using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Services;
@@ -94,7 +95,7 @@ namespace ETHTPS.API.DependencyInjection
                     using (var scope = app.ApplicationServices.CreateScope())
                     {
                         var provider = scope.ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
-                        string[] queues = provider.GetConfigurationStrings("HangfireQueue").Select(x => x.Value).ToArray();
+                        string[] queues = (provider.GetConfigurationStrings("HangfireQueue") ?? throw new ConfigurationStringNotFoundException("HangfireQueue", "UseRunner(this IApplicationBuilder app, BackgroundServiceType type)")).Select(x => x.Value).ToArray();
                         if (queues.Count() == 0)
                         {
                             queues = new string[] { "default" };

@@ -47,7 +47,7 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
         [AutomaticRetry(Attempts = 1, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
         public override async Task RunAsync()
         {
-            if (!_statusService.Enabled ?? true)
+            if (!_statusService.Enabled ?? false)
             {
                 _logger.LogInformation($"Not running MSSQLLogger<{_provider}> because it is disabled");
                 return; //TODO: remove self from hangfire

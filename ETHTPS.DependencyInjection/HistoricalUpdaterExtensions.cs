@@ -40,6 +40,7 @@ namespace ETHTPS.API.DependencyInjection
                 services.RegisterHistoricalHangfireDateBackgroundService<HangfireDateHistoricalBlockInfoProviderDataLogger<SorareBlockInfoProvider>, SorareBlockInfoProvider>(CronConstants.NEVER, HISTORICALUPDATERQUEUE);
                 services.RegisterHistoricalHangfireDateBackgroundService<HangfireDateHistoricalBlockInfoProviderDataLogger<DeversiFIHTTPBlockInfoProvider>, DeversiFIHTTPBlockInfoProvider>(CronConstants.NEVER, HISTORICALUPDATERQUEUE);
                 services.RegisterHistoricalHangfireBackgroundService<HangfireHistoricalBlockInfoProviderDataLogger<PolygonHermezBlockInfoProvider>, PolygonHermezBlockInfoProvider>(CronConstants.NEVER, HISTORICALUPDATERQUEUE);
+                services.RegisterHistoricalHangfireBackgroundService<HangfireHistoricalBlockInfoProviderDataLogger<ZKSsyncEraBlockInfoProvider>, ZKSsyncEraBlockInfoProvider>(CronConstants.NEVER, HISTORICALUPDATERQUEUE);
                 //services.RegisterHistoricalHangfireBackgroundService<HangfireHistoricalBlockInfoProviderDataLogger<HabitatBlockInfoProvider>, HabitatBlockInfoProvider>(CronConstants.Never, HISTORICALUPDATERQUEUE);
                 //services.RegisterHistoricalHangfireBackgroundService<HangfireHistoricalBlockInfoProviderDataLogger<BSCScanBlockInfoProvider>, BSCScanBlockInfoProvider>(CronConstants.Never, HISTORICALUPDATERQUEUE);
             }
