@@ -11,6 +11,7 @@ using ETHTPS.Configuration.Validation.Exceptions;
 using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Services;
+using ETHTPS.Services.BlockchainServices;
 using ETHTPS.Services.BlockchainServices.BlockTime;
 using ETHTPS.Services.BlockchainServices.CoravelLoggers;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
@@ -66,7 +67,7 @@ namespace ETHTPS.API.DependencyInjection
             typeof(GnosisJSONRPCBlockInfoProvider)
         };
         public static IServiceCollection AddDataServices(this IServiceCollection services) => services.AddScoped(_enabledUpdaters);
-        public static IServiceCollection AddRunner(this IServiceCollection services, BackgroundServiceType type, string appName)
+        public static IServiceCollection AddRunner(this IServiceCollection services, BackgroundServiceType type, string appName, DatabaseProvider databaseProvider)
         {
             services.AddScoped<EthereumBlockTimeProvider>();
             switch (type)
@@ -77,8 +78,8 @@ namespace ETHTPS.API.DependencyInjection
                     break;
                 case BackgroundServiceType.Hangfire:
                     services.AddHangfireServer(appName);
-                    _enabledUpdaters.ToList().ForEach(updater => services.RegisterHangfireBackgroundService(updater));
-                    services.InjectTimeBucketService(); //services.RegisterHangfireBackgroundServiceAndTimeBucket<MSSQLLogger<EthereumBlockInfoProvider>, EthereumBlockInfoProvider>(CronConstants.EVERY_5_S, "tpsdata");
+                    _enabledUpdaters.ToList().ForEach(updater => services.RegisterHangfireBackgroundService(updater, databaseProvider));
+                    services.InjectTimeBucketService(databaseProvider); //services.RegisterHangfireBackgroundServiceAndTimeBucket<MSSQLLogger<EthereumBlockInfoProvider>, EthereumBlockInfoProvider>(CronConstants.EVERY_5_S, "tpsdata");
 
 
                     break;
@@ -120,7 +121,7 @@ namespace ETHTPS.API.DependencyInjection
             return services;
         }
 
-        public static void RegisterHangfireBackgroundService(this IServiceCollection services, Type sourceType)
+        public static void RegisterHangfireBackgroundService(this IServiceCollection services, Type sourceType, DatabaseProvider databaseProvider)
         {
             if (!typeof(IHTTPBlockInfoProvider).IsAssignableFrom(sourceType))
             {
@@ -129,13 +130,13 @@ namespace ETHTPS.API.DependencyInjection
             var runsEveryAttribute = sourceType.GetCustomAttribute<RunsEveryAttribute>();
             var cronExpression = runsEveryAttribute?.CronExpression ?? CronConstants.EVERY_MINUTE;
             var genericMethod = typeof(DataUpdaterExtensions).GetMethod(nameof(RegisterHangfireBackgroundServiceAndTimeBucket));
-            var loggerType = typeof(MSSQLLogger<>).MakeGenericType(sourceType);
+            var loggerType = (databaseProvider == DatabaseProvider.MSSQL ? typeof(MSSQLLogger<>) : typeof(InfluxLogger<>)).MakeGenericType(sourceType);
             var constructedMethod = genericMethod?.MakeGenericMethod(loggerType, sourceType);
             constructedMethod?.Invoke(null, new object[] { services, cronExpression, "tpsdata" });
         }
 
         public static void RegisterHangfireBackgroundServiceAndTimeBucket<T, V>(this IServiceCollection services, string cronExpression, string queue)
-            where T : MSSQLLogger<V>
+            where T : BlockInfoProviderDataLoggerBase<V>
             where V : class, IHTTPBlockInfoProvider
         {
             services.AddScoped<V>();

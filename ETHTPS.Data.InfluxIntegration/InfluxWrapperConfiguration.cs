@@ -15,7 +15,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
 
         public static InfluxWrapperConfiguration FromConfigurationProvider(IDBConfigurationProvider configurationProvider)
         {
-            Func<string, string?> getConfigurationString = (key) => configurationProvider.GetFirstConfigurationStringForCurrentEnvironment(key, "ETHTPS.Services");
+            Func<string, string?> getConfigurationString = (key) => configurationProvider.GetFirstConfigurationString(key); ;
             return new InfluxWrapperConfiguration()
             {
                 Bucket = getConfigurationString("InfluxDB_prod_bucket"),

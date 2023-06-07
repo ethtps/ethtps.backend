@@ -88,7 +88,7 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
             }
             catch (Exception e)
             {
-                _logger.LogError("MSSQLLogger", e.ToString());
+                _logger.LogError(new EventId(), e, $"Exception running MSSQLLogger<{typeof(T)}>");
                 _statusService.SetStatusFor(UpdaterType.BlockInfo, UpdaterStatus.Failed);
             }
         }

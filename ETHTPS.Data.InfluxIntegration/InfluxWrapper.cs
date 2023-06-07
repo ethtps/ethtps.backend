@@ -41,7 +41,9 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             {
                 Org = _configuration.Org,
                 Token = _configuration.Token,
-                Bucket = _configuration.Bucket,
+                Username = _configuration.Username,
+                Password = _configuration.Password,
+                //Bucket = _configuration.Bucket,
             });
             _writeApi = _influxClient.GetWriteApiAsync();
             _bucketsApi = _influxClient.GetBucketsApi();

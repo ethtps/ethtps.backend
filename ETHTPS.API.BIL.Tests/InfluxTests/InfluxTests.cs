@@ -37,6 +37,9 @@ namespace ETHTPS.Tests.InfluxTests
 
             Assert.DoesNotThrowAsync(async () =>
             {
+                if (!await _influxWrapper.BucketExistsAsync(_DEFAULT_BUCKET_NAME))
+                    await _influxWrapper.CreateBucketAsync(_DEFAULT_BUCKET_NAME);
+
                 await foreach (var entry in _influxWrapper.GetEntriesBetween<Block
                     >(_DEFAULT_BUCKET_NAME, _DEFAULT_MEASUREMENT_NAME, DateTime.Now.Subtract(TimeSpan.FromMinutes(1)), DateTime.Now)) { }
             });

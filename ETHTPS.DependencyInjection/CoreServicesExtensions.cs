@@ -12,6 +12,7 @@ using ETHTPS.API.Core.Integrations.MSSQL.Services.Data;
 using ETHTPS.API.Security.Core.Humanity.Recaptcha;
 using ETHTPS.Configuration;
 using ETHTPS.Configuration.Database;
+using ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProviders;
 using ETHTPS.Services.BlockchainServices.BlockTime;
 
 using Microsoft.EntityFrameworkCore;
@@ -53,7 +54,10 @@ namespace ETHTPS.API.DependencyInjection
                             .AddScoped<IGTPSService, MSSQLGasAdjustedTPSService>();
                     break;
                 default:
-                    throw new NotImplementedException($"{databaseProvider}");
+                    services.AddScoped<ITPSService, InfluxTPSService>()
+                            .AddScoped<IGPSService, InfluxGPSService>()
+                            .AddScoped<IGTPSService, InfluxGTPSService>();
+                    break;
             }
             return services
                 .AddScoped<IPSDataFormatter, DeedleTimeSeriesFormatter>()
