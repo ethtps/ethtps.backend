@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Folder Include="Recurring\Database\" />
+    <Folder Include="Static\WSAPI\" />
   </ItemGroup>
 
 </Project>

@@ -115,6 +115,12 @@ namespace ETHTPS.API.Core.Services
         public void UpdateData<T>(string key, Action<T> updateAction)
             where T : ICachedKey => Task.Run(async () => await UpdateDataAsync(key, updateAction));
 
+        /// <summary>
+        /// Updates a value asynchronously. If the key does not exist, nothing happens.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key">The key.</param>
+        /// <param name="updateAction">The update action.</param>
         public async Task UpdateDataAsync<T>(string key, Action<T> updateAction)
             where T : ICachedKey
         {

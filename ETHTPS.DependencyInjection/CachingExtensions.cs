@@ -11,6 +11,11 @@ namespace ETHTPS.API.DependencyInjection
 {
     public static class CachingExtensions
     {
+        /// <summary>
+        /// Sets up Redis caching for this application. Configuration is automatic and based on an <see cref="IDBConfigurationProvider"/>.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <returns></returns>
         public static IServiceCollection AddRedisCache(this IServiceCollection services) =>
             services.AddSingleton<IConnectionMultiplexer>(
                 x =>

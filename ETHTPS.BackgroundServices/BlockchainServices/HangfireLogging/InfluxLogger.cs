@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Models.DataEntries;
@@ -30,12 +31,14 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
         private readonly IInfluxWrapper _influxWrapper;
         private TimeSpan _timeout = TimeSpan.FromSeconds(30);
         private readonly WSAPIPublisher _wsapiClient;
+        private readonly IRedisCacheService _redisCacheService;
         protected override string ServiceName { get => $"InfluxLogger<{typeof(T).Name}>"; }
-        public InfluxLogger(T instance, ILogger<HangfireBackgroundService> logger, EthtpsContext context, IInfluxWrapper influxWrapper, IDataUpdaterStatusService statusService, WSAPIPublisher wsapiClient) : base(instance, logger, context, statusService, UpdaterType.BlockInfo)
+        public InfluxLogger(T instance, ILogger<HangfireBackgroundService> logger, EthtpsContext context, IInfluxWrapper influxWrapper, IDataUpdaterStatusService statusService, WSAPIPublisher wsapiClient, IRedisCacheService redisCacheService) : base(instance, logger, context, statusService, UpdaterType.BlockInfo)
         {
             _influxWrapper = influxWrapper;
             _bucketCreator ??= new MeasurementBucketCreator(influxWrapper);
             _wsapiClient = wsapiClient;
+            _redisCacheService = redisCacheService;
         }
 
         [AutomaticRetry(Attempts = 3, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
@@ -89,6 +92,37 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
                                 Hash = x
                             })
                         });
+                        await _redisCacheService.SetDataAsync(new L2DataUpdateModel()
+                        {
+                            BlockNumber = delta.BlockNumber,
+                            Data = new MinimalDataPoint()
+                            {
+                                GPS = delta.GPS,
+                                TPS = delta.TPS
+                            },
+                            Provider = _provider,
+                            Transactions = delta.TransactionHashes?.Select(x => new TransactionMetadata()
+                            {
+                                Hash = x
+                            }),
+                            CacheKey = $"Instant_{_provider}"
+                        });
+                        var maxKey = $"Max_{_provider}";
+                        if (await _redisCacheService.HasKeyAsync(maxKey))
+                        {
+                            var max = await _redisCacheService.GetDataAsync<MinimalDataPoint>(maxKey);
+                            max.TPS = Math.Max(max.TPS ?? 0, delta.TPS);
+                            max.GPS = Math.Max(max.GPS ?? 0, delta.GPS);
+                            await _redisCacheService.SetDataAsync(maxKey, max);
+                        }
+                        else
+                        {
+                            await _redisCacheService.SetDataAsync(maxKey, new MinimalDataPoint()
+                            {
+                                TPS = delta.TPS,
+                                GPS = delta.GPS
+                            });
+                        }
                         _logger.LogInformation($"{_provider}: {delta.TPS}TPS {delta.GPS}GPS");
 
                         _statusService.SetStatusFor(UpdaterType.BlockInfo, UpdaterStatus.RanSuccessfully);

@@ -15,8 +15,9 @@ using RabbitMQ.Client.Events;
 namespace ETHTPS.TaskRunner.BackgroundServices
 {
     /// <summary>
-    /// Handles new datapoints received from RabbitMQ, aggregates them by keeping only the latest entry and publishes them to the clients through WSAPI
+    /// Handles new datapoints received from RabbitMQ, aggregates them by keeping only the latest entry and publishes them to connected clients through WSAPI by publishing the aggregated data to another queue (it can be done directly but this approach might be useful should we ever need to scale up the WSAPI service).
     /// </summary>
+    /// <seealso cref="Microsoft.Extensions.Hosting.IHostedService" />
     public sealed class NewDatapointHandler : IHostedService
     {
         private readonly RabbitMQSubscriptionService _subscriptionService;

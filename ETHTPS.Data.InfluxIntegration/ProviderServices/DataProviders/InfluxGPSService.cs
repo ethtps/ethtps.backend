@@ -1,35 +1,17 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
 namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProviders
 {
-    public sealed class InfluxGPSService : IGPSService
+    public sealed class InfluxGPSService : InfluxPSServiceBase, IGPSService
     {
-        public Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetAsync(ProviderQueryModel model, TimeInterval interval)
+        public InfluxGPSService(IInfluxWrapper influxWrapper, IRedisCacheService redisCacheService) : base(influxWrapper, x => x.GasUsed, redisCacheService)
         {
-            throw new NotImplementedException();
         }
 
-        public Task<List<DataResponseModel>> GetGPSAsync(ProviderQueryModel requestModel, TimeInterval interval)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetMonthlyDataByYearAsync(ProviderQueryModel model, int year)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IDictionary<string, IEnumerable<DataPoint>>> InstantAsync(ProviderQueryModel model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IDictionary<string, DataPoint>> MaxAsync(ProviderQueryModel model)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<List<DataResponseModel>> GetGPSAsync(ProviderQueryModel requestModel, TimeInterval interval) => (await GetAsync(requestModel, interval)).SelectMany(x => x.Value).ToList();
     }
 }

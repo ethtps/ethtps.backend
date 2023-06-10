@@ -3,7 +3,6 @@ using ETHTPS.API.DependencyInjection;
 using ETHTPS.API.Security.Core.Policies;
 using ETHTPS.Configuration;
 using ETHTPS.Data.Integrations.InfluxIntegration;
-using ETHTPS.Services.BackgroundTasks.Static.WSAPI;
 using ETHTPS.Services.Infrastructure.Messaging;
 using ETHTPS.Services.LiveData;
 using ETHTPS.TaskRunner.BackgroundServices;
@@ -35,6 +34,7 @@ services.AddEssentialServices()
 var runnerType = BackgroundServiceType.Hangfire;
 
 services.AddSwagger()
+        .AddRedisCache()
         .AddScoped<IInfluxWrapper, InfluxWrapper>()
         .AddDataUpdaterStatusService()
         .AddDataServices()
@@ -42,8 +42,7 @@ services.AddSwagger()
         .WithStore(DatabaseProvider.InfluxDB, CURRENT_APP_NAME)
         .AddDataProviderServices(DatabaseProvider.InfluxDB)
         .AddRabbitMQMessagePublisher()
-        .AddScoped<WSAPIPublisher>()
-        .AddScoped<NewDatapointPublisherTask>();
+        .AddScoped<WSAPIPublisher>();
 services.AddHostedService<NewDatapointHandler>(x =>
 {
     using (var scope = x.CreateScope())
