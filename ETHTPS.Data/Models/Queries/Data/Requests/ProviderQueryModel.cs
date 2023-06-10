@@ -1,4 +1,6 @@
-﻿namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
+﻿using ETHTPS.Data.Core.Extensions.StringExtensions;
+
+namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
 {
     /// <summary>
     /// Represents a filtering model based on a provider, network and whether to include sidechains. Also has an APIKey property.
@@ -14,7 +16,7 @@
 
         public static ProviderQueryModel FromProviderName(string provider) => new()
         {
-            Provider = provider
+            Provider = provider.RemoveAllNonAlphaNumericCharacters() // Avoid sql injection
         };
 
         public static ProviderQueryModel All => new()

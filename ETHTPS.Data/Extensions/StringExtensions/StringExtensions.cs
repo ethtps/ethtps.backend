@@ -29,6 +29,7 @@ namespace ETHTPS.Data.Core.Extensions.StringExtensions
         }
 
         public static string RemoveAllNonNumericCharacters(this string source) => new(source.Where(c => char.IsNumber(c) || c == '.').ToArray());
+        public static string RemoveAllNonAlphaNumericCharacters(this string source) => new(source.Where(c => char.IsNumber(c) || char.IsLetter(c)).ToArray());
 
         public static string UntilParanthesis(this string source)
         {

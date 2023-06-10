@@ -74,10 +74,10 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             _logger.LogInformation($"Created InfluxDB bucket [{_configuration.OrgID}].[{name}]");
         }
 
-        public async Task<IEnumerable<string>> GetBucketsAsync() => (await _bucketsApi.FindBucketsAsync(org: _configuration.Org))?.Select(x => x.Name);
+        public async Task<IEnumerable<string>> GetBucketsAsync() => (await _bucketsApi.FindBucketsAsync(org: _configuration.Org))?.Select(x => x.Name) ?? Enumerable.Empty<string>();
 
         public async Task LogAsync<T>(T entry, string bucket = "")
-            where T : IMeasurement
+            where T : class, IMeasurement
         {
             try
             {
@@ -122,6 +122,9 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             }
         }
 
+        /// <summary>
+        /// Can't set the ID of the organization because it is private for some reason so we have to hack it; *puts sunglasses on*
+        /// </summary>
         class OrganizationHack : Organization
         {
             public OrganizationHack() : base() { }
@@ -137,11 +140,11 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
         {
             await WaitForClientAsync();
             _logger.LogInformation($"Deleting all data in bucket {bucket}...");
-            await _influxClient.GetDeleteApi().Delete(DateTime.Now.Subtract(TimeSpan.FromDays(30)), DateTime.Now, $"_measurement=\"{bucket.ClearBucketNameSuffix().ToLower()}\"", await _bucketsApi.FindBucketByNameAsync(bucket), OrganizationHack.HackOrganization(_configuration.OrgID));
+            await _influxClient.GetDeleteApi().Delete(DateTime.Now.Subtract(TimeSpan.FromDays(30)), DateTime.Now, $"_measurement=\"{bucket.ClearBucketNameSuffix().ToLower()}\"", await _bucketsApi.FindBucketByNameAsync(bucket), OrganizationHack.HackOrganization(_configuration.OrgID ?? string.Empty));
             _logger.LogInformation("Done");
         }
 
-        public async Task LogAsync<T>(T[] entries, string bucket) where T : IMeasurement
+        public async Task LogAsync<T>(T[] entries, string bucket) where T : class, IMeasurement
         {
             await WaitForClientAsync();
             try
@@ -166,7 +169,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             }
         }
 
-        public async IAsyncEnumerable<T> GetEntriesBetween<T>(string bucket, string measurement, DateTime start, DateTime end) where T : IMeasurement
+        public async IAsyncEnumerable<T> GetEntriesBetween<T>(string bucket, string measurement, DateTime start, DateTime end) where T : class, IMeasurement
         {
             var query = QueryBuilder.From(bucket)
                             .Filter(x => x.Measurement(measurement))
@@ -179,10 +182,10 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             }
         }
 
-        public IAsyncEnumerable<T> GetEntriesForPeriod<T>(string bucket, string measurement, TimeInterval period) where T : IMeasurement => GetEntriesBetween<T>(bucket, measurement, DateTime.Now - period.ExtractTimeGrouping().ToTimeSpan(), DateTime.Now);
+        public IAsyncEnumerable<T> GetEntriesForPeriod<T>(string bucket, string measurement, TimeInterval period) where T : class, IMeasurement => GetEntriesBetween<T>(bucket, measurement, DateTime.Now - period.ExtractTimeGrouping().ToTimeSpan(), DateTime.Now);
 
         public async IAsyncEnumerable<T> QueryAsyncEnumerable<T>(string query)
-             where T : IMeasurement
+             where T : class, IMeasurement
         {
             await WaitForClientAsync();
             await foreach (var entry in _queryApi.QueryAsyncEnumerable<T>(query))
@@ -192,7 +195,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
         }
 
         public async Task<IEnumerable<T>> QueryAsync<T>(string query, IDomainObjectMapper? mapper)
-            where T : IMeasurement
+            where T : class, IMeasurement
         {
             await WaitForClientAsync();
             var table = await _influxClient.GetQueryApi().QueryAsync(query, typeof(T), org: _configuration.Org);

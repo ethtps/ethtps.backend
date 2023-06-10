@@ -27,6 +27,12 @@ namespace ETHTPS.Data.Core
             }
         }
 
+        public static class Influx
+        {
+            public static string DEFAULT_BLOCK_BUCKET_NAME = "blockinfo";
+
+        }
+
         public static class Headers
         {
             public static string XAPIKey => "X-API-Key";

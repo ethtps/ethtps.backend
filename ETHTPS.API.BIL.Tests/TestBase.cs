@@ -25,6 +25,7 @@ namespace ETHTPS.Tests
         protected IDBConfigurationProvider ConfigurationProvider => ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
 
         const string APP_NAME = "ETHTPS.Tests";
+        const DatabaseProvider _DATABASE_PROVIDER = DatabaseProvider.InfluxDB;
         protected TestBase()
         {
             var builder = WebApplication.CreateBuilder(new WebApplicationOptions() { });
@@ -34,8 +35,8 @@ namespace ETHTPS.Tests
                     .AddEssentialServices()
                     .AddDatabaseContext(APP_NAME)
                     .AddMixedCoreServices()
-                    .AddDataProviderServices(DatabaseProvider.MSSQL)
-                    .WithStore(DatabaseProvider.MSSQL, APP_NAME)
+                    .AddDataProviderServices(_DATABASE_PROVIDER)
+                    .WithStore(_DATABASE_PROVIDER, APP_NAME)
                     .AddDataUpdaterStatusService()
                     .AddScoped<IInfluxWrapper, InfluxWrapper>()
                     .AddScoped<IAsyncHistoricalBlockInfoProvider, HistoricalInfluxProvider>()

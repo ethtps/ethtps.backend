@@ -8,11 +8,11 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
     public interface IInfluxWriter
     {
         Task LogAsync<T>(T[] entries, string bucket)
-            where T : IMeasurement;
+            where T : class, IMeasurement;
         Task LogAsync<T>(T entry, string bucket)
-            where T : IMeasurement;
+            where T : class, IMeasurement;
         Task LogAsync<T>(T entry)
-            where T : IMeasurement => LogAsync(entry, null);
+            where T : class, IMeasurement => LogAsync(entry, "init");
         Task CreateBucketAsync(string bucket);
     }
 }
