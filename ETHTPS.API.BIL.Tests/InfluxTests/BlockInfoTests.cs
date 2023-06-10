@@ -3,7 +3,6 @@ using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Data.Integrations.InfluxIntegration;
-using ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProviders;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -124,10 +123,17 @@ namespace ETHTPS.Tests.InfluxTests
         }
 
         [Test]
-        public void AllMethodsImplemented()
+        public void MonthlyByYearDoesNotThrow()
         {
-            Assert.That(Extensions.
-                ReflectionExtensions.HasNotImplementedExceptionMethod<InfluxPSServiceBase>(), Is.True, "InfluxPSServiceBase doesn't implement all methods; this is required for the app to run as expected");
+            if (_tpsService == null)
+            {
+                Assert.Fail();
+                return;
+            }
+            Assert.DoesNotThrowAsync(async () =>
+            {
+                await _tpsService.GetMonthlyDataByYearAsync(ProviderQueryModel.FromProviderName("Ethereum"), DateTime.Now.Year);
+            });
         }
     }
 }

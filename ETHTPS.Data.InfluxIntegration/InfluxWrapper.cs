@@ -5,6 +5,7 @@ using ETHTPS.Configuration;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.Extensions;
+using ETHTPS.Data.Core.Extensions.DateTimeExtensions;
 using ETHTPS.Data.Integrations.InfluxIntegration.Extensions;
 
 using Flux.Net;
@@ -200,6 +201,17 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             await WaitForClientAsync();
             var table = await _influxClient.GetQueryApi().QueryAsync(query, typeof(T), org: _configuration.Org);
             return await _queryApi.QueryAsync<T>(query);
+        }
+
+        public async IAsyncEnumerable<TMeasurement> GetEntriesBetween<TMeasurement>(string bucket, string measurement, DateTime start, DateTime end, string groupPeriod)
+            where TMeasurement : class, IMeasurement
+        {
+            var query = $"from(bucket: \"{bucket}\")\r\n  |> range(start: {start.ToUnixTime()}, stop: {end.ToUnixTime()})\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"{measurement}\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"gasused\" or r[\"_field\"] == \"blocknumber\" or r[\"_field\"] == \"transactioncount\")\r\n  |> aggregateWindow(every: 30d, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")";
+            await WaitForClientAsync();
+            await foreach (var entry in _queryApi.QueryAsyncEnumerable<TMeasurement>(query))
+            {
+                yield return entry;
+            }
         }
     }
 }
