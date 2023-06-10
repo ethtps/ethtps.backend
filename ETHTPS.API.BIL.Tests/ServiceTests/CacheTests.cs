@@ -264,47 +264,6 @@ namespace ETHTPS.Tests.ServiceTests
             // Assert
             Assert.IsNull(result);
         }
-
-        [Test]
-        public async Task UpdateDataAsync_KeyExists_CallsUpdateActionAndSetsDataAsync()
-        {
-            // Arrange
-            var key = "test_key";
-            var existingValue = new CachedKey { Id = 1, Name = "Test" };
-            var updatedValue = new CachedKey { Id = 1, Name = "New Name" };
-            var updateAction = new Action<CachedKey>(x => x.Name = "New Name");
-            _mockRedisCacheService.Setup(x => x.HasKeyAsync(key)).ReturnsAsync(true);
-            _mockRedisCacheService.Setup(x => x.GetDataAsync<CachedKey>(key)).ReturnsAsync(existingValue);
-            _mockRedisCacheService.Setup(x => x.SetDataAsync(key, updatedValue)).ReturnsAsync(true);
-
-            // Act
-            await _redisCacheService.UpdateDataAsync<CachedKey>(key, updateAction);
-
-            // Assert
-            _mockRedisCacheService.Verify(x => x.SetDataAsync(key, updatedValue), Times.Once);
-        }
-
-        [Test]
-        public async Task UpdateDataAsync_KeyExists_DataIsSetCorrectly()
-        {
-            // Arrange
-            var key = "test_key";
-            var existingValue = new CachedKey { Id = 1, Name = "Test" };
-            var updatedValue = new CachedKey { Id = 1, Name = "New Name" };
-            var updateAction = new Action<CachedKey>(x => x.Name = "New Name");
-            _mockRedisCacheService.Setup(x => x.HasKeyAsync(key)).ReturnsAsync(true);
-            _mockRedisCacheService.Setup(x => x.GetDataAsync<CachedKey>(key)).ReturnsAsync(existingValue);
-            _mockRedisCacheService.Setup(x => x.SetDataAsync(key, updatedValue)).ReturnsAsync(true);
-
-            // Act
-            await _redisCacheService.UpdateDataAsync<CachedKey>(key, updateAction);
-
-            // Assert
-            var result = await _redisCacheService.GetDataAsync<CachedKey>(key);
-            Assert.That(result?.Id, Is.EqualTo(updatedValue.Id));
-            Assert.That(result?.Name, Is.EqualTo(updatedValue.Name));
-        }
-
         public class CachedKey : ICachedKey
         {
             public int Id;

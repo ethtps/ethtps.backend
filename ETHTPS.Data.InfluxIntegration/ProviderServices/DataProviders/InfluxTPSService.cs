@@ -8,7 +8,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
 {
     public sealed class InfluxTPSService : InfluxPSServiceBase, ITPSService
     {
-        public InfluxTPSService(IInfluxWrapper influxWrapper, IRedisCacheService redisCacheService) : base(influxWrapper, x => x.TransactionCount, redisCacheService)
+        public InfluxTPSService(IInfluxWrapper influxWrapper, IRedisCacheService redisCacheService) : base(influxWrapper, x => x.TransactionCount, x => x.TPS, redisCacheService)
         {
         }
 

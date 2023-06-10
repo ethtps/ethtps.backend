@@ -45,6 +45,6 @@ namespace ETHTPS.Data.Core
 
         public static string All => "All";
         public static string Mainnet => "Mainnet";
-        public static double DefaultTransactionGas => 21000;
+        public static double GasPerTransfer => 21000;
     }
 }

@@ -8,7 +8,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
 {
     public sealed class InfluxGPSService : InfluxPSServiceBase, IGPSService
     {
-        public InfluxGPSService(IInfluxWrapper influxWrapper, IRedisCacheService redisCacheService) : base(influxWrapper, x => x.GasUsed, redisCacheService)
+        public InfluxGPSService(IInfluxWrapper influxWrapper, IRedisCacheService redisCacheService) : base(influxWrapper, x => x.GasUsed, x => x.GPS, redisCacheService)
         {
         }
 

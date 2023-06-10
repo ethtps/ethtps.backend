@@ -2,6 +2,7 @@
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Data.Core.Models.DataPoints;
+using ETHTPS.Data.Core.Models.LiveData;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
 namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProviders
@@ -14,12 +15,18 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
     {
         private readonly IInfluxWrapper _influxWrapper;
         private readonly Func<Block, double> _valueSelector;
+        private readonly Func<MinimalDataPoint, double?> _datapointValueSelector;
         private readonly IRedisCacheService _redisCacheService;
-        protected InfluxPSServiceBase(IInfluxWrapper influxWrapper, Func<Block, double> valueSelector, IRedisCacheService redisCacheService)
+        protected InfluxPSServiceBase(
+            IInfluxWrapper influxWrapper,
+            Func<Block, double> valueSelector,
+            Func<MinimalDataPoint, double?> datapointValueSelector,
+            IRedisCacheService redisCacheService)
         {
             _influxWrapper = influxWrapper;
             _valueSelector = valueSelector;
             _redisCacheService = redisCacheService;
+            _datapointValueSelector = datapointValueSelector;
         }
 
         public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetAsync(ProviderQueryModel model, TimeInterval interval)
@@ -74,14 +81,46 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
         }
 
 
-        public Task<IDictionary<string, IEnumerable<DataPoint>>> InstantAsync(ProviderQueryModel model)
+        public async Task<IDictionary<string, IEnumerable<DataPoint>>> InstantAsync(ProviderQueryModel model)
         {
-            throw new NotImplementedException();
+            if (model.Provider != Constants.All)
+            {
+                var data = await _redisCacheService.GetDataAsync<MinimalDataPoint>($"Instant_{model.Provider}");
+                if (data == null)
+                    return new Dictionary<string, IEnumerable<DataPoint>>();
+
+                return new Dictionary<string, IEnumerable<DataPoint>>()
+                {
+                    {
+                        model.Provider, new DataPoint[]{ new DataPoint()
+                    {
+                        Value = _datapointValueSelector(data)??0
+                    } }
+                    }
+                };
+            }
+            throw new NotSupportedException("Operation not allowed: Get max for ALL providers");
         }
 
-        public Task<IDictionary<string, DataPoint>> MaxAsync(ProviderQueryModel model)
+        public async Task<IDictionary<string, DataPoint>> MaxAsync(ProviderQueryModel model)
         {
-            throw new NotImplementedException();
+            if (model.Provider != Constants.All)
+            {
+                var data = await _redisCacheService.GetDataAsync<MinimalDataPoint>($"Max_{model.Provider}");
+                if (data == null)
+                    return new Dictionary<string, DataPoint>();
+
+                return new Dictionary<string, DataPoint>()
+                {
+                    {
+                        model.Provider, new DataPoint()
+                    {
+                        Value = _datapointValueSelector(data)??0
+                    }
+                    }
+                };
+            }
+            throw new NotSupportedException("Operation not allowed: Get max for ALL providers");
         }
     }
 }
