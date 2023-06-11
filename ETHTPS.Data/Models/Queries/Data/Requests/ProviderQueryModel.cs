@@ -8,7 +8,7 @@ namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
     public class ProviderQueryModel : ICachedKey
     {
         /// <summary>
-        /// All hell breaks loose if we don't initially set this to "All" :/
+        /// All hell breaks loose if we don't initially set this to "All" :\
         /// </summary>
         public string Provider { get; set; } = Constants.All;
         public string Network { get; set; } = Constants.Mainnet;

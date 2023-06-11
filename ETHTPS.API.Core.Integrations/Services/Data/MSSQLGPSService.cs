@@ -15,6 +15,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
         }
 
         public async Task<List<DataResponseModel>> GetGPSAsync(ProviderQueryModel requestModel, TimeInterval interval) => (await GetAsync(requestModel, interval)).SelectMany((x) => x.Value).ToList();
+
     }
 }
 

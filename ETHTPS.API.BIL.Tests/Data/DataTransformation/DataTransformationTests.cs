@@ -1,4 +1,5 @@
 ﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
+using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Models.DataPoints.XYPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
@@ -37,22 +38,24 @@ namespace ETHTPS.Tests.Data.DataTransformation
         }
 
         [Test]
-        public void InitializationTest()
+        public void DoesNotThrowTest()
         {
-            /*
-            Assert.DoesNotThrow(async () =>
+
+            Assert.DoesNotThrowAsync(async () =>
             {
-                await _dataService?.GetTPSAsync(_defaultModel, Data.Core.TimeInterval.OneWeek); 
-                _dataService?.GetData(_defaultModel, Data.Core.DataType.TPS, Data.Core.TimeInterval.OneWeek);
+                if (_dataService != null)
+                    await _dataService.GetDataAsync(_defaultModel, DataType.TPS, TimeInterval.OneWeek);
             });
-            Assert.DoesNotThrow(() =>
+            Assert.DoesNotThrowAsync(async () =>
             {
-                _dataService?.GetGPS(_defaultModel, Data.Core.TimeInterval.OneWeek); _dataService?.GetData(_defaultModel, Data.Core.DataType.GPS, Data.Core.TimeInterval.OneWeek);
+                if (_dataService != null)
+                    await _dataService.GetDataAsync(_defaultModel, DataType.GPS, TimeInterval.OneWeek);
             });
-            Assert.DoesNotThrow(() =>
+            Assert.DoesNotThrowAsync(async () =>
             {
-                _dataService?.GetGTPS(_defaultModel, Data.Core.TimeInterval.OneWeek); _dataService?.GetData(_defaultModel, Data.Core.DataType.GasAdjustedTPS, Data.Core.TimeInterval.OneWeek);
-            });*/
+                if (_dataService != null)
+                    await _dataService.GetDataAsync(_defaultModel, DataType.GasAdjustedTPS, TimeInterval.OneWeek);
+            });
         }
     }
 }

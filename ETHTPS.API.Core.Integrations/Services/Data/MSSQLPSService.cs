@@ -99,6 +99,9 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
             }
             return Task.FromResult((IDictionary<string, IEnumerable<DataPoint>>)result.ToDictionary(x => x.Provider, x => x.Data.AsEnumerable()));
         }
-
+        public Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetAsync(L2DataRequestModel model)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

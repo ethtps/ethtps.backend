@@ -61,7 +61,7 @@ namespace ETHTPS.API.DependencyInjection
             }
             return services
                 .AddScoped<IPSDataFormatter, DeedleTimeSeriesFormatter>()
-                .AddScoped<IAggregatedDataService, DependencyInjectionAggregatedDataservice>()
+                .AddScoped<IAggregatedDataService, AggregatedDataservice>()
                 .AddScoped<GeneralService>()
                 .AddDataUpdaterStatusService()
                 .AddAutoDiscoveredIHTTPBlockInfoProvidersToDatabase();

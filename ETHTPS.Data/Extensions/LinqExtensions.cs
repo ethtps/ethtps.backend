@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 
+using ETHTPS.Data.Core.Models.DataPoints;
+
 namespace ETHTPS.Data.Core.Extensions
 {
     public static class LinqExtensions
@@ -92,5 +94,22 @@ namespace ETHTPS.Data.Core.Extensions
             catch { }
             return false;
         }
+        public static List<DataResponseModel> ToList(this IDictionary<string, IEnumerable<DataResponseModel>> source) => source.Select(x => new DataResponseModel()
+        {
+            Provider = x.Key,
+            Data = x.Value.Select(y => y.Data.First()).ToList()
+        }).ToList();
+
+        public static IDictionary<string, IEnumerable<DataResponseModel>> ToDictionary(this IDictionary<string, DataPoint> source) => (IDictionary<string, IEnumerable<DataResponseModel>>)source.ToDictionary(x => x.Key, x => new[]
+        {
+            new DataResponseModel()
+            {
+                Provider = x.Key,
+                Data = new List<DataPoint>()
+                {
+                    x.Value
+                }
+            }
+        });
     }
 }

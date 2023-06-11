@@ -14,8 +14,11 @@ namespace ETHTPS.Data.Core.Models.ResponseModels.L2s
         public L2DataResponseModel() { }
         public L2DataResponseModel(IAnalysisParameters analysisParameters)
         {
-            IncludeSimpleAnalysis = analysisParameters.IncludeSimpleAnalysis;
-            IncludeComplexAnalysis = analysisParameters.IncludeComplexAnalysis;
+            if (analysisParameters != null)
+            {
+                IncludeSimpleAnalysis = analysisParameters.IncludeSimpleAnalysis;
+                IncludeComplexAnalysis = analysisParameters.IncludeComplexAnalysis;
+            }
         }
         /// <summary>
         /// This field is set when data is requested for a single provider
@@ -34,6 +37,7 @@ namespace ETHTPS.Data.Core.Models.ResponseModels.L2s
             }
             set
             {
+                if (value == null) return;
                 //Use the Data property if there's only one dataset
                 if (value.Count() == 1)
                 {
@@ -56,8 +60,8 @@ namespace ETHTPS.Data.Core.Models.ResponseModels.L2s
         }
         public DataType? DataType { get; set; } = null;
         [JsonIgnore]
-        public bool IncludeSimpleAnalysis { get; set; }
+        public bool IncludeSimpleAnalysis { get; set; } = false;
         [JsonIgnore]
-        public bool IncludeComplexAnalysis { get; set; }
+        public bool IncludeComplexAnalysis { get; set; } = false;
     }
 }

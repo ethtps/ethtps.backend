@@ -5,7 +5,6 @@ using ETHTPS.Configuration;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.Extensions;
-using ETHTPS.Data.Core.Extensions.DateTimeExtensions;
 using ETHTPS.Data.Integrations.InfluxIntegration.Extensions;
 
 using Flux.Net;
@@ -206,12 +205,26 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
         public async IAsyncEnumerable<TMeasurement> GetEntriesBetween<TMeasurement>(string bucket, string measurement, DateTime start, DateTime end, string groupPeriod)
             where TMeasurement : class, IMeasurement
         {
-            var query = $"from(bucket: \"{bucket}\")\r\n  |> range(start: {start.ToUnixTime()}, stop: {end.ToUnixTime()})\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"{measurement}\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"gasused\" or r[\"_field\"] == \"blocknumber\" or r[\"_field\"] == \"transactioncount\")\r\n  |> aggregateWindow(every: 30d, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")";
+            var query = $"from(bucket: \"{bucket}\")\r\n  |> range(start: {start.ToInfluxDateTime()}, stop: {end.ToInfluxDateTime()})\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"{measurement}\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"gasused\" or r[\"_field\"] == \"blocknumber\" or r[\"_field\"] == \"transactioncount\")\r\n  |> aggregateWindow(every: {groupPeriod}, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")";
             await WaitForClientAsync();
             await foreach (var entry in _queryApi.QueryAsyncEnumerable<TMeasurement>(query))
             {
                 yield return entry;
             }
         }
+
+        public async IAsyncEnumerable<TMeasurement> GetEntriesBetween<TMeasurement>(string bucket, string measurement, string providerName, DateTime start, DateTime end)
+                where TMeasurement : class, IMeasurement
+        {
+            var query = $"from(bucket: \"{bucket}\")\r\n  |> range(start: {start.ToInfluxDateTime()}, stop: {end.ToInfluxDateTime()})\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"{measurement}\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"gasused\" or r[\"_field\"] == \"blocknumber\" or r[\"_field\"] == \"transactioncount\")\r\n   |> filter(fn: (r) => r[\"provider\"] == \"{providerName}\")\r\n  |> aggregateWindow(every: auto, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")";
+            await WaitForClientAsync();
+            await foreach (var entry in _queryApi.QueryAsyncEnumerable<TMeasurement>(query))
+            {
+                yield return entry;
+            }
+        }
+
+        public IAsyncEnumerable<TMeasurement> GetEntriesForPeriod<TMeasurement>(string bucket, string measurement, string providerName, TimeInterval period)
+            where TMeasurement : class, IMeasurement => GetEntriesBetween<TMeasurement>(bucket, measurement, providerName, DateTime.Now - period.ExtractTimeGrouping().ToTimeSpan(), DateTime.Now);
     }
 }

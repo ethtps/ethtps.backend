@@ -40,10 +40,10 @@ namespace ETHTPS.API.Controllers.L2DataControllers
         /// <summary>
         /// A method for testing the charting API. Returns a response with junk values after an artificial delay.
         /// </summary>
-        [HttpPost]
+        [HttpGet]
         [SwaggerResponse(200, Type = typeof(L2DataResponseModel))]
         [SwaggerResponse(400, "Invalid parameter(s)", Type = typeof(ValidationResult))]
-        public async Task<IActionResult> GetSingleDatasetJunkAsync([FromBody] L2DataRequestModel requestModel, DataType dataType)
+        public async Task<IActionResult> GetSingleDatasetJunkAsync()
         {
             var result = new L2DataResponseModel();
             await Task.Delay(_RANDOM.Next(1000, 5000));
@@ -129,11 +129,11 @@ namespace ETHTPS.API.Controllers.L2DataControllers
                 IncludeSimpleAnalysis = true,
             };
             var validationResult = Validate(requestModel);
-            var guid = requestModel.Guid;
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Reason);
             }
+            var guid = requestModel.Guid;
             await _redisCacheService.SetDataAsync(L2DataRequestStatus.GenerateCacheKeyFromGuid(guid), new L2DataRequestStatus(guid), TimeSpan.FromHours(1));
             await _redisCacheService.SetDataAsync(L2DataRequestModel.GenerateCacheKeyFromGuid(guid), requestModel, TimeSpan.FromMinutes(15));
             _messagePublisher.PublishJSONMessage(requestModel, "L2DataRequestQueue");
@@ -164,6 +164,8 @@ namespace ETHTPS.API.Controllers.L2DataControllers
                 if (requestModel.Providers.Contains(Constants.All))
                     requestModel.Providers = providers.Select(x => x.Name).ToList();
                 else requestModel.Providers = requestModel.Providers.Where(p => providers.Select(x => x.Name).Contains(p)).ToList();
+            if (requestModel.Provider != null && (!requestModel.Providers?.Contains(requestModel.Provider) ?? false))
+                requestModel.Providers.Add(requestModel.Provider);
             return requestModel.Validate(providers.Select(x => x.Name));
         }
     }

@@ -12,6 +12,11 @@ namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
 {
     public sealed class L2DataRequestModel : ProviderQueryModel, IAnalysisParameters, ICachedKey, IGuidEntity
     {
+        public L2DataRequestModel()
+        {
+            base.Provider = null;
+        }
+
         [JsonIgnore]
         public TimeInterval AutoInterval
         {
@@ -47,6 +52,7 @@ namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
         /// Used in case data for multiple providers is requested. 
         /// </summary>
         public List<string>? Providers { get; set; }
+
         [JsonIgnore]
         public IEnumerable<string> AllDistinctProviders => (Providers ?? Enumerable.Empty<string>()).Concat(new string[] { Provider }).Distinct().Where(x => !string.IsNullOrWhiteSpace(x));
 
@@ -69,7 +75,7 @@ namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
             {
                 if (BucketOptions.BucketSize != TimeInterval.Auto)
                 {
-                    return ValidationResult.InvalidFor($"Can't specify both {nameof(BucketOptions.BucketSize)} and {nameof(BucketOptions.CustomBucketSize)}");
+                    return ValidationResult.InvalidFor($"Can't specify both {nameof(BucketOptions.BucketSize)} and {nameof(BucketOptions.CustomBucketSize)} at the same time");
                 }
             }
             if (AllDistinctProviders.Count() == 0)

@@ -83,5 +83,10 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Data
         }
 
         public async Task<List<DataResponseModel>> GetGTPSAsync(ProviderQueryModel requestModel, TimeInterval interval) => (await GetAsync(requestModel, interval)).SelectMany((x) => x.Value).ToList();
+
+        public Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetAsync(L2DataRequestModel model)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

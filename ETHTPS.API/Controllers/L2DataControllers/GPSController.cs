@@ -5,6 +5,7 @@ using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
 using ETHTPS.API.Core.Attributes;
 using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
@@ -50,6 +51,11 @@ namespace ETHTPS.API.Controllers.L2DataControllers
         public async Task<IDictionary<string, DataPoint>> MaxAsync([FromQuery] ProviderQueryModel model)
         {
             return await _gpsService.MaxAsync(model);
+        }
+
+        public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetAsync(L2DataRequestModel model)
+        {
+            return (await _gpsService.MaxAsync(model)).ToDictionary();
         }
     }
 }

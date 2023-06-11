@@ -1,50 +1,77 @@
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Data.Integrations.InfluxIntegration;
+using ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProviders;
 
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ETHTPS.Tests.InfluxTests
 {
-    /// <summary>
-    /// Testing with TPS because it's the most important stat - everything (else) is based on the same code anyway 
-    /// </summary>
-    public sealed class BlockInfoTests : TestBase
+    [TestFixture]
+    public sealed class InfluxGPSTests : InfluxBlockInfoTests<InfluxGPSService>
+    {
+        public InfluxGPSTests()
+        {
+            _service = ServiceProvider.GetRequiredService<InfluxGPSService>();
+        }
+    }
+
+    [TestFixture]
+    public sealed class InfluxGTPSTests : InfluxBlockInfoTests<InfluxGTPSService>
+    {
+        public InfluxGTPSTests()
+        {
+            _service = ServiceProvider.GetRequiredService<IGTPSService>();
+        }
+    }
+
+    [TestFixture]
+    public sealed class InfluxTPSTests : InfluxBlockInfoTests<InfluxTPSService>
+    {
+        public InfluxTPSTests()
+        {
+            _service = ServiceProvider.GetRequiredService<ITPSService>();
+        }
+    }
+
+    public abstract class InfluxBlockInfoTests<T> : TestBase
+        where T : InfluxPSServiceBase
     {
         private IInfluxWrapper? _influxWrapper;
         private IAsyncHistoricalBlockInfoProvider? _asyncHistoricalBlockInfoProvider;
         private const string _DEFAULT_BUCKET_NAME = "blockinfo";
         private const string _DEFAULT_MEASUREMENT_NAME = "blockinfo";
-        private ITPSService? _tpsService;
+        protected IPSService? _service;
 
         [SetUp]
         public void Setup()
         {
             _influxWrapper = ServiceProvider.GetRequiredService<IInfluxWrapper>();
             _asyncHistoricalBlockInfoProvider = ServiceProvider.GetRequiredService<IAsyncHistoricalBlockInfoProvider>();
-            _tpsService = ServiceProvider.GetRequiredService<ITPSService>();
         }
 
         [Test]
         public void DependencyInjectionTest()
         {
-            Assert.NotNull(_tpsService);
+            Assert.NotNull(_service);
             Assert.Pass();
         }
 
         [Test]
         public void TimeIntervalTests()
         {
-            if (_tpsService == null)
+            if (_service == null)
             {
                 Assert.Fail();
                 return;
             }
             Assert.DoesNotThrowAsync(async () =>
             {
-                await _tpsService.GetAsync(ProviderQueryModel.FromProviderName("Ethereum"), TimeInterval.OneDay);
+                await _service.GetAsync(ProviderQueryModel.FromProviderName("Ethereum"), TimeInterval.OneDay);
             });
         }
 
@@ -52,12 +79,12 @@ namespace ETHTPS.Tests.InfluxTests
         [Test]
         public async Task OnlyRequestedProvidersAreReturnedTest()
         {
-            if (_tpsService == null)
+            if (_service == null)
             {
                 Assert.Fail();
                 return;
             }
-            var result = await _tpsService.GetAsync(ProviderQueryModel.FromProviderName("Ethereum"), TimeInterval.OneYear);
+            var result = await _service.GetAsync(ProviderQueryModel.FromProviderName("Ethereum"), TimeInterval.OneYear);
             Assert.That(result.Count, Is.AtMost(1));
             Assert.IsTrue(result.ContainsKey("Ethereum"));
         }
@@ -65,7 +92,7 @@ namespace ETHTPS.Tests.InfluxTests
         [Test]
         public void MaxWorksTest()
         {
-            if (_tpsService == null)
+            if (_service == null)
             {
                 Assert.Fail();
                 return;
@@ -73,14 +100,14 @@ namespace ETHTPS.Tests.InfluxTests
 
             Assert.DoesNotThrowAsync(async () =>
             {
-                await _tpsService.MaxAsync(ProviderQueryModel.FromProviderName("Ethereum"));
+                await _service.MaxAsync(ProviderQueryModel.FromProviderName("Ethereum"));
             });
         }
 
         [Test]
         public void MaxAllDoesThrowTest()
         {
-            if (_tpsService == null)
+            if (_service == null)
             {
                 Assert.Fail();
                 return;
@@ -88,14 +115,14 @@ namespace ETHTPS.Tests.InfluxTests
 
             Assert.ThrowsAsync<NotSupportedException>(async () =>
             {
-                await _tpsService.MaxAsync(ProviderQueryModel.FromProviderName("All"));
+                await _service.MaxAsync(ProviderQueryModel.FromProviderName("All"));
             });
         }
 
         [Test]
         public void InstantWorksTest()
         {
-            if (_tpsService == null)
+            if (_service == null)
             {
                 Assert.Fail();
                 return;
@@ -103,14 +130,14 @@ namespace ETHTPS.Tests.InfluxTests
 
             Assert.DoesNotThrowAsync(async () =>
             {
-                await _tpsService.InstantAsync(ProviderQueryModel.FromProviderName("Ethereum"));
+                await _service.InstantAsync(ProviderQueryModel.FromProviderName("Ethereum"));
             });
         }
 
         [Test]
         public void InstantAllDoesThrowTest()
         {
-            if (_tpsService == null)
+            if (_service == null)
             {
                 Assert.Fail();
                 return;
@@ -118,21 +145,21 @@ namespace ETHTPS.Tests.InfluxTests
 
             Assert.ThrowsAsync<NotSupportedException>(async () =>
             {
-                await _tpsService.InstantAsync(ProviderQueryModel.FromProviderName("All"));
+                await _service.InstantAsync(ProviderQueryModel.FromProviderName("All"));
             });
         }
 
         [Test]
         public void MonthlyByYearDoesNotThrow()
         {
-            if (_tpsService == null)
+            if (_service == null)
             {
                 Assert.Fail();
                 return;
             }
             Assert.DoesNotThrowAsync(async () =>
             {
-                await _tpsService.GetMonthlyDataByYearAsync(ProviderQueryModel.FromProviderName("Ethereum"), DateTime.Now.Year);
+                await _service.GetMonthlyDataByYearAsync(ProviderQueryModel.FromProviderName("Ethereum"), DateTime.Now.Year);
             });
         }
     }
