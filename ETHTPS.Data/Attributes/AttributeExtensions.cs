@@ -12,6 +12,7 @@ namespace ETHTPS.Data.Core.Attributes
         /// </summary>
         public static TimeGrouping ExtractTimeGrouping(this TimeInterval timeInterval) => timeInterval.GetAttribute<GroupByAttribute>().Grouping;
 
+
         /// <summary>
         /// https://stackoverflow.com/a/19621488
         /// </summary>

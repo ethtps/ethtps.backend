@@ -176,14 +176,24 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
         public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetAsync(L2DataRequestModel model)
         {
             var result = new Dictionary<string, List<DataResponseModel>>();
-            await foreach (var entry in
-                _influxWrapper
-                .GetEntriesBetween<Block>(
+            model.StartDate ??= DateTime.Now;
+            model.EndDate ??= DateTime.Now.Subtract(TimeSpan.FromDays(365 * 10 + 2));
+            var data = (model.Provider == Constants.All) ?
+                await _influxWrapper
+                .GetEntriesBetweenAsync<InfluxBlock>(
                     Constants.Influx.DEFAULT_BLOCK_BUCKET_NAME,
                     "blockinfo",
                     model.StartDate ?? new DateTime(),
                     model.EndDate ?? new DateTime(),
-                "1" + model.AutoInterval.ExtractTimeGrouping().ToTimeSpan().ToFluxTimeUnit()))
+                "1" + model.AutoInterval.ExtractTimeGrouping().Next().ToTimeSpan().ToFluxTimeUnit()) :
+              await _influxWrapper
+                .GetEntriesBetweenAsync<InfluxBlock>(
+                    Constants.Influx.DEFAULT_BLOCK_BUCKET_NAME,
+                    "blockinfo",
+                    model.Provider,
+                    model.StartDate ?? new DateTime(),
+                    model.EndDate ?? new DateTime());
+            foreach (var entry in data)
             {
                 if (model.Provider != Constants.All && !model.AllDistinctProviders.Contains(model.Provider))
                 {
@@ -197,9 +207,9 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
 
                 var dataPoint = new DataPoint()
                 {
-                    BlockNumber = entry.BlockNumber,
+                    BlockNumber = (int)entry.BlockNumber,
                     Date = entry.Date,
-                    Value = _valueSelector(entry)
+                    Value = _valueSelector(entry.ToBlock())
                 };
 
                 if (list.Count > 0)

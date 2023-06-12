@@ -9,14 +9,17 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
     /// </summary>
     public interface IInfluxReader
     {
-        Task<IEnumerable<string>> GetBucketsAsync();
-        Task<bool> BucketExistsAsync(string bucket);
-        IAsyncEnumerable<TMeasurement> GetEntriesBetween<TMeasurement>(string bucket, string measurement, DateTime start, DateTime end, string groupPeriod) where TMeasurement : class, IMeasurement;
-        IAsyncEnumerable<TMeasurement> GetEntriesBetween<TMeasurement>(string bucket, string measurement, DateTime start, DateTime end) where TMeasurement : class, IMeasurement;
-        IAsyncEnumerable<TMeasurement> GetEntriesBetween<TMeasurement>(string bucket, string measurement, string providerName, DateTime start, DateTime end) where TMeasurement : class, IMeasurement;
-        IAsyncEnumerable<TMeasurement> GetEntriesForPeriod<TMeasurement>(string bucket, string measurement, TimeInterval period) where TMeasurement : class, IMeasurement;
-        IAsyncEnumerable<TMeasurement> GetEntriesForPeriod<TMeasurement>(string bucket, string measurement, string providerName, TimeInterval period) where TMeasurement : class, IMeasurement;
-        Task<IEnumerable<T>> QueryAsync<T>(string query, IDomainObjectMapper? mapper = null) where T : class, IMeasurement;
-        IAsyncEnumerable<T> QueryAsyncEnumerable<T>(string query) where T : class, IMeasurement;
+        public Task<IEnumerable<string>> GetBucketsAsync();
+        public Task<bool> BucketExistsAsync(string bucket);
+        public IAsyncEnumerable<TMeasurement> GetEntriesBetween<TMeasurement>(string bucket, string measurement, DateTime start, DateTime end, string groupPeriod) where TMeasurement : class, IMeasurement;
+        public IAsyncEnumerable<TMeasurement> GetEntriesBetween<TMeasurement>(string bucket, string measurement, DateTime start, DateTime end) where TMeasurement : class, IMeasurement;
+        public IAsyncEnumerable<TMeasurement> GetEntriesBetween<TMeasurement>(string bucket, string measurement, string providerName, DateTime start, DateTime end) where TMeasurement : class, IMeasurement;
+        public IAsyncEnumerable<TMeasurement> GetEntriesForPeriod<TMeasurement>(string bucket, string measurement, TimeInterval period) where TMeasurement : class, IMeasurement;
+        public IAsyncEnumerable<TMeasurement> GetEntriesForPeriod<TMeasurement>(string bucket, string measurement, string providerName, TimeInterval period) where TMeasurement : class, IMeasurement;
+        public Task<IEnumerable<T>> QueryAsync<T>(string query, IDomainObjectMapper? mapper = null) where T : class, IMeasurement;
+        public Task<IEnumerable<TMeasurement>> GetEntriesBetweenAsync<TMeasurement>(string bucket, string measurement, DateTime start, DateTime end, string groupPeriod)
+           where TMeasurement : class, IMeasurement;
+        public Task<IEnumerable<TMeasurement>> GetEntriesBetweenAsync<TMeasurement>(string bucket, string measurement, string providerName, DateTime start, DateTime end) where TMeasurement : class, IMeasurement;
+        public IAsyncEnumerable<T> QueryAsyncEnumerable<T>(string query) where T : class, IMeasurement;
     }
 }

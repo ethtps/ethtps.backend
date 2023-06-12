@@ -5,7 +5,9 @@ using ETHTPS.Configuration;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.Extensions;
+using ETHTPS.Data.Core.Extensions.DateTimeExtensions;
 using ETHTPS.Data.Integrations.InfluxIntegration.Extensions;
+using ETHTPS.Data.Integrations.InfluxIntegration.Mappers;
 
 using Flux.Net;
 
@@ -47,7 +49,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             });
             _writeApi = _influxClient.GetWriteApiAsync();
             _bucketsApi = _influxClient.GetBucketsApi();
-            _queryApi = _influxClient.GetQueryApi();
+            _queryApi = _influxClient.GetQueryApi(new CustomMapper());
             _logger = logger;
         }
 
@@ -198,7 +200,6 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             where T : class, IMeasurement
         {
             await WaitForClientAsync();
-            var table = await _influxClient.GetQueryApi().QueryAsync(query, typeof(T), org: _configuration.Org);
             return await _queryApi.QueryAsync<T>(query);
         }
 
@@ -213,10 +214,18 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             }
         }
 
+        public async Task<IEnumerable<TMeasurement>> GetEntriesBetweenAsync<TMeasurement>(string bucket, string measurement, DateTime start, DateTime end, string groupPeriod)
+            where TMeasurement : class, IMeasurement
+        {
+            var query = $"from(bucket: \"{bucket}\")\r\n  |> range(start: {start.ToInfluxDateTime()}, stop: {end.ToInfluxDateTime()})\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"{measurement}\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"gasused\" or r[\"_field\"] == \"blocknumber\" or r[\"_field\"] == \"transactioncount\")\r\n  |> aggregateWindow(every: {groupPeriod}, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")";
+            await WaitForClientAsync();
+            return await _queryApi.QueryAsync<TMeasurement>(query);
+        }
+
         public async IAsyncEnumerable<TMeasurement> GetEntriesBetween<TMeasurement>(string bucket, string measurement, string providerName, DateTime start, DateTime end)
                 where TMeasurement : class, IMeasurement
         {
-            var query = $"from(bucket: \"{bucket}\")\r\n  |> range(start: {start.ToInfluxDateTime()}, stop: {end.ToInfluxDateTime()})\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"{measurement}\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"gasused\" or r[\"_field\"] == \"blocknumber\" or r[\"_field\"] == \"transactioncount\")\r\n   |> filter(fn: (r) => r[\"provider\"] == \"{providerName}\")\r\n  |> aggregateWindow(every: auto, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")";
+            var query = $"from(bucket: \"{bucket}\")\r\n  |> range(start: {start.ToInfluxDateTime()}, stop: {end.ToInfluxDateTime()})\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"{measurement}\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"gasused\" or r[\"_field\"] == \"blocknumber\" or r[\"_field\"] == \"transactioncount\")\r\n   |> filter(fn: (r) => r[\"provider\"] == \"{providerName}\")\r\n  |> aggregateWindow(every: 1{(end - start).GetClosestInterval().ExtractTimeGrouping().Next().ToTimeSpan().ToFluxTimeUnit()}, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")";
             await WaitForClientAsync();
             await foreach (var entry in _queryApi.QueryAsyncEnumerable<TMeasurement>(query))
             {
@@ -226,5 +235,14 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
 
         public IAsyncEnumerable<TMeasurement> GetEntriesForPeriod<TMeasurement>(string bucket, string measurement, string providerName, TimeInterval period)
             where TMeasurement : class, IMeasurement => GetEntriesBetween<TMeasurement>(bucket, measurement, providerName, DateTime.Now - period.ExtractTimeGrouping().ToTimeSpan(), DateTime.Now);
+
+        public async Task<IEnumerable<TMeasurement>> GetEntriesBetweenAsync<TMeasurement>(string bucket, string measurement, string providerName, DateTime start, DateTime end)
+            where TMeasurement : class, IMeasurement
+        {
+            var query = $"from(bucket: \"{bucket}\")\r\n  |> range(start: {start.ToInfluxDateTime()}, stop: {end.ToInfluxDateTime()})\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"{measurement}\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"gasused\" or r[\"_field\"] == \"blocknumber\" or r[\"_field\"] == \"transactioncount\")\r\n   |> filter(fn: (r) => r[\"provider\"] == \"{providerName}\")\r\n  |> aggregateWindow(every: 1{(end - start).GetClosestInterval().ExtractTimeGrouping().Next().ToTimeSpan().ToFluxTimeUnit()}, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")";
+            await WaitForClientAsync();
+            return await QueryAsync<TMeasurement>(query, null);
+        }
+        // I'll clean this code another time
     }
 }
