@@ -7,12 +7,15 @@ using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Controllers
 {
     [Route("/api/v3/BlockInfo/[action]")]
-    public sealed class BlockInfoController : Controller
+    [ApiController]
+    [Authorize]
+    public sealed class BlockInfoController : ControllerBase
     {
         private readonly IAsyncHistoricalBlockInfoProvider _asyncHistoricalBlockInfoProvider;
 

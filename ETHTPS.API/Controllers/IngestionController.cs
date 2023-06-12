@@ -1,5 +1,6 @@
 ﻿using ETHTPS.Data.Integrations.MSSQL;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Controllers
@@ -9,6 +10,7 @@ namespace ETHTPS.API.Controllers
     /// </summary>
     [Route("/api/v3/Ingestion/[action]")]
     [ApiController]
+    [Authorize]
     public sealed class IngestionController : ControllerBase
     {
         private readonly EthtpsContext _context;

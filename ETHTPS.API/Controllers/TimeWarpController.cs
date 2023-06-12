@@ -8,12 +8,15 @@ using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Data.Integrations.MSSQL.TimeWarp;
 using ETHTPS.Data.Integrations.MSSQL.TimeWarp.Models;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Controllers
 {
     [Route("/api/v3/TimeWarp/[action]")]
-    public sealed class TimeWarpController
+    [Authorize]
+    [ApiController]
+    public sealed class TimeWarpController : ControllerBase
     {
         private readonly TimeWarpService _timeWarpService;
         private const string _DEFAULT_SMOOTHING = "Instant";

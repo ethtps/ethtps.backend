@@ -13,7 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace ETHTPS.API.Controllers.L2DataControllers
 {
     [Route("api/v2/[action]")]
-    public sealed class GeneralController
+    [ApiController]
+    public sealed class GeneralController : ControllerBase
     {
         private readonly GeneralService _generalService;
 

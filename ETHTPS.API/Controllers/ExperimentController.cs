@@ -6,12 +6,14 @@ using ETHTPS.API.BIL.Infrastructure.Services;
 using ETHTPS.API.Core.Attributes;
 using ETHTPS.Data.Core.Models;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Controllers
 {
     [Route("/api/v3/Experiments/[action]")]
     [ApiController]
+    [Authorize]
     public sealed class ExperimentController : ControllerBase
     {
         private readonly IExperimentService _experimentService;

@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using ETHTPS.Configuration;
 using ETHTPS.Data.Core.Models.Configuration;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Controllers
 {
     [Route("/api/v3/Experiments/[action]")]
     [ApiController]
+    [Authorize]
     public sealed class ManagementController : ControllerBase
     {
         private readonly IDBConfigurationProvider _configurationProvider;

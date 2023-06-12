@@ -14,8 +14,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace ETHTPS.API.Controllers.L2DataControllers
 {
     [Route("api/v2/GasAdjustedTPS/[action]")]
+    [ApiController]
     [Authorize(AuthenticationSchemes = "APIKey")]
-    public sealed class GasAdjustedTPSController : IPSService
+    public sealed class GasAdjustedTPSController : ControllerBase, IPSService
     {
         private readonly IGTPSService _gtpsService;
 

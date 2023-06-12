@@ -1,12 +1,15 @@
 ﻿using ETHTPS.API.Core.Controllers;
 using ETHTPS.Configuration.Database.Initialization;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Controllers
 {
 #if DEBUG
     [Route("api/v3/[controller]")]
+    [Authorize]
+    [ApiController]
     public sealed class DataInitialization : APIControllerBase
     {
         private readonly PublicDataInitializer _publicDataInitializer;

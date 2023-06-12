@@ -13,9 +13,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Controllers.L2DataControllers
 {
-    [Route("api/v2/TPS/[action]")]
+    [Route("/api/v2/TPS/[action]")]
+    [ApiController]
     [Authorize(AuthenticationSchemes = "APIKey")]
-    public sealed class TPSController : IPSService
+    public sealed class TPSController : ControllerBase, IPSService
     {
         private readonly ITPSService _tpsService;
 

@@ -14,8 +14,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace ETHTPS.API.Controllers.L2DataControllers
 {
     [Route("api/v2/GPS/[action]")]
+    [ApiController]
     [Authorize(AuthenticationSchemes = "APIKey")]
-    public sealed class GPSController : IPSService
+    public sealed class GPSController : ControllerBase, IPSService
     {
         private readonly IGPSService _gpsService;
 

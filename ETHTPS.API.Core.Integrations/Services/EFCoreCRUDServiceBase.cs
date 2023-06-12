@@ -2,11 +2,12 @@
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Integrations.MSSQL;
 
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {
-    public abstract class EFCoreCRUDServiceBase<TEntity> :
+    public abstract class EFCoreCRUDServiceBase<TEntity> : ControllerBase,
         ICRUDService<TEntity> where TEntity : class, IIndexed
 
     {

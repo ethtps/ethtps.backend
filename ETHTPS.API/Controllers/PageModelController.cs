@@ -14,11 +14,14 @@ using ETHTPS.Data.Core.Models.Pages.HomePage;
 using ETHTPS.Data.Core.Models.Pages.ProviderPage;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Controllers
 {
     [Route("api/v2/Pages/[action]")]
+    [Authorize]
+    [ApiController]
     public sealed class PageModelController : ControllerBase
     {
         private readonly GeneralService _generalService;

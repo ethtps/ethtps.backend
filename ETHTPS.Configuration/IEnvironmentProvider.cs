@@ -2,7 +2,7 @@
 {
     public interface IEnvironmentProvider
     {
-        IEnumerable<string> GetEnvironments();
+        IEnumerable<string>? GetEnvironments();
         void AddEnvironments(params string[] environments);
     }
 }

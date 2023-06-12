@@ -41,7 +41,7 @@ namespace ETHTPS.Configuration
             {
                 try
                 {
-                    var existing = _context.Environments?.Select(x => x.Name).ToList();
+                    var existing = _context.Environments?.Select(x => x.Name).ToList() ?? Enumerable.Empty<string>();
                     var toAdd = environments?.Where(x => !existing.Contains(x));
                     _context.Environments?.AddRange(toAdd.SafeSelect(x => new Database.Environment()
                     {
@@ -60,7 +60,7 @@ namespace ETHTPS.Configuration
         {
             lock (_context.LockObj)
             {
-                if (!_context.Microservices.Any(x => x.Name.ToUpper() == name.ToUpper()))
+                if (!_context.Microservices?.Any(x => x.Name.ToUpper() == name.ToUpper()) ?? true)
                 {
                     _context.Add
                         (new Microservice()
@@ -94,9 +94,14 @@ namespace ETHTPS.Configuration
         {
             lock (_context.LockObj)
             {
+                var emptyEnvironment = new Database.Environment();
+                var emptyMicroservice = new Database.Microservice();
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 return _context.MicroserviceConfigurationStrings?
-                    .Where(x => x.Microservice.Name.ToUpper() == microserviceName.ToUpper() && x.Environment.Name.ToUpper() == _environment.ToUpper() || x.Environment.Name.ToUpper() == "ALL")
-                    .Select(x => (IConfigurationString)x.ConfigurationString)
+                    .Where(x => (x.Microservice ?? emptyMicroservice).Name.ToUpper() == microserviceName.ToUpper()
+                                && (x.Environment ?? emptyEnvironment).Name.ToUpper() == _environment.ToUpper()
+                                || (x.Environment ?? emptyEnvironment).Name.ToUpper() == "ALL")
+                    .Select(x => (IConfigurationString?)x.ConfigurationString)
                     .WhereNotNull()
                     .Select(x => new ConfigurationString()
                     {
@@ -104,6 +109,7 @@ namespace ETHTPS.Configuration
                         Value = x.Value
                     })
                     .ToList();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             }
         }
 
@@ -131,7 +137,7 @@ namespace ETHTPS.Configuration
             lock (_context.LockObj)
             {
                 Func<Microservice, bool> selector = x => x.Name.ToUpper() == name.ToUpper();
-                if (!_context.Microservices.Any(selector))
+                if (!_context.Microservices?.Any(selector) ?? false)
                 {
                     if (addIfItDoesntExist)
                     {
@@ -143,26 +149,25 @@ namespace ETHTPS.Configuration
                     }
                 }
 
-                return _context.Microservices.First(selector).Id
-                    ;
+                return _context.Microservices?.First(selector).Id;
             }
         }
 
-        public IEnumerable<IMicroservice> GetMicroservices()
+        public IEnumerable<IMicroservice>? GetMicroservices()
         {
             lock (_context.LockObj)
             {
-                return _context.Microservices.ToList();
+                return _context.Microservices?.ToList();
             }
         }
 
-        public int SetConfigurationString(IConfigurationString configString)
+        public int? SetConfigurationString(IConfigurationString configString)
         {
             lock (_context.LockObj)
             {
-                if (!_context.ConfigurationStrings.Any(x => x.Name == configString.Name && x.Value == configString.Value))
+                if (!_context.ConfigurationStrings?.Any(x => x.Name == configString.Name && x.Value == configString.Value) ?? true)
                 {
-                    _context.ConfigurationStrings.Add(new ConfigurationString()
+                    _context.ConfigurationStrings?.Add(new ConfigurationString()
                     {
                         Name = configString.Name,
                         Value = configString.Value
@@ -170,7 +175,7 @@ namespace ETHTPS.Configuration
                     _context.SaveChanges();
                 }
 
-                return _context.ConfigurationStrings.First(x => x.Name == configString.Name && x.Value == configString.Value).Id;
+                return _context.ConfigurationStrings?.First(x => x.Name == configString.Name && x.Value == configString.Value).Id;
             }
         }
 
@@ -180,9 +185,9 @@ namespace ETHTPS.Configuration
         {
             lock (_context.LockObj)
             {
-                var microserviceID = _context.Microservices.First(x => x.Name.ToUpper().Equals(microserviceName.ToUpper())).Id;
-                var environmentID = _context.Environments.First(x => x.Name.ToUpper().Equals(_environment.ToUpper())).Id;
-                _context.MicroserviceConfigurationStrings.Add(new MicroserviceConfigurationString()
+                var microserviceID = (_context.Microservices?.First(x => x.Name.ToUpper().Equals(microserviceName.ToUpper())).Id) ?? throw new ArgumentException($"{nameof(_context.Microservices)} is null");
+                var environmentID = (_context.Environments?.First(x => x.Name.ToUpper().Equals(_environment.ToUpper())).Id) ?? throw new ArgumentException($"{nameof(_context.Environments)} is null");
+                _context.MicroserviceConfigurationStrings?.Add(new MicroserviceConfigurationString()
                 {
                     ConfigurationString = new ConfigurationString()
                     {
@@ -200,9 +205,9 @@ namespace ETHTPS.Configuration
         {
             lock (_context.LockObj)
             {
-                var providerID = _context.Providers.First(x => x.Name.ToUpper().Equals(provider.ToUpper())).Id;
-                var environmentID = _context.Environments.First(x => x.Name.ToUpper().Equals(_environment.ToUpper())).Id;
-                configStrings.ToList().ForEach(configString => _context.ProviderConfigurationStrings.Add(new ProviderConfigurationString()
+                var providerID = _context.Providers?.First(x => x.Name.ToUpper().Equals(provider.ToUpper())).Id ?? throw new ArgumentException($"{nameof(_context.Providers)} is null");
+                var environmentID = _context.Environments?.First(x => x.Name.ToUpper().Equals(_environment.ToUpper())).Id ?? throw new ArgumentException($"{nameof(_context.Environments)} is null");
+                configStrings.ToList().ForEach(configString => _context.ProviderConfigurationStrings?.Add(new ProviderConfigurationString()
                 {
                     ConfigurationString = new ConfigurationString()
                     {

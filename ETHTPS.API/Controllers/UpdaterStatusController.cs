@@ -6,12 +6,14 @@ using ETHTPS.API.Core.Attributes;
 using ETHTPS.API.Core.Controllers;
 using ETHTPS.Data.Core.Models.DataUpdater;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Controllers
 {
     [Route("/api/v3/updater-status/[action]")]
     [ApiController]
+    [Authorize]
     public sealed class UpdaterStatusController : APIControllerBase
     {
         private readonly IDataUpdaterStatusGetter _dataUpdaterService;
