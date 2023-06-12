@@ -1,6 +1,5 @@
 ﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.Data.Core;
-using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Data.Core.Models.DataPoints;
@@ -178,58 +177,67 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
             var result = new Dictionary<string, List<DataResponseModel>>();
             model.StartDate ??= DateTime.Now;
             model.EndDate ??= DateTime.Now.Subtract(TimeSpan.FromDays(365 * 10 + 2));
-            var data = (model.Provider == Constants.All) ?
-                await _influxWrapper
+            var providerData = new List<IEnumerable<InfluxBlock>>();
+            if (string.IsNullOrWhiteSpace(model.Provider) || model.Provider == Constants.All)
+            {
+                foreach (var provider in model.AllDistinctProviders)
+                {
+                    providerData.Add(await _influxWrapper
                 .GetEntriesBetweenAsync<InfluxBlock>(
                     Constants.Influx.DEFAULT_BLOCK_BUCKET_NAME,
                     "blockinfo",
+                    provider,
                     model.StartDate ?? new DateTime(),
-                    model.EndDate ?? new DateTime(),
-                "1" + model.AutoInterval.ExtractTimeGrouping().Next().ToTimeSpan().ToFluxTimeUnit()) :
-              await _influxWrapper
+                    model.EndDate ?? new DateTime()));
+                }
+            }
+            else
+            {
+                providerData.Add(await _influxWrapper
                 .GetEntriesBetweenAsync<InfluxBlock>(
                     Constants.Influx.DEFAULT_BLOCK_BUCKET_NAME,
                     "blockinfo",
                     model.Provider,
                     model.StartDate ?? new DateTime(),
-                    model.EndDate ?? new DateTime());
-            foreach (var entry in data)
+                    model.EndDate ?? new DateTime()));
+            }
+
+            foreach (var data in providerData)
             {
-                if (model.Provider != Constants.All && !model.AllDistinctProviders.Contains(model.Provider))
+                foreach (var entry in data)
                 {
-                    continue; //Redundant(?)
-                }
-                if (!result.TryGetValue(entry.Provider, out var list))
-                {
-                    list = new List<DataResponseModel>();
-                    result.Add(entry.Provider, list);
-                }
-
-                var dataPoint = new DataPoint()
-                {
-                    BlockNumber = (int)entry.BlockNumber,
-                    Date = entry.Date,
-                    Value = _valueSelector(entry.ToBlock())
-                };
-
-                if (list.Count > 0)
-                {
-                    var lastDataPoint = list.Last().Data.Last();
-                    var timeDiffInSeconds = (dataPoint.Date - lastDataPoint.Date).TotalSeconds;
-                    if (timeDiffInSeconds > 0)
+                    if (!result.TryGetValue(entry.Provider, out var list))
                     {
-                        dataPoint.Value /= timeDiffInSeconds;
+                        list = new List<DataResponseModel>();
+                        result.Add(entry.Provider, list);
                     }
-                    else
-                    {
-                        dataPoint.Value = 0;
-                    }
-                }
 
-                list.Add(new DataResponseModel()
-                {
-                    Data = new List<DataPoint>() { dataPoint }
-                });
+                    var dataPoint = new DataPoint()
+                    {
+                        BlockNumber = (int)entry.BlockNumber,
+                        Date = entry.Date,
+                        Value = _valueSelector(entry.ToBlock())
+                    };
+
+                    if (list.Count > 0)
+                    {
+                        var lastDataPoint = list.Last().Data.Last();
+                        var timeDiffInSeconds = (dataPoint.Date - lastDataPoint.Date).TotalSeconds;
+                        if (timeDiffInSeconds > 0)
+                        {
+                            dataPoint.Value /= timeDiffInSeconds;
+                        }
+                        else
+                        {
+                            dataPoint.Value = 0;
+                        }
+                    }
+
+                    list.Add(new DataResponseModel()
+                    {
+                        Data = new List<DataPoint>() { dataPoint }
+                    });
+                }
             }
 
             return result.ToDictionary(x => x.Key, x => x.Value.AsEnumerable());

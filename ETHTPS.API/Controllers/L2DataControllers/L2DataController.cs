@@ -166,6 +166,9 @@ namespace ETHTPS.API.Controllers.L2DataControllers
                 else requestModel.Providers = requestModel.Providers.Where(p => providers.Select(x => x.Name).Contains(p)).ToList();
             if (requestModel.Provider != null && (!requestModel.Providers?.Contains(requestModel.Provider) ?? false))
                 requestModel.Providers.Add(requestModel.Provider);
+            var difference = DateTime.Now - DateTime.UtcNow;
+            requestModel.StartDate = requestModel.StartDate == null ? DateTime.Now : requestModel.StartDate?.ToLocalTime().Add(0 * difference);
+            requestModel.EndDate = requestModel.EndDate == null ? DateTime.Now : requestModel.EndDate?.ToLocalTime().Add(0 * difference);
             return requestModel.Validate(providers.Select(x => x.Name));
         }
     }

@@ -13,10 +13,10 @@
 
   <ItemGroup>
     <PackageReference Include="FluxQuery.Net" Version="1.1.0" />
-    <PackageReference Include="InfluxDB.Client" Version="4.12.0" />
-    <PackageReference Include="InfluxDB.Client.Core" Version="4.12.0" />
-    <PackageReference Include="InfluxDB.Client.Flux" Version="4.12.0" />
-    <PackageReference Include="InfluxDB.Client.Linq" Version="4.12.0" />
+    <PackageReference Include="InfluxDB.Client" Version="4.13.0-dev.11217" />
+    <PackageReference Include="InfluxDB.Client.Core" Version="4.13.0-dev.11217" />
+    <PackageReference Include="InfluxDB.Client.Flux" Version="4.13.0-dev.11217" />
+    <PackageReference Include="InfluxDB.Client.Linq" Version="4.13.0-dev.11217" />
     <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.3" />
   </ItemGroup>
 

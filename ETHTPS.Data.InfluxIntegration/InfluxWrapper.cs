@@ -196,7 +196,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             }
         }
 
-        public async Task<IEnumerable<T>> QueryAsync<T>(string query, IDomainObjectMapper? mapper)
+        public async Task<IEnumerable<T>> QueryAsync<T>(string query)
             where T : class, IMeasurement
         {
             await WaitForClientAsync();
@@ -219,7 +219,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
         {
             var query = $"from(bucket: \"{bucket}\")\r\n  |> range(start: {start.ToInfluxDateTime()}, stop: {end.ToInfluxDateTime()})\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"{measurement}\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"gasused\" or r[\"_field\"] == \"blocknumber\" or r[\"_field\"] == \"transactioncount\")\r\n  |> aggregateWindow(every: {groupPeriod}, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")";
             await WaitForClientAsync();
-            return await _queryApi.QueryAsync<TMeasurement>(query);
+            return await QueryAsync<TMeasurement>(query);
         }
 
         public async IAsyncEnumerable<TMeasurement> GetEntriesBetween<TMeasurement>(string bucket, string measurement, string providerName, DateTime start, DateTime end)
@@ -241,7 +241,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
         {
             var query = $"from(bucket: \"{bucket}\")\r\n  |> range(start: {start.ToInfluxDateTime()}, stop: {end.ToInfluxDateTime()})\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"{measurement}\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"gasused\" or r[\"_field\"] == \"blocknumber\" or r[\"_field\"] == \"transactioncount\")\r\n   |> filter(fn: (r) => r[\"provider\"] == \"{providerName}\")\r\n  |> aggregateWindow(every: 1{(end - start).GetClosestInterval().ExtractTimeGrouping().Next().ToTimeSpan().ToFluxTimeUnit()}, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")";
             await WaitForClientAsync();
-            return await QueryAsync<TMeasurement>(query, null);
+            return await QueryAsync<TMeasurement>(query);
         }
         // I'll clean this code another time
     }

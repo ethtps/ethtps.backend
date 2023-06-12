@@ -7,6 +7,7 @@ using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.Data.Core.Models.DataPoints.XYPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Data.Core.Models.ResponseModels.L2s;
+using ETHTPS.Data.Integrations.MSSQL;
 
 using Microsoft.Extensions.Logging;
 
@@ -18,19 +19,20 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
         private readonly IGPSService _gpsService;
         private readonly IGTPSService _gtpsService;
         private readonly ILogger<AggregatedDataservice>? _logger;
+        private readonly string[] _allAvailableProviders;
 
-        public AggregatedDataservice(ITPSService tpsService, IGPSService gpsService, IGTPSService gtpsService, ILogger<AggregatedDataservice>? logger)
+        public AggregatedDataservice(ITPSService tpsService, IGPSService gpsService, IGTPSService gtpsService, EthtpsContext context, ILogger<AggregatedDataservice>? logger)
         {
             _tpsService = tpsService;
             _gpsService = gpsService;
             _gtpsService = gtpsService;
             _logger = logger;
+            _allAvailableProviders = context.Providers.Select(x => x.Name).ToArray();
         }
 
-
-
-        public async Task<List<DataResponseModel>> GetDataAsync(L2DataRequestModel requestModel, DataType dataType, TimeInterval interval)
+        private async Task<List<DataResponseModel>> GetDataAsync2(L2DataRequestModel requestModel, DataType dataType, TimeInterval? interval)
         {
+            requestModel.Validate(_allAvailableProviders).ThrowIfInvalid();
             if (requestModel.StartDate != null && requestModel.EndDate != null)
             {
                 return dataType switch
@@ -41,17 +43,22 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
                     _ => throw new ArgumentException($"{dataType} is not supported."),
                 };
             }
-            else
+            else if (interval != null)
             {
                 return dataType switch
                 {
-                    DataType.TPS => await GetTPSAsync(requestModel, interval),
-                    DataType.GPS => await GetGPSAsync(requestModel, interval),
-                    DataType.GasAdjustedTPS => await GetGTPSAsync(requestModel, interval),
+                    DataType.TPS => await GetTPSAsync(requestModel, interval.Value),
+                    DataType.GPS => await GetGPSAsync(requestModel, interval.Value),
+                    DataType.GasAdjustedTPS => await GetGTPSAsync(requestModel, interval.Value),
                     _ => throw new ArgumentException($"{dataType} is not supported."),
                 };
             }
+            throw new ArgumentException($"No start date, end date or time interval specified");
         }
+
+        public async Task<List<DataResponseModel>> GetDataAsync(L2DataRequestModel requestModel, DataType dataType, TimeInterval interval) => await GetDataAsync2(requestModel, dataType, interval);
+
+        public async Task<List<DataResponseModel>> GetDataAsync(L2DataRequestModel requestModel, DataType dataType) => await GetDataAsync2(requestModel, dataType, null);
 
         public Task<L2DataResponseModel> GetDataAsync(L2DataRequestModel requestModel, DataType dataType, IPSDataFormatter formatter)
         {

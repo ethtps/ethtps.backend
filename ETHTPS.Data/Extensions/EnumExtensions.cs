@@ -103,11 +103,11 @@ namespace ETHTPS.Data.Core.Extensions
                 return "m";
             if (timeSpan <= TimeGrouping.Day.ToTimeSpan())
                 return "h";
-            if (timeSpan <= TimeGrouping.Week.ToTimeSpan())
+            if (timeSpan < TimeGrouping.Week.ToTimeSpan())
                 return "d";
-            if (timeSpan <= TimeGrouping.Month.ToTimeSpan())
+            if (timeSpan < TimeGrouping.Month.ToTimeSpan())
                 return "d";
-            if (timeSpan <= TimeGrouping.Year.ToTimeSpan())
+            if (timeSpan < TimeGrouping.Year.ToTimeSpan())
                 return "mo";
             return "y";
         }

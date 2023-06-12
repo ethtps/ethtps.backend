@@ -17,7 +17,10 @@ namespace ETHTPS.Tests.InfluxTests
         private IAsyncHistoricalBlockInfoProvider? _asyncHistoricalBlockInfoProvider;
         private const string _DEFAULT_BUCKET_NAME = "blockinfo";
         private const string _DEFAULT_MEASUREMENT_NAME = "blockinfo";
-
+        private static readonly string[] _TEST_PROVIDERS = new string[]
+        {
+            "Ethereum","Arbitrum One", "Aurora", "Celo", "Gnosis", "Loopring", "Metis", "Optimism", "Palm", "Polygon", "ZKSpace", "ZKSync", "ZKSync Era"
+        };
         [SetUp]
         public void Setup()
         {
@@ -67,7 +70,7 @@ namespace ETHTPS.Tests.InfluxTests
         }
 
         [Test]
-        public void ValuesOkAsync()
+        public void NoErrorThrown()
         {
             if (_aggregatedDataservice == null)
                 return;

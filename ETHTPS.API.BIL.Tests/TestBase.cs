@@ -1,4 +1,6 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+﻿using ETHTPS.API.BIL.Infrastructure.Services;
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
+using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.DependencyInjection;
 using ETHTPS.Configuration;
 using ETHTPS.Configuration.ProviderConfiguration;
@@ -35,6 +37,7 @@ namespace ETHTPS.Tests
                     .AddEssentialServices()
                     .AddDatabaseContext(APP_NAME)
                     .AddMixedCoreServices()
+                    .AddScoped<IPSDataFormatter, DeedleTimeSeriesFormatter>()
                     .AddDataProviderServices(_DATABASE_PROVIDER)
                     .WithStore(_DATABASE_PROVIDER, APP_NAME)
                     .AddDataUpdaterStatusService()
