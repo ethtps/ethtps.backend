@@ -20,6 +20,7 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
         private readonly IGTPSService _gtpsService;
         private readonly ILogger<AggregatedDataservice>? _logger;
         private readonly string[] _allAvailableProviders;
+        private readonly IPSDataFormatter _dataFormatter = new DeedleTimeSeriesFormatter();
 
         public AggregatedDataservice(ITPSService tpsService, IGPSService gpsService, IGTPSService gtpsService, EthtpsContext context, ILogger<AggregatedDataservice>? logger)
         {
@@ -58,10 +59,9 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
 
         public async Task<List<DataResponseModel>> GetDataAsync(L2DataRequestModel requestModel, DataType dataType, TimeInterval interval) => await GetDataAsync2(requestModel, dataType, interval);
 
-        public async Task<List<DataResponseModel>> GetDataAsync(L2DataRequestModel requestModel, DataType dataType) => await GetDataAsync2(requestModel, dataType, null);
-
-        public Task<L2DataResponseModel> GetDataAsync(L2DataRequestModel requestModel, DataType dataType, IPSDataFormatter formatter)
+        public Task<L2DataResponseModel> GetDataAsync(L2DataRequestModel requestModel, DataType dataType)
         {
+            requestModel = requestModel ?? throw new ArgumentNullException(nameof(requestModel));
             var result = new L2DataResponseModel(requestModel)
             {
                 DataType = dataType,
@@ -69,7 +69,7 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
                 ?.Select(async providerName =>
                 {
                     requestModel.Provider = providerName;
-                    return new Dataset(formatter.Format(await GetDataAsync(requestModel, dataType, requestModel.AutoInterval), requestModel), providerName, requestModel.IncludeSimpleAnalysis, requestModel.IncludeComplexAnalysis);
+                    return new Dataset(_dataFormatter.Format(await GetDataAsync(requestModel, dataType, requestModel.AutoInterval), requestModel), providerName, requestModel.IncludeSimpleAnalysis, requestModel.IncludeComplexAnalysis);
                 })
                 ?.Select(task => task.Result)
                 .Where(x => !requestModel.IncludeEmptyDatasets ? x.DataPoints.Count() > 0 : true)
@@ -77,7 +77,7 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
                 .ToArray()
             };
             if (result.Datasets != null)
-                result.Datasets = formatter.MakeEqualLength(result.Datasets, requestModel.ReturnXAxisType);
+                result.Datasets = _dataFormatter.MakeEqualLength(result.Datasets, requestModel.ReturnXAxisType);
             if (requestModel.MergeOptions.MergePercentage.HasValue)
             {
                 SimpleMultiDatasetAnalysis analysis = result.SimpleAnalysis ?? new(result.Datasets);
@@ -110,6 +110,7 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
             {
                 result.Datasets = result.Datasets?.Take(requestModel.MergeOptions.MaxCount.Value);
             }
+            result.Datasets ??= Array.Empty<Dataset>();
             return Task.FromResult(result);
         }
 

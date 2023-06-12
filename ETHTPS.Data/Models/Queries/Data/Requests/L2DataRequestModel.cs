@@ -103,7 +103,7 @@ namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
                     return ValidationResult.InvalidFor($"Custom bucket size is too small. Minimum allowed value is 1 minute.");
                 }
             }
-            if (AllDistinctProviders.Count() == 0)
+            if (!AllDistinctProviders.Any())
             {
                 return ValidationResult.InvalidFor("No provider(s) specified");
             }
