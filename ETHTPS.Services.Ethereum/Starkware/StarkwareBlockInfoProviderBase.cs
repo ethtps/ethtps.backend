@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Data.Integrations.MSSQL.Extensions;
-using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Services.Ethereum.Starkware.API;
 
 namespace ETHTPS.Services.Ethereum.Starkware

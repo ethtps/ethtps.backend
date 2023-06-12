@@ -4,8 +4,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 
 using ETHTPS.Configuration;
-using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.Models.DataEntries;
 
 using Newtonsoft.Json;
 

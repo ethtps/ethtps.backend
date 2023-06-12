@@ -68,7 +68,7 @@ namespace ETHTPS.API.Controllers.L2DataControllers
             {
                 return BadRequest(validationResult.Reason);
             }
-            return Ok(await _aggregatedDataService.GetDataAsync(requestModel, dataType, _dataFormatter));
+            return Ok(await _aggregatedDataService.GetDataAsync(requestModel, dataType));
         }
 
         [HttpGet]

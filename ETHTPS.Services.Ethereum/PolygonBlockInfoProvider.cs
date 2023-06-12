@@ -1,6 +1,6 @@
 ﻿using ETHTPS.Configuration;
-using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Services.Ethereum.JSONRPC;
 
 namespace ETHTPS.Services.Ethereum

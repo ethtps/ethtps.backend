@@ -5,6 +5,7 @@ using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.Data.Core.Models.LiveData;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
+using ETHTPS.Data.Integrations.MSSQL;
 
 namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProviders
 {
@@ -18,17 +19,20 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
         private readonly Func<Block, double> _valueSelector;
         private readonly Func<MinimalDataPoint, double?> _datapointValueSelector;
         private readonly IRedisCacheService _redisCacheService;
+        private readonly string[] _allAvailableProviders;
 
         protected InfluxPSServiceBase(
             IInfluxWrapper influxWrapper,
             Func<Block, double> valueSelector,
             Func<MinimalDataPoint, double?> datapointValueSelector,
-            IRedisCacheService redisCacheService)
+            IRedisCacheService redisCacheService,
+            EthtpsContext context)
         {
             _influxWrapper = influxWrapper;
             _valueSelector = valueSelector;
             _redisCacheService = redisCacheService;
             _datapointValueSelector = datapointValueSelector;
+            _allAvailableProviders = context.Providers.Select(x => x.Name).ToArray();
         }
 
         public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetAsync(ProviderQueryModel model, TimeInterval interval)
@@ -96,7 +100,6 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
                 if (!result.TryGetValue(entry.Provider, out var list))
                 {
                     list = new List<DataResponseModel>();
-                    result.Add(entry.Provider, list);
                 }
 
                 var dataPoint = new DataPoint()
@@ -124,6 +127,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
                 {
                     Data = new List<DataPoint>() { dataPoint }
                 });
+                result.Add(entry.Provider, list);
             }
 
             return result.ToDictionary(x => x.Key, x => x.Value.AsEnumerable());
@@ -148,7 +152,24 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
                     }
                 };
             }
-            throw new NotSupportedException("Operation not allowed: Get max for ALL providers");
+            else
+            {
+                var result = new Dictionary<string, IEnumerable<DataPoint>>();
+                foreach (var provider in _allAvailableProviders)
+                {
+                    var x = await InstantAsync(new ProviderQueryModel()
+                    {
+                        Provider = provider,
+                        IncludeSidechains = model.IncludeSidechains,
+                        Network = model.Network
+                    });
+                    if (x.Count > 0)
+                    {
+                        result.Add(x.First().Key, x.First().Value);
+                    }
+                }
+                return result;
+            }
         }
 
         public async Task<IDictionary<string, DataPoint>> MaxAsync(ProviderQueryModel model)
@@ -169,7 +190,24 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
                     }
                 };
             }
-            throw new NotSupportedException("Operation not allowed: Get max for ALL providers");
+            else
+            {
+                var result = new Dictionary<string, DataPoint>();
+                foreach (var provider in _allAvailableProviders)
+                {
+                    var x = await MaxAsync(new ProviderQueryModel()
+                    {
+                        Provider = provider,
+                        IncludeSidechains = model.IncludeSidechains,
+                        Network = model.Network
+                    });
+                    if (x.Count > 0)
+                    {
+                        result.Add(x.First().Key, x.First().Value);
+                    }
+                }
+                return result;
+            }
         }
 
         public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetAsync(L2DataRequestModel model)
@@ -204,12 +242,12 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
 
             foreach (var data in providerData)
             {
+                List<DataResponseModel>? list = default;
                 foreach (var entry in data)
                 {
-                    if (!result.TryGetValue(entry.Provider, out var list))
+                    if (!result.TryGetValue(entry.Provider, out list))
                     {
                         list = new List<DataResponseModel>();
-                        result.Add(entry.Provider, list);
                     }
 
                     var dataPoint = new DataPoint()
@@ -237,6 +275,10 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
                     {
                         Data = new List<DataPoint>() { dataPoint }
                     });
+                }
+                if (list != null && data.Any())
+                {
+                    result.Add(data.First().Provider, list);
                 }
             }
 

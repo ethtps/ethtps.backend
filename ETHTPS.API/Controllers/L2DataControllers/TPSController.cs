@@ -5,7 +5,6 @@ using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
 using ETHTPS.API.Core.Attributes;
 using ETHTPS.Data.Core;
-using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
@@ -53,9 +52,11 @@ namespace ETHTPS.API.Controllers.L2DataControllers
             return await _tpsService.MaxAsync(model);
         }
 
-        public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetAsync(L2DataRequestModel model)
+        [HttpPost]
+        [TTL(10)]
+        public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetAsync([FromBody] L2DataRequestModel model)
         {
-            return (await _tpsService.MaxAsync(model)).ToDictionary();
+            return await _tpsService.GetAsync(model);
         }
     }
 }

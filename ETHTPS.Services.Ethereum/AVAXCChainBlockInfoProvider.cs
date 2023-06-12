@@ -3,10 +3,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Extensions.StringExtensions;
 using ETHTPS.Data.Core.Models.DataEntries;
-using ETHTPS.Data.Core.Attributes;
 
 using Fizzler.Systems.HtmlAgilityPack;
 

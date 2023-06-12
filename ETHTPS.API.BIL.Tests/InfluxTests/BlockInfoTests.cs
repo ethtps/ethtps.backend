@@ -85,8 +85,8 @@ namespace ETHTPS.Tests.InfluxTests
                 return;
             }
             var result = await _service.GetAsync(ProviderQueryModel.FromProviderName("Ethereum"), TimeInterval.OneYear);
-            Assert.That(result.Count, Is.AtMost(1));
-            Assert.IsTrue(result.ContainsKey("Ethereum"));
+            Assert.That(result, Has.Count.AtMost(1));
+            Assert.That(result.ContainsKey("Ethereum"), Is.True);
         }
 
         [Test]
@@ -105,7 +105,7 @@ namespace ETHTPS.Tests.InfluxTests
         }
 
         [Test]
-        public void MaxAllDoesThrowTest()
+        public void MaxAllDoesNotThrowTest()
         {
             if (_service == null)
             {
@@ -113,7 +113,7 @@ namespace ETHTPS.Tests.InfluxTests
                 return;
             }
 
-            Assert.ThrowsAsync<NotSupportedException>(async () =>
+            Assert.DoesNotThrowAsync(async () =>
             {
                 await _service.MaxAsync(ProviderQueryModel.FromProviderName("All"));
             });
@@ -135,7 +135,7 @@ namespace ETHTPS.Tests.InfluxTests
         }
 
         [Test]
-        public void InstantAllDoesThrowTest()
+        public void InstantAllDoesNotThrowTest()
         {
             if (_service == null)
             {
@@ -143,7 +143,7 @@ namespace ETHTPS.Tests.InfluxTests
                 return;
             }
 
-            Assert.ThrowsAsync<NotSupportedException>(async () =>
+            Assert.DoesNotThrowAsync(async () =>
             {
                 await _service.InstantAsync(ProviderQueryModel.FromProviderName("All"));
             });
