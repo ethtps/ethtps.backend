@@ -10,6 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 namespace ETHTPS.Tests.InfluxTests
 {
     [TestFixture]
+    [Category("Database")]
+    [Category("InfluxDB")]
+    [Category("Essential")]
     public sealed class InfluxTests : TestBase
     {
         private IInfluxWrapper? _influxWrapper;

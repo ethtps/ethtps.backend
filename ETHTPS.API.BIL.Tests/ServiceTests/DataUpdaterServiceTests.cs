@@ -5,6 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ETHTPS.Tests.ServiceTests
 {
+    [Category("Services")]
+    [Category("DataUpdaters")]
+    [Category("Essential")]
+    [TestFixture]
     public sealed class DataUpdaterService : TestBase
     {
         private IDataUpdaterStatusService? _statusService;

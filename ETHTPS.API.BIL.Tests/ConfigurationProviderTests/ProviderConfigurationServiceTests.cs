@@ -9,6 +9,8 @@ using Environment = ETHTPS.Configuration.Database.Environment;
 namespace ETHTPS.Tests.ConfigurationProviderTests
 {
     [TestFixture]
+    [Category("Configuration")]
+    [Category("Essential")]
     public sealed class ProviderConfigurationServiceTests : TestBase
     {
 
@@ -37,9 +39,9 @@ namespace ETHTPS.Tests.ConfigurationProviderTests
             var configurationString = new ConfigurationString { Name = configurationName };
             var environment = new Environment { Name = environmentName };
 
-            _dbContext.Providers.Add(provider);
-            _dbContext.ConfigurationStrings.Add(configurationString);
-            _dbContext.Environments.Add(environment);
+            _dbContext.Providers?.Add(provider);
+            _dbContext.ConfigurationStrings?.Add(configurationString);
+            _dbContext.Environments?.Add(environment);
             _dbContext.SaveChanges();
 
             var providerConfigurationService = ServiceProvider.GetRequiredService<IProviderConfigurationService>();
@@ -55,9 +57,9 @@ namespace ETHTPS.Tests.ConfigurationProviderTests
 
             // Assert
             Assert.NotNull(providerConfigurationString);
-            Assert.AreEqual(providerName, providerConfigurationString.Provider.Name);
-            Assert.AreEqual(configurationName, providerConfigurationString.ConfigurationString.Name);
-            Assert.AreEqual(environmentName, providerConfigurationString.Environment.Name);
+            Assert.That(providerConfigurationString?.Provider?.Name, Is.EqualTo(providerName));
+            Assert.That(providerConfigurationString?.ConfigurationString?.Name, Is.EqualTo(configurationName));
+            Assert.That(providerConfigurationString?.Environment?.Name, Is.EqualTo(environmentName));
 
             Assert.Null(deletedProviderConfigurationString);
         }

@@ -8,6 +8,9 @@ namespace ETHTPS.Tests.ConfigurationProviderTests
     /// <summary>
     /// Long live ChatGPT. Some of these test cases didn't even cross my mind
     /// </summary>
+    [TestFixture]
+    [Category("Configuration")]
+    [Category("Essential")]
     public sealed class BasicConfigurationProviderTests : TestBase
     {
 
@@ -41,7 +44,7 @@ namespace ETHTPS.Tests.ConfigurationProviderTests
             provider.AddEnvironments(environmentName);
 
             // Assert
-            var environment = ServiceProvider.GetRequiredService<ConfigurationContext>().Environments.SingleOrDefault(x => x.Name == environmentName);
+            var environment = ServiceProvider.GetRequiredService<ConfigurationContext>().Environments?.SingleOrDefault(x => x.Name == environmentName);
             Assert.That(environment, Is.Not.Null);
         }
 
@@ -56,7 +59,7 @@ namespace ETHTPS.Tests.ConfigurationProviderTests
             provider.AddEnvironments(environmentName);
 
             // Assert
-            var environments = ServiceProvider.GetRequiredService<ConfigurationContext>().Environments.Where(x => x.Name == environmentName);
+            var environments = ServiceProvider.GetRequiredService<ConfigurationContext>().Environments?.Where(x => x.Name == environmentName);
             Assert.That(environments.Count(), Is.EqualTo(1));
         }
 
@@ -66,7 +69,7 @@ namespace ETHTPS.Tests.ConfigurationProviderTests
             // Arrange
             var provider = ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
             var environmentName = "Development";
-            var expectedEnvironmentID = ServiceProvider.GetRequiredService<ConfigurationContext>().Environments.Single(x => x.Name == environmentName).Id;
+            var expectedEnvironmentID = ServiceProvider.GetRequiredService<ConfigurationContext>().Environments?.Single(x => x.Name == environmentName).Id;
 
             // Act
             var environmentID = provider.GetEnvironmentID(environmentName);

@@ -4,9 +4,11 @@ using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 namespace ETHTPS.Tests.Data
 {
     [TestFixture]
+    [Category("Data")]
+    [Category("BusinessLogic")]
     public class L2DataRequestModelTests
     {
-        private L2DataRequestModel _model;
+        private L2DataRequestModel _model = new();
 
         [SetUp]
         public void Setup()
@@ -30,7 +32,7 @@ namespace ETHTPS.Tests.Data
         {
             var result = _model.Validate(new string[] { "provider1", "provider2" });
 
-            Assert.IsFalse(result.IsValid);
+            Assert.That(result.IsValid, Is.False);
             Assert.That(result.Reason, Is.EqualTo("Both StartDate and EndDate are null"));
         }
 
@@ -42,7 +44,7 @@ namespace ETHTPS.Tests.Data
 
             var result = _model.Validate(new string[] { "provider1", "provider2" });
 
-            Assert.IsFalse(result.IsValid);
+            Assert.That(result.IsValid, Is.False);
             Assert.That(result.Reason, Is.EqualTo("EndDate can't be earlier than StartDate"));
         }
 
@@ -54,7 +56,7 @@ namespace ETHTPS.Tests.Data
 
             var result = _model.Validate(new string[] { "provider1", "provider2" });
 
-            Assert.IsFalse(result.IsValid);
+            Assert.That(result.IsValid, Is.False);
         }
 
         [Test]
@@ -62,7 +64,7 @@ namespace ETHTPS.Tests.Data
         {
             var result = _model.Validate(new string[] { "provider1", "provider2" });
 
-            Assert.IsFalse(result.IsValid);
+            Assert.That(result.IsValid, Is.False);
         }
 
         [Test]
@@ -72,7 +74,7 @@ namespace ETHTPS.Tests.Data
 
             var result = _model.Validate(new string[] { "provider1", "provider2" });
 
-            Assert.IsFalse(result.IsValid);
+            Assert.That(result.IsValid, Is.False);
         }
 
 
@@ -85,7 +87,7 @@ namespace ETHTPS.Tests.Data
             var providers = _model.AllDistinctProviders;
 
             Assert.That(providers.Count(), Is.EqualTo(2));
-            Assert.IsTrue(providers.Contains("provider1"));
+            Assert.That(providers.Contains("provider1"), Is.True);
         }
     }
 }

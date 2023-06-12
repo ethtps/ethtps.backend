@@ -14,11 +14,14 @@ using RabbitMQ.Client.Events;
 namespace ETHTPS.Tests.ServiceTests.RabbitMQ
 {
     [TestFixture]
+    [Category("Services")]
+    [Category("Queueing")]
+    [Category("Essential")]
     public sealed class RabbitMQMessagePublisherTests : TestBase
     {
         private static string _host = "localhost";
         private static string _queue = "test_queue";
-        private static IDBConfigurationProvider _configurationProvider;
+        private static IDBConfigurationProvider? _configurationProvider;
 
         [SetUp]
         public void Setup()
@@ -54,11 +57,15 @@ namespace ETHTPS.Tests.ServiceTests.RabbitMQ
             // Deserialize the message and verify its contents
             var deserializedObj = JsonConvert.DeserializeObject<Person>(receivedMessage);
             Assert.That(deserializedObj, Is.Not.Null);
-            Assert.That(deserializedObj.Name, Is.EqualTo("John"));
-            Assert.That(deserializedObj.Age, Is.EqualTo(30));
+            if (deserializedObj is null) throw new ArgumentNullException(nameof(deserializedObj));
+            Assert.Multiple(() =>
+            {
+                Assert.That(deserializedObj.Name, Is.EqualTo("John"));
+                Assert.That(deserializedObj.Age, Is.EqualTo(30));
+            });
         }
 
-        private string WaitForMessage()
+        private static string WaitForMessage()
         {
             var factory = new ConnectionFactory() { HostName = _host };
             using var connection = factory.CreateConnection();

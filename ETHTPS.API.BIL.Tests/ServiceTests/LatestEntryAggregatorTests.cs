@@ -4,6 +4,8 @@ using ETHTPS.Services.LiveData;
 namespace ETHTPS.Tests.ServiceTests
 {
     [TestFixture]
+    [Category("Data")]
+    [Category("BusinessLogic")]
     public class LatestEntryAggregatorTests
     {
         private sealed class TestObject
@@ -12,8 +14,8 @@ namespace ETHTPS.Tests.ServiceTests
             public string? Name { get; set; }
         }
 
-        private LatestEntryAggregator<string, L2DataUpdateModel> _aggregator1;
-        private LatestEntryAggregator<string, L2DataUpdateModel> _aggregator2;
+        private LatestEntryAggregator<string, L2DataUpdateModel> _aggregator1 = new();
+        private LatestEntryAggregator<string, L2DataUpdateModel> _aggregator2 = new();
 
         [SetUp]
         public void Setup()

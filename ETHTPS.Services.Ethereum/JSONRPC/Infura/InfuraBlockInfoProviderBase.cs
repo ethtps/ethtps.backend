@@ -16,7 +16,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
             _httpClient.DefaultRequestHeaders.Add("Authorization", "Basic " + base64EncodedAuthenticationString);
         }
 
-        private string GetEndpoint(string providerName)
+        private static string GetEndpoint(string providerName)
         {
             switch (providerName)
             {

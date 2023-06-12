@@ -7,6 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ETHTPS.Tests.Data.DataTransformation
 {
+    [TestFixture]
+    [Category("Data")]
+    [Category("DataTransformation")]
+    [Category("Essential")]
     public sealed class DataTransformationTests : TestBase
     {
         private IAggregatedDataService? _dataService;

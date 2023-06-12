@@ -13,6 +13,13 @@ using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Tests.ProviderTests
 {
+    [Category("DataProviders")]
+    [Category("TPS")]
+    [Category("GPS")]
+    [Category("GTPS")]
+    [Category("Data")]
+    [Category("HistoricalData")]
+    [Category("Optional")]
     public abstract class ProviderTestBase<T> : TestBase
         where T : BlockInfoProviderBase
     {

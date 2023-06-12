@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace ETHTPS.Tests.InfluxTests
 {
     [TestFixture]
+    [Category("GPS")]
     public sealed class InfluxGPSTests : InfluxBlockInfoTests<InfluxGPSService>
     {
         public InfluxGPSTests()
@@ -21,6 +22,7 @@ namespace ETHTPS.Tests.InfluxTests
     }
 
     [TestFixture]
+    [Category("GTPS")]
     public sealed class InfluxGTPSTests : InfluxBlockInfoTests<InfluxGTPSService>
     {
         public InfluxGTPSTests()
@@ -30,6 +32,7 @@ namespace ETHTPS.Tests.InfluxTests
     }
 
     [TestFixture]
+    [Category("TPS")]
     public sealed class InfluxTPSTests : InfluxBlockInfoTests<InfluxTPSService>
     {
         public InfluxTPSTests()
@@ -38,6 +41,8 @@ namespace ETHTPS.Tests.InfluxTests
         }
     }
 
+    [Category("CoreFunctionality")]
+    [Category("Essential")]
     public abstract class InfluxBlockInfoTests<T> : TestBase
         where T : InfluxPSServiceBase
     {

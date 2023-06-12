@@ -43,4 +43,8 @@
     <ProjectReference Include="..\ETHTPS.Services.Ethereum\ETHTPS.Services.Ethereum.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="WSTests\" />
+  </ItemGroup>
+
 </Project>

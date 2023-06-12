@@ -7,6 +7,9 @@ using RabbitMQ.Client;
 namespace ETHTPS.Tests.ServiceTests.RabbitMQ
 {
     [TestFixture]
+    [Category("Services")]
+    [Category("Queueing")]
+    [Category("Essential")]
     public class RabbitMQSubscriptionServiceTests
     {
         [Test]

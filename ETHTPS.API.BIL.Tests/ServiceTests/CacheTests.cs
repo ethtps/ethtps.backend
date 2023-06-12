@@ -6,21 +6,19 @@ using ETHTPS.Data.Core;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Moq;
-
 using StackExchange.Redis;
 
 namespace ETHTPS.Tests.ServiceTests
 {
     [TestFixture]
+    [Category("Services")]
+    [Category("Caching")]
+    [Category("Essential")]
     public sealed class CacheTests : TestBase
     {
-        private IConnectionMultiplexer _connectionMultiplexer;
-        private IDatabase _database;
-        private IRedisCacheService _cachedDataService;
-
-        private Mock<IRedisCacheService> _mockRedisCacheService;
-        private IRedisCacheService _redisCacheService;
+        private IConnectionMultiplexer? _connectionMultiplexer;
+        private IDatabase? _database;
+        private IRedisCacheService? _cachedDataService;
 
         [SetUp]
         public void Setup()
@@ -29,20 +27,19 @@ namespace ETHTPS.Tests.ServiceTests
             _connectionMultiplexer = ConnectionMultiplexer.Connect(ServiceProvider.GetRequiredService<IDBConfigurationProvider>().GetFirstConfigurationString("RedisServer") ?? "localhost");
             _database = _connectionMultiplexer.GetDatabase();
             _cachedDataService = new RedisCachedDataService(_connectionMultiplexer);
-            _mockRedisCacheService = new Mock<IRedisCacheService>();
-            _redisCacheService = _mockRedisCacheService.Object;
         }
 
         [TearDown]
         public void TearDown()
         {
             // Flush the Redis database after each test
-            _database.Execute("FLUSHALL");
+            _database?.Execute("FLUSHALL");
         }
 
         [Test]
         public async Task HasDataAsync_ShouldReturnFalse_WhenDataDoesNotExist()
         {
+            _cachedDataService = _cachedDataService ?? throw new ArgumentNullException(nameof(_cachedDataService));
             // Arrange
             string key = "non-existent-key";
 
@@ -56,6 +53,7 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public async Task SetDataAsync_ShouldSetData_WhenValidKeyAndValueProvided()
         {
+            _cachedDataService = _cachedDataService ?? throw new ArgumentNullException(nameof(_cachedDataService));
             // Arrange
             string key = "valid-key";
             string value = "valid-value";
@@ -70,6 +68,7 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public async Task SetDataAsync_ShouldSetData_WhenValidKeyAndValueProvided_ForGenericMethod()
         {
+            _cachedDataService = _cachedDataService ?? throw new ArgumentNullException(nameof(_cachedDataService));
             // Arrange
             string key = "valid-key";
             int value = 42;
@@ -84,6 +83,7 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public async Task GetDataAsync_ShouldReturnData_WhenDataExists_ForGenericMethod()
         {
+            _cachedDataService = _cachedDataService ?? throw new ArgumentNullException(nameof(_cachedDataService));
             // Arrange
             string key = "valid-key";
             int expectedValue = 42;
@@ -99,6 +99,7 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public async Task SetDataAsync_ShouldSetData_WhenObjectImplementsICachedKey()
         {
+            _cachedDataService = _cachedDataService ?? throw new ArgumentNullException(nameof(_cachedDataService));
             // Arrange
             TestCachedKey obj = new()
             {
@@ -116,6 +117,7 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public async Task HasDataAsync_ShouldReturnTrue_WhenDataExists()
         {
+            _cachedDataService = _cachedDataService ?? throw new ArgumentNullException(nameof(_cachedDataService));
             // Arrange
             string key = "valid-key";
             _ = await _cachedDataService.SetDataAsync(key, "valid-value");
@@ -130,6 +132,7 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public async Task SetDataAsync_ShouldReturnFalse_WhenKeyIsNull()
         {
+            _cachedDataService = _cachedDataService ?? throw new ArgumentNullException(nameof(_cachedDataService));
             // Arrange
             string? key = null;
             string value = "valid-value";
@@ -144,6 +147,7 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public async Task SetDataAsync_ShouldReturnFalse_WhenValueIsNull()
         {
+            _cachedDataService = _cachedDataService ?? throw new ArgumentNullException(nameof(_cachedDataService));
             // Arrange
             string key = "valid-key";
             string? value = null;
@@ -158,6 +162,7 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public async Task SetDataAsync_ShouldReturnFalse_WhenKeyIsWhitespace()
         {
+            _cachedDataService = _cachedDataService ?? throw new ArgumentNullException(nameof(_cachedDataService));
             // Arrange
             string key = "   ";
             string value = "valid-value";
@@ -172,6 +177,7 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public async Task SetDataAsync_ShouldReturnFalse_WhenValueIsWhitespace()
         {
+            _cachedDataService = _cachedDataService ?? throw new ArgumentNullException(nameof(_cachedDataService));
             // Arrange
             string key = "valid-key";
             string value = "   ";
@@ -186,6 +192,7 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public async Task GetDataAsync_ShouldReturnNull_WhenDataDoesNotExist()
         {
+            _cachedDataService = _cachedDataService ?? throw new ArgumentNullException(nameof(_cachedDataService));
             // Arrange
             string key = "non-existent-key";
 
@@ -198,6 +205,8 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public async Task SetDataAsync_WithTTL_ShouldSetDataWithTTL()
         {
+            _cachedDataService = _cachedDataService ?? throw new ArgumentNullException(nameof(_cachedDataService));
+            _database = _database ?? throw new ArgumentNullException(nameof(_database));
             // Arrange
             string key = "testshouldsetkey";
             string value = "testvalue";
@@ -216,6 +225,8 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public async Task SetDataAsync_WithNegativeTTL_ShouldNotSetDataWithTTL()
         {
+            _database = _database ?? throw new ArgumentNullException(nameof(_database));
+            _cachedDataService = _cachedDataService ?? throw new ArgumentNullException(nameof(_cachedDataService));
             // Arrange
             string key = "testnegttlkey";
             string value = "testvalue";
@@ -232,6 +243,8 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public async Task SetDataAsync_WithZeroTTL_ShouldNotSetDataWithTTL()
         {
+            _cachedDataService = _cachedDataService ?? throw new ArgumentNullException(nameof(_cachedDataService));
+            _database = _database ?? throw new ArgumentNullException(nameof(_database));
             // Arrange
             string key = "testzerottlkey";
             string value = "testvalue";
@@ -248,6 +261,7 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public async Task GetDataAsync_WithExpiredTTL_ShouldNotGetData()
         {
+            _cachedDataService = _cachedDataService ?? throw new ArgumentNullException(nameof(_cachedDataService));
             // Arrange
             string key = "testkey";
             string value = "testvalue";
@@ -267,7 +281,7 @@ namespace ETHTPS.Tests.ServiceTests
         public class CachedKey : ICachedKey
         {
             public int Id;
-            public string Name;
+            public string? Name;
 
             public string ToCacheKey() => $"test-cached-key-{Id}";
         }

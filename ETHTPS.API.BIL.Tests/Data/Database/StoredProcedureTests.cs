@@ -7,6 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 namespace ETHTPS.Tests.Data.Database
 {
     [TestFixture]
+    [Category("Database")]
+    [Category("MSSQL")]
+    [Category("Essential")]
     public class StoredProcedureTests : TestBase
     {
         [Test]

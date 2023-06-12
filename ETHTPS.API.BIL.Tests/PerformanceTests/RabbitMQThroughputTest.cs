@@ -12,41 +12,50 @@ namespace ETHTPS.Tests.PerformanceTests
     namespace RabbitMQ.Client.Unit
     {
         [TestFixture]
+        [Category("Performance")]
         public class ThroughputTest : TestBase
         {
-            private IConnection conn;
-            private IModel ch;
-            private EventingBasicConsumer consumer;
+            private IConnection? _conn;
+            private IModel? _ch;
+            private EventingBasicConsumer? _consumer;
             [SetUp]
             public void Init()
             {
-                ConnectionFactory cf = new ConnectionFactory();
-                cf.AutomaticRecoveryEnabled = false;
-                cf.HostName = ServiceProvider.GetRequiredService<IDBConfigurationProvider>().GetFirstConfigurationString("RabbitMQ_Host_Dev") ?? "localhost";
-                conn = cf.CreateConnection();
-                ch = conn.CreateModel();
+                ConnectionFactory? cf = new()
+                {
+                    AutomaticRecoveryEnabled = false,
+                    HostName = ServiceProvider.GetRequiredService<IDBConfigurationProvider>().GetFirstConfigurationString("RabbitMQ_Host_Dev") ?? "localhost"
+                };
+                _conn = cf.CreateConnection();
+                _ch = _conn.CreateModel();
             }
             [TearDown]
             public void Cleanup()
             {
-                conn.Close();
+                _conn?.Close();
             }
             [Test]
             public void TestThroughput()
             {
-                string q = ch.QueueDeclare();
-                consumer = new EventingBasicConsumer(ch);
+                string q = _ch.QueueDeclare();
+                _consumer = new EventingBasicConsumer(_ch);
                 uint msgCount = 1000000;
                 uint ackCount = 0;
                 uint ackLimit = 1000;
                 byte[] data = Encoding.UTF8.GetBytes("hello");
-                IBasicProperties props = ch.CreateBasicProperties();
+                if (_ch == null)
+                {
+                    throw new NullReferenceException("Channel is null");
+                }
+                IBasicProperties? props = _ch.CreateBasicProperties();
                 props.ContentType = "text/plain";
                 props.DeliveryMode = 2; // persistent 
                 props.ContentEncoding = "UTF-8";
-                props.Headers = new Dictionary<string, object>();
-                props.Headers.Add("foo", "bar");
-                props.Headers.Add("baz", "qux");
+                props.Headers = new Dictionary<string, object>
+                {
+                    { "foo", "bar" },
+                    { "baz", "qux" }
+                };
                 props.Expiration = "1000";
                 props.MessageId = "message-id";
                 props.Timestamp = new AmqpTimestamp(DateTime.Now.Ticks);
@@ -54,10 +63,10 @@ namespace ETHTPS.Tests.PerformanceTests
                 props.UserId = "user-id";
                 props.AppId = "app-id";
                 props.ClusterId = "cluster-id";
-                ManualResetEvent done = new ManualResetEvent(false);
-                Thread t = new Thread(delegate ()
+                ManualResetEvent? done = new ManualResetEvent(false);
+                Thread? t = new(delegate ()
                 {
-                    consumer.Received += (sender, e) =>
+                    _consumer.Received += (sender, e) =>
                     {
                         while (true)
                         {
@@ -73,17 +82,17 @@ namespace ETHTPS.Tests.PerformanceTests
                             }
                             else if (ackCount % ackLimit == 0)
                             {
-                                ch.BasicAck(e.DeliveryTag, false);
+                                _ch.BasicAck(e.DeliveryTag, false);
                             }
                         }
                     };
                 });
                 t.Start();
-                ch.BasicConsume(q, true, consumer);
-                ch.BasicQos(0, 100, false);
+                _ch.BasicConsume(q, true, _consumer);
+                _ch.BasicQos(0, 100, false);
                 for (uint i = 0; i < msgCount; i++)
                 {
-                    ch.BasicPublish("", q, false, props, data);
+                    _ch.BasicPublish("", q, false, props, data);
                 }
                 done.WaitOne();
                 Assert.That(ackCount, Is.EqualTo(msgCount));

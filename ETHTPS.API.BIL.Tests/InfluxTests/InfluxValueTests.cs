@@ -15,6 +15,10 @@ namespace ETHTPS.Tests.InfluxTests
     /// </summary>
     /// <seealso cref="ETHTPS.Tests.TestBase" />
     [TestFixture]
+    [Category("Database")]
+    [Category("InfluxDB")]
+    [Category("BusinessLogic")]
+    [Category("Essential")]
     public sealed class InfluxValueTests : TestBase
     {
         private IInfluxWrapper? _influxWrapper;
