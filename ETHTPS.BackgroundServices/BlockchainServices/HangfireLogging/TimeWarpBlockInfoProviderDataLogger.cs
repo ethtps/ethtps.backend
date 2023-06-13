@@ -63,7 +63,7 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
                 }
                 catch (Exception e)
                 {
-                    _logger.LogDebug("HangfireHistoricalBlockInfoProviderDataLogger", e);
+                    _logger.LogDebug("HangfireHistoricalBlockInfoProviderDataLogger\r\\n{0}", e);
                 }
                 finally
                 {

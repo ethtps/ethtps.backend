@@ -24,9 +24,6 @@ namespace ETHTPS.Tests.InfluxTests
         private IInfluxWrapper? _influxWrapper;
         private IAggregatedDataService? _aggregatedDataservice;
         private IAsyncHistoricalBlockInfoProvider? _asyncHistoricalBlockInfoProvider;
-        private const string _DEFAULT_BUCKET_NAME = "blockinfo";
-        private const string _DEFAULT_MEASUREMENT_NAME = "blockinfo";
-        private TimeInterval _interval = TimeInterval.OneDay;
         private DataType _dataType = DataType.TPS;
         private L2DataRequestModel? _requestModel;
         private static readonly string[] _TEST_PROVIDERS = new string[]

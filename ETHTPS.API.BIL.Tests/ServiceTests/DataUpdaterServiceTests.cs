@@ -71,7 +71,7 @@ namespace ETHTPS.Tests.ServiceTests
         [Test]
         public void UniquenessTest()
         {
-            var groups = _statusService?.GetAllStatuses().GroupBy(x => x.Updater + x.UpdaterType);
+            var groups = _statusService?.GetAllStatuses().GroupBy(x => (x ?? ETHTPS.Data.Core.Models.DataUpdater.LiveDataUpdaterStatus.EMPTY).Updater + (x ?? ETHTPS.Data.Core.Models.DataUpdater.LiveDataUpdaterStatus.EMPTY).UpdaterType);
             if ((bool)(groups?.Any(x => x.Count() > 1)).GetValueOrDefault())
             {
                 Assert.Fail("Multiple entries for the same updater found", groups?.Where(x => x.Count() > 1));

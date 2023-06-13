@@ -15,9 +15,9 @@ namespace ETHTPS.Data.Integrations.MSSQL.Extensions
                 return context.Apikeys.First(context => context.KeyHash == apiKey.SHA256()).Id;
             }
         }
-        public static bool ValidateAPIKey(this EthtpsContext context, string apiKey)
+        public static bool ValidateAPIKey(this EthtpsContext context, string? apiKey)
         {
-            var keyHash = apiKey.SHA256();
+            var keyHash = apiKey?.SHA256();
             lock (context.LockObj)
             {
                 return context.Apikeys.Any(context => context.KeyHash == keyHash);

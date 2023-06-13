@@ -18,7 +18,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             _services = services;
         }
 
-        public DateTime GetEarliestDate()
+        public DateTime? GetEarliestDate()
         {
             var oldest = _context.TimeWarpData.OrderByDescending(x => x.StartDate).FirstOrDefault();
             if (oldest != null)
@@ -42,9 +42,9 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
         {
             var blockInfoProvider = _services.GetProvider(model.Provider);
             var earliestSyncedBlockHeight = 0;
-            if (_context.TimeWarpData.Any(x => x.ProviderNavigation.Name == model.Provider))
+            if (_context.TimeWarpData.Any(x => (x.ProviderNavigation != null ? x.ProviderNavigation.Name : Provider.EMPTY.Name) == model.Provider))
             {
-                var entry = _context.TimeWarpData.Where(x => x.ProviderNavigation.Name == model.Provider).OrderByDescending(x => x.Block).First().Block;
+                var entry = _context.TimeWarpData.Where(x => (x.ProviderNavigation != null ? x.ProviderNavigation.Name : Provider.EMPTY.Name) == model.Provider).OrderByDescending(x => x.Block).First().Block;
                 if (entry.HasValue)
                 {
                     earliestSyncedBlockHeight = entry.Value;

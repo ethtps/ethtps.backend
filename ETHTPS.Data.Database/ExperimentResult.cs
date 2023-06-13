@@ -14,5 +14,5 @@ public partial class ExperimentResult
 
     public int SdpercentageReturnVisitors { get; set; }
 
-    public virtual Experiment? ExperimentNavigation { get; set; } = new();
+    public virtual Experiment? ExperimentNavigation { get; set; }
 }

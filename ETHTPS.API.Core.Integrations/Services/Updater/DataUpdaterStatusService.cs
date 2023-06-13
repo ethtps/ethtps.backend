@@ -105,7 +105,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
             CreateUpdaterIfNecessary(provider, updaterType);
             lock (_context.LockObj)
             {
-                return _context.DataUpdaters.First(x => x.Type.TypeName == updaterType.ToString() && x.Provider.Name == provider);
+                return _context.DataUpdaters.First(x => (x.Type != null ? x.Type.TypeName : DataUpdaterType.EMPTY.TypeName) == updaterType.ToString() && (x.Provider != null ? x.Provider.Name : Provider.EMPTY.Name) == provider);
             }
         }
         private DataUpdaterStatus GetStatus(UpdaterStatus status) => GetStatus(status.ToString());
@@ -146,7 +146,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
                     _context.SaveChanges();
                 }
 
-                if (!_context.DataUpdaters.Any(x => x.Provider.Name == provider && x.Type.TypeName == updaterType.ToString()))
+                if (!_context.DataUpdaters.Any(x => (x.Provider != null ? x.Provider.Name : Provider.EMPTY.Name) == provider && (x.Type != null ? x.Type.TypeName : DataUpdaterType.EMPTY.TypeName) == updaterType.ToString()))
                 {
                     var typeID = _context.DataUpdaterTypes.First(x => x.TypeName == updaterType.ToString()).Id;
                     var providerID = _context.GetProviderID(provider);

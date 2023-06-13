@@ -22,8 +22,14 @@ namespace ETHTPS.Runner
                 await Console.Out.WriteLineAsync("Nothing to do");
                 return;
             }
+            if (config?.Executables == null || config.Executables.Length == 0)
+            {
+                Console.WriteLine("No executables specified");
+                return;
+            }
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            Service[] services = config.Executables.Select(x => new Service(x.Name, Path.Combine(config.BaseDirectory ?? string.Empty, x.Directory ?? string.Empty), x.Executable, x.Arguments)).ToArray();
+            Service[] services = config.Executables.Select(x => new Service(x.Name ?? throw new ArgumentNullException("Name"), Path.Combine(config.BaseDirectory ?? string.Empty, x.Directory ?? string.Empty), x.Executable ?? "", x.Arguments ?? Array.Empty<string>()))
+                                                   .ToArray();
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
             var size = Window.GetHostWidthHeight.Invoke();
             Console.Clear();

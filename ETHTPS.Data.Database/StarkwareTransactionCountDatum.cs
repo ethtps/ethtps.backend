@@ -6,7 +6,7 @@ public partial class StarkwareTransactionCountDatum
 
     public int Network { get; set; }
 
-    public string Product { get; set; }
+    public required string Product { get; set; }
 
     public DateTime LastUpdateTime { get; set; }
 
@@ -14,5 +14,5 @@ public partial class StarkwareTransactionCountDatum
 
     public double LastUpdateTps { get; set; }
 
-    public virtual Network? NetworkNavigation { get; set; } = new();
+    public virtual Network? NetworkNavigation { get; set; }
 }

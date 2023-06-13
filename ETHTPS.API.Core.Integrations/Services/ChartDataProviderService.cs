@@ -137,7 +137,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 
             var globalAverage = result.Series.Average(s => s.DataPoints.Average(x => x.Y ?? 0));
             var index = Enumerable.Range(1, result.Series.Count()).First(i => result.Series.TakeLast(i).Average(z => z.DataPoints.Average(y => y.Y
-            .HasValue ? y.Y.Value : 0)) >= globalAverage * groupSummingPercentage / 100);
+?? 0)) >= globalAverage * groupSummingPercentage / 100);
 
             var toBeRemoved = result.Series.TakeLast(index);
             var maxCount = toBeRemoved.Max(x => x.DataPoints.Count());

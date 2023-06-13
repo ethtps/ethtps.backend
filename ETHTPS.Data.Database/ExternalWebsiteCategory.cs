@@ -4,7 +4,7 @@ public partial class ExternalWebsiteCategory
 {
     public int Id { get; set; }
 
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     public virtual ICollection<ExternalWebsite> ExternalWebsites { get; } = new List<ExternalWebsite>();
 }

@@ -27,9 +27,9 @@ namespace ETHTPS.Data.Integrations.MSSQL.HistoricalDataProviders
                             continue;
                         }
                     }
-                    if (_context.TpsandGasDataLatests.Any(x => x.ProviderNavigation.Name == model.Provider))
+                    if (_context.TpsandGasDataLatests.Any(x => (x.ProviderNavigation != null ? x.ProviderNavigation.Name : Provider.EMPTY.Name) == model.Provider))
                     {
-                        TpsandGasDataLatest entry = _context.TpsandGasDataLatests.First(x => x.ProviderNavigation.Name == model.Provider);
+                        TpsandGasDataLatest entry = _context.TpsandGasDataLatests.First(x => (x.ProviderNavigation != null ? x.ProviderNavigation.Name : Provider.EMPTY.Name) == model.Provider);
                         yield return new()
                         {
                             AverageTps = entry.Tps,

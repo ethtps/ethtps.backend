@@ -22,7 +22,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
                 return links
                     .Select(link => new ProviderExternalWebsite()
                     {
-                        Category = link.ExternalWebsite?.CategoryNavigation.Id ?? 1,
+                        Category = link.ExternalWebsite?.CategoryNavigation?.Id ?? 1,
                         Name = link.ExternalWebsite?.Name,
                         IconBase64 = (link.ExternalWebsite?.IconBase64.Length == 0) ? null : link.ExternalWebsite?.IconBase64,
                         Url = link.Link

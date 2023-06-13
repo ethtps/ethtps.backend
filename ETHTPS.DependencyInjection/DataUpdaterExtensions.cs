@@ -163,9 +163,7 @@ namespace ETHTPS.API.DependencyInjection
                         if (!attributes.Any(x => x.GetType() == typeof(DisabledAttribute)))
                         {
                             var generic = method.MakeGenericMethod(loggerType);
-                            IScheduleInterval? interval = (IScheduleInterval?)generic.Invoke(scheduler, null);
-                            if (interval == null)
-                                throw new Exception("Initialization failed");
+                            IScheduleInterval? interval = (IScheduleInterval?)generic.Invoke(scheduler, null) ?? throw new Exception("Initialization failed");
                             if (attributes.Any(x => x.GetType() == typeof(RunsEveryAttribute)))
                             {
                                 var runsEvery = loggerType.GetCustomAttribute<RunsEveryAttribute>();

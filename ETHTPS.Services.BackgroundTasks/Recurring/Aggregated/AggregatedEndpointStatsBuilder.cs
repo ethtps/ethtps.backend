@@ -17,7 +17,7 @@ namespace ETHTPS.Services.BackgroundTasks.Recurring.Aggregated
             _logger = logger;
         }
 
-        public IList<AggregatedEnpointStat> Payload { get; set; }
+        public IList<AggregatedEnpointStat> Payload { get; set; } = new List<AggregatedEnpointStat>();
 
         public Task Invoke()
         {

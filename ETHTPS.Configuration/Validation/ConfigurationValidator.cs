@@ -49,20 +49,23 @@ namespace ETHTPS.Configuration.Validation
 
         private void WarnOfMissingOptionalStrings()
         {
+            if (_startupConfiguration == null || _startupConfiguration.Required == null || _startupConfiguration.Required.MicroserviceConfiguration == null)
+                return;
             lock (_context.LockObj)
             {
                 foreach (var microserviceConfiguration in _startupConfiguration.Required.MicroserviceConfiguration)
                 {
+                    if (microserviceConfiguration.RequiredConfigurationStrings == null) continue;
                     foreach (var requiredString in microserviceConfiguration.RequiredConfigurationStrings)
                     {
-                        var s = _context.MicroserviceConfigurationStrings.FirstOrDefault(x => x.Microservice.Name == microserviceConfiguration.Name && x.ConfigurationString.Name == requiredString);
+                        var s = _context.MicroserviceConfigurationStrings?.FirstOrDefault(x => (x.Microservice != null ? x.Microservice.Name : Microservice.EMPTY.Name) == microserviceConfiguration.Name && (x.ConfigurationString != null ? x.ConfigurationString.Name : ConfigurationString.EMPTY.Name) == requiredString);
                         if (s == null)
                         {
                             _logger?.LogWarning($"{requiredString} doesn't exist");
                         }
                         else
                         {
-                            if (string.IsNullOrWhiteSpace(s.ConfigurationString.Value))
+                            if (string.IsNullOrWhiteSpace((s.ConfigurationString != null ? s.ConfigurationString.Value : ConfigurationString.EMPTY.Value)))
                             {
                                 _logger?.LogWarning($"{requiredString} is null or empty");
                             }
@@ -74,18 +77,19 @@ namespace ETHTPS.Configuration.Validation
 
         private void ValidateRequiredConfigurationStrings()
         {
+            if (_startupConfiguration == null || _startupConfiguration.Required == null || _startupConfiguration.Required.MicroserviceConfiguration == null)
+                return;
+
             lock (_context.LockObj)
             {
                 foreach (var microserviceConfiguration in _startupConfiguration.Required.MicroserviceConfiguration)
                 {
+                    if (microserviceConfiguration.RequiredConfigurationStrings == null) continue;
                     foreach (var requiredString in microserviceConfiguration.RequiredConfigurationStrings)
                     {
-                        var s = _context.MicroserviceConfigurationStrings?.FirstOrDefault(x => x.Microservice.Name == microserviceConfiguration.Name && x.ConfigurationString.Name == requiredString);
-                        if (s == null)
-                            throw new ConfigurationStringNotFoundException(requiredString, microserviceConfiguration.Name);
-
-                        if (string.IsNullOrWhiteSpace(s.ConfigurationString.Value))
-                            throw new InvalidConfigurationStringException(s.ConfigurationString.Name, "null or empty");
+                        var s = (_context.MicroserviceConfigurationStrings?.FirstOrDefault(x => (x.Microservice != null ? x.Microservice.Name : Microservice.EMPTY.Name) == microserviceConfiguration.Name && (x.ConfigurationString != null ? x.ConfigurationString.Name : ConfigurationString.EMPTY.Name) == requiredString)) ?? throw new ConfigurationStringNotFoundException(requiredString, microserviceConfiguration.Name ?? "ValidateRequiredConfigurationStrings");
+                        if (string.IsNullOrWhiteSpace(s.ConfigurationString?.Value))
+                            throw new InvalidConfigurationStringException((s.ConfigurationString != null ? s.ConfigurationString.Name : ConfigurationString.EMPTY.Name), "null or empty");
                     }
                 }
             }
@@ -93,12 +97,15 @@ namespace ETHTPS.Configuration.Validation
 
         private void ValidateMicroservices()
         {
+            if (_startupConfiguration == null || _startupConfiguration.Required == null || _startupConfiguration.Required.MicroserviceConfiguration == null)
+                return;
+
             lock (_context.LockObj)
             {
                 List<string>? existingMicroservices = _context.Microservices?.Select(x => x.Name).ToList();
                 if (_startupConfiguration.Required.MicroserviceConfiguration.Select(x => existingMicroservices?.Contains(x.Name ?? string.Empty)).Any(x => x == false))
                 {
-                    throw new MicroservicesNotFoundException(_startupConfiguration.Required.MicroserviceConfiguration.Where(x => !existingMicroservices.Contains(x.Name)).Select(x => x.Name ?? string.Empty).ToArray());
+                    throw new MicroservicesNotFoundException(_startupConfiguration.Required.MicroserviceConfiguration.Where(x => !existingMicroservices?.Contains(x.Name ?? "undefined") ?? true).Select(x => x.Name ?? string.Empty).ToArray());
                 }
             }
         }

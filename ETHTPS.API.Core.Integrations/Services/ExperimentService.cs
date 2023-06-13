@@ -43,7 +43,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             {
                 lock (_context.LockObj)
                 {
-                    return _context.GetExperimentsUserIsEnrolledIn(_context.GetAPIKeyID(context)).SafeSelect(x => x.Id);
+                    return _context.GetExperimentsUserIsEnrolledIn(_context.GetAPIKeyID(context)).SafeSelect(x => (x ?? Experiment.EMPTY).Id);
                 }
             }
             return Enumerable.Empty<int>();

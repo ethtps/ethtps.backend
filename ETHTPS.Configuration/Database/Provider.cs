@@ -2,6 +2,9 @@
 
 public partial class Provider
 {
+#pragma warning disable CA2211 // Non-constant fields should not be visible
+    public static Provider EMPTY = new Provider();
+#pragma warning restore CA2211 // Non-constant fields should not be visible
     public int Id { get; set; }
 
     public string Name { get; set; } = null!;

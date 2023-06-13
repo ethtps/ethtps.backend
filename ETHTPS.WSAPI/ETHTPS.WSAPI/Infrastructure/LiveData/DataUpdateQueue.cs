@@ -4,9 +4,9 @@ namespace ETHTPS.WSAPI.Infrastructure.LiveData
 {
     public sealed class DataUpdateQueue : IInvocable
     {
-        public async Task Invoke()
+        public Task Invoke()
         {
-
+            return Task.CompletedTask;
         }
     }
 }

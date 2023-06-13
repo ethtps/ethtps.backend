@@ -138,7 +138,9 @@ namespace ETHTPS.Tests.ServiceTests
             string value = "valid-value";
 
             // Act
+#pragma warning disable CS8604 // Possible null reference argument.
             bool result = await _cachedDataService.SetDataAsync(key, value);
+#pragma warning restore CS8604 // Possible null reference argument.
 
             // Assert
             Assert.IsFalse(result);
@@ -153,7 +155,7 @@ namespace ETHTPS.Tests.ServiceTests
             string? value = null;
 
             // Act
-            bool result = await _cachedDataService.SetDataAsync(key, value);
+            bool? result = value == null ? null : await _cachedDataService.SetDataAsync(key, value);
 
             // Assert
             Assert.IsFalse(result);

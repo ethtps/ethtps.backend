@@ -6,7 +6,7 @@ public partial class JobQueue
 
     public long JobId { get; set; }
 
-    public string Queue { get; set; }
+    public string? Queue { get; set; }
 
     public DateTime? FetchedAt { get; set; }
 }

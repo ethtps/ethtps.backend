@@ -34,7 +34,7 @@ namespace ETHTPS.Data.Integrations.MSSQL.Extensions
             // We do want to keep some types of experiments alive indefinitely
             // Some of them should only be displayed once
             // Others only sometimes
-            if (experiment.RunParametersNavigation.EnrollmentChance != null)
+            if (experiment.RunParametersNavigation?.EnrollmentChance != null)
             {
                 if (_random.Next(100) <= experiment.RunParametersNavigation.EnrollmentChance)
                 {
@@ -53,7 +53,7 @@ namespace ETHTPS.Data.Integrations.MSSQL.Extensions
             }
         }
 
-        public static IEnumerable<Experiment> GetExperimentsUserIsEnrolledIn(this EthtpsContext context, int apiKeyId)
+        public static IEnumerable<Experiment?> GetExperimentsUserIsEnrolledIn(this EthtpsContext context, int apiKeyId)
         {
             lock (context.LockObj)
             {
@@ -89,9 +89,9 @@ namespace ETHTPS.Data.Integrations.MSSQL.Extensions
         public static bool IsRunning(this Experiment experiment)
         {
             var parameters = experiment.RunParametersNavigation;
-            if (!parameters.Enabled)
+            if (!parameters?.Enabled ?? true)
                 return false;
-            if (parameters.EndDate.HasValue)
+            if (parameters?.EndDate.HasValue ?? false)
             {
                 if (DateTime.Now > parameters.EndDate.Value)
                     return false;

@@ -8,7 +8,7 @@ namespace ETHTPS.API.Security.Core.Humanity.Recaptcha
 {
     public sealed class RecaptchaVerificationService : IRecaptchaVerificationService
     {
-        private readonly string _privateKey;
+        private readonly string? _privateKey;
         private readonly HttpClient _httpClient = new();
         private readonly IDBConfigurationProvider _dBConfigurationProvider;
 
@@ -27,7 +27,7 @@ namespace ETHTPS.API.Security.Core.Humanity.Recaptcha
 
             var dictionary = new Dictionary<string, string>()
                     {
-                        { "secret", _privateKey },
+                        { "secret", _privateKey ?? "undefined" },
                         { "response", recaptchaToken }
 
                     };
@@ -39,7 +39,7 @@ namespace ETHTPS.API.Security.Core.Humanity.Recaptcha
                 return false;
             }
             var googleReCaptchaResponse = JsonConvert.DeserializeObject<RecaptchaResponse>(stringContent);
-            return googleReCaptchaResponse.Success;
+            return googleReCaptchaResponse?.Success ?? false;
         }
 
     }

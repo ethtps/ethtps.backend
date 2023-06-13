@@ -16,9 +16,7 @@ namespace ETHTPS.Services.Extensions
             if (obj == null)
                 throw new ArgumentNullException(nameof(obj));
             Type objType = obj.GetType();
-            var fieldInfo = GetFieldInfo(objType, fieldName);
-            if (fieldInfo == null)
-                throw new ArgumentOutOfRangeException(fieldName,
+            var fieldInfo = GetFieldInfo(objType, fieldName) ?? throw new ArgumentOutOfRangeException(fieldName,
                     $"Couldn't find field {fieldName} in type {objType.FullName}");
             return fieldInfo.GetValue(obj);
         }
@@ -28,9 +26,7 @@ namespace ETHTPS.Services.Extensions
             if (obj == null)
                 throw new ArgumentNullException(nameof(obj));
             Type objType = obj.GetType();
-            var fieldInfo = GetFieldInfo(objType, fieldName);
-            if (fieldInfo == null)
-                throw new ArgumentOutOfRangeException(fieldName,
+            var fieldInfo = GetFieldInfo(objType, fieldName) ?? throw new ArgumentOutOfRangeException(fieldName,
                     $"Couldn't find field {fieldName} in type {objType.FullName}");
             fieldInfo.SetValue(obj, val);
         }
@@ -61,10 +57,10 @@ namespace ETHTPS.Services.Extensions
                 throw new ArgumentNullException(nameof(obj));
             Type objType = obj.GetType();
             var propertyInfo = GetPropertyInfo(objType, propertyName);
-            if (propertyInfo == null)
-                throw new ArgumentOutOfRangeException(propertyName,
-                    $"Couldn't find property {propertyName} in type {objType.FullName}");
-            return propertyInfo.GetValue(obj, null);
+            return propertyInfo == null
+                ? throw new ArgumentOutOfRangeException(propertyName,
+                    $"Couldn't find property {propertyName} in type {objType.FullName}")
+                : propertyInfo.GetValue(obj, null);
         }
 
         public static void SetPropertyValue(this object obj, string propertyName, object val)
@@ -72,9 +68,7 @@ namespace ETHTPS.Services.Extensions
             if (obj == null)
                 throw new ArgumentNullException(nameof(obj));
             Type objType = obj.GetType();
-            var propertyInfo = GetPropertyInfo(objType, propertyName);
-            if (propertyInfo == null)
-                throw new ArgumentOutOfRangeException(propertyName,
+            var propertyInfo = GetPropertyInfo(objType, propertyName) ?? throw new ArgumentOutOfRangeException(propertyName,
                     $"Couldn't find property {propertyName} in type {objType.FullName}");
             propertyInfo.SetValue(obj, val, null);
         }

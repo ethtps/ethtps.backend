@@ -21,9 +21,9 @@ namespace ETHTPS.Data.Integrations.MSSQL.TimeWarp
 
         public string Interval { get; set; }
 
-        public DateTime GetEarliestDate()
+        public DateTime? GetEarliestDate()
         {
-            return _context.TimeWarpData.OrderBy(x => x.StartDate).FirstOrDefault().StartDate;
+            return _context.TimeWarpData?.OrderBy(x => x.StartDate).FirstOrDefault()?.StartDate;
         }
 
         public IEnumerable<DataPoint> GetGasAdjustedTPSAt(ProviderQueryModel model, long timestamp, string smoothing, int count)

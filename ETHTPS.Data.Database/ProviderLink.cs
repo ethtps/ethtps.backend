@@ -8,7 +8,7 @@ public partial class ProviderLink
 
     public int ExternalWebsiteId { get; set; }
 
-    public string Link { get; set; }
+    public string? Link { get; set; }
 
     public virtual ExternalWebsite? ExternalWebsite { get; set; }
 

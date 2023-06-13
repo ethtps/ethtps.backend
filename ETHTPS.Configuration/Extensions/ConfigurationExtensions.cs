@@ -13,13 +13,7 @@ namespace ETHTPS.Configuration.Extensions
             var entityType = modelBuilder.Model.FindEntityType(typeof(T));
             if (entityType != null)
             {
-                var primaryKey = entityType.FindPrimaryKey();
-
-                if (primaryKey == null)
-                {
-                    throw new InvalidOperationException($"Cannot configure primary key for entity type '{entityType.Name}' because it has no primary key defined.");
-                }
-
+                var primaryKey = entityType.FindPrimaryKey() ?? throw new InvalidOperationException($"Cannot configure primary key for entity type '{entityType.Name}' because it has no primary key defined.");
                 modelBuilder.Entity<T>().HasKey(primaryKey.Properties.Select(x => x.Name).ToArray());
 
                 foreach (var foreignKey in entityType.GetForeignKeys())

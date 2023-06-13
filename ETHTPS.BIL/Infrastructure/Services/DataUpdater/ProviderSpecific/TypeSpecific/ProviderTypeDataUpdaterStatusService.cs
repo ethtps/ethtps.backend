@@ -20,12 +20,12 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.ProviderSpecific.Ty
 
         public bool? Enabled => _providerDataUpdaterStatusManager.GetStatusFor(_providerName, UpdaterType)?.Enabled;
 
-        public IEnumerable<LiveDataUpdaterStatus> GetAllStatuses()
+        public IEnumerable<LiveDataUpdaterStatus?> GetAllStatuses()
         {
             return _providerDataUpdaterStatusManager.GetAllStatuses();
         }
 
-        public IEnumerable<LiveDataUpdaterStatus> GetStatusFor(string provider)
+        public IEnumerable<LiveDataUpdaterStatus?> GetStatusFor(string provider)
         {
             return _providerDataUpdaterStatusManager.GetStatusFor(provider);
         }

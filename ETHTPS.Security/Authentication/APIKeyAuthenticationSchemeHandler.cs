@@ -38,13 +38,13 @@ namespace ETHTPS.API.Security.Core.Authentication
             var apiKey = Context.ExtractAPIKey();
             if (!ValidateAPIKey(apiKey))
             {
-                _logger.LogWarning($"API call with invalid key", Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
+                _logger.LogWarning("API call with invalid key [{0}]", Request.HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString());
                 return Task.FromResult(AuthenticateResult.Fail("No X-API-KEY header specified or API key is invalid"));
             }
 
             if (!_context.ValidateNumberOfCalls(apiKey))
             {
-                _logger.LogWarning($"Limit rate exceeded", Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
+                _logger.LogWarning("Limit rate exceeded [{0}]", Request.HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString());
                 return Task.FromResult(AuthenticateResult.Fail("Limit reached for today"));
             }
 

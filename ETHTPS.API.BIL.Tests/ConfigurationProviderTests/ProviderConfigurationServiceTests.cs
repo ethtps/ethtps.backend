@@ -36,7 +36,7 @@ namespace ETHTPS.Tests.ConfigurationProviderTests
             var environmentName = "TestEnvironment";
 
             var provider = new Provider { Name = providerName };
-            var configurationString = new ConfigurationString { Name = configurationName };
+            var configurationString = new ConfigurationString { Name = configurationName, Value = "" };
             var environment = new Environment { Name = environmentName };
 
             _dbContext.Providers?.Add(provider);

@@ -4,7 +4,10 @@ namespace ETHTPS.Data.Core.Models.DataUpdater
 {
     public sealed class LiveDataUpdaterStatus : IBasicLiveUpdaterStatus, IComparable<UpdaterStatus>, IEquatable<UpdaterStatus>
     {
-        private const double UNRELIABILITY_RATIO_THRESHOLD = 1;
+#pragma warning disable CA2211 // Non-constant fields should not be visible
+        public static LiveDataUpdaterStatus EMPTY = new();
+#pragma warning restore CA2211 // Non-constant fields should not be visible
+        private const double _UNRELIABILITY_RATIO_THRESHOLD = 1;
         public string Updater { get; set; }
         public string Status { get; set; }
         public string UpdaterType { get; set; }
@@ -20,7 +23,7 @@ namespace ETHTPS.Data.Core.Models.DataUpdater
                     return false;
                 if (NumberOfFailures == 0)
                     return false;
-                return (NumberOfSuccesses / NumberOfFailures) < UNRELIABILITY_RATIO_THRESHOLD;
+                return (NumberOfSuccesses / NumberOfFailures) < _UNRELIABILITY_RATIO_THRESHOLD;
             }
         }
         public bool IsProbablyDown

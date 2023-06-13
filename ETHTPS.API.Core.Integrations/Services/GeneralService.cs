@@ -109,9 +109,9 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
                         break;
                     default:
                         nextInterval = GetNextIntervalForInstantData(interval);
-                        result.LastData.Add("tps", (await _tpsService.GetAsync(model, nextInterval)).ToDictionary(x => x.Key, x => new List<DataPoint>() { x.Value.LastOrDefault()?.Data.FirstOrDefault() }));
-                        result.LastData.Add("gps", (await _gpsService.GetAsync(model, nextInterval)).ToDictionary(x => x.Key, x => new List<DataPoint>() { x.Value.LastOrDefault()?.Data.FirstOrDefault() }));
-                        result.LastData.Add("gasAdjustedTPS", (await _gasAdjustedTPSService.GetAsync(model, nextInterval)).ToDictionary(x => x.Key, x => new List<DataPoint>() { x.Value.LastOrDefault()?.Data.FirstOrDefault() }));
+                        result.LastData.Add("tps", (await _tpsService.GetAsync(model, nextInterval)).ToDictionary(x => x.Key, x => new List<DataPoint>() { x.Value.Last().Data.First() }));
+                        result.LastData.Add("gps", (await _gpsService.GetAsync(model, nextInterval)).ToDictionary(x => x.Key, x => new List<DataPoint>() { x.Value.Last().Data.First() }));
+                        result.LastData.Add("gasAdjustedTPS", (await _gasAdjustedTPSService.GetAsync(model, nextInterval)).ToDictionary(x => x.Key, x => new List<DataPoint>() { x.Value.Last().Data.First() }));
                         break;
                 }
             }

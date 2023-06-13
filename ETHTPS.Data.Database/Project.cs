@@ -8,11 +8,11 @@ public partial class Project
 
     public int? Provider { get; set; }
 
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
-    public string Website { get; set; }
+    public required string Website { get; set; }
 
-    public string Details { get; set; }
+    public required string Details { get; set; }
 
     public virtual ICollection<Feature> Features { get; } = new List<Feature>();
 

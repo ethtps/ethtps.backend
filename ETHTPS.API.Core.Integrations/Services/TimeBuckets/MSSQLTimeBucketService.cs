@@ -29,7 +29,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets
 
         public void UpdateLatestEntries(TPSGPSInfo entry)
         {
-            Func<TpsandGasDataLatest, bool> selector = x => x.Network == _mainnetID && x.ProviderNavigation.Name == _provider;
+            Func<TpsandGasDataLatest, bool> selector = x => x.Network == _mainnetID && (x.ProviderNavigation != null ? x.ProviderNavigation.Name : Provider.EMPTY.Name) == _provider;
             if (!_context.TpsandGasDataLatests.Any(selector))
             {
                 _context.TpsandGasDataLatests.Add(new TpsandGasDataLatest()
@@ -51,7 +51,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets
 
         public void UpdateMaxEntry(TPSGPSInfo entry)
         {
-            Func<TpsandGasDataMax, bool> selector = x => x.ProviderNavigation.Name == _provider && x.Network == _mainnetID;
+            Func<TpsandGasDataMax, bool> selector = x => (x.ProviderNavigation != null ? x.ProviderNavigation.Name : Provider.EMPTY.Name) == _provider && x.Network == _mainnetID;
             if (!_context.TpsandGasDataMaxes.Any(selector))
             {
                 _context.TpsandGasDataMaxes.Add(new TpsandGasDataMax()

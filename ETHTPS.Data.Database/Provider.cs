@@ -60,4 +60,8 @@ public partial class Provider : ProviderSummaryBase
     public virtual ICollection<TpsandGasDataMonth> TpsandGasDataMonths { get; set; }
     public virtual ICollection<TpsandGasDataWeek> TpsandGasDataWeeks { get; set; }
     public virtual ICollection<TpsandGasDataYear> TpsandGasDataYears { get; set; }
+
+#pragma warning disable IDE0090 // Use 'new(...)'
+    public static Provider EMPTY = new Provider();
+#pragma warning restore IDE0090 // Use 'new(...)'
 }

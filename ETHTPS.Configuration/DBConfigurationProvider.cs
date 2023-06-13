@@ -94,13 +94,13 @@ namespace ETHTPS.Configuration
         {
             lock (_context.LockObj)
             {
-                var emptyEnvironment = new Database.Environment();
-                var emptyMicroservice = new Database.Microservice();
+                var emptyEnvironment = Database.Environment.EMPTY;
+                var emptyMicroservice = Database.Microservice.EMPTY;
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
                 return _context.MicroserviceConfigurationStrings?
-                    .Where(x => (x.Microservice ?? emptyMicroservice).Name.ToUpper() == microserviceName.ToUpper()
-                                && (x.Environment ?? emptyEnvironment).Name.ToUpper() == _environment.ToUpper()
-                                || (x.Environment ?? emptyEnvironment).Name.ToUpper() == "ALL")
+                    .Where(x => (x.Microservice != null ? x.Microservice.Name : emptyMicroservice.Name).ToUpper() == microserviceName.ToUpper()
+                                && (x.Environment != null ? x.Environment.Name : emptyEnvironment.Name).ToUpper() == _environment.ToUpper()
+                                || (x.Environment != null ? x.Environment.Name : emptyEnvironment.Name).ToUpper() == "ALL")
                     .Select(x => (IConfigurationString?)x.ConfigurationString)
                     .WhereNotNull()
                     .Select(x => new ConfigurationString()

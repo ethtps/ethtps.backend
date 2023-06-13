@@ -2,9 +2,12 @@
 
 public partial class Network
 {
+#pragma warning disable CA2211 // Non-constant fields should not be visible
+    public static Network EMPTY = new() { Name = "invalid" };
+#pragma warning restore CA2211 // Non-constant fields should not be visible
     public int Id { get; set; }
 
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     public virtual ICollection<OldestLoggedHistoricalEntry> OldestLoggedHistoricalEntries { get; } = new List<OldestLoggedHistoricalEntry>();
 

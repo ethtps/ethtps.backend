@@ -4,13 +4,13 @@ public partial class ExperimentTarget
 {
     public int Id { get; set; }
 
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
-    public string Description { get; set; }
+    public required string Description { get; set; }
 
     public int Type { get; set; }
 
-    public virtual ICollection<Experiment> Experiments { get; } = new List<Experiment>();
+    public required virtual ICollection<Experiment> Experiments { get; set; }
 
-    public virtual ExperimentTargetType? TypeNavigation { get; set; } = new();
+    public virtual ExperimentTargetType? TypeNavigation { get; set; }
 }

@@ -2,6 +2,9 @@
 
 public partial class DataUpdater
 {
+#pragma warning disable CA2211 // Non-constant fields should not be visible
+    public static DataUpdater EMPTY = new();
+#pragma warning restore CA2211 // Non-constant fields should not be visible
     public int Id { get; set; }
 
     public int TypeId { get; set; }

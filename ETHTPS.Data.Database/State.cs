@@ -6,13 +6,13 @@ public partial class State
 
     public long JobId { get; set; }
 
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
-    public string Reason { get; set; }
+    public required string Reason { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
-    public string Data { get; set; }
+    public required string Data { get; set; }
 
     public virtual Job? Job { get; set; }
 }

@@ -14,7 +14,7 @@ namespace ETHTPS.API.DependencyInjection
             using (var built = services.BuildServiceProvider())
             {
                 var provider = built.GetRequiredService<IDBConfigurationProvider>();
-                var result = (provider.GetConfigurationStringsForMicroservice(appName).FirstOrDefault(x => x.Name == connectionStringName)?.Value) ?? throw new ArgumentException($"Couldn't find a connection string for {appName} for \"{Constants.ENVIRONMENT}\" environment");
+                var result = (provider.GetConfigurationStringsForMicroservice(appName)?.FirstOrDefault(x => x.Name == connectionStringName)?.Value) ?? throw new ArgumentException($"Couldn't find a connection string for {appName} for \"{Constants.ENVIRONMENT}\" environment");
                 return result;
             }
         }

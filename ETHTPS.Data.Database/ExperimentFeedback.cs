@@ -10,7 +10,7 @@ public partial class ExperimentFeedback
 
     public int? Rating { get; set; }
 
-    public string Text { get; set; }
+    public required string Text { get; set; }
 
-    public virtual Experiment? ExperimentNavigation { get; set; } = new();
+    public virtual Experiment? ExperimentNavigation { get; set; }
 }

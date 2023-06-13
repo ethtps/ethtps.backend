@@ -27,7 +27,14 @@ namespace ETHTPS.Data.Integrations.MSSQL.HistoricalDataProviders
             IEnumerable<TimedTPSAndGasData> result;
             lock (_context.LockObj)
             {
-                result = _dataSelector(_context).ToList().Where(x => x.NetworkNavigation.Name == model.Network && x.ProviderNavigation.Name == model.Provider).DistinctBy(x => x.StartDate).OrderBy(x => x.StartDate).ToList().Where(x => DateTime.Now.ToUniversalTime().Subtract(x.StartDate) <= _maxAge);
+                var emptyProvider = new Provider();
+                var emptyNetwork = Network.EMPTY;
+                result = _dataSelector(_context).ToList()
+                                                .Where(x => (x.NetworkNavigation ?? emptyNetwork).Name == model.Network && (x.ProviderNavigation ?? emptyProvider).Name == model.Provider)
+                                                .DistinctBy(x => x.StartDate)
+                                                .OrderBy(x => x.StartDate)
+                                                .ToList()
+                                                .Where(x => DateTime.Now.ToUniversalTime().Subtract(x.StartDate) <= _maxAge);
             }
             return result;
         }

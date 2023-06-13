@@ -2,8 +2,11 @@
 
 public partial class Microservice : IMicroservice
 {
+#pragma warning disable CA2211 // Non-constant fields should not be visible
+    public static Microservice EMPTY = new() { Name = "" };
+#pragma warning restore CA2211 // Non-constant fields should not be visible
     public int Id { get; set; }
     public virtual ICollection<MicroserviceConfigurationString> MicroserviceConfigurationStrings { get; } = new List<MicroserviceConfigurationString>();
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
     public string? Description { get; set; }
 }

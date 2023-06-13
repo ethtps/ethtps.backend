@@ -60,7 +60,7 @@ namespace ETHTPS.Tests.ConfigurationProviderTests
 
             // Assert
             var environments = ServiceProvider.GetRequiredService<ConfigurationContext>().Environments?.Where(x => x.Name == environmentName);
-            Assert.That(environments.Count(), Is.EqualTo(1));
+            Assert.That(environments?.Count(), Is.EqualTo(1));
         }
 
         [Test]
