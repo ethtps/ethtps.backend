@@ -12,7 +12,6 @@ public partial class Provider : ProviderSummaryBase
         OldestLoggedHistoricalEntries = new HashSet<OldestLoggedHistoricalEntry>();
         OldestLoggedTimeWarpBlocks = new HashSet<OldestLoggedTimeWarpBlock>();
         Projects = new HashSet<Project>();
-        ProviderDetailsMarkdownPages = new HashSet<ProviderDetailsMarkdownPage>();
         ProviderLinks = new HashSet<ProviderLink>();
     }
 
@@ -32,7 +31,6 @@ public partial class Provider : ProviderSummaryBase
     public virtual ICollection<OldestLoggedHistoricalEntry> OldestLoggedHistoricalEntries { get; set; }
     public virtual ICollection<OldestLoggedTimeWarpBlock> OldestLoggedTimeWarpBlocks { get; set; }
     public virtual ICollection<Project> Projects { get; set; }
-    public virtual ICollection<ProviderDetailsMarkdownPage> ProviderDetailsMarkdownPages { get; set; }
     public virtual ICollection<ProviderLink> ProviderLinks { get; set; }
 
 #pragma warning disable IDE0090 // Use 'new(...)'

@@ -66,8 +66,6 @@ public partial class EthtpsContext : ETHTPSContextBase
 
     public virtual DbSet<List> Lists { get; set; }
 
-    public virtual DbSet<MarkdownPage> MarkdownPages { get; set; }
-
     public virtual DbSet<Network> Networks { get; set; }
 
     public virtual DbSet<OldestLoggedHistoricalEntry> OldestLoggedHistoricalEntries { get; set; }
@@ -81,8 +79,6 @@ public partial class EthtpsContext : ETHTPSContextBase
     public virtual DbSet<Project> Projects { get; set; }
 
     public virtual DbSet<Provider> Providers { get; set; }
-
-    public virtual DbSet<ProviderDetailsMarkdownPage> ProviderDetailsMarkdownPages { get; set; }
 
     public virtual DbSet<ProviderLink> ProviderLinks { get; set; }
 
@@ -578,18 +574,6 @@ public partial class EthtpsContext : ETHTPSContextBase
             entity.Property(e => e.ExpireAt).HasColumnType("datetime");
         });
 
-        modelBuilder.Entity<MarkdownPage>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Markdown__3214EC2759E148E2");
-
-            entity.ToTable("MarkdownPages", "Info");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.RawMarkdown)
-                .IsRequired()
-                .IsUnicode(false);
-        });
-
         modelBuilder.Entity<Network>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Networks__3214EC27444EB224");
@@ -731,27 +715,6 @@ public partial class EthtpsContext : ETHTPSContextBase
                 .HasForeignKey(d => d.Type)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Providers__Type__4D5F7D71");
-        });
-
-        modelBuilder.Entity<ProviderDetailsMarkdownPage>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Provider__3214EC275B25AB19");
-
-            entity.ToTable("ProviderDetailsMarkdownPages", "Info");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.MarkdownPageId).HasColumnName("MarkdownPageID");
-            entity.Property(e => e.ProviderId).HasColumnName("ProviderID");
-
-            entity.HasOne(d => d.MarkdownPage).WithMany(p => p.ProviderDetailsMarkdownPages)
-                .HasForeignKey(d => d.MarkdownPageId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ProviderD__Markd__27F8EE98");
-
-            entity.HasOne(d => d.Provider).WithMany(p => p.ProviderDetailsMarkdownPages)
-                .HasForeignKey(d => d.ProviderId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ProviderD__Provi__2704CA5F");
         });
 
         modelBuilder.Entity<ProviderLink>(entity =>

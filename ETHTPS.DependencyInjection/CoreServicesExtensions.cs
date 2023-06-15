@@ -31,7 +31,6 @@ namespace ETHTPS.API.DependencyInjection
             .AddScoped<IExperimentService, ExperimentService>()
             .AddScoped<IInfoService, InfoService>()
             .AddScoped<IExternalWebsitesService, ExternalWebsitesService>()
-            .AddScoped<IMarkdownService, MarkdownService>()
             .AddScoped<IProvidersService, ProvidersService>()
             .AddScoped<IChartDataServiceservice, ChartDataServiceservice>();
 
