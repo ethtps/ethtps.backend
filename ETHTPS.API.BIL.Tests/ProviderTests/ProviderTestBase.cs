@@ -23,7 +23,7 @@ namespace ETHTPS.Tests.ProviderTests
         where T : BlockInfoProviderBase
     {
         protected T? _provider;
-        protected MSSQLLogger<T>? _blockInfoLogger;
+        protected InfluxLogger<T>? _blockInfoLogger;
         protected IDataUpdaterStatusService? _statusService;
         protected WSAPIPublisher? _wsapiClient;
 
@@ -99,21 +99,11 @@ namespace ETHTPS.Tests.ProviderTests
         }
 
         [Test]
-        public void LoggerRunAsync_NoException_Test()
-        {
-            Assert.DoesNotThrowAsync(async () =>
-            {
-                await _blockInfoLogger.RunWithoutExceptionHandlingAsync();
-            });
-        }
-
-        [Test]
         public void LoggerRunAsync_ResultOk_Test()
         {
             Assert.DoesNotThrowAsync(async () =>
             {
                 // Running this first because RunAsync swallows exceptions 
-                await _blockInfoLogger.RunWithoutExceptionHandlingAsync();
                 await _blockInfoLogger.RunAsync();
                 var s = _statusService.GetStatusFor(_provider.GetProviderName(), UpdaterType.TPSGPS)?.Status;
 

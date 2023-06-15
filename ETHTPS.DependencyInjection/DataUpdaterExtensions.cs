@@ -130,7 +130,7 @@ namespace ETHTPS.API.DependencyInjection
             var runsEveryAttribute = sourceType.GetCustomAttribute<RunsEveryAttribute>();
             var cronExpression = runsEveryAttribute?.CronExpression ?? CronConstants.EVERY_MINUTE;
             var genericMethod = typeof(DataUpdaterExtensions).GetMethod(nameof(RegisterHangfireBackgroundServiceAndTimeBucket));
-            var loggerType = (databaseProvider == DatabaseProvider.MSSQL ? typeof(MSSQLLogger<>) : typeof(InfluxLogger<>)).MakeGenericType(sourceType);
+            var loggerType = (databaseProvider == DatabaseProvider.MSSQL ? throw new InvalidOperationException("Not supported anymore") : typeof(InfluxLogger<>)).MakeGenericType(sourceType);
             var constructedMethod = genericMethod?.MakeGenericMethod(loggerType, sourceType);
             constructedMethod?.Invoke(null, new object[] { services, cronExpression, "tpsdata" });
         }

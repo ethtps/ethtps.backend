@@ -1,6 +1,5 @@
 ﻿using ETHTPS.Data.Core.Database;
 using ETHTPS.Data.Core.Database.Relational;
-using ETHTPS.Data.Core.Models.DataEntries;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -108,35 +107,6 @@ namespace ETHTPS.Data.Integrations.MSSQL
                 var result = await command.ExecuteNonQueryAsync();
                 return result;
             }
-        }
-
-        public async Task TryCreateNewBlockSummaryAsync(TPSGPSInfo info)
-        {
-            if (info.TransactionHashes?.Length == 0 ||
-                string.IsNullOrWhiteSpace(info.Provider) ||
-                info.TransactionCount == 0 ||
-                info.Date == default)
-            {
-                return;
-            }
-            await CreateNewBlockSummaryAsync(info.Provider, info.BlockNumber, info.TransactionCount, info.Date, info.GasUsed, info.TransactionHashes);
-        }
-
-        public async Task CreateNewBlockSummaryAsync(string providerName, int blockNumber, int transactionCount, DateTime date, int? gasUsed, params string[]? transactionHashes)
-        {
-            await Database.OpenConnectionAsync();
-            var transactionHashesString = transactionHashes != null ? string.Join(",", transactionHashes) : null;
-            var parameters = new[]
-            {
-                new SqlParameter("@ProviderName", providerName),
-                new SqlParameter("@BlockNumber", blockNumber),
-                new SqlParameter("@TransactionCount", transactionCount),
-                new SqlParameter("@Date", date),
-                new SqlParameter("@GasUsed", (object?)gasUsed ?? DBNull.Value),
-                new SqlParameter("@TransactionHashes", (object?)transactionHashesString ?? DBNull.Value)
-            };
-
-            await Database.ExecuteSqlRawAsync("EXEC [BlockInfo].[CreateNewBlockSummary] @ProviderName, @BlockNumber, @TransactionCount, @Date, @GasUsed, @TransactionHashes", parameters);
         }
     }
 }

@@ -8,6 +8,8 @@
     <IsPackable>false</IsPackable>
 
     <Platforms>AnyCPU;x64</Platforms>
+
+    <RunSettingsFilePath>C:\Users\georg\repos\ethtps.backend\ETHTPS.API.BIL.Tests\bin\Debug\net8.0\fine-code-coverage\coverage-tool-output\ETHTPS.Tests-fcc-mscodecoverage-generated.runsettings</RunSettingsFilePath>
   </PropertyGroup>
 
   <ItemGroup>

@@ -203,10 +203,6 @@ namespace ETHTPS.Tests.InfluxTests
 
                 var response = await _aggregatedDataservice.GetDataAsync(_requestModel, _dataType);
                 Assert.That(response, Is.Not.Null);
-
-                // You would need to add assertions here to verify that the response matches the time interval.
-                // For example, if the TimeInterval should control the granularity of the data, you could 
-                // check the time difference between consecutive data points.
             });
         }
 
@@ -229,9 +225,6 @@ namespace ETHTPS.Tests.InfluxTests
             // Assert
             Assert.That(response, Is.Not.Null);
             Assert.That(response.Datasets, Is.Not.Null);
-
-            // Check for presence of complex analysis data
-            // NOTE: Replace 'ComplexAnalysisProperty' with the actual property that indicates the result of complex analysis
 #pragma warning disable CS8604 // Possible null reference argument.
             Assert.That((bool)(response.Datasets.All(x => x.SimpleAnalysis != null)));
 #pragma warning restore CS8604 // Possible null reference argument.
