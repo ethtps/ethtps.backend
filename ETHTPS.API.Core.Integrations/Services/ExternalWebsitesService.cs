@@ -18,7 +18,8 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             lock (_context.LockObj)
             {
                 var links = _context.ProviderLinks.ToList()
-                    .Where(x => x.Provider != null ? x.Provider.Name == providerName : false);
+                    .Where(x => x.Provider != null ? x.Provider.Name == providerName : false)
+                    .AsEnumerable();
                 return links
                     .Select(link => new ProviderExternalWebsite()
                     {

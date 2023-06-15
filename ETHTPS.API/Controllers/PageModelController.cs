@@ -28,15 +28,13 @@ namespace ETHTPS.API.Controllers
         private readonly IGTPSService _gasAdjustedTPSService;
         private readonly ITPSService _tpsService;
         private readonly IGPSService _gpsService;
-        private readonly TimeWarpService _timeWarpService;
 
-        public PageModelController(GeneralService generalService, IGTPSService gasAdjustedTPSService, ITPSService tpsService, IGPSService gpsService, TimeWarpService timeWarpService)
+        public PageModelController(GeneralService generalService, IGTPSService gasAdjustedTPSService, ITPSService tpsService, IGPSService gpsService)
         {
             _generalService = generalService;
             _gasAdjustedTPSService = gasAdjustedTPSService;
             _tpsService = tpsService;
             _gpsService = gpsService;
-            _timeWarpService = timeWarpService;
         }
 
         [HttpGet]

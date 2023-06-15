@@ -1,5 +1,4 @@
 ﻿using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
-using ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets;
 using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.Models.DataEntries;
 using ETHTPS.Data.Core.Models.DataUpdater;
@@ -36,11 +35,8 @@ namespace ETHTPS.Tests.ProviderTests
 
             var context = ServiceProvider.GetRequiredService<EthtpsContext>();
             ILogger<HangfireBackgroundService> logger = ServiceProvider.GetRequiredService<ILogger<HangfireBackgroundService>>();
-            ILogger<MSSQLTimeBucketService<T>> logger2 = ServiceProvider.GetRequiredService<ILogger<MSSQLTimeBucketService<T>>>();
-            var timeBucketService = new MSSQLTimeBucketService<T>(provider, context, logger2);
             _wsapiClient = ServiceProvider.GetRequiredService<WSAPIPublisher>();
             _statusService = ServiceProvider.GetRequiredService<IDataUpdaterStatusService>();
-            _blockInfoLogger = new MSSQLLogger<T>(provider, logger, context, _statusService, timeBucketService, _wsapiClient);
         }
 
         [Test]

@@ -43,7 +43,6 @@ namespace ETHTPS.Tests
                     .AddDataUpdaterStatusService()
                     .AddScoped<IInfluxWrapper, InfluxWrapper>()
                     .AddScoped<IAsyncHistoricalBlockInfoProvider, HistoricalInfluxProvider>()
-                    .AddMSSQLHistoricalDataServices()
                     .AddTransient<IProviderConfigurationService, ProviderConfigurationService>()
                     .AddRedisCache()
                     .AddRabbitMQMessagePublisher()

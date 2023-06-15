@@ -46,6 +46,8 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
 
                     var delta = await CalculateTPSGPSAsync(oldestEntry.OldestBlock);
                     _timeBucketService.UpdateMaxEntry(delta);
+                    /*
+                     * Log here
                     _context.TimeWarpData.Add(new TimeWarpDatum()
                     {
                         AverageGps = delta.GPS,
@@ -55,7 +57,7 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
                         Network = 1,
                         Provider = _providerID
                     });
-
+                    */
                     stopwatch.Stop();
                     var eta = TimeSpan.FromMilliseconds(oldestEntry.OldestBlock * (stopwatch.Elapsed.TotalMilliseconds + 1000));
                     _logger.LogInformation($"{_provider} [{oldestEntry.OldestBlock}] @{delta.Date} ETA: [{eta}] {delta.TPS}TPS {delta.GPS}GPS");

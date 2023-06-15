@@ -16,12 +16,10 @@ namespace ETHTPS.Services.Ethereum
     [RunsEvery(CronConstants.EVERY_5_S)]
     public sealed class RoninBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly string _baseURL;
-        private readonly string _txSummaryPath;
+        private readonly string _baseURL = string.Empty;
 
         public RoninBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Ronin")
         {
-            _txSummaryPath = PartialMatchOrThrow("TXSummary");
             BlockTimeSeconds = 3;
         }
 

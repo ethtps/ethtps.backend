@@ -20,9 +20,9 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
     public sealed class EthereumMultiEndpointJSONRPC : BlockInfoProviderBase
     {
         private readonly IEnumerable<(IHTTPBlockInfoProvider Provider, int FailureCount)> _children;
-        private static Random _random = new Random();
+        private static Random _random = new();
         private const int _BLACKLIST_AFTER = 5;
-        private readonly string[] _endpoints;
+        private readonly string[] _endpoints = Array.Empty<string>();
         private readonly int _totalChildren;
         private readonly ILogger<EthereumMultiEndpointJSONRPC> _logger;
 

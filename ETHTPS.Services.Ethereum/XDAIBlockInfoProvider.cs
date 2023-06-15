@@ -19,9 +19,9 @@ namespace ETHTPS.Services.Ethereum
     [RunsEvery(CronConstants.EVERY_5_S)]
     public sealed class XDAIHTTPBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly string _transactionCountSelector;
-        private readonly string _dateSelector;
-        private readonly string _gasSelector;
+        private readonly string _transactionCountSelector = string.Empty;
+        private readonly string _dateSelector = string.Empty;
+        private readonly string _gasSelector = string.Empty;
         public XDAIHTTPBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "XDAI")
         {
             BlockTimeSeconds = 5.2;

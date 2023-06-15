@@ -14,18 +14,6 @@ public partial class Provider : ProviderSummaryBase
         Projects = new HashSet<Project>();
         ProviderDetailsMarkdownPages = new HashSet<ProviderDetailsMarkdownPage>();
         ProviderLinks = new HashSet<ProviderLink>();
-        TimeWarpData = new HashSet<TimeWarpDatum>();
-        TimeWarpDataDays = new HashSet<TimeWarpDataDay>();
-        TimeWarpDataHours = new HashSet<TimeWarpDataHour>();
-        TimeWarpDataMinutes = new HashSet<TimeWarpDataMinute>();
-        TimeWarpDataWeeks = new HashSet<TimeWarpDataWeek>();
-        TpsandGasDataAlls = new HashSet<TpsandGasDataAll>();
-        TpsandGasDataDays = new HashSet<TpsandGasDataDay>();
-        TpsandGasDataHours = new HashSet<TpsandGasDataHour>();
-        TpsandGasDataMinutes = new HashSet<TpsandGasDataMinute>();
-        TpsandGasDataMonths = new HashSet<TpsandGasDataMonth>();
-        TpsandGasDataWeeks = new HashSet<TpsandGasDataWeek>();
-        TpsandGasDataYears = new HashSet<TpsandGasDataYear>();
     }
 
     public int Type { get; set; }
@@ -38,8 +26,6 @@ public partial class Provider : ProviderSummaryBase
 
     public virtual Provider? SubchainOfNavigation { get; set; }
     public virtual ProviderType TypeNavigation { get; set; } = null!;
-    public virtual TpsandGasDataLatest? TpsandGasDataLatest { get; set; }
-    public virtual TpsandGasDataMax? TpsandGasDataMax { get; set; }
     public virtual ICollection<DataUpdater> DataUpdaters { get; set; }
     public virtual ICollection<Experiment> Experiments { get; set; }
     public virtual ICollection<Provider> InverseSubchainOfNavigation { get; set; }
@@ -48,18 +34,6 @@ public partial class Provider : ProviderSummaryBase
     public virtual ICollection<Project> Projects { get; set; }
     public virtual ICollection<ProviderDetailsMarkdownPage> ProviderDetailsMarkdownPages { get; set; }
     public virtual ICollection<ProviderLink> ProviderLinks { get; set; }
-    public virtual ICollection<TimeWarpDatum> TimeWarpData { get; set; }
-    public virtual ICollection<TimeWarpDataDay> TimeWarpDataDays { get; set; }
-    public virtual ICollection<TimeWarpDataHour> TimeWarpDataHours { get; set; }
-    public virtual ICollection<TimeWarpDataMinute> TimeWarpDataMinutes { get; set; }
-    public virtual ICollection<TimeWarpDataWeek> TimeWarpDataWeeks { get; set; }
-    public virtual ICollection<TpsandGasDataAll> TpsandGasDataAlls { get; set; }
-    public virtual ICollection<TpsandGasDataDay> TpsandGasDataDays { get; set; }
-    public virtual ICollection<TpsandGasDataHour> TpsandGasDataHours { get; set; }
-    public virtual ICollection<TpsandGasDataMinute> TpsandGasDataMinutes { get; set; }
-    public virtual ICollection<TpsandGasDataMonth> TpsandGasDataMonths { get; set; }
-    public virtual ICollection<TpsandGasDataWeek> TpsandGasDataWeeks { get; set; }
-    public virtual ICollection<TpsandGasDataYear> TpsandGasDataYears { get; set; }
 
 #pragma warning disable IDE0090 // Use 'new(...)'
     public static Provider EMPTY = new Provider();

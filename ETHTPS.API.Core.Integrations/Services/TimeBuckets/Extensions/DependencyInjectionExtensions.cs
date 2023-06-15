@@ -20,10 +20,15 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets.Extensions
             }
             else
             {
-                services.AddScoped<ITimeBucketDataUpdaterService<V>, MSSQLTimeBucketService<V>>();
             }
         }
 
-        public static void InjectTimeBucketService(this IServiceCollection serviceCollection, DatabaseProvider databaseProvider) => serviceCollection.AddScoped(typeof(ITimeBucketDataUpdaterService<>), databaseProvider == DatabaseProvider.MSSQL ? typeof(MSSQLTimeBucketService<>) : typeof(InfluxTimeBucketService<>));
+        public static void InjectTimeBucketService(this IServiceCollection serviceCollection, DatabaseProvider databaseProvider)
+        {
+            if (databaseProvider == DatabaseProvider.InfluxDB)
+            {
+                serviceCollection.AddScoped(typeof(ITimeBucketDataUpdaterService<>), typeof(InfluxTimeBucketService<>));
+            }
+        }
     }
 }

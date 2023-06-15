@@ -10,19 +10,18 @@ using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Data.Core.Models.ResponseModels;
 using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.Integrations.MSSQL.HistoricalDataProviders;
 
 using ServiceStack;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {
-    public sealed class GeneralService : HistoricalMethodsServiceBase
+    public sealed class GeneralService : ContextServiceBase
     {
         private readonly ITPSService _tpsService;
         private readonly IGPSService _gpsService;
         private readonly IGTPSService _gasAdjustedTPSService;
 
-        public GeneralService(ITPSService tpsService, IGPSService gpsService, IGTPSService gasAdjustedTPSService, EthtpsContext context, IEnumerable<IHistoricalDataProvider> historicalDataServices, IDataUpdaterStatusService dataUpdaterStatusService) : base(context, historicalDataServices, dataUpdaterStatusService)
+        public GeneralService(ITPSService tpsService, IGPSService gpsService, IGTPSService gasAdjustedTPSService, EthtpsContext context, IDataUpdaterStatusService dataUpdaterStatusService) : base(context, dataUpdaterStatusService)
         {
             _tpsService = tpsService;
             _gpsService = gpsService;

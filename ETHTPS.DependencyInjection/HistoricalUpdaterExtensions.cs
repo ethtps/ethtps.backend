@@ -1,7 +1,6 @@
 ﻿using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Integrations.InfluxIntegration;
 using ETHTPS.Data.Integrations.InfluxIntegration.HistoricalDataProviders;
-using ETHTPS.Data.Integrations.MSSQL.HistoricalDataProviders;
 using ETHTPS.Services;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
 using ETHTPS.Services.Ethereum;
@@ -44,20 +43,6 @@ namespace ETHTPS.API.DependencyInjection
                 //services.RegisterHistoricalHangfireBackgroundService<HangfireHistoricalBlockInfoProviderDataLogger<HabitatBlockInfoProvider>, HabitatBlockInfoProvider>(CronConstants.Never, HISTORICALUPDATERQUEUE);
                 //services.RegisterHistoricalHangfireBackgroundService<HangfireHistoricalBlockInfoProviderDataLogger<BSCScanBlockInfoProvider>, BSCScanBlockInfoProvider>(CronConstants.Never, HISTORICALUPDATERQUEUE);
             }
-            return services;
-        }
-
-
-        public static IServiceCollection AddMSSQLHistoricalDataServices(this IServiceCollection services)
-        {
-            services.AddScoped<IHistoricalDataProvider, OneHourHistoricalDataProvider>();
-            services.AddScoped<IHistoricalDataProvider, OneDayHistoricalDataProvider>();
-            services.AddScoped<IHistoricalDataProvider, OneWeekHistoricalDataProvider>();
-            services.AddScoped<IHistoricalDataProvider, OneMonthHistoricalDataProvider>();
-            services.AddScoped<IHistoricalDataProvider, OneYearHistoricalDataProvider>();
-            services.AddScoped<IHistoricalDataProvider, AllHistoricalDataProvider>();
-            services.AddScoped<IHistoricalDataProvider, InstantDataProvider>();
-            services.AddScoped<IHistoricalDataProvider, OneMinuteHistoricalDataProvider>();
             return services;
         }
 

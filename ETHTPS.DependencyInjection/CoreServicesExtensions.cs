@@ -8,7 +8,6 @@ using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.BIL.Security.Humanity;
 using ETHTPS.API.Core.Integrations.MSSQL.Services;
-using ETHTPS.API.Core.Integrations.MSSQL.Services.Data;
 using ETHTPS.API.Security.Core.Humanity.Recaptcha;
 using ETHTPS.Configuration;
 using ETHTPS.Configuration.Database;
@@ -28,15 +27,13 @@ namespace ETHTPS.API.DependencyInjection
         public static IServiceCollection AddMixedCoreServices(this IServiceCollection services) =>
             services
             .AddScoped<GeneralService>()
-            .AddScoped<TimeWarpService>()
             .AddScoped<EthereumBlockTimeProvider>()
             .AddScoped<IExperimentService, ExperimentService>()
             .AddScoped<IInfoService, InfoService>()
             .AddScoped<IExternalWebsitesService, ExternalWebsitesService>()
             .AddScoped<IMarkdownService, MarkdownService>()
             .AddScoped<IProvidersService, ProvidersService>()
-            .AddScoped<IChartDataServiceservice, ChartDataServiceservice>()
-            .AddMSSQLHistoricalDataServices();
+            .AddScoped<IChartDataServiceservice, ChartDataServiceservice>();
 
         /// <summary>
         /// Adds data providers (for TPS, GPS, GTPS) to the service collection
@@ -48,11 +45,6 @@ namespace ETHTPS.API.DependencyInjection
         {
             switch (databaseProvider)
             {
-                case DatabaseProvider.MSSQL:
-                    services.AddScoped<ITPSService, MSSQLTPSService>()
-                            .AddScoped<IGPSService, MSSQLGPSService>()
-                            .AddScoped<IGTPSService, MSSQLGasAdjustedTPSService>();
-                    break;
                 default:
                     services.AddScoped<ITPSService, InfluxTPSService>()
                             .AddScoped<IGPSService, InfluxGPSService>()

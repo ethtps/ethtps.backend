@@ -44,8 +44,7 @@ namespace ETHTPS.WSAPI
                    .AddCache()
                    .AddScheduler()
                    .AddEvents()
-                   .AddRabbitMQMessagePublisher()
-                   .AddMSSQLHistoricalDataServices();
+                   .AddRabbitMQMessagePublisher();
             services.AddSignalR();
 
             services.AddHostedService<LiveDataService>();

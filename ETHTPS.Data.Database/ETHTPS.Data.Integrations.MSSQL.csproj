@@ -32,6 +32,8 @@
 
   <ItemGroup>
     <Folder Include="db\" />
+    <Folder Include="HistoricalDataProviders\" />
+    <Folder Include="TimeWarp\Models\" />
   </ItemGroup>
 
 </Project>

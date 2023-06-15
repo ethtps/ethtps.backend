@@ -17,7 +17,7 @@ namespace ETHTPS.Services.Ethereum.Scan.Implementations
     [Obsolete("Use JSONRPC.OptimismBlockInfoProvider instead", true)]
     public sealed class OptimisticEthereumBlockInfoProvider : ScanBlockInfoProviderBase
     {
-        private readonly string _targetElementSelector;
+        private readonly string _targetElementSelector = "";
         public OptimisticEthereumBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Optimistic Ethereum")
         {
 

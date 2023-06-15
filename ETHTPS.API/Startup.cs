@@ -53,8 +53,7 @@ namespace ETHTPS.API
                     .AddQueue()
                     .AddCache()
                     .AddScoped<AggregatedEndpointStatsBuilder>()
-                    .AddInfluxHistoricalDataProvider() //Not working r/n
-                    .AddMSSQLHistoricalDataServices()
+                    .AddInfluxHistoricalDataProvider()
                     .AddRedisCache()
                     .AddRabbitMQMessagePublisher()
                     .AddGraphQLSchema<EthtpsContext>();

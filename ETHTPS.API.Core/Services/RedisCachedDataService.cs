@@ -59,7 +59,7 @@ namespace ETHTPS.API.Core.Services
                     });
                 }
             }
-            return default(T);
+            return default;
         }
 
         public async Task<bool> HasKeyAsync(string key) => await _database.KeyExistsAsync(key);
