@@ -155,10 +155,10 @@ namespace ETHTPS.Tests.ServiceTests
             string? value = null;
 
             // Act
-            bool? result = value == null ? null : await _cachedDataService.SetDataAsync(key, value);
+            bool result = value == null ? false : await _cachedDataService.SetDataAsync(key, value);
 
             // Assert
-            Assert.IsFalse(result);
+            Assert.That(result, Is.False);
         }
 
         [Test]

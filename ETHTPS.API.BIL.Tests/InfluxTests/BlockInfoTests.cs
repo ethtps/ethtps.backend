@@ -2,9 +2,7 @@ using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
 using ETHTPS.Data.Core;
-using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
-using ETHTPS.Data.Integrations.InfluxIntegration;
 using ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProviders;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -46,17 +44,12 @@ namespace ETHTPS.Tests.InfluxTests
     public abstract class InfluxBlockInfoTests<T> : TestBase
         where T : InfluxPSServiceBase
     {
-        private IInfluxWrapper? _influxWrapper;
-        private IAsyncHistoricalBlockInfoProvider? _asyncHistoricalBlockInfoProvider;
-        private const string _DEFAULT_BUCKET_NAME = "blockinfo";
-        private const string _DEFAULT_MEASUREMENT_NAME = "blockinfo";
         protected IPSService? _service;
 
         [SetUp]
         public void Setup()
         {
-            _influxWrapper = ServiceProvider.GetRequiredService<IInfluxWrapper>();
-            _asyncHistoricalBlockInfoProvider = ServiceProvider.GetRequiredService<IAsyncHistoricalBlockInfoProvider>();
+            _service = ServiceProvider.GetRequiredService<T>();
         }
 
         [Test]

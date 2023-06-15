@@ -7,6 +7,7 @@ using ETHTPS.Configuration.ProviderConfiguration;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Integrations.InfluxIntegration;
 using ETHTPS.Data.Integrations.InfluxIntegration.HistoricalDataProviders;
+using ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProviders;
 using ETHTPS.Services.BlockchainServices.BlockTime;
 using ETHTPS.Services.Infrastructure.Messaging;
 using ETHTPS.Services.LiveData;
@@ -47,7 +48,10 @@ namespace ETHTPS.Tests
                     .AddRedisCache()
                     .AddRabbitMQMessagePublisher()
                     .AddSingleton<EthereumBlockTimeProvider>()
-                    .AddScoped<WSAPIPublisher>();
+                    .AddScoped<WSAPIPublisher>()
+                    .AddScoped<InfluxTPSService>()
+                    .AddScoped<InfluxGPSService>()
+                    .AddScoped<InfluxGTPSService>();
             ServiceProvider = services.BuildServiceProvider();
         }
     }
