@@ -89,13 +89,13 @@ namespace ETHTPS.Tests.ProviderTests
         [Test]
         public void LoggerNotNull_Test()
         {
-            Assert.NotNull(_blockInfoLogger);
+            Assert.That(_blockInfoLogger, Is.Not.Null);
         }
 
         [Test]
         public void StatusService_NotNull_Test()
         {
-            Assert.NotNull(_statusService);
+            Assert.That(_statusService, Is.Not.Null);
         }
 
         [Test]

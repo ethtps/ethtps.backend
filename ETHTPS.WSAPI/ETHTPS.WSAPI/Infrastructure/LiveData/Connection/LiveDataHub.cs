@@ -24,7 +24,7 @@ namespace ETHTPS.WSAPI.Infrastructure.LiveData.Connection
             {
                 DataTypes = new[] { DataType.TPS, DataType.GasAdjustedTPS, DataType.GPS },
                 IncludeSidechains = true,
-                IncludeTransactions = true,
+                IncludeTransactions = true
             });
             await base.OnConnectedAsync();
         }

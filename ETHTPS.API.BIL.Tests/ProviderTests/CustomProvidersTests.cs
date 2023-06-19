@@ -1,12 +1,27 @@
-﻿using ETHTPS.Services.Ethereum;
+﻿using ETHTPS.Configuration;
+using ETHTPS.Data.Integrations.MSSQL;
+using ETHTPS.Services.Ethereum;
 using ETHTPS.Services.Ethereum.JSONRPC.Implementations;
 using ETHTPS.Services.Ethereum.JSONRPC.Infura;
+using ETHTPS.Services.Ethereum.Starkware;
+
+using Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
 /// Tests for custom implementations
 /// </summary>
 namespace ETHTPS.Tests.ProviderTests
 {
+    public sealed class SorareTests : ProviderTestBase<SorareBlockInfoProvider>
+    {
+        [SetUp]
+        public override void SetUp()
+        {
+            _provider = new SorareBlockInfoProvider(ServiceProvider.GetRequiredService<EthtpsContext>(), ServiceProvider.GetRequiredService<IDBConfigurationProvider>());
+            PartialSetup(_provider);
+        }
+    }
+
     public sealed class BobaNetworkJSONRPCBlockInfoProviderTests : ProviderTestBase<BobaNetworkJSONRPCBlockInfoProvider>
     {
         [SetUp]
