@@ -37,6 +37,7 @@ namespace ETHTPS.API.DependencyInjection
         /// <summary>
         /// Adds data providers (for TPS, GPS, GTPS) to the service collection
         /// </summary>
+        /// <param name="services"></param>
         /// <param name="databaseProvider">What kind of database should be used</param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException">Self-explanatory</exception>

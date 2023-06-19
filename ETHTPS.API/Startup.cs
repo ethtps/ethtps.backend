@@ -57,7 +57,6 @@ namespace ETHTPS.API
                     .AddRedisCache()
                     .AddRabbitMQMessagePublisher()
                     .AddGraphQLSchema<EthtpsContext>();
-            //.RegisterMicroservice(APP_NAME, "General API");
             services.AddDataUpdaterStatusService();
 
 #if DEBUG

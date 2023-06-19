@@ -19,6 +19,7 @@ namespace ETHTPS.API.Security.Core.Policies
                           builder.WithOrigins("https://beta.ethtps.info");
                           builder.WithOrigins("https://ultrasound.money/");
                           builder.WithOrigins("http://localhost:3007");
+                          builder.WithOrigins("http://localhost:3000");
                       });
         });
 

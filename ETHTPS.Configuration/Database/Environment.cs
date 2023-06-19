@@ -11,9 +11,9 @@ public partial class Environment
     };
     public int Id { get; set; }
 
-    public required string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public virtual ICollection<MicroserviceConfigurationString> MicroserviceConfigurationStrings { get; } = new List<MicroserviceConfigurationString>();
+    public virtual ICollection<MicroserviceConfigurationString> MicroserviceConfigurationStrings { get; set; } = new List<MicroserviceConfigurationString>();
 
-    public virtual ICollection<ProviderConfigurationString> ProviderConfigurationStrings { get; } = new List<ProviderConfigurationString>();
+    public virtual ICollection<ProviderConfigurationString> ProviderConfigurationStrings { get; set; } = new List<ProviderConfigurationString>();
 }

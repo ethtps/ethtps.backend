@@ -17,7 +17,7 @@ namespace ETHTPS.Services.Ethereum.Starkware
         private readonly EthtpsContext _context;
         private readonly StarkwareClient _starkwareClient;
 
-        public StarkwareBlockInfoProviderBase(string productName, EthtpsContext context, IDBConfigurationProvider configuration) : base(configuration, productName)
+        protected StarkwareBlockInfoProviderBase(string productName, EthtpsContext context, IDBConfigurationProvider configuration) : base(configuration, productName)
         {
             _providerName = productName;
             _context = context;
@@ -56,7 +56,7 @@ namespace ETHTPS.Services.Ethereum.Starkware
                     Product = _providerName,
                     LastUpdateTps = todaysTransactionCount / DateTime.Now.TimeOfDay.TotalSeconds
                 });
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
             var entry = _context.StarkwareTransactionCountData.First(x => x.Product == _providerName);
@@ -75,7 +75,7 @@ namespace ETHTPS.Services.Ethereum.Starkware
                 entry.LastUpdateTime = DateTime.Now;
 
                 _context.StarkwareTransactionCountData.Update(entry);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             return new Block()
             {

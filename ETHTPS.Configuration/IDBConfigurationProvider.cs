@@ -1,5 +1,4 @@
 ﻿using ETHTPS.Configuration.Database;
-using ETHTPS.Data.Core.Models.Configuration;
 
 namespace ETHTPS.Configuration
 {

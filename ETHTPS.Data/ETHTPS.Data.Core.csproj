@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <Folder Include="Models\Charts\" />
+    <Folder Include="Models\Configuration\" />
     <Folder Include="Models\Queries\Responses\" />
   </ItemGroup>
 

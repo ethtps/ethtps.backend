@@ -1,7 +1,6 @@
 ﻿using ETHTPS.Configuration.Database;
 using ETHTPS.Configuration.Validation;
 using ETHTPS.Data.Core.Extensions;
-using ETHTPS.Data.Core.Models.Configuration;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -51,7 +50,8 @@ namespace ETHTPS.Configuration
                 }
                 catch (Exception ex)
                 {
-                    _logger?.LogError(ex, $"Error adding environments {string.Join(", ", environments)}");
+                    _logger?.LogError(ex,
+                        $"Error adding environments {string.Join(", ", environments ?? Array.Empty<string>())}");
                 }
             }
         }

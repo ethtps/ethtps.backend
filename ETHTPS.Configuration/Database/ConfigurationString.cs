@@ -10,14 +10,21 @@ public partial class ConfigurationString : IConfigurationString
         Name = string.Empty,
         Value = string.Empty
     };
-
     public int Id { get; set; }
 
-    public required string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public required string Value { get; set; }
+    public string Value { get; set; } = null!;
 
-    public virtual ICollection<MicroserviceConfigurationString> MicroserviceConfigurationStrings { get; } = new List<MicroserviceConfigurationString>();
+    public bool IsSecret { get; set; }
 
-    public virtual ICollection<ProviderConfigurationString> ProviderConfigurationStrings { get; } = new List<ProviderConfigurationString>();
+    public bool IsEncrypted { get; set; }
+
+    public string? EncryptionAlgorithmOrHint { get; set; }
+
+    public virtual ICollection<ConfigurationStringTag> ConfigurationStringTags { get; set; } = new List<ConfigurationStringTag>();
+
+    public virtual ICollection<MicroserviceConfigurationString> MicroserviceConfigurationStrings { get; set; } = new List<MicroserviceConfigurationString>();
+
+    public virtual ICollection<ProviderConfigurationString> ProviderConfigurationStrings { get; set; } = new List<ProviderConfigurationString>();
 }
