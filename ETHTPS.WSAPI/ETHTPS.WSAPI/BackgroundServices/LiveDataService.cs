@@ -25,19 +25,18 @@ namespace ETHTPS.WSAPI.BackgroundServices
     {
         private readonly RabbitMQSubscriptionService _subscriptionService;
         private readonly ILogger<LiveDataService> _logger;
-        private readonly IDBConfigurationProvider _configurationProvider;
         private readonly IServiceScope _scope;
         private bool _cancel = false;
         private readonly IHubContext<LiveDataHub> _hubContext;
         private readonly LatestEntryAggregator<string, L2DataUpdateModel> _latestEntryAggregator = new();
-        private static Func<L2DataUpdateModel, L2DataUpdateModel, bool> _DIFF_SELECTOR = (x, y) => x.Data?.TPS != y.Data?.TPS || x.Data?.GPS != y.Data?.GPS;
-        private static Func<L2DataUpdateModel, string> _KEY_SELECTOR = x => x.Provider;
+        private static readonly Func<L2DataUpdateModel, L2DataUpdateModel, bool> _DIFF_SELECTOR = (x, y) => (int?)x.Data?.TPS != (int?)y.Data?.TPS || (int?)x.Data?.GPS != (int?)y.Data?.GPS;
+        private static readonly Func<L2DataUpdateModel, string> _KEY_SELECTOR = x => x.Provider;
 
         public LiveDataService(IServiceProvider services, ILogger<LiveDataService> logger)
         {
             _scope = services.CreateScope();
             _logger = logger;
-            _configurationProvider = _scope.ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
+            var configurationProvider = _scope.ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
             _hubContext = _scope.ServiceProvider.GetRequiredService<IHubContext<LiveDataHub>>();
 
             _subscriptionService = new RabbitMQSubscriptionService(new RabbitMQSubscriptionConfig()
@@ -45,7 +44,7 @@ namespace ETHTPS.WSAPI.BackgroundServices
                 AutoAck = false,
                 AutoDelete = false,
                 QueueName = MessagingQueues.LIVEDATA_MULTIPLENEWDATAPOINTS_QUEUE,
-                Host = _configurationProvider.GetFirstConfigurationString("RabbitMQ_Host_Dev")
+                Host = configurationProvider.GetFirstConfigurationString("RabbitMQ_Host_Dev")
             });
         }
 
@@ -73,12 +72,13 @@ namespace ETHTPS.WSAPI.BackgroundServices
                         var newAggregatedData = new LatestEntryAggregator<string, L2DataUpdateModel>(datapoints, _KEY_SELECTOR);
                         var diff = _latestEntryAggregator.Diff(newAggregatedData, _DIFF_SELECTOR);
                         //_logger.LogInformation($"LiveDataService: {diff?.Count()} new entries");
-                        if (diff?.Count() > 0)
+                        var l2DataUpdateModels = diff as L2DataUpdateModel[] ?? diff.ToArray();
+                        if (l2DataUpdateModels.Any())
                         {
                             _latestEntryAggregator.Clear();
-                            _latestEntryAggregator.Push(diff, _KEY_SELECTOR);
+                            _latestEntryAggregator.Push(l2DataUpdateModels, _KEY_SELECTOR);
 
-                            await _hubContext.Clients.All.SendCoreAsync("LiveDataChanged", new[] { _latestEntryAggregator.ToDictionary(x => x.Provider, x => x) }, cancellationToken);
+                            await _hubContext.Clients.All.SendCoreAsync("LiveDataChanged", new object?[] { _latestEntryAggregator.ToDictionary(x => x.Provider, x => x) }, cancellationToken);
                         }
                     }
                 }

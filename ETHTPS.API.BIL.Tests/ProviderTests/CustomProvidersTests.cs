@@ -7,11 +7,11 @@ using ETHTPS.Services.Ethereum.Starkware;
 
 using Microsoft.Extensions.DependencyInjection;
 
-/// <summary>
-/// Tests for custom implementations
-/// </summary>
 namespace ETHTPS.Tests.ProviderTests
 {
+    /// <summary>
+    /// Tests for custom implementations
+    /// </summary>
     public sealed class SorareTests : ProviderTestBase<SorareBlockInfoProvider>
     {
         [SetUp]

@@ -1,4 +1,6 @@
-﻿using ETHTPS.Configuration.Database;
+﻿using System.ComponentModel.DataAnnotations;
+
+using ETHTPS.Configuration.Database;
 
 namespace ETHTPS.Configuration
 {
@@ -38,5 +40,28 @@ namespace ETHTPS.Configuration
         /// ha.
         /// </summary>
         IEnumerable<AllConfigurationStringsModel> GetAllConfigurationStrings();
+
+        /// <summary>
+        /// Gets all objects that link to the specified configuration string.
+        /// </summary>
+        /// <param name="configurationStringID">The ID of the target configuration string</param>
+        /// <returns></returns>
+        ConfigurationStringLinksModel GetAllLinks(int configurationStringID);
+
+        /// <summary>
+        /// Adds or updates a configuration string.
+        /// </summary>
+        /// <param name="configurationString"></param>
+        /// <param name="microservice"></param>
+        /// <param name="environment"></param>
+        /// throws <see cref="ValidationException"/> if the provided parameters are invalid.
+        int AddOrUpdateConfigurationString(ConfigurationStringUpdateModel configurationString,
+            string? microservice = null, string? environment = null);
+
+        /// <summary>
+        /// Clears the Hangfire job queue.
+        /// </summary>
+        /// <returns></returns>
+        int ClearHangfireQueue();
     }
 }

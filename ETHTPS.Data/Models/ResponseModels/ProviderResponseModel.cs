@@ -6,7 +6,6 @@ namespace ETHTPS.Data.Core.Models.ResponseModels
 {
     public sealed class ProviderResponseModel
     {
-        [JsonIgnore]
         public int Id { get; set; }
         public string Name { get; set; }
         public string Color { get; set; }

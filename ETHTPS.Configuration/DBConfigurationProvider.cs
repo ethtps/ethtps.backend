@@ -1,7 +1,10 @@
-﻿using ETHTPS.Configuration.Database;
+﻿using System.Data;
+
+using ETHTPS.Configuration.Database;
 using ETHTPS.Configuration.Validation;
 using ETHTPS.Data.Core.Extensions;
 
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -32,7 +35,16 @@ namespace ETHTPS.Configuration
             validator.ThrowIfConfigurationInvalid();
         }
 
-        IDBConfigurationProvider IDBConfigurationProvider.this[string environment] { get => new DBConfigurationProvider(this._context, _logger, environment); }
+        IDBConfigurationProvider IDBConfigurationProvider.this[string environment]
+        {
+            get
+            {
+                lock (_context.LockObj)
+                {
+                    return new DBConfigurationProvider(this._context, _logger, environment);
+                }
+            }
+        }
 
         public void AddEnvironments(params string[] environments)
         {
@@ -78,7 +90,95 @@ namespace ETHTPS.Configuration
 
         }
 
-        public IEnumerable<AllConfigurationStringsModel> GetAllConfigurationStrings() => _context.Database.SqlQueryRaw<AllConfigurationStringsModel>("EXEC [Configuration].[GetAllConfigurationStrings]").AsEnumerable();
+        public IEnumerable<AllConfigurationStringsModel> GetAllConfigurationStrings()
+        {
+            lock (_context.LockObj)
+            {
+                return _context.Database.SqlQueryRaw<AllConfigurationStringsModel>("EXEC [Configuration].[GetAllConfigurationStrings]");
+            }
+        }
+
+        public ConfigurationStringLinksModel GetAllLinks(int configurationStringId)
+        {
+            lock (_context.LockObj)
+            {
+                var allLinksModels = _context.Database.SqlQueryRaw<AllLinksModel?>(
+                    "EXEC [Configuration].[GetAllLinksForConfigurationString] @ConfigurationStringID",
+                    new SqlParameter("ConfigurationStringID", configurationStringId)).ToList();
+
+                var first = allLinksModels.First(x => x != null) ?? throw new Exception("Something's up");
+                ConfigurationStringLinksModel result = new()
+                {
+                    ConfigurationString = new ConfigurationString
+                    {
+                        Id = first.ConfigurationStringID,
+                        Name = first.ConfigurationStringName,
+                        Value = first.ConfigurationStringValue
+                    },
+                    ProviderLinks = allLinksModels
+                        .Where(model => model?.ProviderLinksID.HasValue ?? false)
+                        .Select(model => model == null ? null : new ProviderConfigurationString
+                        {
+                            Id = model.ProviderLinksID ?? -1,
+                            ProviderId = model.ProviderLinksProviderID ?? -1,
+                            ConfigurationStringId = model.ProviderLinksConfigurationStringID ?? -1,
+                            EnvironmentId = model.ProviderLinksEnvironmentID ?? -1
+                        }).ToList(),
+                    MicroserviceLinks = allLinksModels
+                        .Where(model => model?.MicroserviceLinksConfigurationStringID.HasValue ?? false)
+                        .Select(model => model == null ? null : new MicroserviceConfigurationString
+                        {
+                            Id = model.MicroserviceLinksID ?? -1,
+                            MicroserviceId = model.MicroserviceLinksMicroserviceID ?? -1,
+                            ConfigurationStringId = model.MicroserviceLinksConfigurationStringID ?? -1,
+                            EnvironmentId = model.MicroserviceLinksEnvironmentID ?? -1
+                        }).ToList()
+                };
+
+                return result;
+            }
+        }
+
+
+
+        public int AddOrUpdateConfigurationString(ConfigurationStringUpdateModel configurationString, string? microservice, string? environment)
+        {
+            lock (_context.LockObj)
+            {
+                var configStringIdParam = new SqlParameter
+                {
+                    ParameterName = "@ConfigStringID",
+                    SqlDbType = SqlDbType.Int,
+                    Direction = ParameterDirection.Output
+                };
+
+                _context.Database.ExecuteSqlRaw(
+                   "EXECUTE [Configuration].[InsertOrUpdateConfigurationString] @MicroserviceName, @EnvironmentName, @ConfigStringName, @ConfigStringValue, @IsSecret, @IsEncrypted, @ConfigStringID OUT",
+                   new SqlParameter("@MicroserviceName", microservice ?? (object)DBNull.Value),
+                   new SqlParameter("@EnvironmentName", environment ?? (object)DBNull.Value),
+                   new SqlParameter("@ConfigStringName", configurationString.Name),
+                   new SqlParameter("@ConfigStringValue", configurationString.Value),
+                   new SqlParameter("@IsSecret", configurationString.IsSecret),
+                   new SqlParameter("@IsEncrypted", configurationString.IsEncrypted),
+                   configStringIdParam);
+                _context.SaveChanges();
+                if (configStringIdParam.Value != DBNull.Value)
+                {
+                    return (int)configStringIdParam.Value;
+                }
+
+                return -2;
+            }
+        }
+
+        public int ClearHangfireQueue()
+        {
+            lock (_context.LockObj)
+            {
+                return _context.Database.ExecuteSqlRaw("EXEC [Hangfire].[DeleteAllJobs]");
+            }
+        }
+
 
         public IEnumerable<IConfigurationString>? GetConfigurationStrings(string name)
         {
@@ -97,11 +197,12 @@ namespace ETHTPS.Configuration
                 var emptyEnvironment = Database.Environment.EMPTY;
                 var emptyMicroservice = Database.Microservice.EMPTY;
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-                return _context.MicroserviceConfigurationStrings?
-                    .Where(x => (x.Microservice != null ? x.Microservice.Name : emptyMicroservice.Name).ToUpper() == microserviceName.ToUpper()
-                                && (x.Environment != null ? x.Environment.Name : emptyEnvironment.Name).ToUpper() == _environment.ToUpper()
-                                || (x.Environment != null ? x.Environment.Name : emptyEnvironment.Name).ToUpper() == "ALL")
-                    .Select(x => (IConfigurationString?)x.ConfigurationString)
+                return (_context.MicroserviceConfigurationStrings?
+                        .Where(x => (x.Microservice != null ? x.Microservice.Name : emptyMicroservice.Name).ToUpper() == microserviceName.ToUpper()
+                                    && (x.Environment != null ? x.Environment.Name : emptyEnvironment.Name).ToUpper() == _environment.ToUpper()
+                                    || (x.Environment != null ? x.Environment.Name : emptyEnvironment.Name).ToUpper() == "ALL")
+                        .Select(x => (IConfigurationString?)x.ConfigurationString))?
+                    .AsEnumerable()
                     .WhereNotNull()
                     .Select(x => new ConfigurationString()
                     {
@@ -119,8 +220,7 @@ namespace ETHTPS.Configuration
         {
             lock (_context.LockObj)
             {
-                return _context.Environments?.First(x => x.Name.ToUpper() == name.ToUpper()).Id
-                    ;
+                return _context.Environments?.First(x => string.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase)).Id;
             }
         }
 

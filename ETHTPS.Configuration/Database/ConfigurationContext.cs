@@ -40,7 +40,8 @@ public partial class ConfigurationContext : ConfigurationContextBase
             entity.ToTable("ConfigurationStrings", "Configuration");
 
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.EncryptionAlgorithmOrHint).HasMaxLength(255);
+            entity.Property(e => e.EncryptionAlgorithmOrHint).HasMaxLength(255).IsRequired(false);
+            entity.Property(e => e.EncryptionAlgorithmOrHint).HasMaxLength(255).IsRequired(false);
             entity.Property(e => e.Name).HasMaxLength(255);
             entity.Property(e => e.Value).HasMaxLength(255);
         });
@@ -149,6 +150,7 @@ public partial class ConfigurationContext : ConfigurationContextBase
         });
 
         modelBuilder.Entity<AllConfigurationStringsModel>(e => e.HasNoKey());
+        modelBuilder.Entity<AllLinksModel>(e => e.HasNoKey());
 
         modelBuilder.Entity<Provider>(entity =>
         {
