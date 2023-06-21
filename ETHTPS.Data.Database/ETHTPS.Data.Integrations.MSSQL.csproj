@@ -33,6 +33,7 @@
   <ItemGroup>
     <Folder Include="db\" />
     <Folder Include="HistoricalDataProviders\" />
+    <Folder Include="Definitions\" />
     <Folder Include="TimeWarp\Models\" />
   </ItemGroup>
 
