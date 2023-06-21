@@ -94,6 +94,10 @@ public partial class EthtpsContext : ETHTPSContextBase
 
     public virtual DbSet<StarkwareTransactionCountDatum> StarkwareTransactionCountData { get; set; }
 
+    public virtual DbSet<FeedbackTypes> FeedbackTypes { get; set; }
+
+    public virtual DbSet<UserFeedback> UserFeedback { get; set; }
+
     public virtual DbSet<State> States { get; set; }
     public virtual DbSet<DataUpdater> DataUpdaters { get; set; }
 
@@ -839,6 +843,33 @@ public partial class EthtpsContext : ETHTPSContextBase
             entity.HasOne(d => d.Job).WithMany(p => p.States)
                 .HasForeignKey(d => d.JobId)
                 .HasConstraintName("FK_HangFire_State_Job");
+        });
+        modelBuilder.Entity<FeedbackTypes>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Feedback__3214EC27A6B132D6");
+
+            entity.ToTable("FeedbackTypes", "Feedback");
+
+            entity.HasIndex(e => e.Name, "UQ__Feedback__737584F6DA6487B5").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<UserFeedback>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__UserFeed__3214EC270350DF32");
+
+            entity.ToTable("UserFeedback", "Feedback");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Details)
+                .IsRequired()
+                .HasMaxLength(255);
+            entity.Property(e => e.ExtraData).HasMaxLength(255);
+            entity.Property(e => e.Title).HasMaxLength(255);
         });
 
         OnModelCreatingPartial(modelBuilder);

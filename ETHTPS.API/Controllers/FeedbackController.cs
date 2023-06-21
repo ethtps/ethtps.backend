@@ -24,7 +24,16 @@ namespace ETHTPS.API.Controllers
         {
             if (issue?.Text?.Length > 0)
             {
-                return Ok();
+                lock (_context.LockObj)
+                {
+                    _context.UserFeedback.Add(new()
+                    {
+                        Title = "Issue report",
+                        Details = issue.Text
+                    });
+                    _context.SaveChanges();
+                    return StatusCode(201);
+                }
             }
             else
             {

@@ -159,7 +159,7 @@ namespace ETHTPS.API.Controllers.L2DataControllers
             if (requestModel == null)
                 return new ValidationResult(false, "Request model is null");
 
-            var providers = _generalService.AllProviders.Select(x => (x.Name, x.Type == "Sidechain")).Where(x => !requestModel.IncludeSidechains ? !x.Item2 : true);
+            var providers = _generalService.AllProviders.Select(x => (x.Name, x.Type == "Sidechain")).Where(x => requestModel.IncludeSidechains || !x.Item2);
             if (requestModel.Providers != null)
                 if (requestModel.Providers.Contains(Constants.All))
                     requestModel.Providers = providers.Select(x => x.Name).ToList();
