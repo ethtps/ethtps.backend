@@ -13,4 +13,5 @@
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Microservices/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Sorare/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Starkware/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=transactioncount/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=WSAPI/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

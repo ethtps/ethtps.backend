@@ -84,7 +84,7 @@ namespace ETHTPS.Tests.InfluxTests
             }
             var result = await _service.GetAsync(ProviderQueryModel.FromProviderName("Ethereum"), TimeInterval.OneYear);
             Assert.That(result, Has.Count.AtMost(1));
-            Assert.That(result.ContainsKey("Ethereum"), Is.True);
+            Assert.That(result.ContainsKey("Ethereum"), Is.True, $"Keys returned: [{string.Join(',', result.Select((x => x.Key)))}]");
         }
 
         [Test]

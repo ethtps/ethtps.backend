@@ -171,7 +171,8 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             }
         }
 
-        public async IAsyncEnumerable<T> GetEntriesBetween<T>(string bucket, string measurement, DateTime start, DateTime end) where T : class, IMeasurement
+        public async IAsyncEnumerable<T> GetEntriesBetween<T>(string bucket, string measurement, DateTime start, DateTime end)
+            where T : class, IMeasurement
         {
             var query = QueryBuilder.From(bucket)
                             .Filter(x => x.Measurement(measurement))
@@ -200,7 +201,8 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             where T : class, IMeasurement
         {
             await WaitForClientAsync();
-            return await _queryApi.QueryAsync<T>(query);
+            var result = QueryAsyncEnumerable<T>(query);
+            return result.ToBlockingEnumerable();
         }
 
         public async IAsyncEnumerable<TMeasurement> GetEntriesBetween<TMeasurement>(string bucket, string measurement, DateTime start, DateTime end, string groupPeriod)
