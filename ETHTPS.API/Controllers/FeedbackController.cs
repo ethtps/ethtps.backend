@@ -24,6 +24,7 @@ namespace ETHTPS.API.Controllers
         {
             if (issue?.Text?.Length > 0)
             {
+                return Ok();
             }
             else
             {
