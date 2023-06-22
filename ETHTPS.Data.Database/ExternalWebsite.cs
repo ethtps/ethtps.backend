@@ -7,6 +7,7 @@ namespace ETHTPS.Data.Integrations.MSSQL;
 
 public partial class ExternalWebsite : ExternalWebsiteBase
 {
+    [JsonIgnore]
     public virtual ExternalWebsiteCategory? CategoryNavigation { get; set; }
 
     [JsonIgnore]

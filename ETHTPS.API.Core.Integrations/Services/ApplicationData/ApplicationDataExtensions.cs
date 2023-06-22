@@ -8,6 +8,7 @@ public static class ApplicationDataExtensions
         services.AddScoped<ProvidersService>()//Added controller (ac)
             .AddScoped<EnvironmentService>() // (ac)
             .AddScoped<ExternalWebsiteCategoryService>() //(ac
-            .AddScoped<ProviderLinksService>()
+            .AddScoped<ProviderLinksService>()// (ac)
+            .AddScoped<MicroservicesService>()
             .AddScoped<ExternalWebsitesService>();// (ac)
 }

@@ -66,3 +66,10 @@ public sealed class ProviderLinksService : EFCoreCRUDServiceBase<ProviderLink>
     {
     }
 }
+
+public sealed class MicroservicesService : EFCoreCRUDServiceBase<ETHTPS.Configuration.Database.Microservice>
+{
+    public MicroservicesService(ConfigurationContext context) : base(context.Microservices ?? throw new ArgumentNullException("Microservices"), context)
+    {
+    }
+}

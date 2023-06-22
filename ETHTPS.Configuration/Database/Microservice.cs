@@ -1,6 +1,8 @@
-﻿namespace ETHTPS.Configuration.Database;
+﻿using ETHTPS.Data.Core;
 
-public partial class Microservice : IMicroservice
+namespace ETHTPS.Configuration.Database;
+
+public partial class Microservice : IMicroservice, IIndexed
 {
 #pragma warning disable CA2211 // Non-constant fields should not be visible
     public static Microservice EMPTY = new() { Name = "" };
