@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Controllers
 {
-    public abstract class CRUDServiceControllerBase<T> : APIControllerBase, ICRUDController<T> where T : class
+    public abstract class CRUDServiceControllerBase<TEntity> : APIControllerBase, ICRUDController<TEntity> where TEntity : class
     {
-        private readonly ICRUDService<T> _serviceImplementation;
-        public CRUDServiceControllerBase(ICRUDService<T> serviceImplementation)
+        private readonly ICRUDService<TEntity> _serviceImplementation;
+        public CRUDServiceControllerBase(ICRUDService<TEntity> serviceImplementation)
         {
             _serviceImplementation = serviceImplementation;
         }
@@ -18,7 +18,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Controllers
         [Route("[action]")]
         [HttpPost]
         [Authorize(Policy = "EditorsOnly")]
-        public void Create([FromBody] T entity)
+        public void Create([FromBody] TEntity entity)
         {
             _serviceImplementation.Create(entity);
         }
@@ -33,14 +33,14 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        public IEnumerable<T> GetAll()
+        public IEnumerable<TEntity> GetAll()
         {
             return _serviceImplementation.GetAll();
         }
 
         [HttpGet]
         [Route("[action]")]
-        public T GetById(int id)
+        public TEntity GetById(int id)
         {
             return _serviceImplementation.GetById(id);
         }
@@ -48,7 +48,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Controllers
         [Route("[action]")]
         [Authorize(Policy = "EditorsOnly")]
         [HttpPut]
-        public void Update([FromBody] T entity)
+        public void Update([FromBody] TEntity entity)
         {
             _serviceImplementation.Update(entity);
         }

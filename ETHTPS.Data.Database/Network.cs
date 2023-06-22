@@ -1,6 +1,8 @@
-﻿namespace ETHTPS.Data.Integrations.MSSQL;
+﻿using ETHTPS.Data.Core;
 
-public partial class Network
+namespace ETHTPS.Data.Integrations.MSSQL;
+
+public partial class Network : IIndexed
 {
 #pragma warning disable CA2211 // Non-constant fields should not be visible
     public static Network EMPTY = new() { Name = "invalid" };

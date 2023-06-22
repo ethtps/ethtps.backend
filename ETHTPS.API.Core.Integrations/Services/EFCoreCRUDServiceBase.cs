@@ -1,22 +1,21 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.ApplicationData;
 using ETHTPS.Data.Core;
-using ETHTPS.Data.Integrations.MSSQL;
+using ETHTPS.Data.Core.Database;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {
-    public abstract class EFCoreCRUDServiceBase<TEntity> : ControllerBase,
-        ICRUDService<TEntity> where TEntity : class, IIndexed
-
+    public abstract class EFCoreCRUDServiceBase<TEntity> : ControllerBase, IApplicationDataService<TEntity>
+         where TEntity : class, IIndexed
     {
         private readonly DbSet<TEntity> _entitySet;
         private readonly Action _saveChangesAction;
         private readonly object _lockObject;
-        protected EFCoreCRUDServiceBase(DbSet<TEntity> entitySet, EthtpsContext context)
+        protected EFCoreCRUDServiceBase(DbSet<TEntity> entitySet, LockableContext context)
         {
-            _entitySet = entitySet;
+            _entitySet = entitySet ?? throw new ArgumentNullException(nameof(entitySet));
             _saveChangesAction = () => context.SaveChanges();
             _lockObject = context.LockObj;
         }

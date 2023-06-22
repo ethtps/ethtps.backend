@@ -8,7 +8,21 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
     {
         private readonly EthtpsContext _context;
         const string _NAME = "CurrentVisitors";
-        public bool Enabled { get => _context.Experiments.Any(x => x.Name == "Current visitors"); }
+
+        public bool Enabled
+        {
+            get
+            {
+                var result = false;
+                lock (_context.LockObj)
+                {
+                    result = _context.Experiments.Any(x => x.Name == "Current visitors");
+                }
+
+                return result;
+            }
+        }
+
         public WebsiteStatisticsService(EthtpsContext context)
         {
             _context = context;

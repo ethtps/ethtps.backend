@@ -8,6 +8,7 @@ using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.BIL.Security.Humanity;
 using ETHTPS.API.Core.Integrations.MSSQL.Services;
+using ETHTPS.API.Core.Integrations.MSSQL.Services.ApplicationData;
 using ETHTPS.API.Security.Core.Humanity.Recaptcha;
 using ETHTPS.Configuration;
 using ETHTPS.Configuration.Database;
@@ -30,8 +31,7 @@ namespace ETHTPS.API.DependencyInjection
             .AddScoped<EthereumBlockTimeProvider>()
             .AddScoped<IExperimentService, ExperimentService>()
             .AddScoped<IInfoService, InfoService>()
-            .AddScoped<IExternalWebsitesService, ExternalWebsitesService>()
-            .AddScoped<IProvidersService, ProvidersService>()
+            .AddApplicationDataServices()
             .AddScoped<IChartDataServiceservice, ChartDataServiceservice>();
 
         /// <summary>

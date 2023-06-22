@@ -1,6 +1,8 @@
-﻿namespace ETHTPS.Configuration.Database;
+﻿using ETHTPS.Data.Core;
 
-public partial class Environment
+namespace ETHTPS.Configuration.Database;
+
+public partial class Environment : IIndexed
 {
 #pragma warning disable CA2211 // Non-constant fields should not be visible
     public static Environment EMPTY = new()

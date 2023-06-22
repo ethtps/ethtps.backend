@@ -4,25 +4,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ETHTPS.Data.Core.Database
 {
-    public abstract class ContextBase<TContext> : DbContext
+    public abstract class ContextBase<TContext> : LockableContext
         where TContext : DbContext
     {
-        public readonly object LockObj = new object();
-        public ContextBase()
+        protected ContextBase()
         {
             Database.SetCommandTimeout(TimeSpan.FromSeconds(10));
         }
 
-        public ContextBase(DbContextOptions<TContext> options)
+        protected ContextBase(DbContextOptions<TContext> options)
             : base(options)
         {
             Database.SetCommandTimeout(TimeSpan.FromSeconds(60));
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseLazyLoadingProxies().EnableThreadSafetyChecks();
         }
     }
 }

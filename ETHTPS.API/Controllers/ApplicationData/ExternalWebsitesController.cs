@@ -1,20 +1,21 @@
 ﻿using System.Collections.Generic;
 
-using ETHTPS.API.BIL.Infrastructure.Services;
 using ETHTPS.API.Core.Attributes;
 using ETHTPS.API.Core.Integrations.MSSQL.Controllers;
+using ETHTPS.API.Core.Integrations.MSSQL.Services.ApplicationData;
 using ETHTPS.Data.Core.Models.ExternalWebsites;
+using ETHTPS.Data.Integrations.MSSQL;
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace ETHTPS.API.Controllers
+namespace ETHTPS.API.Controllers.ApplicationData
 {
-    [Route("/api/v3/external-websites/")]
+    [Route("/api/v3/data/external-websites/")]
     [ApiController]
-    public sealed class ExternalWebsitesController : CRUDServiceControllerBase<IExternalWebsite>
+    public sealed class ExternalWebsitesController : CRUDServiceControllerBase<ExternalWebsite>
     {
-        private readonly IExternalWebsitesService _externalWebsitesService;
-        public ExternalWebsitesController(IExternalWebsitesService serviceImplementation) : base((ICRUDService<IExternalWebsite>)serviceImplementation)
+        private readonly ExternalWebsitesService _externalWebsitesService;
+        public ExternalWebsitesController(ExternalWebsitesService serviceImplementation) : base(serviceImplementation)
         {
             _externalWebsitesService = serviceImplementation;
         }
