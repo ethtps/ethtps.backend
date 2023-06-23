@@ -27,22 +27,7 @@ namespace ETHTPS.API.Controllers
         [HttpGet("GetNewKey")]
         public async Task<APIKeyResponseModel> RegisterNewKeyForProofAsync(string humanityProof)
         {
-            return await _apiKeyService.RegisterNewKeyAsync(humanityProof, HttpContext.Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
-        }
-
-        [HttpGet]
-        public async Task<string> RegdisGetTest(string key)
-        {
-            var db = _connectionMultiplexer.GetDatabase();
-            return await db.StringGetAsync(key);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> RegisSetTest(string key, string value)
-        {
-            var db = _connectionMultiplexer.GetDatabase();
-            await db.SetAddAsync(key, value);
-            return Created();
+            return await _apiKeyService.RegisterNewKeyAsync(humanityProof, HttpContext.Request.HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString() ?? "0.0.0.0");
         }
     }
 }
