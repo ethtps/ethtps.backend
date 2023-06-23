@@ -171,6 +171,60 @@ namespace ETHTPS.Configuration
             }
         }
 
+        public int LinkProviderToConfigurationString(string providerName, string configurationStringName,
+            string environmentName = Constants.ENVIRONMENT)
+        {
+            // Create parameters
+            var providerNameParam = new SqlParameter("@ProviderName", providerName);
+            var configurationStringNameParam = new SqlParameter("@ConfigurationStringName", configurationStringName);
+            var environmentNameParam = new SqlParameter("@EnvironmentName", environmentName);
+            var returnCodeParam = new SqlParameter("@RC", SqlDbType.Int)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            lock (_context.LockObj)
+            {
+                _context.Database.ExecuteSqlRaw(
+                    "EXEC @RC = [Configuration].[LinkProviderToConfigurationString] @ProviderName, @ConfigurationStringName, @EnvironmentName",
+                    returnCodeParam, providerNameParam, configurationStringNameParam, environmentNameParam);
+            }
+
+            return (int)returnCodeParam.Value;
+        }
+
+        public int LinkProviderToConfigurationString(int providerID, int configurationStringID,
+            string environmentName = Constants.ENVIRONMENT)
+        {
+            var providerIdParam = new SqlParameter("@ProviderID", providerID);
+            var configurationStringIdParam = new SqlParameter("@ConfigurationStringID", configurationStringID);
+            var environmentNameParam = new SqlParameter("@EnvironmentName", environmentName);
+            var result = 0;
+            lock (_context.LockObj)
+            {
+                result = _context.Database.ExecuteSqlRaw("[Configuration].[LinkProviderToConfigurationStringByID] @ProviderID, @ConfigurationStringID, @EnvironmentName",
+                    providerIdParam, configurationStringIdParam, environmentNameParam);
+            }
+
+            return result;
+        }
+
+        public int UnlinkProviderFromConfigurationString(int providerID, int configurationStringID,
+            string environmentName = Constants.ENVIRONMENT)
+        {
+            var providerIdParam = new SqlParameter("@ProviderID", providerID);
+            var configurationStringIdParam = new SqlParameter("@ConfigurationStringID", configurationStringID);
+            var environmentNameParam = new SqlParameter("@EnvironmentName", environmentName);
+            var result = 0;
+            lock (_context.LockObj)
+            {
+                result = _context.Database.ExecuteSqlRaw("[Configuration].[UnlinkProviderFromConfigurationStringByID] @ProviderID, @ConfigurationStringID, @EnvironmentName",
+                    providerIdParam, configurationStringIdParam, environmentNameParam);
+            }
+
+            return result;
+        }
+
         public int ClearHangfireQueue()
         {
             lock (_context.LockObj)

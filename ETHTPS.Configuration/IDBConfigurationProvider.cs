@@ -59,6 +59,36 @@ namespace ETHTPS.Configuration
             string? microservice = null, string? environment = null);
 
         /// <summary>
+        /// Links a provider to a configuration string.
+        /// </summary>
+        /// <param name="providerName"></param>
+        /// <param name="configurationStringName"></param>
+        /// <param name="environmentName"></param>
+        /// <returns>The SQL return code of the operation</returns>
+        int LinkProviderToConfigurationString(string providerName, string configurationStringName,
+            string environmentName = Constants.ENVIRONMENT);
+
+        /// <summary>
+        /// Links a provider to a configuration string based on their IDs.
+        /// </summary>
+        /// <param name="providerID"></param>
+        /// <param name="configurationStringID"></param>
+        /// <param name="environmentName"></param>
+        /// <returns>The number of rows affected</returns>
+        int LinkProviderToConfigurationString(int providerID, int configurationStringID,
+            string environmentName = Constants.ENVIRONMENT);
+
+        /// <summary>
+        /// Removes a configuration string link from a provider based on their IDs.
+        /// </summary>
+        /// <param name="providerID"></param>
+        /// <param name="configurationStringID"></param>
+        /// <param name="environmentName"></param>
+        /// <returns>The number of rows affected</returns>
+        int UnlinkProviderFromConfigurationString(int providerID, int configurationStringID,
+            string environmentName = Constants.ENVIRONMENT);
+
+        /// <summary>
         /// Clears the Hangfire job queue.
         /// </summary>
         /// <returns></returns>

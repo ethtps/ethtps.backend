@@ -67,5 +67,23 @@ namespace ETHTPS.API.Controllers
             var id = _configurationProvider.ClearHangfireQueue();
             return Content(id.ToString());
         }
+
+        [HttpPut]
+        public int LinkProviderToConfigurationString(string providerName, string configurationStringName,
+            string environmentName = "All") =>
+            _configurationProvider.LinkProviderToConfigurationString(providerName, configurationStringName,
+                environmentName);
+
+        [HttpPut]
+        public int LinkProviderToConfigurationString(int providerID, int configurationStringID,
+            string environmentName = "All") =>
+            _configurationProvider.LinkProviderToConfigurationString(providerID, configurationStringID,
+                environmentName);
+
+        [HttpDelete]
+        public int UnlinkProviderFromConfigurationString(int providerID, int configurationStringID,
+            string environmentName = Constants.ENVIRONMENT) =>
+            _configurationProvider.UnlinkProviderFromConfigurationString(providerID, configurationStringID,
+                environmentName);
     }
 }
