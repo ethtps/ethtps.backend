@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Controllers
 {
+    [Authorize]
     public abstract class CRUDServiceControllerBase<TEntity> : APIControllerBase, ICRUDController<TEntity> where TEntity : class
     {
         private readonly ICRUDService<TEntity> _serviceImplementation;

@@ -8,26 +8,26 @@ using Microsoft.AspNetCore.Http;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {
-    public sealed class ExperimentService : IExperimentService
+    public sealed class ExperimentService : EFCoreCRUDServiceBase<Experiment>, IExperimentService
     {
         private readonly EthtpsContext _context;
 
-        public ExperimentService(EthtpsContext context)
+        public ExperimentService(EthtpsContext context) : base(context.Experiments, context)
         {
             _context = context;
         }
 
         public Task EnrollInNewExperimentsIfApplicableAsync(ExperimentRequesterParameters parameters, HttpContext context)
         {
-            var experiments = _context.GetExperimentsForDeviceType(parameters.DeviceType).ToList();
-            var runningExperiments = experiments.Where(x => x.IsRunning()).ToList();
-            if (runningExperiments.Any())
+            lock (_context.LockObj)
             {
-                foreach (var experiment in runningExperiments)
+                var experiments = _context.GetExperimentsForDeviceType(parameters.DeviceType).ToList();
+                var runningExperiments = experiments.Where(x => x.IsRunning()).ToList();
+                if (runningExperiments.Any())
                 {
-                    var apiKeyID = _context.GetAPIKeyID(context);
-                    lock (_context.LockObj)
+                    foreach (var experiment in runningExperiments)
                     {
+                        var apiKeyID = _context.GetAPIKeyID(context);
                         if (_context.UserIsEligibleForEnrollmentIn(experiment, apiKeyID))
                         {
                             _context.EnrollUserIn(experiment, apiKeyID);

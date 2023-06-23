@@ -1,6 +1,8 @@
-﻿namespace ETHTPS.Data.Integrations.MSSQL;
+﻿using ETHTPS.Data.Core;
 
-public partial class GroupRole
+namespace ETHTPS.Data.Integrations.MSSQL;
+
+public partial class GroupRole : IIndexed
 {
     public int Id { get; set; }
 

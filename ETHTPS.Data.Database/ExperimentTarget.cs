@@ -1,6 +1,8 @@
-﻿namespace ETHTPS.Data.Integrations.MSSQL;
+﻿using ETHTPS.Data.Core;
 
-public partial class ExperimentTarget
+namespace ETHTPS.Data.Integrations.MSSQL;
+
+public partial class ExperimentTarget : IIndexed
 {
     public int Id { get; set; }
 

@@ -29,7 +29,6 @@ namespace ETHTPS.API.DependencyInjection
             services
             .AddScoped<GeneralService>()
             .AddScoped<EthereumBlockTimeProvider>()
-            .AddScoped<IExperimentService, ExperimentService>()
             .AddScoped<IInfoService, InfoService>()
             .AddApplicationDataServices()
             .AddScoped<IChartDataServiceservice, ChartDataServiceservice>();
