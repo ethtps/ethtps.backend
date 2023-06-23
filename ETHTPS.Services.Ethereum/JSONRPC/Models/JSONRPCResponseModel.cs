@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Services.Ethereum.JSONRPC.Models
 {
-    public class JSONRPCResponseModel
+    public sealed class JSONRPCResponseModel
     {
         [JsonProperty("id")]
         public int ID { get; set; }

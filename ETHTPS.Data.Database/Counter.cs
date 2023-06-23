@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ETHTPS.Data.Integrations.MSSQL;
+﻿namespace ETHTPS.Data.Integrations.MSSQL;
 
 public partial class Counter
 {
-    public string Key { get; set; }
+    public required string Key { get; set; }
 
     public int Value { get; set; }
 

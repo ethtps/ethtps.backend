@@ -1,7 +1,12 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.ProviderSpecific;
+using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.ProviderSpecific.TypeSpecific;
 using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Models.DataUpdater;
 using ETHTPS.Data.Integrations.InfluxIntegration;
 using ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices;
@@ -9,22 +14,18 @@ using ETHTPS.Services.BlockchainServices.Extensions;
 
 using Microsoft.Extensions.Logging;
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace ETHTPS.Services.BlockchainServices.CoravelLoggers
 {
     /// <summary>
     /// A simple periodic task update runner
     /// </summary>
     /// <typeparam name="TBlockInfoProvider"></typeparam>
-    public class CoravelBlockLogger<TBlockInfoProvider> : ICoravelBackgroundService
+    public abstract class CoravelBlockLogger<TBlockInfoProvider> : ICoravelBackgroundService
         where TBlockInfoProvider : IHTTPBlockInfoProvider
     {
         private static Dictionary<string, int> _lastBlockNumberDictionary = new();
         private static IBucketCreator _bucketCreator;
-        private static Dictionary<string, int> _consecutiveFailureCountDictionary = new();
+        private static readonly Dictionary<string, int> _consecutiveFailureCountDictionary = new();
         private const int MAX_CONSECUTIVE_FAILURE_COUNT = 5;
         private static object _lockObj = new object();
 

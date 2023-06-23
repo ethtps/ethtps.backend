@@ -2,7 +2,7 @@
 
 namespace ETHTPS.Data.Core.Models.DataPoints
 {
-    public class AllDataModel
+    public sealed class AllDataModel
     {
         public IEnumerable<ProviderModel> Providers { get; set; }
         public IDictionary<string, object> MaxData { get; set; }
@@ -11,7 +11,7 @@ namespace ETHTPS.Data.Core.Models.DataPoints
         public Dictionary<TimeInterval, IDictionary<string, IEnumerable<DataResponseModel>>> AllGasAdjustedTPSData { get; set; }
     }
 
-    public class ProviderModel
+    public sealed class ProviderModel
     {
         public string Name { get; set; }
         public string Type { get; set; }

@@ -1,20 +1,24 @@
-﻿using ETHTPS.Data.Integrations.MSSQL;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
+using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Data.Core.Models.DataEntries;
+using ETHTPS.Data.Core.Models.DataUpdater;
+using ETHTPS.Data.Core.Models.LiveData;
+using ETHTPS.Data.Core.Models.LiveData.Triggers;
 using ETHTPS.Data.Integrations.InfluxIntegration;
 using ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices;
+using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Services.BlockchainServices.Extensions;
-using ETHTPS.Data.Core.Models.DataEntries;
+using ETHTPS.Services.LiveData;
 
 using Hangfire;
 
 using Microsoft.Extensions.Logging;
-
-using System.Threading.Tasks;
-using System;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
-using ETHTPS.Data.Core.Models.DataUpdater;
-using System.Collections.Generic;
-using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
-using ETHTPS.Data.Core.Models.DataEntries.BlockchainServices.Models;
 
 namespace ETHTPS.Services.BlockchainServices.HangfireLogging
 {
@@ -25,24 +29,43 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
         private static object _lockObj = new object();
         private static Dictionary<string, int> _lastBlockNumberDictionary = new();
         private readonly IInfluxWrapper _influxWrapper;
+        private TimeSpan _timeout = TimeSpan.FromSeconds(30);
+        private readonly WSAPIPublisher _wsapiClient;
+        private readonly IRedisCacheService _redisCacheService;
         protected override string ServiceName { get => $"InfluxLogger<{typeof(T).Name}>"; }
-        public InfluxLogger(T instance, ILogger<HangfireBackgroundService> logger, EthtpsContext context, IInfluxWrapper influxWrapper, IDataUpdaterStatusService statusService) : base(instance, logger, context, statusService, UpdaterType.BlockInfo)
+        public InfluxLogger(T instance, ILogger<HangfireBackgroundService> logger, EthtpsContext context, IInfluxWrapper influxWrapper, IDataUpdaterStatusService statusService, WSAPIPublisher wsapiClient, IRedisCacheService redisCacheService) : base(instance, logger, context, statusService, UpdaterType.BlockInfo)
         {
             _influxWrapper = influxWrapper;
             _bucketCreator ??= new MeasurementBucketCreator(influxWrapper);
+            _wsapiClient = wsapiClient;
+            _redisCacheService = redisCacheService;
         }
 
         [AutomaticRetry(Attempts = 3, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
         //        [DisableConcurrentExecution(15)]
         public override async Task RunAsync()
         {
+            if (!_statusService.Enabled ?? false)
+            {
+                _logger.LogInformation($"Not running InfluxLogger<{_provider}> because it is disabled");
+                return; //TODO: remove self from hangfire
+            }
             if (TimeSinceLastRan?.TotalSeconds >= 5)
             {
                 try
                 {
+                    if (DateTime.Now - _statusService.GetLastRunTime() < _timeout)
+                    {
+                        if (_statusService.GetStatusFor(UpdaterType.BlockInfo) == UpdaterStatus.Running)
+                        {
+                            _logger.LogWarning($"{_provider}: Updater is already running");
+                            return;
+                        }
+                    }
+
                     await CreateBucketsIfNeededAsync();
 
-                    _statusService.MarkAsRunning();
+                    _statusService.SetStatusFor(UpdaterType.BlockInfo, UpdaterStatus.Running);
                     var block = await _instance.GetLatestBlockInfoAsync();
                     if (block != null)
                     {
@@ -55,7 +78,54 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
                         }
                         await _influxWrapper.LogBlockAsync(block);
                         TPSGPSInfo delta = await CalculateTPSGPSAsync(block);
-                        _statusService.MarkAsRanSuccessfully();
+                        _wsapiClient.Push(new L2DataUpdateModel()
+                        {
+                            BlockNumber = delta.BlockNumber,
+                            Data = new MinimalDataPoint()
+                            {
+                                GPS = delta.GPS,
+                                TPS = delta.TPS
+                            },
+                            Provider = _provider,
+                            Transactions = delta.TransactionHashes?.Select(x => new TransactionMetadata()
+                            {
+                                Hash = x
+                            })
+                        });
+                        await _redisCacheService.SetDataAsync(new L2DataUpdateModel()
+                        {
+                            BlockNumber = delta.BlockNumber,
+                            Data = new MinimalDataPoint()
+                            {
+                                GPS = delta.GPS,
+                                TPS = delta.TPS
+                            },
+                            Provider = _provider,
+                            Transactions = delta.TransactionHashes?.Select(x => new TransactionMetadata()
+                            {
+                                Hash = x
+                            }),
+                            CacheKey = $"Instant_{_provider}"
+                        });
+                        var maxKey = $"Max_{_provider}";
+                        if (await _redisCacheService.HasKeyAsync(maxKey))
+                        {
+                            var max = await _redisCacheService.GetDataAsync<MinimalDataPoint>(maxKey);
+                            max.TPS = Math.Max(max.TPS ?? 0, delta.TPS);
+                            max.GPS = Math.Max(max.GPS ?? 0, delta.GPS);
+                            await _redisCacheService.SetDataAsync(maxKey, max);
+                        }
+                        else
+                        {
+                            await _redisCacheService.SetDataAsync(maxKey, new MinimalDataPoint()
+                            {
+                                TPS = delta.TPS,
+                                GPS = delta.GPS
+                            });
+                        }
+                        _logger.LogInformation($"{_provider}: {delta.TPS}TPS {delta.GPS}GPS");
+
+                        _statusService.SetStatusFor(UpdaterType.BlockInfo, UpdaterStatus.RanSuccessfully);
                     }
                     else
                     {
@@ -66,13 +136,13 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
                 catch (InfluxException e)
                 {
                     _statusService.MarkAsFailed();
-                    _logger.LogError("InfluxLogger exception", e);
+                    _logger.LogError(new EventId(), e, $"InfluxLogger exception running InfluxLogger<{typeof(T)}>");
                     throw;
                 }
                 catch (Exception e)
                 {
-                    _statusService.MarkAsFailed();
-                    _logger.LogError($":{ServiceName} {e.GetType().Name} {e.Message}");
+                    _logger.LogError(new EventId(), e, $"Exception running InfluxLogger<{typeof(T)}>");
+                    _statusService.SetStatusFor(UpdaterType.BlockInfo, UpdaterStatus.Failed);
                 }
             }
             else

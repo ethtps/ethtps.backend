@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Services.BackgroundTasks.Recurring.Aggregated
 {
-    public class AggregatedEndpointStatsBuilder : IInvocable, IInvocableWithPayload<IList<AggregatedEnpointStat>>
+    public sealed class AggregatedEndpointStatsBuilder : IInvocable, IInvocableWithPayload<IList<AggregatedEnpointStat>>
     {
         private readonly EthtpsContext _context;
         private readonly ILogger<AggregatedEndpointStatsBuilder> _logger;
@@ -17,7 +17,7 @@ namespace ETHTPS.Services.BackgroundTasks.Recurring.Aggregated
             _logger = logger;
         }
 
-        public IList<AggregatedEnpointStat> Payload { get; set; }
+        public IList<AggregatedEnpointStat> Payload { get; set; } = new List<AggregatedEnpointStat>();
 
         public Task Invoke()
         {

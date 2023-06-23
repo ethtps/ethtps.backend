@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
 
-using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace ETHTPS.Data.Core.Models.DataPoints
 {
-    public class DataResponseModel
+    public sealed class DataResponseModel
     {
         public List<DataPoint> Data { get; set; }
 

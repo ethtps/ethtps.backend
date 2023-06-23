@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 
 namespace ETHTPS.Data.Core.Extensions
 {
@@ -47,6 +45,8 @@ namespace ETHTPS.Data.Core.Extensions
 
             return expression(attribute);
         }
+        public static TimeGrouping Previous(this TimeGrouping timeInterval) => (TimeGrouping)(timeInterval - 1);
+        public static TimeGrouping Next(this TimeGrouping timeInterval) => (TimeGrouping)(timeInterval + 1);
 
         public static TimeSpan ToTimeSpan(this TimeGrouping grouping)
         {
@@ -103,11 +103,11 @@ namespace ETHTPS.Data.Core.Extensions
                 return "m";
             if (timeSpan <= TimeGrouping.Day.ToTimeSpan())
                 return "h";
-            if (timeSpan <= TimeGrouping.Week.ToTimeSpan())
+            if (timeSpan < TimeGrouping.Week.ToTimeSpan())
                 return "d";
-            if (timeSpan <= TimeGrouping.Month.ToTimeSpan())
+            if (timeSpan < TimeGrouping.Month.ToTimeSpan())
                 return "d";
-            if (timeSpan <= TimeGrouping.Year.ToTimeSpan())
+            if (timeSpan < TimeGrouping.Year.ToTimeSpan())
                 return "mo";
             return "y";
         }

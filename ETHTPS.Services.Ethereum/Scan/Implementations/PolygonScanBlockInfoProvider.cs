@@ -1,18 +1,16 @@
-﻿using ETHTPS.Services.Attributes;
-using ETHTPS.Services.BlockchainServices;
+﻿using System;
 
-using Microsoft.Extensions.Configuration;
-
-using System;
+using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
 
 namespace ETHTPS.Services.Ethereum.Scan.Implementations
 {
     [Provider("Polygon")]
     [Disabled]
     [Obsolete("Use JSONRPC.PolygonBlockInfoProvider instead", true)]
-    public class PolygonScanBlockInfoProvider : ScanBlockInfoProviderBase
+    public sealed class PolygonScanBlockInfoProvider : ScanBlockInfoProviderBase
     {
-        public PolygonScanBlockInfoProvider(IConfiguration configuration) : base(configuration, "Polygonscan")
+        public PolygonScanBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Polygonscan")
         {
         }
     }

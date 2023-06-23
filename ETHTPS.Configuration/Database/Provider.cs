@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ETHTPS.Configuration.Database;
+﻿namespace ETHTPS.Configuration.Database;
 
 public partial class Provider
 {
+#pragma warning disable CA2211 // Non-constant fields should not be visible
+    public static Provider EMPTY = new Provider();
+#pragma warning restore CA2211 // Non-constant fields should not be visible
     public int Id { get; set; }
 
     public string Name { get; set; } = null!;
@@ -26,6 +26,7 @@ public partial class Provider
     public virtual ICollection<Provider> InverseSubchainOfNavigation { get; } = new List<Provider>();
 
     public virtual ICollection<ProviderConfigurationString> ProviderConfigurationStrings { get; } = new List<ProviderConfigurationString>();
+    public virtual ICollection<ProviderTag> ProviderTags { get; } = new List<ProviderTag>();
 
-    public virtual Provider? SubchainOfNavigation { get; set; }
+    public virtual Provider? SubchainOfNavigation { get; set; } = new();
 }

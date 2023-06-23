@@ -7,7 +7,6 @@ types
 dist
 node_modules
 ServiceCreator.cs
-ConfigurationExtensions.cs
 PrivateData.cs
 appsettings - Copy.default.json
 cloc-1.64.exe
@@ -365,3 +364,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/ETHTPS.Configuration/Database/Initialization/PrivateDataInitializer.cs
+ETHTPS.Runner/Startup.json
+.env

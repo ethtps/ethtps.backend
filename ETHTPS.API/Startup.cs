@@ -1,26 +1,32 @@
 
 
+using Coravel;
+
+using EntityGraphQL.AspNet;
+using EntityGraphQL.Schema;
+
+using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+using ETHTPS.API.Core.Middlewares;
+using ETHTPS.API.DependencyInjection;
+using ETHTPS.API.Security.Core.Authentication;
+using ETHTPS.API.Security.Core.Policies;
+using ETHTPS.Configuration.Database.Initialization;
+using ETHTPS.Data.Integrations.MSSQL;
+using ETHTPS.Services.BackgroundTasks.Recurring.Aggregated;
+using ETHTPS.Services.Infrastructure.Messaging;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ETHTPS.Configuration.Extensions;
-using ETHTPS.Configuration.Database;
-using ETHTPS.API.Core.Middlewares;
-using ETHTPS.API.Security.Core.Policies;
-using ETHTPS.API.DependencyInjection;
-using ETHTPS.API.Security.Core.Authentication;
-using Coravel;
-using ETHTPS.Services.BackgroundTasks.Recurring.Aggregated;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 
 namespace ETHTPS.API
 {
-    public class Startup
+    public sealed class Startup
     {
-        private readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-        const string APP_NAME = "ETHTPS.API.General";
+        private readonly string _myAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        private readonly string _appName = "ETHTPS.API.General";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -30,29 +36,31 @@ namespace ETHTPS.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDatabaseContext(APP_NAME);
+            services.AddEssentialServices();
+            services.AddDatabaseContext(_appName);
             services.AddCustomCORSPolicies();
-
+            services.AddResponseCompression();
             services.AddControllersWithViews()
-                .AddControllersAsServices()
-                .ConfigureNewtonsoftJson();
+                    .AddControllersAsServices()
+                    .ConfigureNewtonsoftJson();
             services.AddSwagger()
                     .AddMemoryCache()
                     .AddAPIKeyProvider()
                     .AddAPIKeyAuthenticationAndAuthorization()
-                    .AddDataProviderServices(DatabaseProvider.MSSQL)
+                    .AddDataProviderServices(DatabaseProvider.InfluxDB)
+                    .WithStore(DatabaseProvider.InfluxDB, "ETHTPS.API")
                     .AddMixedCoreServices()
                     .AddQueue()
                     .AddCache()
                     .AddScoped<AggregatedEndpointStatsBuilder>()
-                    .AddInfluxHistoricalDataProvider() //Not working r/n
-                    .AddMSSQLHistoricalDataServices();
-            //.RegisterMicroservice(APP_NAME, "General API");
+                    .AddInfluxHistoricalDataProvider()
+                    .AddRedisCache()
+                    .AddRabbitMQMessagePublisher()
+                    .AddGraphQLSchema<EthtpsContext>();
             services.AddDataUpdaterStatusService();
 
 #if DEBUG
-            services.AddScoped<PublicDataInitializer>()
-                    .AddScoped<PrivateDataInitializer>();
+            services.AddScoped<PublicDataInitializer>();
 #endif
         }
 
@@ -67,11 +75,17 @@ namespace ETHTPS.API
             app.UseMiddleware<AccesStatsMiddleware>();
             app.ConfigureSwagger();
             app.UseRouting();
+            app.UseMiddleware<RedisCacheMiddleware>();
             app.UseAuthorization();
-            app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors(_myAllowSpecificOrigins);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers().RequireAuthorization();
+                endpoints.MapGraphQL<EthtpsContext>(options: new ExecutionOptions()
+                {
+                    EnableQueryCache = true,
+                    ExecuteServiceFieldsSeparately = true,
+                });
             });
         }
     }

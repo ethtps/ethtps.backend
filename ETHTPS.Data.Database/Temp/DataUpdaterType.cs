@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ETHTPS.Data.Integrations.MSSQL.Temp;
-
-public partial class DataUpdaterType
+namespace ETHTPS.Data.Integrations.MSSQL.Temp
 {
-    public int Id { get; set; }
+    public partial class DataUpdaterType
+    {
+        public DataUpdaterType()
+        {
+            DataUpdaters = new HashSet<DataUpdater>();
+        }
 
-    public string TypeName { get; set; } = null!;
+        public int Id { get; set; }
+        public string TypeName { get; set; } = null!;
 
-    public virtual ICollection<DataUpdater> DataUpdaters { get; } = new List<DataUpdater>();
+        public virtual ICollection<DataUpdater> DataUpdaters { get; set; }
+    }
 }

@@ -1,52 +1,35 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
-using ETHTPS.Services.BlockchainServices;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.Models.DataEntries;
+
 using Fizzler.Systems.HtmlAgilityPack;
 
 using HtmlAgilityPack;
 
-using Microsoft.Extensions.Configuration;
-
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using ETHTPS.Services.Attributes;
-
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("Ronin")]
-    [RunsEvery(CronConstants.Every5s)]
-    public class RoninBlockInfoProvider : IHTTPBlockInfoProvider
+    [RunsEvery(CronConstants.EVERY_5_S)]
+    public sealed class RoninBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
-        private readonly string _baseURL;
-        private readonly string _txSummaryPath;
-        private readonly string _blockHeightSelector;
-        private readonly string _transactionCountSelector;
-        private readonly string _dateSelector;
-        private readonly string _gasSelector;
+        private readonly string _baseURL = string.Empty;
 
-        public RoninBlockInfoProvider(IConfiguration configuration)
+        public RoninBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Ronin")
         {
-            var config = configuration.GetSection("BlockInfoProviders").GetSection("Ronin");
-            _baseURL = config.GetValue<string>("BaseURL");
-            _txSummaryPath = config.GetValue<string>("TXSummaryPath");
-            _blockHeightSelector = config.GetValue<string>("BlockHeightSelector");
-            _transactionCountSelector = config.GetValue<string>("TXCountSelector");
-            _dateSelector = config.GetValue<string>("DateSelector");
-            _gasSelector = config.GetValue<string>("GasUsedSelector");
-            _httpClient = new HttpClient();
+            BlockTimeSeconds = 3;
         }
-        public double BlockTimeSeconds { get; set; } = 3;
 
-        public Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             HtmlWeb web = new HtmlWeb();
             //HtmlDocument doc = web.Load($"{_baseURL}/block/{blockNumber}");
 
             var txPage = web.Load($"{_baseURL}/block/{blockNumber}/txs");
-            var txCountNode = txPage.DocumentNode.QuerySelectorAll(_transactionCountSelector);
+            var txCountNode = txPage.DocumentNode.QuerySelectorAll(TXCountSelector);
             var txCount = new string(string.Join(" ", txCountNode.Select(x => x.InnerText)).Where(Char.IsNumber).ToArray());
 
             return Task.FromResult(new Block()
@@ -56,17 +39,17 @@ namespace ETHTPS.Services.Ethereum
             });
         }
 
-        public Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override async Task<Block> GetLatestBlockInfoAsync()
         {
             HtmlWeb web = new HtmlWeb();
             HtmlDocument doc = web.Load($"{_baseURL}/blocks");
 
-            var blockHeightNode = doc.DocumentNode.QuerySelectorAll(_blockHeightSelector);
+            var blockHeightNode = doc.DocumentNode.QuerySelectorAll(BlockHeightSelector);
             var blockHeight = string.Join(" ", blockHeightNode.Select(x => x.InnerText));
 
             if (string.IsNullOrWhiteSpace(blockHeight))
@@ -79,19 +62,19 @@ namespace ETHTPS.Services.Ethereum
         }
 
 
-        public class TxSummaryResponse
+        public sealed class TxSummaryResponse
         {
             public TxSummaryPageprops pageProps { get; set; }
             public bool __N_SSG { get; set; }
         }
 
-        public class TxSummaryPageprops
+        public sealed class TxSummaryPageprops
         {
             public Overviewdata overviewData { get; set; }
             public Txchartdata txChartData { get; set; }
         }
 
-        public class Overviewdata
+        public sealed class Overviewdata
         {
             public int blockTime { get; set; }
             public int totalAddresses { get; set; }
@@ -99,7 +82,7 @@ namespace ETHTPS.Services.Ethereum
             public int totalTxs { get; set; }
         }
 
-        public class Txchartdata
+        public sealed class Txchartdata
         {
             public int[] txCount { get; set; }
             public string[] label { get; set; }

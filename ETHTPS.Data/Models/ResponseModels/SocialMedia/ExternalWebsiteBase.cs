@@ -1,8 +1,8 @@
 ﻿using ETHTPS.Data.Core.Models.ExternalWebsites;
 
-namespace ETHTPS.Data.ResponseModels.SocialMedia
+namespace ETHTPS.Data.Core.Models.ResponseModels.SocialMedia
 {
-    public class ExternalWebsiteBase : IExternalWebsite
+    public abstract class ExternalWebsiteBase : IExternalWebsite
     {
 
         public string Name { get; set; }

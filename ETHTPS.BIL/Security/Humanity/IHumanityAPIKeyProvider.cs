@@ -1,6 +1,6 @@
-﻿using ETHTPS.API.Security.Core.APIKeyProvider;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.APIKeys;
 
-namespace ETHTPS.API.Security.Core.Humanity
+namespace ETHTPS.API.BIL.Security.Humanity
 {
     public interface IHumanityAPIKeyProvider<THumanityCheckService> : IExtendedAPIKeyService
         where THumanityCheckService : IHumanityCheckService

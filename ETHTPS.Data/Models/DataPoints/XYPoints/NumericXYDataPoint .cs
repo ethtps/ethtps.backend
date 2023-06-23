@@ -1,13 +1,13 @@
-﻿using ETHTPS.Data.Core.Extensions;
+﻿using System;
 
-using System;
+using ETHTPS.Data.Core.Extensions.DateTimeExtensions;
 
 namespace ETHTPS.Data.Core.Models.DataPoints.XYPoints
 {
     /// <summary>
     /// Represents a TPS/GPS/GTPS data point
     /// </summary>
-    public class NumericXYDataPoint : XYDataPointBase<double>
+    public sealed class NumericXYDataPoint : XYDataPointBase<double>
     {
         public NumericXYDataPoint() : base() { }
         public NumericXYDataPoint(double x, double y) : base(x, y)

@@ -1,42 +1,39 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
-using ETHTPS.Services.BlockchainServices;
-using ETHTPS.Data.Core.Models.DataEntries;
-using Newtonsoft.Json;
-
-using System;
-using System.Net.Http;
+﻿using System;
 using System.Threading.Tasks;
-using ETHTPS.Services.Attributes;
+
+using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.Models.DataEntries;
+
+using Newtonsoft.Json;
 
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("OMG Network")]
-    [RunsEvery(CronConstants.Every13s)]
-    public class OMGNetworkBlockInfoProvider : IHTTPBlockInfoProvider
+    [RunsEvery(CronConstants.EVERY_13_S)]
+    public sealed class OMGNetworkBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
 
-        public OMGNetworkBlockInfoProvider()
+        public OMGNetworkBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "OMG Network")
         {
-            _httpClient = new HttpClient();
+
         }
 
-        public double BlockTimeSeconds { get; set; }
-
-        public Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override async Task<Block> GetLatestBlockInfoAsync()
         {
-            var response = await _httpClient.PostAsync("https://watcher-info.mainnet.v1.omg.network/block.all", null);
+            var response = await _httpClient.PostAsync(Endpoint, null);
             var responseObject = JsonConvert.DeserializeObject<OMGResponseObject>(await response.Content.ReadAsStringAsync());
+            if (responseObject == null) return null;
             var latestBlock = responseObject.data[0];
             var secondToLatestBlock = responseObject.data[1];
             BlockTimeSeconds = latestBlock.inserted_at.Subtract(secondToLatestBlock.inserted_at).TotalSeconds;
@@ -49,7 +46,7 @@ namespace ETHTPS.Services.Ethereum
         }
 
 
-        public class OMGResponseObject
+        public sealed class OMGResponseObject
         {
             public BlockData[] data { get; set; }
             public Data_Paging data_paging { get; set; }
@@ -58,13 +55,13 @@ namespace ETHTPS.Services.Ethereum
             public string version { get; set; }
         }
 
-        public class Data_Paging
+        public sealed class Data_Paging
         {
             public int limit { get; set; }
             public int page { get; set; }
         }
 
-        public class BlockData
+        public sealed class BlockData
         {
             public int blknum { get; set; }
             public int eth_height { get; set; }

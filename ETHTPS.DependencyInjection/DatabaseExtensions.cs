@@ -3,7 +3,6 @@ using ETHTPS.Data.Integrations.MSSQL;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.API.DependencyInjection
 {
@@ -15,13 +14,23 @@ namespace ETHTPS.API.DependencyInjection
             using (var built = services.BuildServiceProvider())
             {
                 var provider = built.GetRequiredService<IDBConfigurationProvider>();
-                return provider.GetConfigurationStringsForMicroservice(appName).First(x => x.Name == connectionStringName).Value;
+                var result = (provider.GetConfigurationStringsForMicroservice(appName)?.FirstOrDefault(x => x.Name == connectionStringName)?.Value) ?? throw new ArgumentException($"Couldn't find a connection string for {appName} for \"{Constants.ENVIRONMENT}\" environment");
+                return result;
             }
         }
+
         public static IServiceCollection AddDatabaseContext(this IServiceCollection services, string appName)
         {
-            services.AddDbContext<EthtpsContext>(options => options.UseSqlServer(services.GetDefaultConnectionString(appName)), ServiceLifetime.Scoped);
-            return services;
+            try
+            {
+                var configurationString = services.GetDefaultConnectionString(appName);
+                services.AddDbContext<EthtpsContext>(options => options.UseSqlServer(configurationString), ServiceLifetime.Scoped);
+                return services;
+            }
+            catch (Exception ex)
+            {
+                throw new UnauthorizedAccessException("Not allowed", ex);
+            }
 
         }
     }

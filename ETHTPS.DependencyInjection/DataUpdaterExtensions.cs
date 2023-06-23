@@ -1,27 +1,30 @@
-﻿using ETHTPS.Services.Ethereum.Scan.Implementations;
-using ETHTPS.Services.Ethereum.Starkware;
-using ETHTPS.Services.Ethereum;
-using ETHTPS.Services;
-using Microsoft.Extensions.DependencyInjection;
-using static ETHTPS.API.Core.Constants;
-using ETHTPS.Services.Infrastructure.Extensions;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
-using ETHTPS.API.Core.Integrations.MSSQL.Services.Updater;
-using Hangfire;
-using ETHTPS.Services.BlockchainServices.Status.BackgroundTasks.Discord;
-using ETHTPS.Services.BlockchainServices.Status;
-using ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets.Extensions;
-using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
-using ETHTPS.Services.Ethereum.JSONRPC.Infura;
-using ETHTPS.Services.Ethereum.JSONRPC.Generic;
-using ETHTPS.Services.BlockchainServices.HangfireLogging;
-using ETHTPS.Services.BlockchainServices.CoravelLoggers;
-using Microsoft.AspNetCore.Builder;
+﻿using System.Reflection;
+
 using Coravel;
-using Coravel.Scheduling.Schedule;
 using Coravel.Scheduling.Schedule.Interfaces;
-using ETHTPS.Services.Attributes;
-using System.Reflection;
+
+using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+using ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets.Extensions;
+using ETHTPS.API.Core.Integrations.MSSQL.Services.Updater;
+using ETHTPS.Configuration;
+using ETHTPS.Configuration.Validation.Exceptions;
+using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Services;
+using ETHTPS.Services.BlockchainServices;
+using ETHTPS.Services.BlockchainServices.BlockTime;
+using ETHTPS.Services.BlockchainServices.CoravelLoggers;
+using ETHTPS.Services.BlockchainServices.HangfireLogging;
+using ETHTPS.Services.Ethereum;
+using ETHTPS.Services.Ethereum.JSONRPC.Implementations;
+using ETHTPS.Services.Ethereum.JSONRPC.Infura;
+using ETHTPS.Services.Ethereum.Scan.Implementations;
+using ETHTPS.Services.Ethereum.Starkware;
+
+using Hangfire;
+
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ETHTPS.API.DependencyInjection
 {
@@ -29,17 +32,17 @@ namespace ETHTPS.API.DependencyInjection
     {
         public static IServiceCollection AddDataUpdaterStatusService(this IServiceCollection services) =>
             services.AddTransient<IDataUpdaterStatusService, DataUpdaterStatusService>();
+
         private static Type[] _enabledUpdaters = new[]
         {
             typeof(EthereumBlockInfoProvider),
-            typeof(AuroraBlockInfoProvider),
+            typeof(AuroraJSONRPCBlockInfoProvider),
             typeof(AVAXBlockInfoProvider),
             typeof(CeloBlockInfoProvider),
             typeof(NEARBlockInfoProvider),
             typeof(PalmBlockInfoProvider),
-            typeof(PolygonBlockInfoProvider),
+            typeof(Services.Ethereum.JSONRPC.Infura.PolygonBlockInfoProvider),
             typeof(StarknetBlockInfoProvider),
-            typeof(PolygonBlockInfoProvider),
             typeof(ArbitrumBlockInfoProvider),
             typeof(OptimismBlockInfoProvider),
             typeof(LoopringBlockInfoProvider),
@@ -48,32 +51,42 @@ namespace ETHTPS.API.DependencyInjection
             typeof(ZKSwapBlockInfoProvider),
             typeof(ZKSpaceBlockInfoProvider),
             typeof(ZKSsyncBlockInfoProvider),
+            typeof(ZKSsyncEraBlockInfoProvider),
             typeof(AztecBlockInfoProvider),
             typeof(ImmutableXBlockInfoProvider),
             typeof(MetisBlockInfoProvider),
             typeof(RoninBlockInfoProvider),
             typeof(VoyagerBlockInfoProvider),
             typeof(Nahmii20BlockInfoProvider),
-            typeof(BSCScanBlockInfoProvider),
             typeof(OMGNetworkBlockInfoProvider),
             typeof(ZKTubeBlockInfoProvider),
             typeof(FTMScanBlockInfoProvider),
             typeof(SorareBlockInfoProvider),
             typeof(DeversiFIHTTPBlockInfoProvider),
             typeof(PolygonHermezBlockInfoProvider),
+            typeof(GnosisJSONRPCBlockInfoProvider)
         };
         public static IServiceCollection AddDataServices(this IServiceCollection services) => services.AddScoped(_enabledUpdaters);
-        public static IServiceCollection AddRunner(this IServiceCollection services, BackgroundServiceType type)
+        public static IServiceCollection AddRunner(this IServiceCollection services, BackgroundServiceType type, string appName, DatabaseProvider databaseProvider)
         {
+            services.AddScoped<EthereumBlockTimeProvider>();
             switch (type)
             {
                 case BackgroundServiceType.Coravel:
                     services.AddScheduler();
                     services.AddScoped(_enabledUpdaters.Select(x => typeof(CoravelBlockLogger<>).MakeGenericType(x)));
                     break;
+                case BackgroundServiceType.Hangfire:
+                    services.AddHangfireServer(appName);
+                    _enabledUpdaters.ToList().ForEach(updater => services.RegisterHangfireBackgroundService(updater, databaseProvider));
+                    services.InjectTimeBucketService(databaseProvider); //services.RegisterHangfireBackgroundServiceAndTimeBucket<MSSQLLogger<EthereumBlockInfoProvider>, EthereumBlockInfoProvider>(CronConstants.EVERY_5_S, "tpsdata");
+
+
+                    break;
             }
             return services;
         }
+
         public static void UseRunner(this IApplicationBuilder app, BackgroundServiceType type)
         {
             switch (type)
@@ -81,21 +94,55 @@ namespace ETHTPS.API.DependencyInjection
                 case BackgroundServiceType.Coravel:
                     app.UseCoravel();
                     break;
+                case BackgroundServiceType.Hangfire:
+                    using (var scope = app.ApplicationServices.CreateScope())
+                    {
+                        var provider = scope.ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
+                        string[] queues = (provider.GetConfigurationStrings("HangfireQueue") ?? throw new ConfigurationStringNotFoundException("HangfireQueue", "UseRunner(this IApplicationBuilder app, BackgroundServiceType type)")).Select(x => x.Value).ToArray();
+                        if (queues.Count() == 0)
+                        {
+                            queues = new string[] { "default" };
+                        }
+                        app.ConfigureHangfire(queues);
+                        app.UseHangfireDashboard();
+                        break;
+                    }
             }
         }
-        public static IServiceCollection WithStore(this IServiceCollection services, DatabaseProvider databaseProvider)
+
+        public static IServiceCollection WithStore(this IServiceCollection services, DatabaseProvider databaseProvider, string appName)
         {
+            switch (databaseProvider)
+            {
+                case DatabaseProvider.MSSQL:
+                    services.InitializeHangfire(appName);
+                    break;
+            }
             return services;
         }
+
+        public static void RegisterHangfireBackgroundService(this IServiceCollection services, Type sourceType, DatabaseProvider databaseProvider)
+        {
+            if (!typeof(IHTTPBlockInfoProvider).IsAssignableFrom(sourceType))
+            {
+                throw new ArgumentException("The provided type must implement IHTTPBlockInfoProvider.", nameof(sourceType));
+            }
+            var runsEveryAttribute = sourceType.GetCustomAttribute<RunsEveryAttribute>();
+            var cronExpression = runsEveryAttribute?.CronExpression ?? CronConstants.EVERY_MINUTE;
+            var genericMethod = typeof(DataUpdaterExtensions).GetMethod(nameof(RegisterHangfireBackgroundServiceAndTimeBucket));
+            var loggerType = (databaseProvider == DatabaseProvider.MSSQL ? throw new InvalidOperationException("Not supported anymore") : typeof(InfluxLogger<>)).MakeGenericType(sourceType);
+            var constructedMethod = genericMethod?.MakeGenericMethod(loggerType, sourceType);
+            constructedMethod?.Invoke(null, new object[] { services, cronExpression, "tpsdata" });
+        }
+
         public static void RegisterHangfireBackgroundServiceAndTimeBucket<T, V>(this IServiceCollection services, string cronExpression, string queue)
+            where T : BlockInfoProviderDataLoggerBase<V>
             where V : class, IHTTPBlockInfoProvider
-            where T : MSSQLLogger<V>
         {
             services.AddScoped<V>();
-            services.InjectTimeBucketService<V>();
             services.AddScoped<T>();
 #pragma warning disable CS0618 // Type or member is obsolete
-            RecurringJob.AddOrUpdate<T>(typeof(V).Name, x => x.RunAsync(), cronExpression, queue: queue);
+            Hangfire.RecurringJob.AddOrUpdate<T>(typeof(V).Name, x => x.RunAsync(), cronExpression, queue: queue);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
@@ -116,9 +163,7 @@ namespace ETHTPS.API.DependencyInjection
                         if (!attributes.Any(x => x.GetType() == typeof(DisabledAttribute)))
                         {
                             var generic = method.MakeGenericMethod(loggerType);
-                            IScheduleInterval? interval = (IScheduleInterval?)generic.Invoke(scheduler, null);
-                            if (interval == null)
-                                throw new Exception("Initialization failed");
+                            IScheduleInterval? interval = (IScheduleInterval?)generic.Invoke(scheduler, null) ?? throw new Exception("Initialization failed");
                             if (attributes.Any(x => x.GetType() == typeof(RunsEveryAttribute)))
                             {
                                 var runsEvery = loggerType.GetCustomAttribute<RunsEveryAttribute>();
@@ -131,6 +176,7 @@ namespace ETHTPS.API.DependencyInjection
                             {
                                 interval?.EveryFifteenSeconds();
                             }
+                            Console.WriteLine($"Registered {loggerType.Name}<{loggerType.GetGenericArguments()[0].Name}>");
                         }
                     });
                 }

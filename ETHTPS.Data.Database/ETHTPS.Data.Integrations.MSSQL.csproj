@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Configurations>Debug;Release;Staging</Configurations>
@@ -9,25 +9,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Database\**" />
     <Compile Remove="Temp\**" />
+    <EmbeddedResource Remove="Database\**" />
     <EmbeddedResource Remove="Temp\**" />
+    <None Remove="Database\**" />
     <None Remove="Temp\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Database\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0-preview.4.23259.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NLog.Database" Version="5.1.1" />
+    <PackageReference Include="NLog.Database" Version="5.1.5" />
+    <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ETHTPS.Data\ETHTPS.Data.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="db\" />
+    <Folder Include="HistoricalDataProviders\" />
+    <Folder Include="Definitions\" />
+    <Folder Include="TimeWarp\Models\" />
   </ItemGroup>
 
 </Project>

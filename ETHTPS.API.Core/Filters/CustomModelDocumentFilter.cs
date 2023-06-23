@@ -4,7 +4,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace ETHTPS.API.Core.Filters
 {
-    public class CustomModelDocumentFilter<T> : IDocumentFilter where T : class
+    public sealed class CustomModelDocumentFilter<T> : IDocumentFilter where T : class
     {
         public void Apply(OpenApiDocument openapiDoc, DocumentFilterContext context)
         {

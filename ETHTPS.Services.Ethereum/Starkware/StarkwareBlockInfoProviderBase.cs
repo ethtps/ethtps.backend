@@ -1,43 +1,39 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
-using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.Integrations.MSSQL.Extensions;
-using ETHTPS.Services.BlockchainServices;
-using ETHTPS.Services.Ethereum.Starkware.API;
-using ETHTPS.Data.Core.Models.DataEntries;
-using Microsoft.Extensions.Configuration;
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ETHTPS.Services.Attributes;
+
+using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.Models.DataEntries;
+using ETHTPS.Data.Integrations.MSSQL;
+using ETHTPS.Data.Integrations.MSSQL.Extensions;
+using ETHTPS.Services.Ethereum.Starkware.API;
 
 namespace ETHTPS.Services.Ethereum.Starkware
 {
-    [RunsEvery(CronConstants.Every30s)]
-    public abstract class StarkwareBlockInfoProviderBase : IHTTPBlockInfoProvider
+    [RunsEvery(CronConstants.EVERY_30_S)]
+    public abstract class StarkwareBlockInfoProviderBase : BlockInfoProviderBase
     {
-        private readonly string _productName;
         private readonly EthtpsContext _context;
         private readonly StarkwareClient _starkwareClient;
 
-        public StarkwareBlockInfoProviderBase(string productName, EthtpsContext context, IConfiguration configuration)
+        protected StarkwareBlockInfoProviderBase(string productName, EthtpsContext context, IDBConfigurationProvider configuration) : base(configuration, productName)
         {
-            _productName = productName;
+            _providerName = productName;
             _context = context;
 
-            _starkwareClient = new StarkwareClient(configuration);
+            _starkwareClient = new StarkwareClient(Endpoint, APIKey);
+            BlockTimeSeconds = 100;
         }
 
-        public double BlockTimeSeconds { get; set; } = 100;
-
-        public Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Block> GetBlockInfoAsync(DateTime time)
+        public override async Task<Block> GetBlockInfoAsync(DateTime time)
         {
-            var txCountForDay = await _starkwareClient.GetTransactionCountForAllTokensAsync(time, _productName);
+            var txCountForDay = await _starkwareClient.GetTransactionCountForAllTokensAsync(time, _providerName);
             return new Block()
             {
                 Date = time,
@@ -46,24 +42,24 @@ namespace ETHTPS.Services.Ethereum.Starkware
             };
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override async Task<Block> GetLatestBlockInfoAsync()
         {
-            var todaysTransactionCount = await _starkwareClient.GetTodayTransactionCountForAllTokensAsync(_productName);
+            var todaysTransactionCount = await _starkwareClient.GetTodayTransactionCountForAllTokensAsync(_providerName);
             var mainnetID = _context.GetMainnetID();
-            if (!_context.StarkwareTransactionCountData.Any(x => x.Product == _productName)) //First time we see this product
+            if (!_context.StarkwareTransactionCountData.Any(x => x.Product == _providerName)) //First time we see this product
             {
                 _context.StarkwareTransactionCountData.Add(new StarkwareTransactionCountDatum()
                 {
                     LastUpdateCount = todaysTransactionCount,
                     LastUpdateTime = DateTime.Now,
                     Network = mainnetID,
-                    Product = _productName,
+                    Product = _providerName,
                     LastUpdateTps = todaysTransactionCount / DateTime.Now.TimeOfDay.TotalSeconds
                 });
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
-            var entry = _context.StarkwareTransactionCountData.First(x => x.Product == _productName);
+            var entry = _context.StarkwareTransactionCountData.First(x => x.Product == _providerName);
             if (entry.LastUpdateCount != todaysTransactionCount) //tx count has changed, update the entry
             {
                 if (entry.LastUpdateTime.Day == DateTime.Now.Day)
@@ -79,7 +75,7 @@ namespace ETHTPS.Services.Ethereum.Starkware
                 entry.LastUpdateTime = DateTime.Now;
 
                 _context.StarkwareTransactionCountData.Update(entry);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             return new Block()
             {

@@ -1,11 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using ETHTPS.Data.Core;
 
-using System;
-using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace ETHTPS.Data.Integrations.MSSQL;
 
-public partial class ProviderLink
+public partial class ProviderLink : IIndexed
 {
     public int Id { get; set; }
 
@@ -13,9 +12,9 @@ public partial class ProviderLink
 
     public int ExternalWebsiteId { get; set; }
 
-    public string Link { get; set; }
-
-    public virtual ExternalWebsite ExternalWebsite { get; set; }
-
-    public virtual Provider Provider { get; set; }
+    public string? Link { get; set; }
+    [JsonIgnore]
+    public virtual ExternalWebsite? ExternalWebsite { get; set; }
+    [JsonIgnore]
+    public virtual Provider? Provider { get; set; }
 }

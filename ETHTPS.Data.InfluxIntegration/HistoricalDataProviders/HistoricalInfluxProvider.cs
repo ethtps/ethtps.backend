@@ -1,5 +1,6 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
-using ETHTPS.Data.Core;
+﻿using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
@@ -7,9 +8,9 @@ using Flux.Net;
 
 using Block = ETHTPS.Data.Core.Models.DataEntries.Block;
 
-namespace ETHTPS.Data.Integrations.InfluxIntegration.HistoricalDataServices
+namespace ETHTPS.Data.Integrations.InfluxIntegration.HistoricalDataProviders
 {
-    public class HistoricalInfluxProvider : IAsyncHistoricalBlockInfoProvider
+    public sealed class HistoricalInfluxProvider : IAsyncHistoricalBlockInfoProvider
     {
         private readonly IInfluxWrapper _influxWrapper;
         private const string BLOCK_INFO = "blockinfo";
@@ -40,7 +41,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.HistoricalDataServices
   |> group(columns: [""provider""])
   |> yield(name: ""Time buckets"")
  ";
-            var result = await _influxWrapper.QueryAsync<Block>(query, new DomainEntityConverter());
+            var result = await _influxWrapper.QueryAsync<Block>(query);
             return result;
         }
 

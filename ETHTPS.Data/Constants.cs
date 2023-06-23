@@ -6,8 +6,8 @@ namespace ETHTPS.Data.Core
     {
         public static class CacheTimes
         {
-            public static TimeSpan Realtime = TimeSpan.FromSeconds(3);
-            public static TimeSpan LowUpdateRate = TimeSpan.FromMinutes(1);
+            public static TimeSpan REALTIME = TimeSpan.FromSeconds(3);
+            public static TimeSpan LOW_UPDATE_RATE = TimeSpan.FromMinutes(1);
         }
 
         public static class EnvironmentVariables
@@ -27,6 +27,12 @@ namespace ETHTPS.Data.Core
             }
         }
 
+        public static class Influx
+        {
+            public static string DEFAULT_BLOCK_BUCKET_NAME = "blockinfo";
+
+        }
+
         public static class Headers
         {
             public static string XAPIKey => "X-API-Key";
@@ -34,10 +40,11 @@ namespace ETHTPS.Data.Core
 
         public static class TimeConstants
         {
-            public static TimeSpan OneMinute = TimeSpan.FromSeconds(60);
+            public static TimeSpan ONE_MINUTE = TimeSpan.FromSeconds(60);
         }
 
         public static string All => "All";
         public static string Mainnet => "Mainnet";
+        public static double GasPerTransfer => 21000;
     }
 }

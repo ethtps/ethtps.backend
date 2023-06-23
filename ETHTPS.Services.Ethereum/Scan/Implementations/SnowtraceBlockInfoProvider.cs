@@ -1,18 +1,16 @@
-﻿using ETHTPS.Services.Attributes;
-using ETHTPS.Services.BlockchainServices;
+﻿using System;
 
-using Microsoft.Extensions.Configuration;
-
-using System;
+using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
 
 namespace ETHTPS.Services.Ethereum.Scan.Implementations
 {
     [Provider("AVAX C-chain")]
     [Disabled]
     [Obsolete("Use JSONRPC.AVAXBlockInfoProvider instead", true)]
-    public class SnowTraceBlockInfoProvider : ScanBlockInfoProviderBase
+    public sealed class SnowTraceBlockInfoProvider : ScanBlockInfoProviderBase
     {
-        public SnowTraceBlockInfoProvider(IConfiguration configuration) : base(configuration, "Snowtrace")
+        public SnowTraceBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Snowtrace")
         {
         }
     }

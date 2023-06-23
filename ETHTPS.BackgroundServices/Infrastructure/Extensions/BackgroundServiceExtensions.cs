@@ -1,5 +1,4 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.TimeBuckets;
+﻿using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
 using ETHTPS.Services.BlockchainServices.Status;
 
@@ -13,14 +12,6 @@ namespace ETHTPS.Services.Infrastructure.Extensions
     public static class BackgroundServiceExtensions
     {
 #pragma warning disable CS0618
-        public static void RegisterHangfireBackgroundService<T, V>(this IServiceCollection services, string cronExpression, string queue)
-            where V : class, IHTTPBlockInfoProvider
-            where T : MSSQLLogger<V>
-        {
-            services.AddScoped<V>();
-            services.AddScoped<T>();
-            RecurringJob.AddOrUpdate<T>(typeof(V).Name, x => x.RunAsync(), cronExpression, queue: queue);
-        }
 
         public static void RegisterInfluxHangfireBackgroundService<T, V>(this IServiceCollection services, string cronExpression, string queue)
            where V : class, IHTTPBlockInfoProvider
@@ -39,34 +30,6 @@ namespace ETHTPS.Services.Infrastructure.Extensions
             services.AddScoped<T>();
             BackgroundJob.Enqueue<T>(x => x.RunAsync());
         }
-
-        public static void RegisterHistoricalHangfireBackgroundService<T, V>(this IServiceCollection services, string cronExpression, string queue)
-           where V : class, IHTTPBlockInfoProvider
-           where T : HangfireHistoricalBlockInfoProviderDataLogger<V>
-        {
-            services.AddScoped<T>();
-            services.AddScoped<V>();
-            RecurringJob.AddOrUpdate<T>("Historical" + typeof(V).Name, x => x.RunAsync(), cronExpression, queue: queue);
-        }
-
-        public static void RegisterHistoricalHangfireDateBackgroundService<T, V>(this IServiceCollection services, string cronExpression, string queue)
-           where V : class, IHTTPBlockInfoProvider
-           where T : HangfireDateHistoricalBlockInfoProviderDataLogger<V>
-        {
-            services.AddScoped<T>();
-            services.AddScoped<V>();
-            RecurringJob.AddOrUpdate<T>("DateHistorical" + typeof(V).Name, x => x.RunAsync(), cronExpression, queue: queue);
-        }
-
-        public static void RegisterTimeWarpHangfireBackgroundService<T, V>(this IServiceCollection services, string cronExpression, string queue)
-          where V : class, IHTTPBlockInfoProvider
-          where T : TimeWarpBlockInfoProviderDataLogger<V>
-        {
-            services.AddScoped<T>();
-            services.AddScoped<V>();
-            RecurringJob.AddOrUpdate<T>("TimeWarp" + typeof(V).Name, x => x.RunAsync(), cronExpression, queue: queue);
-        }
-
 
         public static void RegisterHangfireBackgroundService<T>(this IServiceCollection services, string cronExpression, string queue)
             where T : HangfireBackgroundService

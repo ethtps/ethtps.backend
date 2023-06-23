@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ETHTPS.Data.Core.Models.ResponseModels.ChartData.StackedChart
 {
-    public class StackedChartSeries
+    public sealed class StackedChartSeries
     {
         public IEnumerable<StackedChartDataPoint> DataPoints { get; set; }
         public double MaxValue => DataPoints.Max(x => x.Y ?? 0);

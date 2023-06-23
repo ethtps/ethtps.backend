@@ -1,5 +1,4 @@
-﻿using ETHTPS.Data.Core;
-using ETHTPS.Data.Core.Models.Queries.Data.Requests;
+﻿using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 
 namespace ETHTPS.Data.Core.Models.Pages.Chart
 {

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace ETHTPS.Data.ResponseModels.SocialMedia
+namespace ETHTPS.Data.Core.Models.ResponseModels.SocialMedia
 {
-    public class ProviderSocialMediaLinksResponseModel
+    public sealed class ProviderSocialMediaLinksResponseModel
     {
         public IEnumerable<ProviderSocialMediaLink> Links { get; set; }
         public IEnumerable<ExternalWebsiteBase> ExternalWebsites { get; set; }

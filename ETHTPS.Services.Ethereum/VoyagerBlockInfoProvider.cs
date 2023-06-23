@@ -1,40 +1,36 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
-using ETHTPS.Data.Core.Extensions;
-using ETHTPS.Services.BlockchainServices;
-using ETHTPS.Data.Core.Models.DataEntries;
-using Newtonsoft.Json;
-
-using System;
+﻿using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using ETHTPS.Services.Attributes;
+
+using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.Extensions.DateTimeExtensions;
+using ETHTPS.Data.Core.Models.DataEntries;
+
+using Newtonsoft.Json;
 
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("Starknet")]
-    [RunsEvery(CronConstants.Every13s)]
-    public class VoyagerBlockInfoProvider : IHTTPBlockInfoProvider
+    [RunsEvery(CronConstants.EVERY_13_S)]
+    public sealed class VoyagerBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
-        public double BlockTimeSeconds { get; set; }
 
-        public VoyagerBlockInfoProvider()
+        public VoyagerBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Starknet")
         {
-            _httpClient = new HttpClient();
         }
 
-        public Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override async Task<Block> GetLatestBlockInfoAsync()
         {
             var responseString = await _httpClient.GetStringAsync("https://voyager.online/api/blocks?ps=10&p=1");
             var response = JsonConvert.DeserializeObject<StarknetResponse>(responseString);
@@ -50,13 +46,13 @@ namespace ETHTPS.Services.Ethereum
         }
 
 
-        public class StarknetResponse
+        public sealed class StarknetResponse
         {
             public StarknetBlockInfo[] items { get; set; }
             public int lastPage { get; set; }
         }
 
-        public class StarknetBlockInfo
+        public sealed class StarknetBlockInfo
         {
             public string id { get; set; }
             public string previousBlockId { get; set; }

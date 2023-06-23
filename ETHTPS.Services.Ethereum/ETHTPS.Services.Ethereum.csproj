@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<Configurations>Debug;Release;Staging</Configurations>
 		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="NLog.Database" Version="5.1.1" />
+		<PackageReference Include="NLog.Database" Version="5.1.5" />
+		<PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.3" />
 	</ItemGroup>
 
 	<ItemGroup>

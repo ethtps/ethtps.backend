@@ -1,16 +1,14 @@
-﻿using ETHTPS.Services.Attributes;
-
-using Microsoft.Extensions.Configuration;
+﻿using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
 
 namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
 {
     [Provider("NEAR")]
-    [RunsEvery(CronConstants.Every30s)]
-    public class NEARBlockInfoProvider : InfuraBlockInfoProviderBase
+    [RunsEvery(CronConstants.EVERY_30_S)]
+    public sealed class NEARBlockInfoProvider : InfuraBlockInfoProviderBase
     {
-        public NEARBlockInfoProvider(IConfiguration configuration) : base(configuration, "NEAREndpoint")
+        public NEARBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "NEAR")
         {
-
         }
     }
 }

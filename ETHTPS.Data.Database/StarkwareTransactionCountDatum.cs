@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ETHTPS.Data.Integrations.MSSQL;
+﻿namespace ETHTPS.Data.Integrations.MSSQL;
 
 public partial class StarkwareTransactionCountDatum
 {
@@ -9,7 +6,7 @@ public partial class StarkwareTransactionCountDatum
 
     public int Network { get; set; }
 
-    public string Product { get; set; }
+    public required string Product { get; set; }
 
     public DateTime LastUpdateTime { get; set; }
 
@@ -17,5 +14,5 @@ public partial class StarkwareTransactionCountDatum
 
     public double LastUpdateTps { get; set; }
 
-    public virtual Network NetworkNavigation { get; set; }
+    public virtual Network? NetworkNavigation { get; set; }
 }

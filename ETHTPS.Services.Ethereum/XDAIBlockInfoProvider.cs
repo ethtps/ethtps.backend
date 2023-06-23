@@ -1,40 +1,32 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.Extensions.StringExtensions;
-using ETHTPS.Services.BlockchainServices;
 using ETHTPS.Data.Core.Models.DataEntries;
+
 using Fizzler.Systems.HtmlAgilityPack;
+
 using HtmlAgilityPack;
 
-using Microsoft.Extensions.Configuration;
-
 using Newtonsoft.Json;
-
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using ETHTPS.Services.Attributes;
 
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("XDAI")]
-    [RunsEvery(CronConstants.Every5s)]
-    public class XDAIHTTPBlockInfoProvider : IHTTPBlockInfoProvider
+    [RunsEvery(CronConstants.EVERY_5_S)]
+    public sealed class XDAIHTTPBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
-        private readonly string _transactionCountSelector;
-        private readonly string _dateSelector;
-        private readonly string _gasSelector;
-        public XDAIHTTPBlockInfoProvider(IConfiguration configuration)
+        private readonly string _transactionCountSelector = string.Empty;
+        private readonly string _dateSelector = string.Empty;
+        private readonly string _gasSelector = string.Empty;
+        public XDAIHTTPBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "XDAI")
         {
-            _httpClient = new HttpClient();
-            var config = configuration.GetSection("TPSLoggerConfigurations").GetSection("StandardLoggerConfiguration").GetSection("XDAI");
-            _transactionCountSelector = config.GetValue<string>("TransactionCountSelector");
-            _dateSelector = config.GetValue<string>("DateSelector");
-            _gasSelector = config.GetValue<string>("GasSelector");
+            BlockTimeSeconds = 5.2;
         }
 
-        public double BlockTimeSeconds { get; set; } = 5.2;
 
         private static int GetTransactionCountFromHTML(string html)
         {
@@ -49,7 +41,7 @@ namespace ETHTPS.Services.Ethereum
             return int.Parse(html.Between("data-block-number", "data-block-hash").RemoveAllNonNumericCharacters());
         }
 
-        public Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             HtmlWeb web = new HtmlWeb();
             HtmlDocument doc = web.Load($"https://blockscout.com/xdai/mainnet/block/{blockNumber}/transactions");
@@ -68,16 +60,16 @@ namespace ETHTPS.Services.Ethereum
                 TransactionCount = int.Parse(txCount),
                 Date = DateTime.Parse(date),
                 BlockNumber = blockNumber,
-                GasUsed = double.Parse(gas)
+                GasUsed = int.Parse(gas)
             });
         }
 
-        public Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override async Task<Block> GetLatestBlockInfoAsync()
         {
             var obj = JsonConvert.DeserializeObject<dynamic>(await _httpClient.GetStringAsync("https://blockscout.com/xdai/mainnet/blocks?type=JSON"));
             return await GetBlockInfoAsync(GetLatestBlockNumberFromHTML(obj.items[0].ToString()));

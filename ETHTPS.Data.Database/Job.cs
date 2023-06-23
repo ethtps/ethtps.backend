@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ETHTPS.Data.Integrations.MSSQL;
+﻿namespace ETHTPS.Data.Integrations.MSSQL;
 
 public partial class Job
 {
@@ -9,11 +6,11 @@ public partial class Job
 
     public long? StateId { get; set; }
 
-    public string StateName { get; set; }
+    public required string StateName { get; set; }
 
-    public string InvocationData { get; set; }
+    public required string InvocationData { get; set; }
 
-    public string Arguments { get; set; }
+    public required string Arguments { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

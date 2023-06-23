@@ -1,8 +1,6 @@
-﻿using ETHTPS.Data.Core.Models.ResponseModels.APIKey;
-
-namespace ETHTPS.Data.ResponseModels.APIKey
+﻿namespace ETHTPS.Data.Core.Models.ResponseModels.APIKey
 {
-    public class APIKeyResponseModel : SimpleAPIKey
+    public sealed class APIKeyResponseModel : SimpleAPIKey
     {
         public static APIKeyResponseModel Successful(string key, int requestLimit24h) => new APIKeyResponseModel(true, null, key, requestLimit24h);
         public static APIKeyResponseModel Failed(string reason) => new APIKeyResponseModel()
@@ -20,6 +18,6 @@ namespace ETHTPS.Data.ResponseModels.APIKey
         }
 
         public bool Success { get; private set; }
-        public string? FailureReason { get; private set; }
+        public string FailureReason { get; private set; }
     }
 }

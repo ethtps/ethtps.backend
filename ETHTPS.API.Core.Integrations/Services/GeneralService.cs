@@ -1,34 +1,31 @@
-﻿using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.Integrations.MSSQL.HistoricalDataServices;
-using ETHTPS.Data.Core.Extensions.StringExtensions;
-using ETHTPS.Data.ResponseModels;
-using ETHTPS.Data.Core;
-using ETHTPS.API.Core.Services;
-using ETHTPS.API.Core.Integrations.MSSQL.Services.Data;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
-using ETHTPS.Data.Core.Models.DataUpdater;
+using ETHTPS.API.Core.Services;
+using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.Extensions;
+using ETHTPS.Data.Core.Extensions.StringExtensions;
 using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
-using ETHTPS.Data.Core.Extensions;
+using ETHTPS.Data.Core.Models.ResponseModels;
+using ETHTPS.Data.Integrations.MSSQL;
+
+using ServiceStack;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {
-    public class GeneralService : HistoricalMethodsServiceBase
+    public sealed class GeneralService : ContextServiceBase
     {
         private readonly ITPSService _tpsService;
         private readonly IGPSService _gpsService;
         private readonly IGTPSService _gasAdjustedTPSService;
-        private readonly IDataUpdaterStatusService _dataUpdaterStatusService;
 
-        public GeneralService(ITPSService tpsService, IGPSService gpsService, IGTPSService gasAdjustedTPSService, EthtpsContext context, IEnumerable<IHistoricalDataProvider> historicalDataServices, IDataUpdaterStatusService dataUpdaterStatusService) : base(context, historicalDataServices)
+        public GeneralService(ITPSService tpsService, IGPSService gpsService, IGTPSService gasAdjustedTPSService, EthtpsContext context, IDataUpdaterStatusService dataUpdaterStatusService) : base(context, dataUpdaterStatusService)
         {
             _tpsService = tpsService;
             _gpsService = gpsService;
             _gasAdjustedTPSService = gasAdjustedTPSService;
-            _dataUpdaterStatusService = dataUpdaterStatusService;
         }
 
 
@@ -45,33 +42,13 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 
         public IEnumerable<TimeInterval> Intervals() => TimeIntervals();
 
-        public IEnumerable<ProviderResponseModel> Providers()
-        {
-            IEnumerable<ProviderResponseModel> result;
-            lock (Context.LockObj)
-            {
-                result = Context.Providers.ToList().Where(x => x.Enabled).Select(x => new ProviderResponseModel()
-                {
-                    Name = x.Name,
-                    Type = x.TypeNavigation.Name,
-                    Color = x.Color,
-                    TheoreticalMaxTPS = x.TheoreticalMaxTps,
-                    IsGeneralPurpose = x.IsGeneralPurpose ?? x.TypeNavigation.IsGeneralPurpose,
-                    IsSubchainOf = x.SubchainOfNavigation?.Name,
-                    Status = _dataUpdaterStatusService.GetStatusFor(x.Name, UpdaterType.BlockInfo)
-                });
-            }
-            return result;
-        }
-
         public IEnumerable<ProviderResponseModel> Providers(string subchainsOf)
         {
-            IEnumerable<ProviderResponseModel> list = Providers();
-            if (string.IsNullOrWhiteSpace(subchainsOf) || subchainsOf.LossyCompareTo(Constants.All))
+            if (string.IsNullOrWhiteSpace(subchainsOf) || subchainsOf.LossyCompareTo(Constants.ALL))
             {
-                return list;
+                return AllProviders;
             }
-            return Enumerable.Where(list, x => x.Name.LossyCompareTo(subchainsOf));
+            return Enumerable.Where(AllProviders, x => x.Name.LossyCompareTo(subchainsOf));
         }
 
         public IDictionary<string, string> ColorDictionary()
@@ -79,7 +56,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             IDictionary<string, string> result;
             lock (Context.LockObj)
             {
-                result = Context.Providers.Where(x => x.Enabled).ToDictionary(x => x.Name, x => x.Color);
+                result = AllProviders.Select(x => new { x.Name, x.Color, x.Enabled }).Where(x => x.Enabled).ToDictionary(x => x.Name, x => x.Color);
             }
             return result;
         }
@@ -97,7 +74,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 
         private static Dictionary<(bool IncludeSidechains, string Network, string Smoothing), (Dictionary<string, object> LastData, DateTime LastGetTime)> _instantDataDictionary = new();
 
-        public IDictionary<string, object> InstantData(ProviderQueryModel model, string smoothing = "")
+        public async Task<IDictionary<string, object>> InstantDataAsync(ProviderQueryModel model, string smoothing = "")
         {
             TimeInterval interval = TimeInterval.Instant;
             if (!string.IsNullOrWhiteSpace(smoothing))
@@ -117,23 +94,23 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
                 switch (interval)
                 {
                     case TimeInterval.Instant:
-                        result.LastData.Add("tps", _tpsService.Instant(model));
-                        result.LastData.Add("gps", _gpsService.Instant(model));
-                        result.LastData.Add("gasAdjustedTPS", _gasAdjustedTPSService.Instant(model));
+                        result.LastData.Add("tps", await _tpsService.InstantAsync(model));
+                        result.LastData.Add("gps", await _gpsService.InstantAsync(model));
+                        result.LastData.Add("gasAdjustedTPS", await _gasAdjustedTPSService.InstantAsync(model));
                         break;
                     case TimeInterval.OneWeek:
                         TimeInterval nextInterval = TimeInterval.OneMonth;
-                        result.LastData.Add("tps", Enumerable.Where(_tpsService.Get(model, nextInterval), x => x.Value.Any()).ToDictionary(x => x.Key, x => new List<DataPoint>() { new DataPoint() { Value = x.Value.TakeLast(7).Average(x => (x.Data.FirstOrDefault() == null) ? 0 : x?.Data?.FirstOrDefault()?.Value).GetValueOrDefault() } }));
+                        result.LastData.Add("tps", Enumerable.Where(await _tpsService.GetAsync(model, nextInterval), x => x.Value.Any()).ToDictionary(x => x.Key, x => new List<DataPoint>() { new DataPoint() { Value = x.Value.TakeLast(7).Average(x => (x.Data.FirstOrDefault() == null) ? 0 : x?.Data?.FirstOrDefault()?.Value).GetValueOrDefault() } }));
 
-                        result.LastData.Add("gps", Enumerable.Where(_gpsService.Get(model, nextInterval), x => x.Value.Any()).ToDictionary(x => x.Key, x => new List<DataPoint>() { new DataPoint() { Value = x.Value.TakeLast(7).Average(x => (x.Data.FirstOrDefault() == null) ? 0 : x?.Data?.FirstOrDefault()?.Value).GetValueOrDefault() } }));
+                        result.LastData.Add("gps", Enumerable.Where(await _gpsService.GetAsync(model, nextInterval), x => x.Value.Any()).ToDictionary(x => x.Key, x => new List<DataPoint>() { new DataPoint() { Value = x.Value.TakeLast(7).Average(x => (x.Data.FirstOrDefault() == null) ? 0 : x?.Data?.FirstOrDefault()?.Value).GetValueOrDefault() } }));
 
-                        result.LastData.Add("gasAdjustedTPS", Enumerable.Where(_gasAdjustedTPSService.Get(model, nextInterval), x => x.Value.Any()).ToDictionary(x => x.Key, x => new List<DataPoint>() { new DataPoint() { Value = x.Value.TakeLast(7).Average(x => x?.Data?.FirstOrDefault()?.Value).GetValueOrDefault() } }));
+                        result.LastData.Add("gasAdjustedTPS", Enumerable.Where(await _gasAdjustedTPSService.GetAsync(model, nextInterval), x => x.Value.Any()).ToDictionary(x => x.Key, x => new List<DataPoint>() { new DataPoint() { Value = x.Value.TakeLast(7).Average(x => x?.Data?.FirstOrDefault()?.Value).GetValueOrDefault() } }));
                         break;
                     default:
                         nextInterval = GetNextIntervalForInstantData(interval);
-                        result.LastData.Add("tps", _tpsService.Get(model, nextInterval).ToDictionary(x => x.Key, x => new List<DataPoint>() { x.Value.LastOrDefault()?.Data.FirstOrDefault() }));
-                        result.LastData.Add("gps", _gpsService.Get(model, nextInterval).ToDictionary(x => x.Key, x => new List<DataPoint>() { x.Value.LastOrDefault()?.Data.FirstOrDefault() }));
-                        result.LastData.Add("gasAdjustedTPS", _gasAdjustedTPSService.Get(model, nextInterval).ToDictionary(x => x.Key, x => new List<DataPoint>() { x.Value.LastOrDefault()?.Data.FirstOrDefault() }));
+                        result.LastData.Add("tps", (await _tpsService.GetAsync(model, nextInterval)).ToDictionary(x => x.Key, x => new List<DataPoint>() { x.Value.Last().Data.First() }));
+                        result.LastData.Add("gps", (await _gpsService.GetAsync(model, nextInterval)).ToDictionary(x => x.Key, x => new List<DataPoint>() { x.Value.Last().Data.First() }));
+                        result.LastData.Add("gasAdjustedTPS", (await _gasAdjustedTPSService.GetAsync(model, nextInterval)).ToDictionary(x => x.Key, x => new List<DataPoint>() { x.Value.Last().Data.First() }));
                         break;
                 }
             }
@@ -157,16 +134,13 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             }
         }
 
-        public IDictionary<string, object> Max(ProviderQueryModel model)
+        public async Task<IDictionary<string, object>> MaxAsync(ProviderQueryModel model)
         {
             Dictionary<string, object> result = new();
-            lock (Context.LockObj)
-            {
-                IDictionary<string, DataPoint> maxGPS = _gpsService.Max(model);
-                result.Add("tps", _tpsService.Max(model));
-                result.Add("gps", maxGPS);
-                result.Add("gasAdjustedTPS", _gasAdjustedTPSService.Max(model));
-            }
+            IDictionary<string, DataPoint> maxGPS = await _gpsService.MaxAsync(model);
+            result.Add("tps", await _tpsService.MaxAsync(model));
+            result.Add("gps", maxGPS);
+            result.Add("gasAdjustedTPS", await _gasAdjustedTPSService.MaxAsync(model));
             return result;
         }
 
@@ -174,14 +148,14 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
         /// Used for displaying chart buttons.
         /// </summary>
 
-        public IEnumerable<TimeInterval> GetIntervalsWithData(ProviderQueryModel model)
+        public async Task<IEnumerable<TimeInterval>> GetIntervalsWithDataAsync(ProviderQueryModel model)
         {
             List<TimeInterval> result = new();
             foreach (var interval in TimeIntervals())
             {
                 try
                 {
-                    int count = _tpsService.Get(model, interval)[model.Provider].Count();
+                    int count = (await _tpsService.GetAsync(model, interval))[model.Provider].Count();
                     if (count > 1)
                     {
                         if (interval == TimeInterval.All && count < 12)
@@ -196,32 +170,43 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
         }
 
 
-        public IEnumerable<string?> GetUniqueDataYears(ProviderQueryModel model)
+        public async Task<IEnumerable<string?>> GetUniqueDataYearsAsync(ProviderQueryModel model)
         {
-            IEnumerable<string?>? entries = _tpsService.Get(model, TimeInterval.All)[model.Provider]?.Select(x => x.Data.FirstOrDefault()?.Date.Year.ToString())?.OrderBy(x => x)?.Distinct();
+            IEnumerable<string?>? entries = (await _tpsService.GetAsync(model, TimeInterval.All))[model.Provider]?.Select(x => x.Data.FirstOrDefault()?.Date.Year.ToString())?.OrderBy(x => x)?.Distinct();
             var preResult = (entries?.SafeAny(x => x != null)).GetValueOrDefault();
             var e = Enumerable.Empty<string?>();
             return preResult ? (entries ?? e).ToList() : e;
         }
 
-        public AllDataModel GetAllData(string network)
+        public async Task<AllDataModel> GetAllDataAsync(string network)
         {
             ProviderQueryModel allDataModel = new()
             {
-                Provider = Constants.All,
+                Provider = Constants.ALL,
                 Network = network
             };
             return new AllDataModel()
             {
-                Providers = Context.Providers.Select(x => new ProviderModel()
+                Providers = AllProviders.Select(x => new ProviderModel()
                 {
                     Name = x.Name,
-                    Type = x.TypeNavigation.Name
+                    Type = x.Type ?? string.Empty
                 }).ToArray(),
-                AllTPSData = Intervals().Select(interval => new { interval, data = _tpsService.Get(allDataModel, interval) }).ToDictionary(x => x.interval, x => x.data),
-                MaxData = Max(allDataModel),
-                AllGPSData = Intervals().Select(interval => new { interval, data = _gpsService.Get(allDataModel, interval) }).ToDictionary(x => x.interval, x => x.data),
-                AllGasAdjustedTPSData = Intervals().Select(interval => new { interval, data = _gasAdjustedTPSService.Get(allDataModel, interval) }).ToDictionary(x => x.interval, x => x.data),
+                AllTPSData = Intervals().Select(async interval =>
+                new
+                {
+                    interval,
+                    data = (await _tpsService.GetAsync(allDataModel, interval))
+                })
+                .ToDictionary(x => x.Result.interval, x => x.Result.data),
+                MaxData = await MaxAsync(allDataModel),
+                AllGPSData = Intervals().Select(async interval => new { interval, data = (await _gpsService.GetAsync(allDataModel, interval)) }).ToDictionary(x => x.Result.interval, x => x.Result.data),
+                AllGasAdjustedTPSData = Intervals().Select(async interval => new
+                {
+                    interval,
+                    data = await _gasAdjustedTPSService.GetAsync(allDataModel, interval)
+                })
+                .ToDictionary(x => x.Result.interval, x => x.Result.data),
             };
         }
 
@@ -232,8 +217,8 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             return new HomePageViewModel()
             {
                 InstantTPS = await InstantTPSAsync(),
-                ColorDictionary = _context.Providers.ToDictionary(x => x.Name, x => x.Color),
-                ProviderData = _context.Providers.Select(x => new ProviderInfo()
+                ColorDictionary = _Providers.ToDictionary(x => x.Name, x => x.Color),
+                ProviderData = _Providers.Select(x => new ProviderInfo()
                 {
                     Name = x.Name,
                     MaxTPS = MaxTPS(x.Name).FirstOrDefaultOrDefault().Data.FirstOrDefaultOrDefault().TPS,

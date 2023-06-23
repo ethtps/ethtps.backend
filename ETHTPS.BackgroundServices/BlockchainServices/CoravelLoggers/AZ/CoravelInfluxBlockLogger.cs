@@ -1,8 +1,8 @@
-using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+using ETHTPS.Data.Core.BlockInfo;
 
 namespace ETHTPS.Services.BlockchainServices.CoravelLoggers.AZ
 {
-    public class CoravelInfluxBlockLogger<T> where T : IHTTPBlockInfoProvider
+    public sealed class CoravelInfluxBlockLogger<T> where T : IHTTPBlockInfoProvider
     {
     }
 }

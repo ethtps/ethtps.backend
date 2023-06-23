@@ -1,10 +1,10 @@
-﻿using ETHTPS.Data.Integrations.MSSQL;
+﻿using System.Threading.Tasks;
+
+using ETHTPS.Data.Integrations.MSSQL;
 
 using Hangfire;
 
 using Microsoft.Extensions.Logging;
-
-using System.Threading.Tasks;
 
 namespace ETHTPS.Services.BlockchainServices.HangfireLogging
 {

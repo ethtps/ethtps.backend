@@ -1,18 +1,16 @@
-﻿using ETHTPS.Runner.Extensions;
-
-using Konsole;
+﻿using Konsole;
 
 namespace ETHTPS.Runner
 {
-    public class WindowedService
+    public sealed class WindowedService
     {
         private readonly Service _child;
         private readonly IConsole _window;
-        private readonly IConsole _statusWindow;
+        private readonly IConsole? _statusWindow;
         private readonly IConsole _logWindow;
-        private List<ExtendedProgressBar> _resourceProgressBars;
         public bool Running => _child.IsRunning;
         public ServiceState State => _child.State;
+        public string Name => _child.Name;
 
         public WindowedService(Service child, IConsole window)
         {

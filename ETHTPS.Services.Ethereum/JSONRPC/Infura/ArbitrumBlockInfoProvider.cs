@@ -1,18 +1,14 @@
-﻿using ETHTPS.Services.Attributes;
-using ETHTPS.Services.BlockchainServices;
-using ETHTPS.Services.BlockchainServices.BlockTime;
-
-using Microsoft.Extensions.Configuration;
+﻿using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
 
 namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
 {
     [Provider("Arbitrum One")]
-    [RunsEvery(CronConstants.Every5s)]
-    public class ArbitrumBlockInfoProvider : InfuraBlockInfoProviderBase
+    [RunsEvery(CronConstants.EVERY_13_S)]
+    public sealed class ArbitrumBlockInfoProvider : InfuraBlockInfoProviderBase
     {
-        public ArbitrumBlockInfoProvider(IConfiguration configuration) : base(configuration, "ArbitrumEndpoint")
+        public ArbitrumBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Arbitrum One")
         {
-
         }
     }
 }

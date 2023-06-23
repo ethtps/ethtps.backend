@@ -5,7 +5,7 @@ namespace ETHTPS.API.Core.Middlewares
     /// <summary>
     /// Testing how the frontend behaves when data loads slowly or doesn't even load at all
     /// </summary>
-    public class UnstableConnectionSimulatorMiddleware
+    public sealed class UnstableConnectionSimulatorMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly Random _random = new Random();

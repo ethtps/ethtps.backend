@@ -1,27 +1,39 @@
 ﻿using System;
+
+using ETHTPS.Utils.DotEnv;
+
 using static ETHTPS.Data.Core.Constants.EnvironmentVariables;
 
 namespace ETHTPS.Data.Core.Extensions
 {
     public static class EnvironmentExtensions
     {
+        private static readonly DotEnvParser _parser = new(".env.data.development");
         public static string GetEnvVarValue(string name)
         {
-            var env = Environment.GetEnvironmentVariable(ENV);
+            var env = GetEnvironmentVariableFromAnywherePriorityWiseOrThrow(ENV);
             if (string.IsNullOrWhiteSpace(env))
                 throw new ArgumentNullException(ENV);
             string? result = null;
-            switch (env)
+            result = env switch
             {
-                case "DEVELOPMENT":
-                    result = Environment.GetEnvironmentVariable($"{name}_{env}");
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(ENV);
-            }
-            if (string.IsNullOrWhiteSpace(result))
+                "DEVELOPMENT" => GetEnvironmentVariableFromAnywherePriorityWiseOrThrow($"{name}"),
+                _ => throw new ArgumentOutOfRangeException(ENV)
+            };
+            if (string.IsNullOrEmpty(result))
                 throw new Exception($"{name} not defined");
             else return result;
         }
+
+        /// <summary>
+        /// Just get it from anywhere, I don't really care
+        /// </summary>
+        private static string GetEnvironmentVariableFromAnywherePriorityWiseOrThrow(string name) =>
+            Environment.GetEnvironmentVariable(name) ??
+            Environment.GetEnvironmentVariable(name,
+                EnvironmentVariableTarget.Process) ??
+            Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.User) ??
+            Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Machine) ??
+            _parser.Get(name) ?? throw new ArgumentNullException(name);
     }
 }

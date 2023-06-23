@@ -1,19 +1,22 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
-using System.Collections.Generic;
-using ETHTPS.API.Core.Integrations.MSSQL.Services.Data;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
+using ETHTPS.API.Core.Attributes;
+using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
-using ETHTPS.Data.Core;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Controllers.L2DataControllers
 {
-    [Route("api/v2/TPS/[action]")]
+    [Route("/api/v2/TPS/[action]")]
+    [ApiController]
     [Authorize(AuthenticationSchemes = "APIKey")]
-    public class TPSController : IPSService
+    public sealed class TPSController : ControllerBase, IPSService
     {
         private readonly ITPSService _tpsService;
 
@@ -23,27 +26,38 @@ namespace ETHTPS.API.Controllers.L2DataControllers
         }
 
         [HttpGet]
-        public IDictionary<string, IEnumerable<DataResponseModel>> GetMonthlyDataByYear([FromQuery] ProviderQueryModel model, int year)
+        [TTL(3600)]
+        public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetMonthlyDataByYearAsync([FromQuery] ProviderQueryModel model, int year)
         {
-            return _tpsService.GetMonthlyDataByYear(model, year);
+            return await _tpsService.GetMonthlyDataByYearAsync(model, year);
         }
 
         [HttpGet]
-        public IDictionary<string, IEnumerable<DataResponseModel>> Get([FromQuery] ProviderQueryModel model, TimeInterval interval)
+        [TTL(10)]
+        public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetAsync([FromQuery] ProviderQueryModel model, TimeInterval interval)
         {
-            return _tpsService.Get(model, interval);
+            return await _tpsService.GetAsync(model, interval);
         }
 
         [HttpGet]
-        public IDictionary<string, IEnumerable<DataPoint>> Instant([FromQuery] ProviderQueryModel model)
+        [TTL(1)]
+        public async Task<IDictionary<string, IEnumerable<DataPoint>>> InstantAsync([FromQuery] ProviderQueryModel model)
         {
-            return _tpsService.Instant(model);
+            return await _tpsService.InstantAsync(model);
         }
 
         [HttpGet]
-        public IDictionary<string, DataPoint> Max([FromQuery] ProviderQueryModel model)
+        [TTL(30)]
+        public async Task<IDictionary<string, DataPoint>> MaxAsync([FromQuery] ProviderQueryModel model)
         {
-            return _tpsService.Max(model);
+            return await _tpsService.MaxAsync(model);
+        }
+
+        [HttpPost]
+        [TTL(10)]
+        public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetAsync([FromBody] L2DataRequestModel model)
+        {
+            return await _tpsService.GetAsync(model);
         }
     }
 }

@@ -1,10 +1,10 @@
-﻿using ETHTPS.Data.Core.Extensions;
+﻿using System;
 
-using System;
+using ETHTPS.Data.Core.Extensions.DateTimeExtensions;
 
 namespace ETHTPS.Data.Core.Models.DataPoints.XYPoints
 {
-    public class ProviderDatedXYDataPoint : XYDataPointBase<DateTime>, IProviderXYMultiConvertible
+    public sealed class ProviderDatedXYDataPoint : XYDataPointBase<DateTime>, IProviderXYMultiConvertible
     {
         public ProviderDatedXYDataPoint() : base() { }
         public ProviderDatedXYDataPoint(DateTime x, double y, string provider) : base(x, y)

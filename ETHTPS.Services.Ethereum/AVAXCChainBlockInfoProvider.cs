@@ -1,8 +1,12 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Core.Extensions.StringExtensions;
 using ETHTPS.Data.Core.Models.DataEntries;
-using ETHTPS.Services.Attributes;
-using ETHTPS.Services.BlockchainServices;
 
 using Fizzler.Systems.HtmlAgilityPack;
 
@@ -12,30 +16,25 @@ using Microsoft.Extensions.Configuration;
 
 using Newtonsoft.Json;
 
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("AVAX C-chain")]
     [Disabled]
-    [RunsEvery(CronConstants.Every30s)]
+    [RunsEvery(CronConstants.EVERY_30_S)]
     [Obsolete("This implementation is obsolete. Please use SnowtraceBlockInfoProvider.", error: true)]
-    public class AVAXCChainBlockInfoProvider : IHTTPBlockInfoProvider
+    public sealed class AVAXCChainBlockInfoProvider : IHTTPBlockInfoProvider
     {
-        private const string NAME = "AVAX C-chain";
+        private const string _NAME = "AVAX C-chain";
         private readonly HttpClient _httpClient;
         private readonly string _transactionCountSelector;
         private readonly string _dateSelector;
         private readonly string _gasSelector;
 
-        public double BlockTimeSeconds { get; set; }
+        public double? BlockTimeSeconds { get; set; }
 
         public AVAXCChainBlockInfoProvider(IConfiguration configuration)
         {
-            var config = configuration.GetSection("TPSLoggerConfigurations").GetSection("StandardLoggerConfiguration").GetSection(NAME);
+            var config = configuration.GetSection("TPSLoggerConfigurations").GetSection("StandardLoggerConfiguration").GetSection(_NAME);
             _transactionCountSelector = config.GetValue<string>("TransactionCountSelector");
             _dateSelector = config.GetValue<string>("DateSelector");
             _gasSelector = config.GetValue<string>("GasSelector");
@@ -69,7 +68,7 @@ namespace ETHTPS.Services.Ethereum
                 TransactionCount = int.Parse(txCount),
                 Date = DateTime.Parse(date),
                 BlockNumber = blockNumber,
-                GasUsed = double.Parse(gas)
+                GasUsed = int.Parse(gas)
             });
         }
 

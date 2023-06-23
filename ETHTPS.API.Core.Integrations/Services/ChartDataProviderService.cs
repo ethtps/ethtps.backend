@@ -1,25 +1,18 @@
-﻿using Castle.Core.Logging;
-
-using ETHTPS.API.BIL.Infrastructure.Services.ChartData;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.ChartData;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
-using ETHTPS.API.Core.Integrations.MSSQL.Services.Data;
-using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Data.Core.Models.ResponseModels.ChartData.StackedChart;
 using ETHTPS.Data.Core.Models.ResponseModels.ChartData.Streamchart;
 using ETHTPS.Data.Core.Models.ResponseModels.ChartData.Streamchart.Extensions;
-using ETHTPS.Data.ResponseModels;
 
 using Microsoft.Extensions.Logging;
 
-using System.Linq;
-
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {
-    public class ChartDataServiceservice : IChartDataServiceservice
+    public sealed class ChartDataServiceservice : IChartDataServiceservice
     {
         private readonly ITPSService _tpsService;
         private readonly IGPSService _gpsService;
@@ -36,11 +29,11 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             _logger = logger;
         }
 
-        public StreamchartModel GetStreamchartData(ChartDataRequestModel model)
+        public async Task<StreamchartModel> GetStreamchartDataAsync(ChartDataRequestModel model)
         {
-            var tpsData = _tpsService.Get(model, model.Interval).RemoveEmptyValues().OrderEachSet().TakeLatestN(model.Count).Flatten();
-            var gpsData = _gpsService.Get(model, model.Interval).RemoveEmptyValues().OrderEachSet().TakeLatestN(model.Count).Flatten();
-            var gtpsData = _gtpsService.Get(model, model.Interval).RemoveEmptyValues().OrderEachSet().TakeLatestN(model.Count).Flatten();
+            var tpsData = (await _tpsService.GetAsync(model, model.Interval)).RemoveEmptyValues().OrderEachSet().TakeLatestN(model.Count).Flatten();
+            var gpsData = (await _gpsService.GetAsync(model, model.Interval)).RemoveEmptyValues().OrderEachSet().TakeLatestN(model.Count).Flatten();
+            var gtpsData = (await _gtpsService.GetAsync(model, model.Interval)).RemoveEmptyValues().OrderEachSet().TakeLatestN(model.Count).Flatten();
             var providers = tpsData.SelectMany(x => x.Keys).Concat(gpsData.SelectMany(y => y.Keys)).Distinct();
 
             double maxtps = 0;
@@ -105,7 +98,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
         /// <summary>
         /// Example series: [{ x: "2020-01-03", y: 20 }]
         /// </summary>
-        public StackedChartModel GetStackedChartData(ChartDataRequestModel model)
+        public async Task<StackedChartModel> GetStackedChartDataAsync(ChartDataRequestModel model)
         {
             IPSService? service = default;
             switch (model.DataType.ToUpper())
@@ -122,7 +115,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
                 default:
                     throw new ArgumentException($"Invalid data type \"{model.DataType}\"");
             }
-            var data = service.Get(ProviderQueryModel.All, model.Interval).RemoveEmptyValues();
+            var data = (await service.GetAsync(ProviderQueryModel.All, model.Interval)).RemoveEmptyValues();
             foreach (var key in data.Keys)
             {
                 data[key] = data[key].OrderBy(x => x.Data.FirstOrDefault()?.Date);
@@ -144,7 +137,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 
             var globalAverage = result.Series.Average(s => s.DataPoints.Average(x => x.Y ?? 0));
             var index = Enumerable.Range(1, result.Series.Count()).First(i => result.Series.TakeLast(i).Average(z => z.DataPoints.Average(y => y.Y
-            .HasValue ? y.Y.Value : 0)) >= globalAverage * groupSummingPercentage / 100);
+?? 0)) >= globalAverage * groupSummingPercentage / 100);
 
             var toBeRemoved = result.Series.TakeLast(index);
             var maxCount = toBeRemoved.Max(x => x.DataPoints.Count());

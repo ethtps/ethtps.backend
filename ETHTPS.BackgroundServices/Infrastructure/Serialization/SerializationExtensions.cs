@@ -6,10 +6,12 @@ namespace ETHTPS.Services.Infrastructure.Serialization
     {
         public static string SerializeAsJsonWithEmptyArray<T>(this T source)
         {
-            JsonSerializerSettings settings = new JsonSerializerSettings();
-            settings.ContractResolver = new NullToEmptyListResolver();
-            settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
-            settings.Formatting = Formatting.Indented;
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                ContractResolver = new NullToEmptyListResolver(),
+                ObjectCreationHandling = ObjectCreationHandling.Replace,
+                Formatting = Formatting.Indented
+            };
             return JsonConvert.SerializeObject(source, settings);
         }
     }

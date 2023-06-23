@@ -1,8 +1,5 @@
-﻿using ETHTPS.Data;
-using ETHTPS.Data.Core;
+﻿using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
-
-using System.Collections.Generic;
 
 namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
 {
@@ -13,9 +10,10 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
     /// <typeparam name="TResponseModel"></typeparam>
     public interface IPSDataProvider<TDataPoint, TResponseModel>
     {
-        IDictionary<string, TDataPoint> Max(ProviderQueryModel model);
-        IDictionary<string, IEnumerable<TDataPoint>> Instant(ProviderQueryModel model);
-        IDictionary<string, IEnumerable<TResponseModel>> Get(ProviderQueryModel model, TimeInterval interval);
-        IDictionary<string, IEnumerable<TResponseModel>> GetMonthlyDataByYear(ProviderQueryModel model, int year);
+        Task<IDictionary<string, IEnumerable<TResponseModel>>> GetAsync(L2DataRequestModel model);
+        Task<IDictionary<string, IEnumerable<TResponseModel>>> GetAsync(ProviderQueryModel model, TimeInterval interval);
+        Task<IDictionary<string, TDataPoint>> MaxAsync(ProviderQueryModel model);
+        Task<IDictionary<string, IEnumerable<TDataPoint>>> InstantAsync(ProviderQueryModel model);
+        Task<IDictionary<string, IEnumerable<TResponseModel>>> GetMonthlyDataByYearAsync(ProviderQueryModel model, int year);
     }
 }

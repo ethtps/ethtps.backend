@@ -1,16 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Platforms>AnyCPU;x64</Platforms>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<_ContentIncludedByDefault Remove="appsettings.default.Development.json" />
-		<_ContentIncludedByDefault Remove="appsettings.default.json" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<Folder Include="Extensions\" />
@@ -18,8 +15,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Coravel" Version="4.2.0" />
-		<PackageReference Include="NLog.Database" Version="5.1.1" />
+		<PackageReference Include="Coravel" Version="4.2.1" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
+		<PackageReference Include="NLog.Database" Version="5.1.5" />
+		<PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.3" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -31,7 +30,7 @@
 
 	<ItemGroup>
 		<Content Update="appsettings.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</Content>

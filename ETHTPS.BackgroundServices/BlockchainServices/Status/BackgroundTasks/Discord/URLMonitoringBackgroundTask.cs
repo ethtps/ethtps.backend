@@ -1,13 +1,14 @@
-﻿using ETHTPS.Data.Integrations.MSSQL;
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Services.BlockchainServices.HangfireLogging;
+
 using Hangfire;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace ETHTPS.Services.BlockchainServices.Status.BackgroundTasks.Discord
 {

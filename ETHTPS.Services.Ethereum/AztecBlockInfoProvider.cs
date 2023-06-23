@@ -1,31 +1,27 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
-using ETHTPS.Data.Core.Models.DataEntries;
-using ETHTPS.Services.Attributes;
-using ETHTPS.Services.BlockchainServices;
-
-using Newtonsoft.Json;
-
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
+using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.Models.DataEntries;
+
+using Newtonsoft.Json;
+
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("Aztec")]
-    [RunsEvery(CronConstants.Every13s)]
-    public class AztecBlockInfoProvider : IHTTPBlockInfoProvider
+    [RunsEvery(CronConstants.EVERY_13_S)]
+    public sealed class AztecBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
-        public double BlockTimeSeconds { get; set; }
 
-        public AztecBlockInfoProvider()
+        public AztecBlockInfoProvider(IDBConfigurationProvider provider) : base(provider, "Aztec")
         {
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("https://api.aztec.network/falafel-mainnet/graphql");
+
         }
 
-        public async Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override async Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             var payload = new GraphQLPayload()
             {
@@ -64,12 +60,12 @@ namespace ETHTPS.Services.Ethereum
             return null;
         }
 
-        public Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override async Task<Block> GetLatestBlockInfoAsync()
         {
             var payload = new GraphQLPayload()
             {
@@ -111,19 +107,19 @@ namespace ETHTPS.Services.Ethereum
             public string query { get; set; }
         }
 
-        public class BlockCountRootObject
+        public sealed class BlockCountRootObject
         {
             public BlockCountResponse data { get; set; }
         }
 
-        public class BlockCountResponse
+        public sealed class BlockCountResponse
         {
             public int totalBlocks { get; set; }
             public int totalTxs { get; set; }
             public Serverstatus serverStatus { get; set; }
         }
 
-        public class Serverstatus
+        public sealed class Serverstatus
         {
             public DateTime nextPublishTime { get; set; }
             public int pendingTxCount { get; set; }

@@ -1,16 +1,14 @@
-﻿using ETHTPS.Services.Attributes;
-
-using Microsoft.Extensions.Configuration;
+﻿using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
 
 namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
 {
     [Provider("Celo")]
-    [RunsEvery(CronConstants.Every30s)]
-    public class CeloBlockInfoProvider : InfuraBlockInfoProviderBase
+    [RunsEvery(CronConstants.EVERY_30_S)]
+    public sealed class CeloBlockInfoProvider : InfuraBlockInfoProviderBase
     {
-        public CeloBlockInfoProvider(IConfiguration configuration) : base(configuration, "CeloEndpoint")
+        public CeloBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Celo")
         {
-
         }
     }
 }

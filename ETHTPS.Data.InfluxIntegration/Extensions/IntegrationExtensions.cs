@@ -26,7 +26,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.Extensions
         public static string GetGPSBucketNameFor(string provider) => $"{provider}_GPS";
         public static string GetBlockBucketNameFor(string provider) => $"{provider}_blocks";
         public static string ClearBucketNameSuffix(this string provider) => provider.Replace("_TPS", string.Empty).Replace("_GPS", string.Empty).Replace("_blocks", string.Empty);
-        
+
         /// <summary>
         /// <see cref="Flux.Net.FluxQuery.ToQuery"/> returns a query containing "bucket/[optional]" and we need to clean it.
         /// </summary>

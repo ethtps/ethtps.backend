@@ -1,10 +1,10 @@
-﻿using ETHTPS.Data.Core.Extensions;
+﻿using System;
 
-using System;
+using ETHTPS.Data.Core.Extensions.DateTimeExtensions;
 
 namespace ETHTPS.Services.Ethereum.Scan
 {
-    public class ScanRequestModelFactory
+    public sealed class ScanRequestModelFactory
     {
         private readonly string _apiKey;
 

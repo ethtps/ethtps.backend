@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ETHTPS.Data.Integrations.MSSQL;
+﻿namespace ETHTPS.Data.Integrations.MSSQL;
 
 public partial class ApikeyExperimentBinding
 {
@@ -11,7 +8,7 @@ public partial class ApikeyExperimentBinding
 
     public int ApikeyId { get; set; }
 
-    public virtual Apikey Apikey { get; set; }
+    public virtual Apikey? Apikey { get; set; }
 
-    public virtual Experiment Experiment { get; set; }
+    public virtual Experiment? Experiment { get; set; }
 }

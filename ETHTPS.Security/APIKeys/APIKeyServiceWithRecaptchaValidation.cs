@@ -1,14 +1,14 @@
-﻿using ETHTPS.API.Security.Core.Humanity;
+﻿using ETHTPS.API.BIL.Security.Humanity;
 using ETHTPS.API.Security.Core.Humanity.Recaptcha;
 using ETHTPS.Configuration;
 using ETHTPS.Configuration.Extensions;
 using ETHTPS.Data.Core.Extensions.StringExtensions;
+using ETHTPS.Data.Core.Models.ResponseModels.APIKey;
 using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.ResponseModels.APIKey;
 
 namespace ETHTPS.API.Security.Core.APIKeys
 {
-    public class APIKeyServiceWithRecaptchaValidation : IHumanityAPIKeyProvider<IRecaptchaVerificationService>
+    public sealed class APIKeyServiceWithRecaptchaValidation : IHumanityAPIKeyProvider<IRecaptchaVerificationService>
     {
         private readonly EthtpsContext _context;
         private const int DEFAULT_REQUEST_LIMIT_24H = 5 * 5 * 3600 * 24; //Equivalent to 1 request per second; should be more than anyone needs

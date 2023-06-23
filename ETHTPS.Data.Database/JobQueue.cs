@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ETHTPS.Data.Integrations.MSSQL;
+﻿namespace ETHTPS.Data.Integrations.MSSQL;
 
 public partial class JobQueue
 {
@@ -9,7 +6,7 @@ public partial class JobQueue
 
     public long JobId { get; set; }
 
-    public string Queue { get; set; }
+    public string? Queue { get; set; }
 
     public DateTime? FetchedAt { get; set; }
 }

@@ -1,9 +1,10 @@
 ﻿using ETHTPS.Data.Integrations.MSSQL;
+
 using static ETHTPS.Data.Integrations.InfluxIntegration.Extensions.IntegrationExtensions;
 
 namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices
 {
-    public class ProviderBucketCreator : IBucketCreator
+    public sealed class ProviderBucketCreator : IBucketCreator
     {
         private readonly IEnumerable<string> _providers;
         private readonly IInfluxWrapper _influxWrapper;

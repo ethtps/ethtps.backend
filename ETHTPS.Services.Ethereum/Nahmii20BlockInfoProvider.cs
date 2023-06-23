@@ -1,35 +1,31 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.Extensions.StringExtensions;
-using ETHTPS.Services.BlockchainServices;
 using ETHTPS.Data.Core.Models.DataEntries;
+
 using Fizzler.Systems.HtmlAgilityPack;
 
 using HtmlAgilityPack;
 
 using Newtonsoft.Json;
 
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using ETHTPS.Services.Attributes;
-
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("Nahmii 2.0")]
-    [RunsEvery(CronConstants.Every13s)]
-    public class Nahmii20BlockInfoProvider : IHTTPBlockInfoProvider
+    [RunsEvery(CronConstants.EVERY_13_S)]
+    public sealed class Nahmii20BlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
 
-        public Nahmii20BlockInfoProvider()
+        public Nahmii20BlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Nahmii 2.0")
         {
-            _httpClient = new HttpClient();
+
         }
 
-        public double BlockTimeSeconds { get; set; }
-
-        public Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             HtmlWeb web = new HtmlWeb();
             HtmlDocument doc = web.Load($"https://explorer.nahmii.io/blocks/{blockNumber}/transactions");
@@ -52,16 +48,16 @@ namespace ETHTPS.Services.Ethereum
             });
         }
 
-        private double ValueOrZero(string value)
+        private int ValueOrZero(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
                 return 0;
             }
-            else return double.Parse(value);
+            else return int.Parse(value);
         }
 
-        public Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             throw new NotImplementedException();
         }
@@ -76,7 +72,7 @@ namespace ETHTPS.Services.Ethereum
             return int.Parse(new string(targetString.Where(char.IsDigit).ToArray()));
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override async Task<Block> GetLatestBlockInfoAsync()
         {
             var responseString = await _httpClient.GetStringAsync("https://explorer.nahmii.io/blocks?type=JSON");
             var response = JsonConvert.DeserializeObject<dynamic>(responseString);

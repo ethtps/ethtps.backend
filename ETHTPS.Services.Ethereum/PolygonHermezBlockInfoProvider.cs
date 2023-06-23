@@ -1,28 +1,28 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
-using ETHTPS.Data.Core.Models.DataEntries;
-using ETHTPS.Services.Attributes;
-using ETHTPS.Services.BlockchainServices;
-
-using Newtonsoft.Json;
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.Models.DataEntries;
+
+using Newtonsoft.Json;
+
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("Polygon Hermez")]
-    [RunsEvery(CronConstants.Every13s)]
-    public class PolygonHermezBlockInfoProvider : IHTTPBlockInfoProvider
+    [RunsEvery(CronConstants.EVERY_13_S)]
+    public sealed class PolygonHermezBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient = new HttpClient();
 
-        public double BlockTimeSeconds { get; set; }
-
-        public async Task<Block> GetBlockInfoAsync(int blockNumber)
+        public PolygonHermezBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Polygon Hermez")
         {
-            var response = await _httpClient.GetAsync($"https://api.hermez.io/v1/batches/{blockNumber}");
+        }
+
+        public override async Task<Block> GetBlockInfoAsync(int blockNumber)
+        {
+            var response = await _httpClient.GetAsync($"{Endpoint}/{blockNumber}");
             if (response.IsSuccessStatusCode)
             {
                 var res = JsonConvert.DeserializeObject<Batch>(await response.Content.ReadAsStringAsync());
@@ -41,14 +41,14 @@ namespace ETHTPS.Services.Ethereum
             }
         }
 
-        public Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override async Task<Block> GetLatestBlockInfoAsync()
         {
-            var response = await _httpClient.GetAsync("https://api.hermez.io/v1/batches?order=DESC&limit=20");
+            var response = await _httpClient.GetAsync($"{Endpoint}?order=DESC&limit=20");
             if (response.IsSuccessStatusCode)
             {
                 var res = JsonConvert.DeserializeObject<BatchResponse>(await response.Content.ReadAsStringAsync());
@@ -62,13 +62,13 @@ namespace ETHTPS.Services.Ethereum
         }
 
 
-        public class TransactionListResponse
+        public sealed class TransactionListResponse
         {
             public Transaction[] transactions { get; set; }
             public int pendingItems { get; set; }
         }
 
-        public class Transaction
+        public sealed class Transaction
         {
             public string id { get; set; }
             public int itemId { get; set; }
@@ -90,7 +90,7 @@ namespace ETHTPS.Services.Ethereum
             public string L1orL2 { get; set; }
         }
 
-        public class L1info
+        public sealed class L1info
         {
             public int toForgeL1TransactionsNum { get; set; }
             public bool userOrigin { get; set; }
@@ -101,7 +101,7 @@ namespace ETHTPS.Services.Ethereum
             public int ethereumBlockNum { get; set; }
         }
 
-        public class Token
+        public sealed class Token
         {
             public int id { get; set; }
             public int itemId { get; set; }
@@ -115,13 +115,13 @@ namespace ETHTPS.Services.Ethereum
         }
 
 
-        public class BatchResponse
+        public sealed class BatchResponse
         {
             public Batch[] batches { get; set; }
             public int pendingItems { get; set; }
         }
 
-        public class Batch
+        public sealed class Batch
         {
             public int itemId { get; set; }
             public int batchNum { get; set; }
@@ -140,7 +140,7 @@ namespace ETHTPS.Services.Ethereum
             public int forgedTransactions { get; set; }
         }
 
-        public class Collectedfees
+        public sealed class Collectedfees
         {
             public string _1 { get; set; }
         }

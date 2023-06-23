@@ -1,10 +1,11 @@
+using NLog.Extensions.Logging;
+
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using NLog.Extensions.Logging;
 
 namespace ETHTPS.API.Gateway
 {
-    public class Program
+    public sealed class Program
     {
         public static void Main(string[] args)
         {

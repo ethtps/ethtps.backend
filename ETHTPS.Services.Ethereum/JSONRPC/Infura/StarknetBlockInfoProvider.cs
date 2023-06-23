@@ -1,15 +1,14 @@
-﻿using ETHTPS.Services.Attributes;
-
-using Microsoft.Extensions.Configuration;
+﻿using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
 
 namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
 {
     [Provider("Starknet")]
-    public class StarknetBlockInfoProvider : InfuraBlockInfoProviderBase
+    [RunsEvery(CronConstants.EVERY_13_S)]
+    public sealed class StarknetBlockInfoProvider : InfuraBlockInfoProviderBase
     {
-        public StarknetBlockInfoProvider(IConfiguration configuration) : base(configuration, "StarknetEndpoint")
+        public StarknetBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Starknet")
         {
-
         }
     }
 }

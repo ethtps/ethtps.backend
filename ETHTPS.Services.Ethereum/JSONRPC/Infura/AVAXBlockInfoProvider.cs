@@ -1,14 +1,13 @@
-﻿using ETHTPS.Services.Attributes;
-
-using Microsoft.Extensions.Configuration;
+﻿using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
 
 namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
 {
     [Provider("AVAX C-chain")]
-    [RunsEvery(CronConstants.Every30s)]
-    public class AVAXBlockInfoProvider : InfuraBlockInfoProviderBase
+    [RunsEvery(CronConstants.EVERY_30_S)]
+    public sealed class AVAXBlockInfoProvider : InfuraBlockInfoProviderBase
     {
-        public AVAXBlockInfoProvider(IConfiguration configuration) : base(configuration, "AVAXEndpoint")
+        public AVAXBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "AVAX C-chain")
         {
 
         }

@@ -1,6 +1,6 @@
 ﻿using ETHTPS.Data.Core.Models.DataUpdater;
 
-namespace ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.ProviderSpecific
+namespace ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.ProviderSpecific.TypeSpecific
 {
     public interface IProviderTypeDataUpdaterStatusGetter : IProviderDataUpdaterStatusGetter
     {

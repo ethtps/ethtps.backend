@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
+
+using Newtonsoft.Json;
 
 namespace ETHTPS.Services.Ethereum.JSONRPC.Models
 {
-    public class JSONRPCRequestModel
+    public sealed class JSONRPCRequestModel
     {
         [JsonProperty("id")]
         public int ID { get; set; }

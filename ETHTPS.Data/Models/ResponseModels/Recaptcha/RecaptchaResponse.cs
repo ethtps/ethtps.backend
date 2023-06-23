@@ -1,14 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
-namespace ETHTPS.Data.ResponseModels.Recaptcha
+namespace ETHTPS.Data.Core.Models.ResponseModels.Recaptcha
 {
-    public class RecaptchaResponse
+    public sealed class RecaptchaResponse
     {
         [JsonProperty("success")]
         public bool Success { get; set; }

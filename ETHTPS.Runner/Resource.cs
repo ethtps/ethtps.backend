@@ -1,8 +1,6 @@
-﻿using Konsole;
-
-namespace ETHTPS.Runner
+﻿namespace ETHTPS.Runner
 {
-    public class SystemResource
+    public sealed class SystemResource
     {
         private readonly Func<double>? _valueGetter;
         public SystemResource(string name, string unit, int? padLeft = 0)

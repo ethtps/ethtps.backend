@@ -1,13 +1,13 @@
-﻿using Fizzler.Systems.HtmlAgilityPack;
+﻿using System;
+using System.Linq;
+
+using Fizzler.Systems.HtmlAgilityPack;
 
 using HtmlAgilityPack;
 
-using System;
-using System.Linq;
-
 namespace ETHTPS.Services.BlockchainServices.BlockTime
 {
-    public class EthereumBlockTimeProvider : IBlockTimeProvider
+    public sealed class EthereumBlockTimeProvider : IBlockTimeProvider
     {
         private double _lastBlocktime = 13.5;
 

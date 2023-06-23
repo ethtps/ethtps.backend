@@ -1,13 +1,15 @@
-﻿namespace ETHTPS.Data.Integrations.MSSQL.Extensions
+﻿using ETHTPS.Data.Core.Extensions;
+
+namespace ETHTPS.Data.Integrations.MSSQL.Extensions
 {
     public static class ExperimentExtensions
     {
-        private static Random Random = new();
+        private static Random _random = new();
         public static IEnumerable<Experiment> GetExperimentsForDeviceType(this EthtpsContext context, string deviceType)
         {
             lock (context.LockObj)
             {
-                var targetTypes = context.ExperimentTargetTypes.Where(x => x.TargetTypeName == "Device" && (x.TargetTypeValue == deviceType || x.TargetTypeValue == "All"));
+                var targetTypes = context.ExperimentTargetTypes.Where(x => x.TargetTypeName == "Device" && (x.TargetTypeValue == deviceType || x.TargetTypeValue == "All")).ToList();
                 if (targetTypes.Any())
                 {
                     foreach (var targetType in targetTypes)
@@ -32,9 +34,9 @@
             // We do want to keep some types of experiments alive indefinitely
             // Some of them should only be displayed once
             // Others only sometimes
-            if (experiment.RunParametersNavigation.EnrollmentChance != null)
+            if (experiment.RunParametersNavigation?.EnrollmentChance != null)
             {
-                if (Random.Next(100) < experiment.RunParametersNavigation.EnrollmentChance)
+                if (_random.Next(100) <= experiment.RunParametersNavigation.EnrollmentChance)
                 {
                     return true;
                 }
@@ -51,13 +53,15 @@
             }
         }
 
-        public static IEnumerable<Experiment> GetExperimentsUserIsEnrolledIn(this EthtpsContext context, int apiKeyId)
+        public static IEnumerable<Experiment?> GetExperimentsUserIsEnrolledIn(this EthtpsContext context, int apiKeyId)
         {
             lock (context.LockObj)
             {
                 if (context.ApikeyExperimentBindings.Any(x => x.ApikeyId == apiKeyId))
                 {
-                    return context.ApikeyExperimentBindings.Where(x => x.ApikeyId == apiKeyId).Select(x => x.Experiment).ToList();
+                    return context.ApikeyExperimentBindings.Where(x => x.ApikeyId == apiKeyId).Select(x => x.Experiment)
+                    .ToList()
+                    .WhereNotNull();
                 }
             }
             return Enumerable.Empty<Experiment>();
@@ -85,9 +89,9 @@
         public static bool IsRunning(this Experiment experiment)
         {
             var parameters = experiment.RunParametersNavigation;
-            if (!parameters.Enabled)
+            if (!parameters?.Enabled ?? true)
                 return false;
-            if (parameters.EndDate.HasValue)
+            if (parameters?.EndDate.HasValue ?? false)
             {
                 if (DateTime.Now > parameters.EndDate.Value)
                     return false;

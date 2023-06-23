@@ -1,18 +1,16 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
-using ETHTPS.Data.Core.Extensions;
-using ETHTPS.Services.BlockchainServices;
-
-using Microsoft.Extensions.Configuration;
-using ETHTPS.Data.Core.Models.DataEntries;
-using Newtonsoft.Json;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using ETHTPS.Services.Attributes;
+
+using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.Extensions.DateTimeExtensions;
+using ETHTPS.Data.Core.Models.DataEntries;
+
+using Newtonsoft.Json;
 
 namespace ETHTPS.Services.Ethereum
 {
@@ -20,34 +18,25 @@ namespace ETHTPS.Services.Ethereum
     /// Immutable X doesn't have blocks but we can work around this by getting all transactions made in the past minute and assuming they are part of a block.
     /// </summary>
     [Provider("Immutable X")]
-    [RunsEvery(CronConstants.Every13s)]
-    public class ImmutableXBlockInfoProvider : IHTTPBlockInfoProvider
+    [RunsEvery(CronConstants.EVERY_13_S)]
+    public sealed class ImmutableXBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
-        private readonly string _apiKey;
-
-        public double BlockTimeSeconds { get; set; } = 60;
-
-        public ImmutableXBlockInfoProvider(IConfiguration configuration)
+        public ImmutableXBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Immutable X")
         {
-            var config = configuration.GetSection("BlockInfoProviders").GetSection("Immutascan");
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri(config.GetValue<string>("BaseURL"));
-            _apiKey = config.GetValue<string>("APIKey");
-            _httpClient.DefaultRequestHeaders.Add("x-api-key", _apiKey);
+            BlockTimeSeconds = 60;
         }
 
-        public Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override async Task<Block> GetLatestBlockInfoAsync()
         {
             var txLimit = 200;
             var block = await GenerateFakeBlockAsync(txLimit);
@@ -94,9 +83,9 @@ namespace ETHTPS.Services.Ethereum
             return null;
         }
 
-        private double CalculateGasCost(IEnumerable<Item> items)
+        private int CalculateGasCost(IEnumerable<Item> items)
         {
-            double sum = 0;
+            int sum = 0;
             foreach (var item in items)
             {
                 switch (item.txn_type)
@@ -121,17 +110,17 @@ namespace ETHTPS.Services.Ethereum
             return sum;
         }
 
-        public class Rootobject
+        public sealed class Rootobject
         {
             public Data data { get; set; }
         }
 
-        public class Data
+        public sealed class Data
         {
             public Listtransactions listTransactions { get; set; }
         }
 
-        public class Listtransactions
+        public sealed class Listtransactions
         {
             public Item[] items { get; set; }
             public string nextToken { get; set; }
@@ -139,7 +128,7 @@ namespace ETHTPS.Services.Ethereum
             public string __typename { get; set; }
         }
 
-        public class Item
+        public sealed class Item
         {
             public string txn_time { get; set; }
             public int txn_id { get; set; }
@@ -148,7 +137,7 @@ namespace ETHTPS.Services.Ethereum
             public string __typename { get; set; }
         }
 
-        public class Transfer
+        public sealed class Transfer
         {
             public string from_address { get; set; }
             public string to_address { get; set; }
@@ -156,7 +145,7 @@ namespace ETHTPS.Services.Ethereum
             public string __typename { get; set; }
         }
 
-        public class Token
+        public sealed class Token
         {
             public string type { get; set; }
             public float quantity { get; set; }
@@ -167,14 +156,14 @@ namespace ETHTPS.Services.Ethereum
         }
 
 
-        public class GraphQLPayload
+        public sealed class GraphQLPayload
         {
             public string operationName { get; set; }
             public Variables variables { get; set; }
             public string query { get; set; }
         }
 
-        public class Variables
+        public sealed class Variables
         {
             public string address { get; set; }
         }

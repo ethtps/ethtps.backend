@@ -1,17 +1,24 @@
-﻿using Microsoft.OpenApi.Any;
+﻿using System.Reflection;
+
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-using System.Reflection;
-
 namespace ETHTPS.API.Core.Filters
 {
-    public class PolymorphismDocumentFilter<T> : IDocumentFilter
+    public sealed class PolymorphismDocumentFilter<T> : IDocumentFilter
     {
         public void Apply(OpenApiDocument openApiDoc, DocumentFilterContext context)
         {
-            RegisterSubClasses(context, typeof(T));
+            try
+            {
+                RegisterSubClasses(context, typeof(T));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error registering {typeof(T)}: " + ex);
+            }
         }
 
         private static void RegisterSubClasses(DocumentFilterContext context, Type abstractType)

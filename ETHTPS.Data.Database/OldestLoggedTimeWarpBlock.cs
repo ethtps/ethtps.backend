@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ETHTPS.Data.Integrations.MSSQL;
+﻿namespace ETHTPS.Data.Integrations.MSSQL;
 
 public partial class OldestLoggedTimeWarpBlock
 {
@@ -13,7 +10,7 @@ public partial class OldestLoggedTimeWarpBlock
 
     public int OldestBlock { get; set; }
 
-    public virtual Network NetworkNavigation { get; set; }
+    public virtual Network? NetworkNavigation { get; set; }
 
-    public virtual Provider ProviderNavigation { get; set; }
+    public virtual Provider? ProviderNavigation { get; set; }
 }

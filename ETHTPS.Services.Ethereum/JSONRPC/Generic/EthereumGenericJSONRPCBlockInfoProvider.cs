@@ -1,19 +1,13 @@
-﻿using ETHTPS.Services.Attributes;
-using ETHTPS.Services.BlockchainServices;
-
-using Microsoft.Extensions.Configuration;
+﻿using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
 
 namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
 {
     [Provider("Ethereum")]
-    [RunsEvery(CronConstants.Every5s)]
-    public class EthereumGenericJSONRPCBlockInfoProvider : JSONRPCBlockInfoProviderBase
+    [RunsEvery(CronConstants.EVERY_5_S)]
+    public sealed class EthereumGenericJSONRPCBlockInfoProvider : JSONRPCBlockInfoProviderBase
     {
-        public EthereumGenericJSONRPCBlockInfoProvider(string endpoint) : base(endpoint)
-        {
-
-        }
-        public EthereumGenericJSONRPCBlockInfoProvider(IConfiguration configuration) : base(configuration, "GenericJSONRPC", "Ethereum0")
+        public EthereumGenericJSONRPCBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Ethereum")
         {
         }
     }

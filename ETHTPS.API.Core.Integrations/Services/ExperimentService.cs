@@ -1,14 +1,14 @@
-﻿using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Data.Integrations.MSSQL.Extensions;
+﻿using ETHTPS.API.BIL.Infrastructure.Services;
 using ETHTPS.Data.Core.Extensions;
+using ETHTPS.Data.Core.Models;
+using ETHTPS.Data.Integrations.MSSQL;
+using ETHTPS.Data.Integrations.MSSQL.Extensions;
 
 using Microsoft.AspNetCore.Http;
-using ETHTPS.API.BIL.Infrastructure.Services;
-using ETHTPS.Data.Core.Models;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 {
-    public class ExperimentService : IExperimentService
+    public sealed class ExperimentService : IExperimentService
     {
         private readonly EthtpsContext _context;
 
@@ -19,20 +19,31 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 
         public Task EnrollInNewExperimentsIfApplicableAsync(ExperimentRequesterParameters parameters, HttpContext context)
         {
-            var experiments = _context.GetExperimentsForDeviceType(parameters.DeviceType);
-            var runningExperiments = experiments.Where(x => x.IsRunning());
+            var experiments = _context.GetExperimentsForDeviceType(parameters.DeviceType).ToList();
+            var runningExperiments = experiments.Where(x => x.IsRunning()).ToList();
             if (runningExperiments.Any())
             {
                 foreach (var experiment in runningExperiments)
                 {
                     var apiKeyID = _context.GetAPIKeyID(context);
-                    if (_context.UserIsEligibleForEnrollmentIn(experiment, apiKeyID))
+                    lock (_context.LockObj)
                     {
-                        _context.EnrollUserIn(experiment, apiKeyID);
+                        if (_context.UserIsEligibleForEnrollmentIn(experiment, apiKeyID))
+                        {
+                            _context.EnrollUserIn(experiment, apiKeyID);
+                        }
                     }
                 }
             }
             return Task.CompletedTask;
+        }
+
+        public Task<Experiment?> GetExperimentByIDAsync(int id)
+        {
+            lock (_context.LockObj)
+            {
+                return Task.FromResult(!_context.Experiments.Any(x => x.Id == id) ? default : _context.Experiments.First(x => x.Id == id));
+            }
         }
 
 
@@ -43,15 +54,19 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             {
                 lock (_context.LockObj)
                 {
-                    return _context.GetExperimentsUserIsEnrolledIn(_context.GetAPIKeyID(context)).SafeSelect(x => x.Id);
+                    return _context.GetExperimentsUserIsEnrolledIn(_context.GetAPIKeyID(context)).SafeSelect(x => x?.Id ?? -1);
                 }
             }
             return Enumerable.Empty<int>();
         }
 
-        public void GiveAnonymousFeedback()
+        public void GiveAnonymousFeedback(ExperimentFeedback feedback)
         {
-            throw new System.NotImplementedException();
+            lock (_context.LockObj)
+            {
+                _context.ExperimentFeedbacks.Add(feedback);
+                _context.SaveChanges();
+            }
         }
     }
 }

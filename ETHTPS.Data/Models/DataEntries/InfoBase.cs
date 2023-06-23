@@ -1,9 +1,6 @@
-﻿
-using ETHTPS.Data.Core;
+﻿using System;
 
 using InfluxDB.Client.Core;
-
-using System;
 
 namespace ETHTPS.Data.Core.Models.DataEntries
 {

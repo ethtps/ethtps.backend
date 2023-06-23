@@ -2,18 +2,16 @@
 
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.Data.Core.Models.DataPoints.XYPoints;
-using ETHTPS.Data.Core.Models.Pages;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Data.Core.Models.ResponseModels.L2s;
 
-using System.Linq;
-
 namespace ETHTPS.API.BIL.Infrastructure.Services
 {
-    public class DeedleTimeSeriesFormatter : IPSDataFormatter
+    public sealed class DeedleTimeSeriesFormatter : IPSDataFormatter
     {
         public IEnumerable<IXYMultiConvertible> Format(List<DataResponseModel> source, L2DataRequestModel requestModel)
         {

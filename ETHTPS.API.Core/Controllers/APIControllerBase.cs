@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Core.Controllers
 {
+    [ApiController]
     public abstract class APIControllerBase : ControllerBase
     {
     }

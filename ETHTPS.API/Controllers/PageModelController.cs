@@ -1,70 +1,73 @@
-﻿using ETHTPS.API.Core.Integrations.MSSQL.Services;
-using ETHTPS.Data;
+﻿using System.Linq;
+using System.Threading.Tasks;
+
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
+using ETHTPS.API.Core.Attributes;
+using ETHTPS.API.Core.Integrations.MSSQL.Services;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Extensions.StringExtensions;
 using ETHTPS.Data.Core.Models.Pages.Chart;
 using ETHTPS.Data.Core.Models.Pages.HomePage;
 using ETHTPS.Data.Core.Models.Pages.ProviderPage;
-
-using Microsoft.AspNetCore.Mvc;
-
-using System.Linq;
-using ETHTPS.API.Core.Integrations.MSSQL.Services.Data;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices.TPS;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Controllers
 {
     [Route("api/v2/Pages/[action]")]
-    public class PageModelController : ControllerBase
+    [Authorize]
+    [ApiController]
+    public sealed class PageModelController : ControllerBase
     {
         private readonly GeneralService _generalService;
         private readonly IGTPSService _gasAdjustedTPSService;
         private readonly ITPSService _tpsService;
         private readonly IGPSService _gpsService;
-        private readonly TimeWarpService _timeWarpService;
 
-        public PageModelController(GeneralService generalService, IGTPSService gasAdjustedTPSService, ITPSService tpsService, IGPSService gpsService, TimeWarpService timeWarpService)
+        public PageModelController(GeneralService generalService, IGTPSService gasAdjustedTPSService, ITPSService tpsService, IGPSService gpsService)
         {
             _generalService = generalService;
             _gasAdjustedTPSService = gasAdjustedTPSService;
             _tpsService = tpsService;
             _gpsService = gpsService;
-            _timeWarpService = timeWarpService;
         }
 
         [HttpGet]
-        public HomePageResponseModel Home([FromQuery] HomePageRequestModel model) => new HomePageResponseModel()
+        [TTL(10)]
+        public async Task<HomePageResponseModel> HomeAsync([FromQuery] HomePageRequestModel model) => new HomePageResponseModel()
         {
-            ChartData = FromRequestModel(model),
-            MaxData = _generalService.Max(ProviderQueryModel.All),
-            InstantData = _generalService.InstantData(ProviderQueryModel.All),
+            ChartData = await FromRequestModelAsync(model),
+            MaxData = await _generalService.MaxAsync(ProviderQueryModel.All),
+            InstantData = await _generalService.InstantDataAsync(ProviderQueryModel.All),
             ColorDictionary = _generalService.ColorDictionary(),
             ProviderTypesColorDictionary = _generalService.ProviderTypesColorDictionary(),
             Providers = _generalService.Providers(model.SubchainsOf)
         };
 
         [HttpGet]
-        public IActionResult Provider([FromQuery] ProviderPageRequestModel model)
+        [TTL(10)]
+        public async Task<IActionResult> ProviderAsync([FromQuery] ProviderPageRequestModel model)
         {
-            if (string.IsNullOrWhiteSpace(model.Provider) || model.Provider.LossyCompareTo(Constants.All) || !_generalService.Providers().Any(x => x.Name.LossyCompareTo(model.Provider)))
+            if (string.IsNullOrWhiteSpace(model.Provider) || model.Provider.LossyCompareTo(Constants.All) || !_generalService.AllProviders.Any(x => x.Name.LossyCompareTo(model.Provider)))
             {
                 return BadRequest($"Invalid provider name \"{model.Provider}\"");
             }
             return Ok(new ProviderPageResponseModel()
             {
-                ChartData = FromRequestModel(model),
-                IntervalsWithData = _generalService.GetIntervalsWithData(model),
-                UniqueDataYears = _generalService.GetUniqueDataYears(model)
+                ChartData = await FromRequestModelAsync(model),
+                IntervalsWithData = await _generalService.GetIntervalsWithDataAsync(model),
+                UniqueDataYears = await _generalService.GetUniqueDataYearsAsync(model)
             });
         }
 
-        private ChartData FromRequestModel(RequestModelWithChartBase model) => new ChartData()
+        private async Task<ChartData> FromRequestModelAsync(RequestModelWithChartBase model) => new ChartData()
         {
-            Data = GetServiceFor(model.DataType).Get(model, model.Interval),
+            Data = await GetServiceFor(model.DataType).GetAsync(model, model.Interval),
             DataType = model.DataType
         };
 

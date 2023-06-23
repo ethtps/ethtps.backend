@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ETHTPS.Configuration.Database;
+﻿namespace ETHTPS.Configuration.Database;
 
 public partial class ProviderConfigurationString
 {
@@ -13,9 +10,9 @@ public partial class ProviderConfigurationString
 
     public int EnvironmentId { get; set; }
 
-    public virtual ConfigurationString ConfigurationString { get; set; } = null!;
+    public virtual ConfigurationString? ConfigurationString { get; set; } = null!;
 
-    public virtual Environment Environment { get; set; } = null!;
+    public virtual Environment? Environment { get; set; } = null!;
 
-    public virtual Provider Provider { get; set; } = null!;
+    public virtual Provider? Provider { get; set; } = null!;
 }

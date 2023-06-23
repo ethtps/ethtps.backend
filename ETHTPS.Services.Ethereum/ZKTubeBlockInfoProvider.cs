@@ -1,34 +1,30 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
-using ETHTPS.Services.BlockchainServices;
-using ETHTPS.Data.Core.Models.DataEntries;
-using Newtonsoft.Json;
-
-using System;
-using System.Net.Http;
+﻿using System;
 using System.Threading.Tasks;
-using ETHTPS.Services.Attributes;
+
+using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.Models.DataEntries;
+
+using Newtonsoft.Json;
 
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("zkTube")]
-    [RunsEvery(CronConstants.Every30s)]
-    public class ZKTubeBlockInfoProvider : IHTTPBlockInfoProvider
+    [RunsEvery(CronConstants.EVERY_30_S)]
+    public sealed class ZKTubeBlockInfoProvider : BlockInfoProviderBase
     {
-        private readonly HttpClient _httpClient;
 
-        public ZKTubeBlockInfoProvider()
+        public ZKTubeBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "zkTube")
         {
-            _httpClient = new HttpClient();
+
         }
 
-        public double BlockTimeSeconds { get; set; }
-
-        public async Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override async Task<Block> GetBlockInfoAsync(int blockNumber)
         {
-            var responseString = await _httpClient.GetStringAsync($"https://api.zktube.io/api/v0.1/blocks/{blockNumber}/transactions");
+            var responseString = await _httpClient.GetStringAsync($"{Endpoint}/blocks/{blockNumber}/transactions");
             var transactionsResponse = JsonConvert.DeserializeObject<dynamic>(responseString);
 
-            responseString = await _httpClient.GetStringAsync($"https://api.zktube.io/api/v0.1/blocks/{blockNumber}");
+            responseString = await _httpClient.GetStringAsync($"{Endpoint}/blocks/{blockNumber}");
             var blockSummary = JsonConvert.DeserializeObject<BlockSummary>(responseString);
             var txCount = 0;
             try
@@ -47,20 +43,20 @@ namespace ETHTPS.Services.Ethereum
             };
         }
 
-        public Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override async Task<Block> GetLatestBlockInfoAsync()
         {
-            var responseString = await _httpClient.GetStringAsync("https://api.zktube.io/api/v0.1/status");
+            var responseString = await _httpClient.GetStringAsync($"{Endpoint}/status");
             var response = JsonConvert.DeserializeObject<StatusResponse>(responseString);
             return await GetBlockInfoAsync(response.last_verified);
         }
 
 
-        public class BlockSummary
+        public sealed class BlockSummary
         {
             public int block_number { get; set; }
             public string new_state_root { get; set; }
@@ -72,12 +68,12 @@ namespace ETHTPS.Services.Ethereum
         }
 
 
-        public class TransactionsResponse
+        public sealed class TransactionsResponse
         {
             public Transaction[] Property1 { get; set; }
         }
 
-        public class Transaction
+        public sealed class Transaction
         {
             public string tx_hash { get; set; }
             public int block_number { get; set; }
@@ -87,7 +83,7 @@ namespace ETHTPS.Services.Ethereum
             public DateTime created_at { get; set; }
         }
 
-        public class Op
+        public sealed class Op
         {
             public string to { get; set; }
             public string fee { get; set; }
@@ -101,14 +97,14 @@ namespace ETHTPS.Services.Ethereum
             public Signature signature { get; set; }
         }
 
-        public class Signature
+        public sealed class Signature
         {
             public string pubKey { get; set; }
             public string signature { get; set; }
         }
 
 
-        public class StatusResponse
+        public sealed class StatusResponse
         {
             public object next_block_at_max { get; set; }
             public int last_committed { get; set; }

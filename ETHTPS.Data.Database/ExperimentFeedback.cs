@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ETHTPS.Data.Integrations.MSSQL;
+﻿namespace ETHTPS.Data.Integrations.MSSQL;
 
 public partial class ExperimentFeedback
 {
@@ -13,7 +10,7 @@ public partial class ExperimentFeedback
 
     public int? Rating { get; set; }
 
-    public string Text { get; set; }
+    public required string Text { get; set; }
 
-    public virtual Experiment ExperimentNavigation { get; set; }
+    public virtual Experiment? ExperimentNavigation { get; set; }
 }

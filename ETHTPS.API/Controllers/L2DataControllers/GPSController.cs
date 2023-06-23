@@ -1,48 +1,63 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+
+using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GPS;
-using ETHTPS.API.Core.Integrations.MSSQL.Services.Data;
-using ETHTPS.Data.Core.Models.Queries.Data.Requests;
-using ETHTPS.Data.Core.Models.DataPoints;
-
-using Microsoft.AspNetCore.Mvc;
-
-using System.Collections.Generic;
+using ETHTPS.API.Core.Attributes;
 using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.Models.DataPoints;
+using ETHTPS.Data.Core.Models.Queries.Data.Requests;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Controllers.L2DataControllers
 {
-    [Route(template: "api/v2/GPS/[action]")]
-    public class GPSController : IPSService
+    [Route("api/v2/GPS/[action]")]
+    [ApiController]
+    [Authorize(AuthenticationSchemes = "APIKey")]
+    public sealed class GPSController : ControllerBase, IPSService
     {
         private readonly IGPSService _gpsService;
 
-        public GPSController(IGPSService gpsService)
+        public GPSController(IGPSService tpsService)
         {
-            _gpsService = gpsService;
+            _gpsService = tpsService;
         }
 
         [HttpGet]
-        public IDictionary<string, IEnumerable<DataResponseModel>> GetMonthlyDataByYear([FromQuery] ProviderQueryModel model, int year)
+        [TTL(3600)]
+        public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetMonthlyDataByYearAsync([FromQuery] ProviderQueryModel model, int year)
         {
-            return _gpsService.GetMonthlyDataByYear(model, year);
+            return await _gpsService.GetMonthlyDataByYearAsync(model, year);
         }
 
         [HttpGet]
-        public IDictionary<string, IEnumerable<DataResponseModel>> Get([FromQuery] ProviderQueryModel model, TimeInterval interval)
+        [TTL(10)]
+        public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetAsync([FromQuery] ProviderQueryModel model, TimeInterval interval)
         {
-            return _gpsService.Get(model, interval);
+            return await _gpsService.GetAsync(model, interval);
         }
 
         [HttpGet]
-        public IDictionary<string, IEnumerable<DataPoint>> Instant([FromQuery] ProviderQueryModel model)
+        [TTL(1)]
+        public async Task<IDictionary<string, IEnumerable<DataPoint>>> InstantAsync([FromQuery] ProviderQueryModel model)
         {
-            return _gpsService.Instant(model);
+            return await _gpsService.InstantAsync(model);
         }
 
         [HttpGet]
-        public IDictionary<string, DataPoint> Max([FromQuery] ProviderQueryModel model)
+        [TTL(30)]
+        public async Task<IDictionary<string, DataPoint>> MaxAsync([FromQuery] ProviderQueryModel model)
         {
-            return _gpsService.Max(model);
+            return await _gpsService.MaxAsync(model);
+        }
+
+        [HttpPost]
+        [TTL(10)]
+        public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetAsync([FromBody] L2DataRequestModel model)
+        {
+            return await _gpsService.GetAsync(model);
         }
     }
 }

@@ -1,12 +1,13 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
-using ETHTPS.Services.Extensions;
-
-using Microsoft.Extensions.DependencyInjection;
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
+using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Services.Extensions;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ETHTPS.Services.BlockchainServices.Extensions
 {

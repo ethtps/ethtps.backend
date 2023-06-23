@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.API.Security.Core.Policies
 {
-    public class PolicyDescriptor
+    public sealed class PolicyDescriptor
     {
         public PolicyDescriptor(string name, string value)
         {

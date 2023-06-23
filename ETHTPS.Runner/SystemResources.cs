@@ -1,13 +1,13 @@
 ﻿namespace ETHTPS.Runner
 {
-    public class SystemResources
+    public sealed class SystemResources
     {
-        private const int PADDING = 7;
-        public SystemResource CPU { get; private set; } = new("CPU", "%", PADDING)
+        private const int _PADDING = 7;
+        public SystemResource CPU { get; private set; } = new("CPU", "%", _PADDING)
         {
             Max = 100
         };
-        public SystemResource MemoryMB { get; private set; } = new("Memory", "MB", PADDING);
-        public SystemResource NetworkMbit { get; set; } = new("Network", "Mb", PADDING);
+        public SystemResource MemoryMB { get; private set; } = new("Memory", "MB", _PADDING);
+        public SystemResource NetworkMbit { get; set; } = new("Network", "Mb", _PADDING);
     }
 }

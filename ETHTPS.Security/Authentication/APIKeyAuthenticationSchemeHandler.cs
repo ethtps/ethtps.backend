@@ -1,4 +1,7 @@
-﻿using ETHTPS.Data.Core.Extensions;
+﻿using System.Security.Claims;
+using System.Text.Encodings.Web;
+
+using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Data.Integrations.MSSQL.Extensions;
 
@@ -7,13 +10,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 
-using System.Security.Claims;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-
 namespace ETHTPS.API.Security.Core.Authentication
 {
-    public class APIKeyAuthenticationSchemeHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+    public sealed class APIKeyAuthenticationSchemeHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         private readonly EthtpsContext _context;
         private readonly ILogger _logger;
@@ -39,20 +38,20 @@ namespace ETHTPS.API.Security.Core.Authentication
             var apiKey = Context.ExtractAPIKey();
             if (!ValidateAPIKey(apiKey))
             {
-                _logger.LogWarning($"API call with invalid key", Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
+                _logger.LogWarning("API call with invalid key [{0}]", Request.HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString());
                 return Task.FromResult(AuthenticateResult.Fail("No X-API-KEY header specified or API key is invalid"));
             }
 
             if (!_context.ValidateNumberOfCalls(apiKey))
             {
-                _logger.LogWarning($"Limit rate exceeded", Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString());
+                _logger.LogWarning("Limit rate exceeded [{0}]", Request.HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString());
                 return Task.FromResult(AuthenticateResult.Fail("Limit reached for today"));
             }
 
             _context.IncrementNumberOfCalls(apiKey);
             Claim[] claims = new[] { new Claim(ClaimTypes.Name, "VALID USER") };
             ClaimsIdentity identity = new(claims, Scheme.Name);
-            ClaimsPrincipal principal = new (identity);
+            ClaimsPrincipal principal = new(identity);
             AuthenticationTicket ticket = new(principal, Scheme.Name);
             return Task.FromResult(AuthenticateResult.Success(ticket));
         }

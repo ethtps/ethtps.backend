@@ -1,17 +1,15 @@
 ﻿
-using ETHTPS.Services.Attributes;
-using ETHTPS.Services.BlockchainServices;
+using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Services.Ethereum.JSONRPC;
-
-using Microsoft.Extensions.Configuration;
 
 namespace ETHTPS.Services.Ethereum
 {
     [Provider("Habitat")]
     [Disabled]
-    public class HabitatBlockInfoProvider : JSONRPCBlockInfoProviderBase
+    public sealed class HabitatBlockInfoProvider : JSONRPCBlockInfoProviderBase
     {
-        public HabitatBlockInfoProvider(IConfiguration configuration) : base(configuration, "Habitat")
+        public HabitatBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Habitat")
         {
         }
     }

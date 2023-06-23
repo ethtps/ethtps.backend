@@ -1,17 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ETHTPS.Data.Integrations.MSSQL;
+﻿namespace ETHTPS.Data.Integrations.MSSQL;
 
 public partial class Experiment
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "We need this")]
+    public static Experiment EMPTY = new()
+    {
+        Id = -1,
+        ProjectId = -1,
+        Name = "EMPTY",
+        Description = "EMPTY",
+        Target = -1,
+    };
     public int Id { get; set; }
 
     public int ProjectId { get; set; }
 
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
-    public string Description { get; set; }
+    public required string Description { get; set; }
 
     public int Target { get; set; }
 
@@ -23,11 +29,11 @@ public partial class Experiment
 
     public virtual ICollection<ExperimentResult> ExperimentResults { get; } = new List<ExperimentResult>();
 
-    public virtual ExperimentalSession ExperimentalSession { get; set; }
+    public virtual ExperimentalSession? ExperimentalSession { get; set; }
 
-    public virtual Provider Project { get; set; }
+    public virtual Provider? Project { get; set; }
 
-    public virtual ExperimentRunParameter RunParametersNavigation { get; set; }
+    public virtual ExperimentRunParameter? RunParametersNavigation { get; set; }
 
-    public virtual ExperimentTarget TargetNavigation { get; set; }
+    public virtual ExperimentTarget? TargetNavigation { get; set; }
 }

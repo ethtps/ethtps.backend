@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ETHTPS.Services.BlockchainServices.Status.BackgroundTasks.Discord
 {
-    public class DiscordWebhookNotifier
+    public sealed class DiscordWebhookNotifier
     {
         private readonly HttpClient _httpClient;
 

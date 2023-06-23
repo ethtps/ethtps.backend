@@ -1,6 +1,6 @@
-﻿using ETHTPS.Data.Core.Models.DataPoints.XYPoints;
+﻿using System.Collections.Generic;
 
-using System.Collections.Generic;
+using ETHTPS.Data.Core.Models.DataPoints.XYPoints;
 
 namespace ETHTPS.Data.Core.Models.ResponseModels.L2s
 {

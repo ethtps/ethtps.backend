@@ -1,7 +1,7 @@
-﻿using ETHTPS.Data.Core.Models.DataPoints;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
+using ETHTPS.Data.Core.Models.DataPoints;
 
 namespace ETHTPS.Data.Core.Models.ResponseModels.ChartData.Streamchart.Extensions
 {

@@ -7,6 +7,7 @@ public partial class LiveDataUpdaterStatus
     public int UpdaterId { get; set; }
 
     public int StatusId { get; set; }
+    public bool Enabled { get; set; }
 
     public DateTime? LastSuccessfulRunTime { get; set; }
     public DateTime? LastRunTime { get; set; }
@@ -15,7 +16,7 @@ public partial class LiveDataUpdaterStatus
 
     public int NumberOfFailures { get; set; }
 
-    public virtual DataUpdaterStatus Status { get; set; } = null!;
+    public virtual DataUpdaterStatus? Status { get; set; } = null!;
 
-    public virtual DataUpdater Updater { get; set; } = null!;
+    public virtual DataUpdater? Updater { get; set; } = null!;
 }

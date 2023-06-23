@@ -1,15 +1,13 @@
-﻿using ETHTPS.Services.Attributes;
-using ETHTPS.Services.BlockchainServices;
-
-using Microsoft.Extensions.Configuration;
+﻿using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
 
 namespace ETHTPS.Services.Ethereum.Scan.Implementations
 {
     [Provider("Fantom")]
-    [RunsEvery(CronConstants.Every10s)]
-    public class FTMScanBlockInfoProvider : ScanBlockInfoProviderBase
+    [RunsEvery(CronConstants.EVERY_10_S)]
+    public sealed class FTMScanBlockInfoProvider : ScanBlockInfoProviderBase
     {
-        public FTMScanBlockInfoProvider(IConfiguration configuration) : base(configuration, "FTMScan")
+        public FTMScanBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Fantom")
         {
         }
     }

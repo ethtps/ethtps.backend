@@ -1,10 +1,8 @@
-﻿using ETHTPS.Data.Core;
-
-using System;
+﻿using System;
 
 namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
 {
-    public class BucketOptions
+    public sealed class BucketOptions
     {
         public bool UseTimeBuckets { get; set; } = true;
         public TimeInterval BucketSize { get; set; } = TimeInterval.Auto;

@@ -2,8 +2,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-using System;
-
 namespace ETHTPS.Data.Core
 {
     [JsonConverter(typeof(StringEnumConverter))]

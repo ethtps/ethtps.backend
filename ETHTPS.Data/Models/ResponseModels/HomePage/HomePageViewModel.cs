@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+
 using ETHTPS.Data.Core.Models.DataPoints;
 
-namespace ETHTPS.Data.ResponseModels.HomePage
+namespace ETHTPS.Data.Core.Models.ResponseModels.HomePage
 {
-    public class HomePageViewModel
+    public sealed class HomePageViewModel
     {
         public IDictionary<string, IEnumerable<DataPoint>> InstantTPS { get; set; }
         public IEnumerable<ProviderInfo> ProviderData { get; set; }

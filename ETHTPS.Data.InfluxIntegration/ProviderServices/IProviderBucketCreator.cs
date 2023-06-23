@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices
+﻿namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices
 {
     public interface IBucketCreator
     {

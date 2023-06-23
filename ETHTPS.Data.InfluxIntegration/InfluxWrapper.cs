@@ -1,11 +1,13 @@
-﻿using Castle.Components.DictionaryAdapter.Xml;
+﻿
+using System.Diagnostics;
 
 using ETHTPS.Configuration;
 using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.Extensions;
+using ETHTPS.Data.Core.Extensions.DateTimeExtensions;
 using ETHTPS.Data.Integrations.InfluxIntegration.Extensions;
-using ETHTPS.Data.Core.Models;
-using ETHTPS.Data.Core.Models.DataEntries;
+using ETHTPS.Data.Integrations.InfluxIntegration.Mappers;
 
 using Flux.Net;
 
@@ -14,14 +16,12 @@ using InfluxDB.Client.Api.Domain;
 
 using Microsoft.Extensions.Logging;
 
-using System.Diagnostics;
-
 namespace ETHTPS.Data.Integrations.InfluxIntegration
 {
     /// <summary>
     /// Calling it a wrapper so we don't conflict with the library
     /// </summary>
-    public class InfluxWrapper : IInfluxWrapper
+    public sealed class InfluxWrapper : IInfluxWrapper
     {
         private readonly InfluxWrapperConfiguration _configuration;
         private readonly InfluxDBClient _influxClient;
@@ -43,11 +43,13 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             {
                 Org = _configuration.Org,
                 Token = _configuration.Token,
-                Bucket = _configuration.Bucket,
+                Username = _configuration.Username,
+                Password = _configuration.Password,
+                //Bucket = _configuration.Bucket,
             });
             _writeApi = _influxClient.GetWriteApiAsync();
             _bucketsApi = _influxClient.GetBucketsApi();
-            _queryApi = _influxClient.GetQueryApi();
+            _queryApi = _influxClient.GetQueryApi(new CustomMapper());
             _logger = logger;
         }
 
@@ -74,10 +76,10 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             _logger.LogInformation($"Created InfluxDB bucket [{_configuration.OrgID}].[{name}]");
         }
 
-        public async Task<IEnumerable<string>> GetBucketsAsync() => (await _bucketsApi.FindBucketsAsync(org: _configuration.Org))?.Select(x => x.Name);
+        public async Task<IEnumerable<string>> GetBucketsAsync() => (await _bucketsApi.FindBucketsAsync(org: _configuration.Org))?.Select(x => x.Name) ?? Enumerable.Empty<string>();
 
-        public async Task LogAsync<T>(T entry, string bucket = null)
-            where T : IMeasurement
+        public async Task LogAsync<T>(T entry, string bucket = "")
+            where T : class, IMeasurement
         {
             try
             {
@@ -122,6 +124,9 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             }
         }
 
+        /// <summary>
+        /// Can't set the ID of the organization because it is private for some reason so we have to hack it; *puts sunglasses on*
+        /// </summary>
         class OrganizationHack : Organization
         {
             public OrganizationHack() : base() { }
@@ -137,11 +142,11 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
         {
             await WaitForClientAsync();
             _logger.LogInformation($"Deleting all data in bucket {bucket}...");
-            await _influxClient.GetDeleteApi().Delete(DateTime.Now.Subtract(TimeSpan.FromDays(30)), DateTime.Now, $"_measurement=\"{bucket.ClearBucketNameSuffix().ToLower()}\"", await _bucketsApi.FindBucketByNameAsync(bucket), OrganizationHack.HackOrganization(_configuration.OrgID));
+            await _influxClient.GetDeleteApi().Delete(DateTime.Now.Subtract(TimeSpan.FromDays(30)), DateTime.Now, $"_measurement=\"{bucket.ClearBucketNameSuffix().ToLower()}\"", await _bucketsApi.FindBucketByNameAsync(bucket), OrganizationHack.HackOrganization(_configuration.OrgID ?? string.Empty));
             _logger.LogInformation("Done");
         }
 
-        public async Task LogAsync<T>(T[] entries, string bucket) where T : IMeasurement
+        public async Task LogAsync<T>(T[] entries, string bucket) where T : class, IMeasurement
         {
             await WaitForClientAsync();
             try
@@ -166,7 +171,8 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             }
         }
 
-        public async IAsyncEnumerable<T> GetEntriesBetween<T>(string bucket, string measurement, DateTime start, DateTime end) where T : IMeasurement
+        public async IAsyncEnumerable<T> GetEntriesBetween<T>(string bucket, string measurement, DateTime start, DateTime end)
+            where T : class, IMeasurement
         {
             var query = QueryBuilder.From(bucket)
                             .Filter(x => x.Measurement(measurement))
@@ -179,10 +185,10 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             }
         }
 
-        public IAsyncEnumerable<T> GetEntriesForPeriod<T>(string bucket, string measurement, TimeInterval period) where T : IMeasurement => GetEntriesBetween<T>(bucket, measurement, DateTime.Now - period.ExtractTimeGrouping().ToTimeSpan(), DateTime.Now);
+        public IAsyncEnumerable<T> GetEntriesForPeriod<T>(string bucket, string measurement, TimeInterval period) where T : class, IMeasurement => GetEntriesBetween<T>(bucket, measurement, DateTime.Now - period.ExtractTimeGrouping().ToTimeSpan(), DateTime.Now);
 
         public async IAsyncEnumerable<T> QueryAsyncEnumerable<T>(string query)
-             where T : IMeasurement
+             where T : class, IMeasurement
         {
             await WaitForClientAsync();
             await foreach (var entry in _queryApi.QueryAsyncEnumerable<T>(query))
@@ -191,12 +197,54 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             }
         }
 
-        public async Task<IEnumerable<T>> QueryAsync<T>(string query, IDomainObjectMapper mapper)
-            where T : IMeasurement
+        public async Task<IEnumerable<T>> QueryAsync<T>(string query)
+            where T : class, IMeasurement
         {
             await WaitForClientAsync();
-            var table = await _influxClient.GetQueryApi().QueryAsync(query, typeof(T), org: _configuration.Org);
-            return await _queryApi.QueryAsync<T>(query);
+            var result = QueryAsyncEnumerable<T>(query);
+            return result.ToBlockingEnumerable();
         }
+
+        public async IAsyncEnumerable<TMeasurement> GetEntriesBetween<TMeasurement>(string bucket, string measurement, DateTime start, DateTime end, string groupPeriod)
+            where TMeasurement : class, IMeasurement
+        {
+            var query = $"from(bucket: \"{bucket}\")\r\n  |> range(start: {start.ToInfluxDateTime()}, stop: {end.ToInfluxDateTime()})\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"{measurement}\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"gasused\" or r[\"_field\"] == \"blocknumber\" or r[\"_field\"] == \"transactioncount\")\r\n  |> aggregateWindow(every: {groupPeriod}, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")";
+            await WaitForClientAsync();
+            await foreach (var entry in _queryApi.QueryAsyncEnumerable<TMeasurement>(query))
+            {
+                yield return entry;
+            }
+        }
+
+        public async Task<IEnumerable<TMeasurement>> GetEntriesBetweenAsync<TMeasurement>(string bucket, string measurement, DateTime start, DateTime end, string groupPeriod)
+            where TMeasurement : class, IMeasurement
+        {
+            var query = $"from(bucket: \"{bucket}\")\r\n  |> range(start: {start.ToInfluxDateTime()}, stop: {end.ToInfluxDateTime()})\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"{measurement}\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"gasused\" or r[\"_field\"] == \"blocknumber\" or r[\"_field\"] == \"transactioncount\")\r\n  |> aggregateWindow(every: {groupPeriod}, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")";
+            await WaitForClientAsync();
+            return await QueryAsync<TMeasurement>(query);
+        }
+
+        public async IAsyncEnumerable<TMeasurement> GetEntriesBetween<TMeasurement>(string bucket, string measurement, string providerName, DateTime start, DateTime end)
+                where TMeasurement : class, IMeasurement
+        {
+            var query = $"from(bucket: \"{bucket}\")\r\n  |> range(start: {start.ToInfluxDateTime()}, stop: {end.ToInfluxDateTime()})\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"{measurement}\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"gasused\" or r[\"_field\"] == \"blocknumber\" or r[\"_field\"] == \"transactioncount\")\r\n   |> filter(fn: (r) => r[\"provider\"] == \"{providerName}\")\r\n  |> aggregateWindow(every: 1{(end - start).GetClosestInterval().ExtractTimeGrouping().Next().ToTimeSpan().ToFluxTimeUnit()}, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")";
+            await WaitForClientAsync();
+            await foreach (var entry in _queryApi.QueryAsyncEnumerable<TMeasurement>(query))
+            {
+                yield return entry;
+            }
+        }
+
+        public IAsyncEnumerable<TMeasurement> GetEntriesForPeriod<TMeasurement>(string bucket, string measurement, string providerName, TimeInterval period)
+            where TMeasurement : class, IMeasurement => GetEntriesBetween<TMeasurement>(bucket, measurement, providerName, DateTime.Now - period.ExtractTimeGrouping().ToTimeSpan(), DateTime.Now);
+
+        public async Task<IEnumerable<TMeasurement>> GetEntriesBetweenAsync<TMeasurement>(string bucket, string measurement, string providerName, DateTime start, DateTime end)
+            where TMeasurement : class, IMeasurement
+        {
+            var query = $"from(bucket: \"{bucket}\")\r\n  |> range(start: {start.ToInfluxDateTime()}, stop: {end.ToInfluxDateTime()})\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"{measurement}\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"gasused\" or r[\"_field\"] == \"blocknumber\" or r[\"_field\"] == \"transactioncount\")\r\n   |> filter(fn: (r) => r[\"provider\"] == \"{providerName}\")\r\n  |> aggregateWindow(every: 1{(end - start).GetClosestInterval().ExtractTimeGrouping().Next().ToTimeSpan().ToFluxTimeUnit()}, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")";
+            await WaitForClientAsync();
+            return await QueryAsync<TMeasurement>(query);
+        }
+        // I'll clean this code another time
     }
 }

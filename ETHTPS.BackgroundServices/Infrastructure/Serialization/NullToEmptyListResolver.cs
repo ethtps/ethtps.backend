@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json.Serialization;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 
+using Newtonsoft.Json.Serialization;
+
 namespace ETHTPS.Services.Infrastructure.Serialization
 {
-    public class NullToEmptyListResolver : DefaultContractResolver
+    public sealed class NullToEmptyListResolver : DefaultContractResolver
     {
         protected override IValueProvider CreateMemberValueProvider(MemberInfo member)
         {
@@ -25,25 +25,25 @@ namespace ETHTPS.Services.Infrastructure.Serialization
             return provider;
         }
 
-        public class EmptyListValueProvider : IValueProvider
+        public sealed class EmptyListValueProvider : IValueProvider
         {
-            private IValueProvider innerProvider;
-            private object defaultValue;
+            private IValueProvider _innerProvider;
+            private object _defaultValue;
 
             public EmptyListValueProvider(IValueProvider innerProvider, Type listType)
             {
-                this.innerProvider = innerProvider;
-                defaultValue = Activator.CreateInstance(listType);
+                this._innerProvider = innerProvider;
+                _defaultValue = Activator.CreateInstance(listType);
             }
 
             public void SetValue(object target, object value)
             {
-                innerProvider.SetValue(target, value ?? defaultValue);
+                _innerProvider.SetValue(target, value ?? _defaultValue);
             }
 
             public object GetValue(object target)
             {
-                return innerProvider.GetValue(target) ?? defaultValue;
+                return _innerProvider.GetValue(target) ?? _defaultValue;
             }
         }
     }

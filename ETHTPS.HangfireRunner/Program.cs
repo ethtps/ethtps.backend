@@ -1,35 +1,64 @@
-using ETHTPS.API.Core.Integrations.MSSQL.Services;
-using ETHTPS.API.DependencyInjection;
-using ETHTPS.API.Security.Core.Authentication;
-using ETHTPS.API.Security.Core.Policies;
-using ETHTPS.Configuration.Extensions;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
-using static ETHTPS.TaskRunner.Constants;
-
-using NLog.Extensions.Hosting;
+using ETHTPS.API.DependencyInjection;
+using ETHTPS.API.Security.Core.Policies;
 using ETHTPS.Configuration;
 using ETHTPS.Data.Integrations.InfluxIntegration;
-using Coravel;
+using ETHTPS.Services.Infrastructure.Messaging;
+using ETHTPS.Services.LiveData;
+using ETHTPS.TaskRunner.BackgroundServices;
+
+using Hangfire;
+
+using NLog.Extensions.Hosting;
+
+using Steeltoe.Common.Http.Discovery;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Consul;
+
+using static ETHTPS.TaskRunner.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.AddServiceDiscovery(options =>
+{
+    options.UseConsul();
+});
 builder.Host.UseNLog();
 var services = builder.Services;
-services.AddDatabaseContext(CURRENT_APP_NAME)
-        .AddDataProviderServices(DatabaseProvider.MSSQL)
+services.AddEssentialServices()
+        .AddDatabaseContext(CURRENT_APP_NAME)
         .AddMixedCoreServices()
         .AddCustomCORSPolicies()
-        .AddAPIKeyAuthenticationAndAuthorization()
-        .AddControllers().AddControllersAsServices();
+        .AddControllers()
+        .AddControllersAsServices();
+
+var runnerType = BackgroundServiceType.Hangfire;
 
 services.AddSwagger()
+        .AddRedisCache()
         .AddScoped<IInfluxWrapper, InfluxWrapper>()
         .AddDataUpdaterStatusService()
         .AddDataServices()
-        .WithStore(DatabaseProvider.InfluxDB)
-        .AddRunner(BackgroundServiceType.Coravel)
-        ;//.RegisterMicroservice(CURRENT_APP_NAME, "Task runner web app");
-
+        .AddRunner(runnerType, CURRENT_APP_NAME, DatabaseProvider.InfluxDB)
+        .WithStore(DatabaseProvider.InfluxDB, CURRENT_APP_NAME)
+        .AddDataProviderServices(DatabaseProvider.InfluxDB)
+        .AddRabbitMQMessagePublisher()
+        .AddScoped<WSAPIPublisher>();
+services.AddHostedService<NewDatapointHandler>(x =>
+{
+    using (var scope = x.CreateScope())
+    {
+        return new NewDatapointHandler(
+        scope.ServiceProvider.GetRequiredService<ILogger<NewDatapointHandler>>(),
+        scope.ServiceProvider.GetRequiredService<IDBConfigurationProvider>(),
+        scope.ServiceProvider.GetRequiredService<IMessagePublisher>());
+    }
+});
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    //scope.ServiceProvider.GetRequiredService<EthtpsContext>().DeleteAllJobsAsync().Wait();
+}
 
 if (!app.Environment.IsDevelopment())
 {
@@ -37,8 +66,8 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseStaticFiles();
 app.UseRouting();
+app.UseHangfireDashboard();
 app.ConfigureSwagger();
-app.UseAuthorization();
+app.UseRunner(runnerType);
 app.MapControllers();
-app.UseRunner(BackgroundServiceType.Coravel);
 app.Run();

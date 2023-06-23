@@ -1,17 +1,21 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.ChartData;
+﻿using System.Threading.Tasks;
+
+using ETHTPS.API.BIL.Infrastructure.Services.ChartData;
+using ETHTPS.API.Core.Attributes;
 using ETHTPS.API.Core.Controllers;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Data.Core.Models.ResponseModels.ChartData.StackedChart;
 using ETHTPS.Data.Core.Models.ResponseModels.ChartData.Streamchart;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-using System.Linq;
 
 namespace ETHTPS.API.Controllers
 {
     [Route("/api/v3/ChartData/[action]")]
-    public class ChartDataController : APIControllerBase
+    [Authorize]
+    [ApiController]
+    public sealed class ChartDataController : APIControllerBase
     {
         private readonly IChartDataServiceservice _chartDataServiceservice;
 
@@ -21,15 +25,17 @@ namespace ETHTPS.API.Controllers
         }
 
         [HttpGet]
-        public StreamchartModel GetStreamchartData([FromQuery] ChartDataRequestModel model)
+        [TTL(5)]
+        public async Task<StreamchartModel> GetStreamchartDataAsync([FromQuery] ChartDataRequestModel model)
         {
-            return _chartDataServiceservice.GetStreamchartData(model);
+            return await _chartDataServiceservice.GetStreamchartDataAsync(model);
         }
 
         [HttpGet]
-        public StackedChartModel GetStackedChartData([FromQuery] ChartDataRequestModel model)
+        [TTL(5)]
+        public async Task<StackedChartModel> GetStackedChartDataAsync([FromQuery] ChartDataRequestModel model)
         {
-            return _chartDataServiceservice.GetStackedChartData(model);
+            return await _chartDataServiceservice.GetStackedChartDataAsync(model);
         }
     }
 }

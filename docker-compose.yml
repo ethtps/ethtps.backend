@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  ethtps.taskrunner:
+    env_file: .env
+    image: ${DOCKER_REGISTRY-}ethtpstaskrunner
+    build:
+      context: .
+      dockerfile: ETHTPS.HangfireRunner/Dockerfile
+
+  ethtps.api:
+    env_file: .env
+    image: ${DOCKER_REGISTRY-}ethtpsapi
+    build:
+      context: .
+      dockerfile: ETHTPS.API/Dockerfile
+

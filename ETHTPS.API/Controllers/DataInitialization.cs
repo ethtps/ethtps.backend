@@ -1,22 +1,22 @@
 ﻿using ETHTPS.API.Core.Controllers;
-using ETHTPS.Configuration.Database;
-using ETHTPS.Data.Core.Models;
+using ETHTPS.Configuration.Database.Initialization;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Controllers
 {
 #if DEBUG
     [Route("api/v3/[controller]")]
-    public class DataInitialization : APIControllerBase
+    [Authorize]
+    [ApiController]
+    public sealed class DataInitialization : APIControllerBase
     {
         private readonly PublicDataInitializer _publicDataInitializer;
-        private readonly PrivateDataInitializer _privateDataInitializer;
 
-        public DataInitialization(PublicDataInitializer publicDataInitializer, PrivateDataInitializer privateDataInitializer)
+        public DataInitialization(PublicDataInitializer publicDataInitializer)
         {
             _publicDataInitializer = publicDataInitializer;
-            _privateDataInitializer = privateDataInitializer;
         }
 
         [Route("[action]")]
@@ -24,7 +24,6 @@ namespace ETHTPS.API.Controllers
         public IActionResult Initialize()
         {
             _publicDataInitializer.Initialize();
-            _privateDataInitializer.Initialize();
             return Created(string.Empty, null);
         }
     }

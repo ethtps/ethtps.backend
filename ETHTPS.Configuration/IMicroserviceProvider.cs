@@ -2,8 +2,8 @@
 {
     public interface IMicroserviceProvider
     {
-        IEnumerable<IMicroservice> GetMicroservices();
+        IEnumerable<IMicroservice>? GetMicroservices();
         void AddMicroservice(string name, string? description);
-        int GetMicroserviceID(string name, bool addIfItDoesntExist);
+        int? GetMicroserviceID(string name, bool addIfItDoesntExist);
     }
 }

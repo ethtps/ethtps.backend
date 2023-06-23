@@ -1,17 +1,21 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
-using ETHTPS.Data.Core;
-using ETHTPS.Data.Core.Models.Queries.Data.Requests;
-
-using Microsoft.AspNetCore.Mvc;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
+using ETHTPS.API.Core.Attributes;
+using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Data.Core.Models.Queries.Data.Requests;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Controllers
 {
     [Route("/api/v3/BlockInfo/[action]")]
-    public class BlockInfoController : Controller
+    [ApiController]
+    [Authorize]
+    public sealed class BlockInfoController : ControllerBase
     {
         private readonly IAsyncHistoricalBlockInfoProvider _asyncHistoricalBlockInfoProvider;
 
@@ -21,12 +25,14 @@ namespace ETHTPS.API.Controllers
         }
 
         [HttpGet]
+        [TTL(10)]
         public async Task<IEnumerable<IBlock>> GetBlocksBetweenAsync(ProviderQueryModel model, DateTime start, DateTime end)
         {
             return await _asyncHistoricalBlockInfoProvider.GetBlocksBetweenAsync(model, start, end);
         }
 
         [HttpGet]
+        [TTL(10)]
         public async Task<IEnumerable<IBlock>> GetLatestBlocksAsync(ProviderQueryModel model, string period)
         {
             var result = TryParse(period);

@@ -1,11 +1,11 @@
-﻿using ETHTPS.Data.Core.Models.Pages.Chart;
-using ETHTPS.Data.ResponseModels;
+﻿using System.Collections.Generic;
 
-using System.Collections.Generic;
+using ETHTPS.Data.Core.Models.Pages.Chart;
+using ETHTPS.Data.Core.Models.ResponseModels;
 
 namespace ETHTPS.Data.Core.Models.Pages.HomePage
 {
-    public class HomePageResponseModel : ResponseModelWithChartBase
+    public sealed class HomePageResponseModel : ResponseModelWithChartBase
     {
         public IDictionary<string, object> MaxData { get; set; }
         public IDictionary<string, object> InstantData { get; set; }

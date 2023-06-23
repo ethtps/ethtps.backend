@@ -1,17 +1,15 @@
-﻿using ETHTPS.Data.Integrations.MSSQL;
-using ETHTPS.Services.Attributes;
-using ETHTPS.Services.BlockchainServices;
+﻿using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Services.Ethereum.Starkware.API.Models;
-
-using Microsoft.Extensions.Configuration;
 
 namespace ETHTPS.Services.Ethereum.Starkware
 {
     [Provider("Sorare")]
-    [RunsEvery(CronConstants.Every30s)]
-    public class SorareBlockInfoProvider : StarkwareBlockInfoProviderBase
+    [RunsEvery(CronConstants.EVERY_30_S)]
+    public sealed class SorareBlockInfoProvider : StarkwareBlockInfoProviderBase
     {
-        public SorareBlockInfoProvider(EthtpsContext context, IConfiguration configuration) : base(Products.Sorare, context, configuration)
+        public SorareBlockInfoProvider(EthtpsContext context, IDBConfigurationProvider configuration) : base(Products.Sorare, context, configuration)
         {
         }
     }

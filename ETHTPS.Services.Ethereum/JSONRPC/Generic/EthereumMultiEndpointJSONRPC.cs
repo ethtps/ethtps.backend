@@ -1,63 +1,58 @@
 ﻿
-using ETHTPS.API.BIL.Infrastructure.Services.BlockInfo;
-using ETHTPS.Data.Core.Models.DataEntries;
-using ETHTPS.Services.Attributes;
-using ETHTPS.Services.BlockchainServices;
-
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-using static System.Net.Mime.MediaTypeNames;
+using ETHTPS.Configuration;
+using ETHTPS.Data.Core.Attributes;
+using ETHTPS.Data.Core.BlockInfo;
+using ETHTPS.Data.Core.Models.DataEntries;
+
+using Microsoft.Extensions.Logging;
 
 namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
 {
     [Provider("Ethereum")]
-    [RunsEvery(CronConstants.Every5s)]
-    public class EthereumMultiEndpointJSONRPC : IHTTPBlockInfoProvider
+    [Obsolete("Implementation not adapted to use IDBConfigurationProvider", true)]
+    [Disabled]
+    [RunsEvery(CronConstants.EVERY_5_S)]
+    public sealed class EthereumMultiEndpointJSONRPC : BlockInfoProviderBase
     {
         private readonly IEnumerable<(IHTTPBlockInfoProvider Provider, int FailureCount)> _children;
-        private static Random _random = new Random();
-        private const int BLACKLIST_AFTER = 5;
-        private readonly string[] _endpoints;
+        private static Random _random = new();
+        private const int _BLACKLIST_AFTER = 5;
+        private readonly string[] _endpoints = Array.Empty<string>();
         private readonly int _totalChildren;
-        private int _currentChildIndex = 0;
         private readonly ILogger<EthereumMultiEndpointJSONRPC> _logger;
-        public double BlockTimeSeconds { get; set; }
 
-        public EthereumMultiEndpointJSONRPC(IConfiguration configuration, ILogger<EthereumMultiEndpointJSONRPC> logger)
+        public EthereumMultiEndpointJSONRPC(IDBConfigurationProvider configuration, ILogger<EthereumMultiEndpointJSONRPC> logger) : base(configuration, "Ethereum")
         {
-            _endpoints = configuration.GetSection("MultiEndpointJSONRPC").GetSection("Ethereum").Get<string[]>();
-            _children = _endpoints.Select(x => (Provider: (IHTTPBlockInfoProvider)(new EthereumGenericJSONRPCBlockInfoProvider(x)), FailureCount: 0));
+            _children = _endpoints.Select(x => (Provider: (IHTTPBlockInfoProvider)(new EthereumGenericJSONRPCBlockInfoProvider(configuration)), FailureCount: 0));
             _totalChildren = _endpoints.Length;
             _logger = logger;
         }
 
-        public async Task<Block> GetLatestBlockInfoAsync()
+        public override Task<Block> GetLatestBlockInfoAsync()
         {
             Block result = default;
             for (int i = 0; i < _totalChildren; i++)
             {
-                if (result != null) return result;
+                if (result != null) return Task.FromResult(result);
             }
-            return result;
+            return Task.FromResult(result);
         }
 
-        public async Task<Block> GetBlockInfoAsync(int blockNumber)
+        public override async Task<Block> GetBlockInfoAsync(int blockNumber)
         {
             Block result = default;
             int c = 0;
             do
             {
                 var next = _children.ElementAt(_random.Next(_totalChildren));
-                if (next.FailureCount >= BLACKLIST_AFTER)
+                if (next.FailureCount >= _BLACKLIST_AFTER)
                 {
-                    _logger.LogInformation("Blacklist updated. New size: " + _children.Count(x => x.FailureCount >= BLACKLIST_AFTER));
+                    _logger.LogInformation("Blacklist updated. New size: " + _children.Count(x => x.FailureCount >= _BLACKLIST_AFTER));
                     continue;
                 }
                 result = await next.Provider.GetBlockInfoAsync(blockNumber);
@@ -75,14 +70,14 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
             while (result == null && ++c < _totalChildren);
             return result;
         }
-        public async Task<Block> GetBlockInfoAsync(DateTime time)
+        public override Task<Block> GetBlockInfoAsync(DateTime time)
         {
             Block result = default;
             for (int i = 0; i < _totalChildren; i++)
             {
-                if (result != null) return result;
+                if (result != null) return Task.FromResult(result);
             }
-            return result;
+            return Task.FromResult(result);
         }
     }
 }

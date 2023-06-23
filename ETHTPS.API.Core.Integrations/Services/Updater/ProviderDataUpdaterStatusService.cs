@@ -1,11 +1,11 @@
-﻿using ETHTPS.Data.Core.Models.DataUpdater;
-using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.ProviderSpecific;
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater.ProviderSpecific.TypeSpecific;
+using ETHTPS.Data.Core.Models.DataUpdater;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
 {
-    public class ProviderDataUpdaterStatusService : IProviderDataUpdaterStatusService
+    public sealed class ProviderDataUpdaterStatusService : IProviderDataUpdaterStatusService
     {
         private readonly IDataUpdaterStatusService _statusService;
 
@@ -18,13 +18,14 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
         public static IProviderDataUpdaterStatusService From(IDataUpdaterStatusService statusService, string provider) => new ProviderDataUpdaterStatusService(statusService, provider);
 
         public string ProviderName { get; private set; }
+        public bool? Enabled => _statusService.Enabled;
 
-        public IEnumerable<LiveDataUpdaterStatus> GetAllStatuses()
+        public IEnumerable<LiveDataUpdaterStatus?> GetAllStatuses()
         {
             return _statusService.GetAllStatuses();
         }
 
-        public IEnumerable<LiveDataUpdaterStatus> GetStatusFor(string provider)
+        public IEnumerable<LiveDataUpdaterStatus?> GetStatusFor(string provider)
         {
             return _statusService.GetStatusFor(provider);
         }
@@ -77,5 +78,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services.Updater
         {
             return _statusService.GetLastRunTimeFor(provider, updaterType);
         }
+
+        public async Task<IEnumerable<DataUpdaterDTO>> GetAllAsync() => (await _statusService.GetAllAsync()).Where(x => x.Provider == ProviderName);
     }
 }
