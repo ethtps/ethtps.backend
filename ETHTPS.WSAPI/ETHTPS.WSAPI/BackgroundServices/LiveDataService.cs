@@ -36,7 +36,7 @@ namespace ETHTPS.WSAPI.BackgroundServices
         {
             _scope = services.CreateScope();
             _logger = logger;
-            var configurationProvider = _scope.ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
+            var configurationProvider = _scope.ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>();
             _hubContext = _scope.ServiceProvider.GetRequiredService<IHubContext<LiveDataHub>>();
 
             _subscriptionService = new RabbitMQSubscriptionService(new RabbitMQSubscriptionConfig()

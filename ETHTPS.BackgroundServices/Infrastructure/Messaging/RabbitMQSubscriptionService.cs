@@ -7,18 +7,17 @@ namespace ETHTPS.Services.Infrastructure.Messaging
 {
     public class RabbitMQSubscriptionService : IRabbitMQSubscriptionService
     {
-        private readonly string _queueName;
         private readonly IConnection _connection;
         public IModel Channel { get; private set; }
 
         public RabbitMQSubscriptionService(RabbitMQSubscriptionConfig config)
         {
-            _queueName = config.QueueName;
+            var queueName = config.QueueName;
 
-            var factory = new ConnectionFactory() { HostName = config.Host };
+            var factory = new ConnectionFactory() { HostName = string.IsNullOrWhiteSpace(config.Host) ? RabbitMQSubscriptionConfig.DEFAULT_HOST_NAME : config.Host };
             _connection = factory.CreateConnection();
             Channel = _connection.CreateModel();
-            Channel.QueueDeclare(queue: _queueName,
+            Channel.QueueDeclare(queue: string.IsNullOrWhiteSpace(queueName) ? RabbitMQSubscriptionConfig.DEFAULT_QUEUE_NAME : queueName,
                                   durable: config.Durable,
                                   exclusive: config.Exclusive,
                                   autoDelete: config.AutoDelete,
@@ -40,7 +39,7 @@ namespace ETHTPS.Services.Infrastructure.Messaging
             {
                 OnConsumerUnregistered(ea);
             };
-            Channel.BasicConsume(queue: _queueName,
+            Channel.BasicConsume(queue: queueName,
                                   autoAck: config.AutoAck,
                                   consumer: consumer);
         }

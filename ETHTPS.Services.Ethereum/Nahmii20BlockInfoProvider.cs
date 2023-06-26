@@ -20,7 +20,7 @@ namespace ETHTPS.Services.Ethereum
     public sealed class Nahmii20BlockInfoProvider : BlockInfoProviderBase
     {
 
-        public Nahmii20BlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Nahmii 2.0")
+        public Nahmii20BlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "Nahmii 2.0")
         {
 
         }

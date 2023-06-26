@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
 {
     [Provider("Ethereum")]
-    [Obsolete("Implementation not adapted to use IDBConfigurationProvider", true)]
+    [Obsolete("Implementation not adapted to use DBConfigurationProviderWithCache", true)]
     [Disabled]
     [RunsEvery(CronConstants.EVERY_5_S)]
     public sealed class EthereumMultiEndpointJSONRPC : BlockInfoProviderBase
@@ -26,7 +26,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
         private readonly int _totalChildren;
         private readonly ILogger<EthereumMultiEndpointJSONRPC> _logger;
 
-        public EthereumMultiEndpointJSONRPC(IDBConfigurationProvider configuration, ILogger<EthereumMultiEndpointJSONRPC> logger) : base(configuration, "Ethereum")
+        public EthereumMultiEndpointJSONRPC(DBConfigurationProviderWithCache configuration, ILogger<EthereumMultiEndpointJSONRPC> logger) : base(configuration, "Ethereum")
         {
             _children = _endpoints.Select(x => (Provider: (IHTTPBlockInfoProvider)(new EthereumGenericJSONRPCBlockInfoProvider(configuration)), FailureCount: 0));
             _totalChildren = _endpoints.Length;

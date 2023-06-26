@@ -16,7 +16,7 @@ namespace ETHTPS.Services.Ethereum
     public sealed class VoyagerBlockInfoProvider : BlockInfoProviderBase
     {
 
-        public VoyagerBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Starknet")
+        public VoyagerBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "Starknet")
         {
         }
 

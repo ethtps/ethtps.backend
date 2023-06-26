@@ -62,13 +62,6 @@ public sealed class ExternalWebsiteCategoryService : EFCoreCRUDServiceBase<Exter
     }
 }
 
-public sealed class ProviderLinksService : EFCoreCRUDServiceBase<ProviderLink>
-{
-    public ProviderLinksService(EthtpsContext context) : base(context.ProviderLinks ?? throw new ArgumentNullException("ProviderLinks"), context)
-    {
-    }
-}
-
 public sealed class MicroservicesService : EFCoreCRUDServiceBase<Microservice>
 {
     public MicroservicesService(ConfigurationContext context) : base(context.Microservices ?? throw new ArgumentNullException("Microservices"), context)

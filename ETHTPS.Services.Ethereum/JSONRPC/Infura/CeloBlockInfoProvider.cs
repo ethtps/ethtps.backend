@@ -7,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
     [RunsEvery(CronConstants.EVERY_30_S)]
     public sealed class CeloBlockInfoProvider : InfuraBlockInfoProviderBase
     {
-        public CeloBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Celo")
+        public CeloBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "Celo")
         {
         }
     }

@@ -7,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Implementations
     [RunsEvery(CronConstants.EVERY_5_S)]
     public sealed class BobaNetworkJSONRPCBlockInfoProvider : JSONRPCBlockInfoProviderBase
     {
-        public BobaNetworkJSONRPCBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Boba Network")
+        public BobaNetworkJSONRPCBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "Boba Network")
         {
         }
     }

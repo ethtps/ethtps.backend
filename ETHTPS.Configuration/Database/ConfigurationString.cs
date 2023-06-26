@@ -10,6 +10,16 @@ public partial class ConfigurationString : IConfigurationString
         Name = string.Empty,
         Value = string.Empty
     };
+
+    public static ConfigurationString From(IConfigurationString x) => new()
+    {
+        Name = x.Name,
+        Value = x.Value,
+        IsSecret = x.IsSecret,
+        IsEncrypted = x.IsEncrypted,
+        EncryptionAlgorithmOrHint = x.EncryptionAlgorithmOrHint,
+    };
+
     public int Id { get; set; }
 
     public string Name { get; set; } = null!;

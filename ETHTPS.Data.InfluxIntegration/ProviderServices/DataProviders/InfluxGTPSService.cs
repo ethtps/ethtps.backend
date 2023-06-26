@@ -1,5 +1,5 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
+﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices.GTPS;
+using ETHTPS.Core;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Models.DataPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;

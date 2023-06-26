@@ -10,7 +10,7 @@ namespace ETHTPS.Services.Ethereum.Scan.Implementations
     [Obsolete("Use JSONRPC.PolygonBlockInfoProvider instead", true)]
     public sealed class PolygonScanBlockInfoProvider : ScanBlockInfoProviderBase
     {
-        public PolygonScanBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Polygonscan")
+        public PolygonScanBlockInfoProvider(DBConfigurationProviderWithCache configuration) : base(configuration, "Polygonscan")
         {
         }
     }

@@ -7,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.Scan.Implementations
     [Disabled]
     public sealed class BSCScanBlockInfoProvider : ScanBlockInfoProviderBase
     {
-        public BSCScanBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "BSCScan")
+        public BSCScanBlockInfoProvider(DBConfigurationProviderWithCache configuration) : base(configuration, "BSCScan")
         {
         }
     }

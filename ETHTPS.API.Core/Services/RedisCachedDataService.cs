@@ -1,5 +1,4 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
-using ETHTPS.Data.Core;
+﻿using ETHTPS.Core;
 
 using Newtonsoft.Json;
 
@@ -11,14 +10,15 @@ namespace ETHTPS.API.Core.Services
 {
     public sealed class RedisCachedDataService : IRedisCacheService
     {
-        private readonly IConnectionMultiplexer _connectionMultiplexer;
         private readonly IDatabase _database;
         private readonly ILogger? _logger;
-
+        private readonly JsonSerializerSettings _serializerSettings = new()
+        {
+            ContractResolver = new NoVirtualPropertiesResolver()
+        };
         public RedisCachedDataService(IConnectionMultiplexer connectionMultiplexer, ILogger? logger = null)
         {
-            _connectionMultiplexer = connectionMultiplexer;
-            _database = _connectionMultiplexer.GetDatabase();
+            _database = connectionMultiplexer.GetDatabase();
             _logger = logger;
         }
 
@@ -39,7 +39,7 @@ namespace ETHTPS.API.Core.Services
                     });
                 }
             }
-            return default(T);
+            return default;
         }
 
         public T? GetData<T>(string key)
@@ -74,13 +74,12 @@ namespace ETHTPS.API.Core.Services
         public async Task<bool> SetDataAsync<T>(string key, T value)
         {
             if (value == null || string.IsNullOrWhiteSpace(key)) return false;
-            return await SetDataAsync(key, JsonConvert.SerializeObject(value));
+            return await SetDataAsync(key, JsonConvert.SerializeObject(value, _serializerSettings));
         }
 
         public async Task<bool> SetDataAsync<T>(T value) where T : ICachedKey
         {
-            if (value == null) return false;
-            return await SetDataAsync(value.ToCacheKey(), JsonConvert.SerializeObject(value));
+            return await SetDataAsync(value.ToCacheKey(), JsonConvert.SerializeObject(value, _serializerSettings));
         }
 
         public async Task<bool> SetDataAsync(string key, string value, TimeSpan expiration)
@@ -89,16 +88,22 @@ namespace ETHTPS.API.Core.Services
             return await _database.StringSetAsync(key, value, expiration);
         }
 
+        public bool SetData<T>(string key, T value, TimeSpan expiration)
+        {
+            if (value == null || string.IsNullOrWhiteSpace(key) || expiration.TotalMilliseconds <= 0) return false;
+            return _database.StringSet(key, JsonConvert.SerializeObject(value, _serializerSettings), expiration);
+        }
+
         public async Task<bool> SetDataAsync<T>(string key, T value, TimeSpan expiration)
         {
             if (value == null || string.IsNullOrWhiteSpace(key) || expiration.TotalMilliseconds <= 0) return false;
-            return await SetDataAsync(key, JsonConvert.SerializeObject(value), expiration);
+            return await SetDataAsync(key, JsonConvert.SerializeObject(value, _serializerSettings), expiration);
         }
 
         public async Task<bool> SetDataAsync<T>(T value, TimeSpan expiration) where T : ICachedKey
         {
-            if (value == null || expiration.TotalMilliseconds <= 0) return false;
-            return await SetDataAsync(value.ToCacheKey(), JsonConvert.SerializeObject(value), expiration);
+            if (expiration.TotalMilliseconds <= 0) return false;
+            return await SetDataAsync(value.ToCacheKey(), JsonConvert.SerializeObject(value, _serializerSettings), expiration);
         }
 
         public async Task<TimeSpan?> GetTimeToLiveAsync(string key)

@@ -7,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
     [RunsEvery(CronConstants.EVERY_13_S)]
     public sealed class ArbitrumBlockInfoProvider : InfuraBlockInfoProviderBase
     {
-        public ArbitrumBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Arbitrum One")
+        public ArbitrumBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "Arbitrum One")
         {
         }
     }

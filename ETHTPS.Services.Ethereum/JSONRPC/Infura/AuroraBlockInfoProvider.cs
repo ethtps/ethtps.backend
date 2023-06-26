@@ -7,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
     [RunsEvery(CronConstants.EVERY_30_S)]
     public sealed class AuroraBlockInfoProvider : InfuraBlockInfoProviderBase
     {
-        public AuroraBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Aurora")
+        public AuroraBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "Aurora")
         {
         }
     }

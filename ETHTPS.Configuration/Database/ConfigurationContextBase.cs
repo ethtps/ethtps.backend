@@ -69,5 +69,25 @@ namespace ETHTPS.Configuration.Database
                     new SqlParameter("@EnvironmentName", environmentName))
                 .ToList();
         }
+
+        public List<ConfigurationString> GetConfigurationStringsOfMicroservice(string microserviceName, string environmentName)
+        {
+            var parameters = new object[]
+            {
+
+                new SqlParameter("@MicroserviceName", microserviceName),
+                new SqlParameter("@EnvironmentName", environmentName)
+            };
+            return Set<ConfigurationString>()
+                .FromSqlRaw("EXEC [Configuration].[GetConfigurationStringsOfMicroservice] @MicroserviceName, @EnvironmentName", parameters)
+                .AsEnumerable().Select(x => new ConfigurationString()
+                {
+                    Name = x.Name,
+                    Value = x.Value,
+                    IsSecret = x.IsSecret,
+                    IsEncrypted = x.IsEncrypted,
+                    EncryptionAlgorithmOrHint = x.EncryptionAlgorithmOrHint
+                }).ToList();
+        }
     }
 }

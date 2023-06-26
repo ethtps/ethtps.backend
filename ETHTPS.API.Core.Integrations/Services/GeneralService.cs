@@ -172,7 +172,10 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
 
         public async Task<IEnumerable<string?>> GetUniqueDataYearsAsync(ProviderQueryModel model)
         {
-            IEnumerable<string?>? entries = (await _tpsService.GetAsync(model, TimeInterval.All))[model.Provider]?.Select(x => x.Data.FirstOrDefault()?.Date.Year.ToString())?.OrderBy(x => x)?.Distinct();
+            var value = await _tpsService.GetAsync(model, TimeInterval.All);
+            if (!value.ContainsKey(model.Provider)) return Enumerable.Empty<string?>();
+
+            IEnumerable<string?>? entries = value[model.Provider]?.Select(x => x.Data.FirstOrDefault()?.Date.Year.ToString())?.OrderBy(x => x)?.Distinct();
             var preResult = (entries?.SafeAny(x => x != null)).GetValueOrDefault();
             var e = Enumerable.Empty<string?>();
             return preResult ? (entries ?? e).ToList() : e;

@@ -10,7 +10,6 @@ using ETHTPS.API.Core.Middlewares;
 using ETHTPS.API.DependencyInjection;
 using ETHTPS.API.Security.Core.Authentication;
 using ETHTPS.API.Security.Core.Policies;
-using ETHTPS.Configuration.Database.Initialization;
 using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Services.BackgroundTasks.Recurring.Aggregated;
 using ETHTPS.Services.Infrastructure.Messaging;
@@ -54,14 +53,9 @@ namespace ETHTPS.API
                     .AddCache()
                     .AddScoped<AggregatedEndpointStatsBuilder>()
                     .AddInfluxHistoricalDataProvider()
-                    .AddRedisCache()
                     .AddRabbitMQMessagePublisher()
                     .AddGraphQLSchema<EthtpsContext>();
             services.AddDataUpdaterStatusService();
-
-#if DEBUG
-            services.AddScoped<PublicDataInitializer>();
-#endif
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

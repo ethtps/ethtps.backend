@@ -34,7 +34,6 @@ services.AddEssentialServices()
 var runnerType = BackgroundServiceType.Hangfire;
 
 services.AddSwagger()
-        .AddRedisCache()
         .AddScoped<IInfluxWrapper, InfluxWrapper>()
         .AddDataUpdaterStatusService()
         .AddDataServices()
@@ -43,15 +42,13 @@ services.AddSwagger()
         .AddDataProviderServices(DatabaseProvider.InfluxDB)
         .AddRabbitMQMessagePublisher()
         .AddScoped<WSAPIPublisher>();
-services.AddHostedService<NewDatapointHandler>(x =>
+services.AddHostedService(x =>
 {
-    using (var scope = x.CreateScope())
-    {
-        return new NewDatapointHandler(
+    using var scope = x.CreateScope();
+    return new NewDatapointHandler(
         scope.ServiceProvider.GetRequiredService<ILogger<NewDatapointHandler>>(),
-        scope.ServiceProvider.GetRequiredService<IDBConfigurationProvider>(),
+        scope.ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>(),
         scope.ServiceProvider.GetRequiredService<IMessagePublisher>());
-    }
 });
 var app = builder.Build();
 

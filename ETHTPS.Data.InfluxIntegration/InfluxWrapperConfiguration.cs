@@ -1,5 +1,6 @@
 ﻿using ETHTPS.Configuration;
 using ETHTPS.Configuration.Extensions;
+using ETHTPS.Configuration.Validation.Exceptions;
 
 namespace ETHTPS.Data.Integrations.InfluxIntegration
 {
@@ -13,18 +14,18 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
         public string? Username { get; set; }
         public string? Password { get; set; }
 
-        public static InfluxWrapperConfiguration FromConfigurationProvider(IDBConfigurationProvider configurationProvider)
+        public static InfluxWrapperConfiguration FromConfigurationProvider(DBConfigurationProviderWithCache configurationProvider)
         {
-            Func<string, string?> getConfigurationString = (key) => configurationProvider.GetFirstConfigurationString(key); ;
+            string GetConfigurationString(string key) => configurationProvider.GetFirstConfigurationString(key) ?? throw new ConfigurationStringNotFoundException(key, DBConfigurationProviderWithCache.EntryAppName ?? "ETHTPS.Data.Integrations.InfluxIntegration");
             return new InfluxWrapperConfiguration()
             {
-                Bucket = getConfigurationString("InfluxDB_prod_bucket"),
-                URL = getConfigurationString("InfluxDB_prod_url"),
-                Org = getConfigurationString("InfluxDB_prod_org"),
-                Token = getConfigurationString("InfluxDB_token"),
-                Username = getConfigurationString("InfluxDB_prod_user"),
-                Password = getConfigurationString("InfluxDB_prod_password"),
-                OrgID = getConfigurationString("InfluxDB_prod_orgid")
+                Bucket = GetConfigurationString("InfluxDB_prod_bucket"),
+                URL = GetConfigurationString("InfluxDB_prod_url"),
+                Org = GetConfigurationString("InfluxDB_prod_org"),
+                Token = GetConfigurationString("InfluxDB_token"),
+                Username = GetConfigurationString("InfluxDB_prod_user"),
+                Password = GetConfigurationString("InfluxDB_prod_password"),
+                OrgID = GetConfigurationString("InfluxDB_prod_orgid")
             };
         }
     }

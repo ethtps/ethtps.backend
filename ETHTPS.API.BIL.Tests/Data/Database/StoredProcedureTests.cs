@@ -44,7 +44,7 @@ namespace ETHTPS.Tests.Data.Database
         [Test]
         public async Task InsertOrUpdateConfigurationStringAsync_InsertsOrUpdateConfigurationString()
         {
-            var configurationProvider = ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
+            var configurationProvider = ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>();
             var configurationProviderContext = ServiceProvider.GetRequiredService<ConfigurationContext>();
             string microserviceName = "ETHTPS.Tests";
             string environmentName = "Development";

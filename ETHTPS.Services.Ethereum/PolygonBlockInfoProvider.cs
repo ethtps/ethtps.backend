@@ -8,7 +8,7 @@ namespace ETHTPS.Services.Ethereum
     [Provider("Polygon")]
     public sealed class PolygonBlockInfoProvider : JSONRPCBlockInfoProviderBase, IHTTPBlockInfoProvider
     {
-        public PolygonBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Polygon")
+        public PolygonBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "Polygon")
         {
         }
     }

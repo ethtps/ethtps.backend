@@ -14,7 +14,7 @@ namespace ETHTPS.Services.Ethereum
     public sealed class OMGNetworkBlockInfoProvider : BlockInfoProviderBase
     {
 
-        public OMGNetworkBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "OMG Network")
+        public OMGNetworkBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "OMG Network")
         {
 
         }

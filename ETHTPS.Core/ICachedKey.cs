@@ -1,4 +1,4 @@
-﻿namespace ETHTPS.Data.Core
+﻿namespace ETHTPS.Core
 {
     public interface ICachedKey
     {

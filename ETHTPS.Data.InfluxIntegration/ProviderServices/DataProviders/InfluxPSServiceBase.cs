@@ -1,4 +1,5 @@
 ﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
+using ETHTPS.Core;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Core.Models.DataEntries;

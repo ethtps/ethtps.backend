@@ -29,15 +29,29 @@ namespace ETHTPS.Tests.ConfigurationProviderTests
         [Test]
         public void DependencyInjectionTest()
         {
-            Assert.NotNull(ServiceProvider.GetRequiredService<IDBConfigurationProvider>());
+            Assert.NotNull(ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>());
             Assert.Pass();
+        }
+
+        [Test]
+        public void ReturnsHangfireConnectionString()
+        {
+            var strings = ConfigurationProvider.GetConfigurationStringsForMicroservice("ETHTPS.TaskRunner");
+            if (strings == null)
+            {
+                Assert.That(strings, Is.Not.Null);
+                return;
+            }
+            strings = strings.ToList();
+            Assert.That(strings.Count(), Is.GreaterThan(0));
+            Assert.That(strings.Count(x => x.Name == "HangfireConnectionString"), Is.GreaterThan(1));
         }
 
         [Test]
         public void AddEnvironments_WithNewEnvironment_AddsNewEnvironment()
         {
             // Arrange
-            var provider = ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
+            var provider = ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>();
             var environmentName = "TestEnvironment";
 
             // Act
@@ -52,7 +66,7 @@ namespace ETHTPS.Tests.ConfigurationProviderTests
         public void AddEnvironments_WithExistingEnvironment_DoesNotAddNewEnvironment()
         {
             // Arrange
-            var provider = ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
+            var provider = ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>();
             var environmentName = "Development";
 
             // Act
@@ -67,7 +81,7 @@ namespace ETHTPS.Tests.ConfigurationProviderTests
         public void GetEnvironmentID_WithExistingEnvironment_ReturnsCorrectID()
         {
             // Arrange
-            var provider = ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
+            var provider = ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>();
             var environmentName = "Development";
             var expectedEnvironmentID = ServiceProvider.GetRequiredService<ConfigurationContext>().Environments?.Single(x => x.Name == environmentName).Id;
 

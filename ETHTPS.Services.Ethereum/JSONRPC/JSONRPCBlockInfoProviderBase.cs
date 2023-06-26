@@ -22,7 +22,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC
         private static bool _busy { get; set; }
         private static TimeSpan _timeSinceLastCall => DateTime.Now - _LastCallTime;
 
-        public JSONRPCBlockInfoProviderBase(IDBConfigurationProvider configurationProvider, string providerName) : base(configurationProvider, providerName)
+        public JSONRPCBlockInfoProviderBase(DBConfigurationProviderWithCache configurationProvider, string providerName) : base(configurationProvider, providerName)
         {
         }
 

@@ -31,7 +31,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
         private readonly ILogger<InfluxWrapper> _logger;
         private readonly Stopwatch _stopwatch = new();
 
-        public InfluxWrapper(IDBConfigurationProvider configurationProvider, ILogger<InfluxWrapper> logger) : this(InfluxWrapperConfiguration.FromConfigurationProvider(configurationProvider), logger)
+        public InfluxWrapper(DBConfigurationProviderWithCache configurationProvider, ILogger<InfluxWrapper> logger) : this(InfluxWrapperConfiguration.FromConfigurationProvider(configurationProvider), logger)
         {
 
         }

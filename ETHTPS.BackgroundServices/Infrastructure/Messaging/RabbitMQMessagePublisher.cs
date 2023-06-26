@@ -13,7 +13,7 @@ namespace ETHTPS.Services.Infrastructure.Messaging
     {
         private readonly string? _host;
 
-        public RabbitMQMessagePublisher(IDBConfigurationProvider configurationProvider)
+        public RabbitMQMessagePublisher(DBConfigurationProviderWithCache configurationProvider)
         {
             _host = configurationProvider.GetFirstConfigurationString("RabbitMQ_Host_Dev");
         }
@@ -27,20 +27,18 @@ namespace ETHTPS.Services.Infrastructure.Messaging
         public void PublishMessage(string message, string queue, string host)
         {
             var factory = new ConnectionFactory() { HostName = _host ?? host };
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
-                channel.QueueDeclare(queue: queue,
-                                     false,
-                                     exclusive: false,
-                                     autoDelete: false,
-                                     arguments: null);
-                var body = Encoding.UTF8.GetBytes(message);
-                channel.BasicPublish(exchange: "",
-                                     routingKey: queue,
-                                     basicProperties: null,
-                                     body: body);
-            }
+            using var connection = factory.CreateConnection();
+            using var channel = connection.CreateModel();
+            channel.QueueDeclare(queue: queue,
+                false,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null);
+            var body = Encoding.UTF8.GetBytes(message);
+            channel.BasicPublish(exchange: "",
+                routingKey: queue,
+                basicProperties: null,
+                body: body);
         }
     }
 }

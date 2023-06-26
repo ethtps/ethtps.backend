@@ -3,15 +3,42 @@
     "MicroserviceConfiguration": [
       {
         "Name": "ETHTPS.API.General",
-        "RequiredConfigurationStrings": [ "ConnectionString" ]
+        "RequiredConfigurationStrings": [
+          "ConnectionString",
+          "RabbitMQ_Host_Dev",
+          "InfluxDB_prod_bucket",
+          "InfluxDB_prod_url",
+          "InfluxDB_prod_org",
+          "InfluxDB_token",
+          "InfluxDB_prod_user",
+          "InfluxDB_prod_password",
+          "InfluxDB_prod_orgid",
+          "RabbitMQ_Host_Dev",
+          "HangfireConnectionString"
+        ]
       },
       {
         "Name": "ETHTPS.WSAPI",
-        "RequiredConfigurationStrings": [ "ConnectionString" ]
+        "RequiredConfigurationStrings": [
+          "ConnectionString",
+          "RabbitMQ_Host_Dev"
+        ]
       },
       {
         "Name": "ETHTPS.TaskRunner",
-        "RequiredConfigurationStrings": [ "ConnectionString" ]
+        "RequiredConfigurationStrings": [
+          "ConnectionString",
+          "RabbitMQ_Host_Dev",
+          "InfluxDB_prod_bucket",
+          "InfluxDB_prod_url",
+          "InfluxDB_prod_org",
+          "InfluxDB_token",
+          "InfluxDB_prod_user",
+          "InfluxDB_prod_password",
+          "InfluxDB_prod_orgid",
+          "RabbitMQ_Host_Dev",
+          "HangfireConnectionString"
+        ]
       },
       {
         "Name": "ETHTPS.Configuration.IDBConfigurationProvider",
@@ -20,6 +47,12 @@
       {
         "Name": "ETHTPS.Tests",
         "RequiredConfigurationStrings": [ "ConnectionString" ]
+      },
+      {
+        "Name": "ETHTPS.Services",
+        "RequiredConfigurationStrings": [
+          "ConnectionString"
+        ]
       }
     ],
     "ProviderConfiguration": []

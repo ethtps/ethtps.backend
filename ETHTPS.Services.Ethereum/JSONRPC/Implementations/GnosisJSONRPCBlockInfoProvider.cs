@@ -7,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Implementations
     [RunsEvery(CronConstants.EVERY_5_S)]
     public sealed class GnosisJSONRPCBlockInfoProvider : JSONRPCBlockInfoProviderBase
     {
-        public GnosisJSONRPCBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Gnosis")
+        public GnosisJSONRPCBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "Gnosis")
         {
         }
     }

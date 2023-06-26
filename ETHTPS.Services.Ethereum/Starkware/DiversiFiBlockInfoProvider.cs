@@ -9,7 +9,7 @@ namespace ETHTPS.Services.Ethereum.Starkware
     [RunsEvery(CronConstants.EVERY_30_S)]
     public sealed class DeversiFIHTTPBlockInfoProvider : StarkwareBlockInfoProviderBase
     {
-        public DeversiFIHTTPBlockInfoProvider(EthtpsContext context, IDBConfigurationProvider configuration) : base(Products.DeversiFi, context, configuration)
+        public DeversiFIHTTPBlockInfoProvider(EthtpsContext context, DBConfigurationProviderWithCache configuration) : base(Products.DeversiFi, context, configuration)
         {
         }
     }

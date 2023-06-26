@@ -22,7 +22,7 @@ namespace ETHTPS.Services.Ethereum
         private readonly string _transactionCountSelector = string.Empty;
         private readonly string _dateSelector = string.Empty;
         private readonly string _gasSelector = string.Empty;
-        public XDAIHTTPBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "XDAI")
+        public XDAIHTTPBlockInfoProvider(DBConfigurationProviderWithCache configuration) : base(configuration, "XDAI")
         {
             BlockTimeSeconds = 5.2;
         }

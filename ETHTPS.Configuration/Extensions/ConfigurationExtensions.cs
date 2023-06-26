@@ -1,12 +1,28 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ETHTPS.Core;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ETHTPS.Configuration.Extensions
 {
     public static class ConfigurationExtensions
     {
-        public static string? GetFirstConfigurationString(this IDBConfigurationProvider provider, string key) => provider.GetConfigurationStrings(key)?.FirstOrDefault()?.Value;
+        internal static string? GetFirstConfigurationString(this IDBConfigurationProvider provider, string key) => provider.GetConfigurationStrings(key)?.FirstOrDefault()?.Value;
 
-        public static string? GetFirstConfigurationStringForCurrentEnvironment(this IDBConfigurationProvider provider, string key, string microservice) => provider.GetConfigurationStringsForMicroservice(microservice)?.FirstOrDefault(x => x.Name == key)?.Value;
+        public static string? GetFirstConfigurationString(this DBConfigurationProviderWithCache provider, string key) => provider.GetConfigurationStrings(key)?.FirstOrDefault()?.Value;
+
+        internal static string? GetFirstConfigurationStringForCurrentEnvironment(this IDBConfigurationProvider provider, string key, string microservice) => provider.GetConfigurationStringsForMicroservice(microservice)?.FirstOrDefault(x => x.Name == key)?.Value;
+
+        /// <summary>
+        /// Adds a scoped  <see cref="DBConfigurationProviderWithCache"/> to the service collection. This method should only be called *after* adding an <see cref="IRedisCacheService"/> to the service collection.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddConfigurationProvider(this IServiceCollection services) =>
+            services
+                .AddLogging()
+                .AddScoped<DBConfigurationProvider>()
+                .AddScoped<DBConfigurationProviderWithCache>();
 
         public static void ConfigureEntityPrimaryKey<T>(this ModelBuilder modelBuilder) where T : class
         {

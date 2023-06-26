@@ -17,7 +17,7 @@ namespace ETHTPS.Services.Ethereum.Starkware
         private readonly EthtpsContext _context;
         private readonly StarkwareClient _starkwareClient;
 
-        protected StarkwareBlockInfoProviderBase(string productName, EthtpsContext context, IDBConfigurationProvider configuration) : base(configuration, productName)
+        protected StarkwareBlockInfoProviderBase(string productName, EthtpsContext context, DBConfigurationProviderWithCache configuration) : base(configuration, productName)
         {
             _providerName = productName;
             _context = context;

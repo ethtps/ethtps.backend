@@ -1,9 +1,9 @@
 ﻿using System.Text;
 
-using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.API.DependencyInjection;
 using ETHTPS.Configuration;
 using ETHTPS.Configuration.Extensions;
+using ETHTPS.Core;
 using ETHTPS.Daemon.Infra;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Services.Infrastructure.Messaging;
@@ -65,7 +65,6 @@ namespace ETHTPS.Daemon
                     .AddDatabaseContext("ETHTPS.Tests")
                     .AddMixedCoreServices()
                     .AddRabbitMQMessagePublisher()
-                    .AddRedisCache()
                     .AddSingleton<IRabbitMQSubscriptionService>(x =>
                     {
                         using (var scope = x.CreateScope())
@@ -73,7 +72,7 @@ namespace ETHTPS.Daemon
                             {
                                 AutoAck = false,
                                 QueueName = _queueCorrespondence[Scope],
-                                Host = x.GetRequiredService<IDBConfigurationProvider>().GetFirstConfigurationString("RabbitMQ_Host_Dev")
+                                Host = x.GetRequiredService<DBConfigurationProviderWithCache>().GetFirstConfigurationString("RabbitMQ_Host_Dev")
                             });
                     });
 

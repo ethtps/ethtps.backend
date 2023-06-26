@@ -46,6 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ETHTPS.Core\ETHTPS.Core.csproj" />
     <ProjectReference Include="..\ETHTPS.Utils\ETHTPS.Utils.csproj" />
   </ItemGroup>
 

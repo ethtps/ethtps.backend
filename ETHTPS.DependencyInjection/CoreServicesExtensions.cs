@@ -10,8 +10,8 @@ using ETHTPS.API.BIL.Security.Humanity;
 using ETHTPS.API.Core.Integrations.MSSQL.Services;
 using ETHTPS.API.Core.Integrations.MSSQL.Services.ApplicationData;
 using ETHTPS.API.Security.Core.Humanity.Recaptcha;
-using ETHTPS.Configuration;
 using ETHTPS.Configuration.Database;
+using ETHTPS.Configuration.Extensions;
 using ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProviders;
 using ETHTPS.Services.BlockchainServices.BlockTime;
 
@@ -63,8 +63,9 @@ namespace ETHTPS.API.DependencyInjection
         /// </summary>
         public static IServiceCollection AddEssentialServices(this IServiceCollection services) =>
             services.AddScoped<IHumanityCheckService, RecaptchaVerificationService>()
-            .AddDbContext<ConfigurationContext>(options => options.UseSqlServer(GetConfigurationServiceConnectionString()), ServiceLifetime.Scoped)
-            .AddScoped<IDBConfigurationProvider, DBConfigurationProvider>()
+            .AddDbContext<ConfigurationContext>(options => options.UseSqlServer(GetConfigurationServiceConnectionString()))
+            .AddRedisCache()
+            .AddConfigurationProvider()
             .AddScoped<IWebsiteStatisticsService, WebsiteStatisticsService>();
 
         private static string GetConfigurationServiceConnectionString() => GetEnvVarValue(CONFIGURATION_PROVIDER_CONN_STR);

@@ -22,12 +22,12 @@ namespace ETHTPS.TaskRunner.BackgroundServices
     {
         private readonly RabbitMQSubscriptionService _subscriptionService;
         private readonly ILogger<NewDatapointHandler> _logger;
-        private readonly IDBConfigurationProvider _configurationProvider;
+        private readonly DBConfigurationProviderWithCache _configurationProvider;
         private readonly LatestEntryAggregator<string, L2DataUpdateModel> _latestEntryAggregator = new LatestEntryAggregator<string, L2DataUpdateModel>();
         private readonly IMessagePublisher _messagePublisher;
         private bool _cancel = false;
 
-        public NewDatapointHandler(ILogger<NewDatapointHandler> logger, IDBConfigurationProvider configurationProvider, IMessagePublisher messagePublisher)
+        public NewDatapointHandler(ILogger<NewDatapointHandler> logger, DBConfigurationProviderWithCache configurationProvider, IMessagePublisher messagePublisher)
         {
             _logger = logger;
             _configurationProvider = configurationProvider;

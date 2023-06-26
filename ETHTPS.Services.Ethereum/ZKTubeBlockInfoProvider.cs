@@ -14,7 +14,7 @@ namespace ETHTPS.Services.Ethereum
     public sealed class ZKTubeBlockInfoProvider : BlockInfoProviderBase
     {
 
-        public ZKTubeBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "zkTube")
+        public ZKTubeBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "zkTube")
         {
 
         }

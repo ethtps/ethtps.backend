@@ -97,7 +97,7 @@ namespace ETHTPS.API.DependencyInjection
                 case BackgroundServiceType.Hangfire:
                     using (var scope = app.ApplicationServices.CreateScope())
                     {
-                        var provider = scope.ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
+                        var provider = scope.ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>();
                         string[] queues = (provider.GetConfigurationStrings("HangfireQueue") ?? throw new ConfigurationStringNotFoundException("HangfireQueue", "UseRunner(this IApplicationBuilder app, BackgroundServiceType type)")).Select(x => x.Value).ToArray();
                         if (queues.Count() == 0)
                         {

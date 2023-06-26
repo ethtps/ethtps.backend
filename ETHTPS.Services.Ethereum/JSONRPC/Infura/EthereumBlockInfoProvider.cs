@@ -8,7 +8,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
     [RunsEvery(CronConstants.EVERY_13_S)]
     public sealed class EthereumBlockInfoProvider : InfuraBlockInfoProviderBase
     {
-        public EthereumBlockInfoProvider(IDBConfigurationProvider configurationProvider, EthereumBlockTimeProvider ethereumBlockTimeProvider) : base(configurationProvider, "Ethereum")
+        public EthereumBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider, EthereumBlockTimeProvider ethereumBlockTimeProvider) : base(configurationProvider, "Ethereum")
         {
             BlockTimeSeconds = ethereumBlockTimeProvider.GetBlockTime();
         }

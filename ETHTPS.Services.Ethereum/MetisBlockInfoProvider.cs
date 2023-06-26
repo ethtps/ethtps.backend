@@ -23,7 +23,7 @@ namespace ETHTPS.Services.Ethereum
     public sealed class MetisBlockInfoProvider : BlockInfoProviderBase
     {
 
-        public MetisBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Metis")
+        public MetisBlockInfoProvider(DBConfigurationProviderWithCache configuration) : base(configuration, "Metis")
         {
         }
 

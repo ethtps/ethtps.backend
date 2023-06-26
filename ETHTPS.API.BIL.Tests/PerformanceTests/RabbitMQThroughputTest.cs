@@ -24,7 +24,7 @@ namespace ETHTPS.Tests.PerformanceTests
                 ConnectionFactory? cf = new()
                 {
                     AutomaticRecoveryEnabled = false,
-                    HostName = ServiceProvider.GetRequiredService<IDBConfigurationProvider>().GetFirstConfigurationString("RabbitMQ_Host_Dev") ?? "localhost"
+                    HostName = ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>().GetFirstConfigurationString("RabbitMQ_Host_Dev") ?? "localhost"
                 };
                 _conn = cf.CreateConnection();
                 _ch = _conn.CreateModel();

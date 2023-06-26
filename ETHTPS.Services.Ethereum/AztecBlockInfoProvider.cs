@@ -16,7 +16,7 @@ namespace ETHTPS.Services.Ethereum
     public sealed class AztecBlockInfoProvider : BlockInfoProviderBase
     {
 
-        public AztecBlockInfoProvider(IDBConfigurationProvider provider) : base(provider, "Aztec")
+        public AztecBlockInfoProvider(DBConfigurationProviderWithCache provider) : base(provider, "Aztec")
         {
 
         }

@@ -1,8 +1,7 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
-using ETHTPS.API.Core.Services;
+﻿using ETHTPS.API.Core.Services;
 using ETHTPS.Configuration;
 using ETHTPS.Configuration.Extensions;
-using ETHTPS.Data.Core;
+using ETHTPS.Core;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,7 +23,7 @@ namespace ETHTPS.Tests.ServiceTests
         public void Setup()
         {
             // Initialize the ICachedDataService implementation here.
-            _connectionMultiplexer = ConnectionMultiplexer.Connect(ServiceProvider.GetRequiredService<IDBConfigurationProvider>().GetFirstConfigurationString("RedisServer") ?? "localhost");
+            _connectionMultiplexer = ConnectionMultiplexer.Connect(ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>().GetFirstConfigurationString("RedisServer") ?? "localhost");
             _database = _connectionMultiplexer.GetDatabase();
             _cachedDataService = new RedisCachedDataService(_connectionMultiplexer);
         }

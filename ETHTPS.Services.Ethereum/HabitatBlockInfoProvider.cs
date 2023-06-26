@@ -9,7 +9,7 @@ namespace ETHTPS.Services.Ethereum
     [Disabled]
     public sealed class HabitatBlockInfoProvider : JSONRPCBlockInfoProviderBase
     {
-        public HabitatBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Habitat")
+        public HabitatBlockInfoProvider(DBConfigurationProviderWithCache configuration) : base(configuration, "Habitat")
         {
         }
     }

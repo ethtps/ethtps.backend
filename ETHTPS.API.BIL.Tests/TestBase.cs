@@ -25,7 +25,7 @@ namespace ETHTPS.Tests
     public abstract class TestBase
     {
         protected ServiceProvider ServiceProvider { get; private set; }
-        protected IDBConfigurationProvider ConfigurationProvider => ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
+        protected DBConfigurationProviderWithCache ConfigurationProvider => ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>();
 
         const string APP_NAME = "ETHTPS.Tests";
         const DatabaseProvider _DATABASE_PROVIDER = DatabaseProvider.InfluxDB;
@@ -45,7 +45,6 @@ namespace ETHTPS.Tests
                     .AddScoped<IInfluxWrapper, InfluxWrapper>()
                     .AddScoped<IAsyncHistoricalBlockInfoProvider, HistoricalInfluxProvider>()
                     .AddTransient<IProviderConfigurationService, ProviderConfigurationService>()
-                    .AddRedisCache()
                     .AddRabbitMQMessagePublisher()
                     .AddSingleton<EthereumBlockTimeProvider>()
                     .AddScoped<WSAPIPublisher>()
