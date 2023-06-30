@@ -5,9 +5,29 @@
 /// </summary>
 internal static class Logger
 {
+    static Logger()
+    {
+        Info($"Logger initialization...");
+        Info($"Current time: {DateTime.Now}");
+    }
+
     public static bool LogToFile { get; set; } = true;
 
     public static string LogFileName { get; set; } = "AutoSetup.log";
+
+    public static class LeftPadding
+    {
+        internal static int LeftPad { get; set; } = 0;
+        private static readonly int _incrementAmount = 1;
+        public static char PaddingCharacter { get; set; } = '\t';
+
+        public static void Increment() => LeftPad += _incrementAmount;
+
+        public static void Decrement()
+        {
+            if (LeftPad > 0) LeftPad -= _incrementAmount;
+        }
+    }
 
     /// <summary>
     /// Logs a message with the given log level.
@@ -15,7 +35,8 @@ internal static class Logger
     private static void Log(string level, string message, ConsoleColor color)
     {
         Console.ForegroundColor = color;
-        string output = $"{level}: {DateTime.Now}: {message}";
+        string li = LeftPadding.LeftPad > 0 ? "" : string.Empty;
+        string output = $"{li}{string.Empty.PadLeft(LeftPadding.LeftPad, LeftPadding.PaddingCharacter)}{level} {message}";
         Console.WriteLine(output);
         Console.ResetColor();
 
@@ -39,7 +60,15 @@ internal static class Logger
     /// </summary>
     public static void Info(string message)
     {
-        Log("INFO", message, ConsoleColor.White);
+        Log("ℹ️", message, ConsoleColor.White);
+    }
+
+    /// <summary>
+    /// Logs an "ok" message.
+    /// </summary>
+    public static void Ok(string message)
+    {
+        Log("✔", message, ConsoleColor.White);
     }
 
     /// <summary>
@@ -47,7 +76,7 @@ internal static class Logger
     /// </summary>
     public static void Warn(string message)
     {
-        Log("WARN", message, ConsoleColor.Yellow);
+        Log("❗", message, ConsoleColor.Yellow);
     }
 
     /// <summary>
@@ -55,7 +84,7 @@ internal static class Logger
     /// </summary>
     public static void Error(string message)
     {
-        Log("ERROR", message, ConsoleColor.Red);
+        Log("❌", message, ConsoleColor.Red);
     }
 
     /// <summary>
@@ -63,6 +92,6 @@ internal static class Logger
     /// </summary>
     public static void Debug(string message)
     {
-        Log("DEBUG", message, ConsoleColor.Green);
+        Log("🔧", message, ConsoleColor.Green); // Are you a 🔧 monerator?
     }
 }

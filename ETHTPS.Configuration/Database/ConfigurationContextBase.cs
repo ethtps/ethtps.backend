@@ -7,12 +7,12 @@ namespace ETHTPS.Configuration.Database
 {
     public abstract class ConfigurationContextBase : ContextBase<ConfigurationContext>
     {
-        public ConfigurationContextBase()
+        protected ConfigurationContextBase()
         {
             Database.SetCommandTimeout(TimeSpan.FromSeconds(10));
         }
 
-        public ConfigurationContextBase(DbContextOptions<ConfigurationContext> options)
+        protected ConfigurationContextBase(DbContextOptions<ConfigurationContext> options)
             : base(options)
         {
             Database.AutoTransactionBehavior = AutoTransactionBehavior.WhenNeeded;

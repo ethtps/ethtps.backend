@@ -23,7 +23,7 @@ using static ETHTPS.Data.Core.Extensions.EnvironmentExtensions;
 
 namespace ETHTPS.API.DependencyInjection
 {
-    public static partial class CoreServicesExtensions
+    public static class CoreServicesExtensions
     {
         public static IServiceCollection AddMixedCoreServices(this IServiceCollection services) =>
             services
@@ -68,6 +68,6 @@ namespace ETHTPS.API.DependencyInjection
             .AddConfigurationProvider()
             .AddScoped<IWebsiteStatisticsService, WebsiteStatisticsService>();
 
-        private static string GetConfigurationServiceConnectionString() => GetEnvVarValue(CONFIGURATION_PROVIDER_CONN_STR);
+        public static string GetConfigurationServiceConnectionString() => GetEnvVarValue(CONFIGURATION_PROVIDER_CONN_STR);
     }
 }

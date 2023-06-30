@@ -9,7 +9,7 @@
         private Action? _post;
         private Action? _clean;
 
-        public SetupScriptBuilder(string environment)
+        public SetupScriptBuilder(string environment = "Debug")
         {
             Environment = environment;
         }
@@ -21,9 +21,23 @@
             return this;
         }
 
-        public SetupScriptBuilder AddAction(Action action)
+        public SetupScriptBuilder Add<T>()
+            where T : SetupScript, new()
         {
-            _scripts.Add(new ActionScript(action));
+            _scripts.Add(new T());
+            return this;
+        }
+
+        public SetupScriptBuilder Add(Action action, string? details = null)
+        {
+            if (details == null)
+            {
+                _scripts.Add(new ActionScript(action));
+            }
+            else
+            {
+                _scripts.Add(new ActionScript(action, () => Logger.Ok(details)));
+            }
             return this;
         }
 
