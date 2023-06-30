@@ -38,11 +38,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ETHTPS.BIL\ETHTPS.API.BIL.csproj" />
+    <ProjectReference Include="..\ETHTPS.Configuration.AutoSetup\ETHTPS.Configuration.AutoSetup.csproj" />
     <ProjectReference Include="..\ETHTPS.DependencyInjection\ETHTPS.API.DependencyInjection.csproj" />
     <ProjectReference Include="..\ETHTPS.Services.Ethereum\ETHTPS.Services.Ethereum.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="AutoSetup\" />
     <Folder Include="WSTests\" />
   </ItemGroup>
 

@@ -5,7 +5,7 @@
         public const string ENVIRONMENT =
 #if DEBUG
             "Debug";
-#elif Staging
+#elif STAGING
             "Staging";
 #else
 "Release";
