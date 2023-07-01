@@ -66,7 +66,7 @@ namespace ETHTPS.Data.Core.Models.DataEntries
             BlockNumber = (int)BlockNumber,
             TransactionCount = (int)TransactionCount,
             GasUsed = (int)GasUsed,
-            Provider = (string)Provider,
+            Provider = Provider,
             TXHashes = TXHashes,
 
         };

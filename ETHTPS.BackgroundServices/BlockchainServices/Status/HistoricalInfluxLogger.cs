@@ -118,7 +118,7 @@ namespace ETHTPS.Services.BlockchainServices.Status
                     oldestEntry.OldestBlockDate = list.Last().Date;
                     await _context.SaveChangesAsync(); //no gaps
 
-                    _logger.LogInformation($"{ServiceName} - Logged blocks [#{list.First().BlockNumber}, ...,#{list.Last().BlockNumber}]\nDelta: -{dt.Hours}h {dt.Minutes}m {dt.Seconds}s\nETA: {eta.Days}d {eta.Hours}h {eta.Minutes}m\nCompleted: {Math.Round((double)(16607138 - oldestEntry.OldestBlock) * 100 / 16607138, 2)}%\nAverage speed: {Math.Round((double)parallelQueriesCount / stopwatch.Elapsed.TotalSeconds, 2)} req/s");
+                    _logger.LogInformation($"{ServiceName} - Logged blocks [#{list.First().BlockNumber}, ...,#{list.Last().BlockNumber}]\nDelta: -{dt.Hours}h {dt.Minutes}m {dt.Seconds}s\nETA: {eta.Days}d {eta.Hours}h {eta.Minutes}m\nCompleted: {Math.Round((double)(16607138 - oldestEntry.OldestBlock) * 100 / 16607138, 2)}%\nAverage speed: {Math.Round(parallelQueriesCount / stopwatch.Elapsed.TotalSeconds, 2)} req/s");
                 }
                 catch (Exception e)
                 {

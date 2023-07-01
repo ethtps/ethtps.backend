@@ -41,7 +41,7 @@ namespace ETHTPS.Services.Ethereum
 
             return Task.FromResult(new Block()
             {
-                TransactionCount = (int)ValueOrZero(txCount),
+                TransactionCount = ValueOrZero(txCount),
                 Date = DateTime.Parse(date),
                 BlockNumber = blockNumber,
                 GasUsed = ValueOrZero(gas)

@@ -38,7 +38,7 @@ namespace ETHTPS.Services.Ethereum.Starkware
             {
                 Date = time,
                 Settled = true,
-                TransactionCount = (int)(100 * txCountForDay / 86400)
+                TransactionCount = 100 * txCountForDay / 86400
             };
         }
 

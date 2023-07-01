@@ -1,4 +1,4 @@
-﻿using ETHTPS.Data.Core.Models.Markdown;
+﻿using ETHTPS.Data.Core.Models.Providers.Markdown;
 
 namespace ETHTPS.API.BIL.Infrastructure.Services
 {

@@ -226,7 +226,7 @@ namespace ETHTPS.Tests.InfluxTests
             Assert.That(response, Is.Not.Null);
             Assert.That(response.Datasets, Is.Not.Null);
 #pragma warning disable CS8604 // Possible null reference argument.
-            Assert.That((bool)(response.Datasets.All(x => x.SimpleAnalysis != null)));
+            Assert.That(response.Datasets.All(x => x.SimpleAnalysis != null));
 #pragma warning restore CS8604 // Possible null reference argument.
         }
 
@@ -252,7 +252,7 @@ namespace ETHTPS.Tests.InfluxTests
             // Check for presence of complex analysis data
             // NOTE: Replace 'ComplexAnalysisProperty' with the actual property that indicates the result of complex analysis
 #pragma warning disable CS8604 // Possible null reference argument.
-            Assert.That((bool)(response.Datasets.All(x => x.ComplexAnalysis != null)));
+            Assert.That(response.Datasets.All(x => x.ComplexAnalysis != null));
 #pragma warning restore CS8604 // Possible null reference argument.
         }
 
