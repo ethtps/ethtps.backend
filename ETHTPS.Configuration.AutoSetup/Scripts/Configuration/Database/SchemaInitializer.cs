@@ -4,20 +4,20 @@ using ETHTPS.Configuration.AutoSetup.Infra;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace ETHTPS.Configuration.AutoSetup.Scripts.Configuration;
+namespace ETHTPS.Configuration.AutoSetup.Scripts.Configuration.Database;
 
 /// <summary>
-/// A class for checking whether a database context has the required schemas.
+/// A class for checking whether a database context has the required schemas and creating them in case they are missing.
 /// </summary>
 /// <typeparam name="TContext"></typeparam>
-internal sealed class SchemaInit<TContext> : SetupScript
-where TContext : DbContext
+internal sealed class SchemaInitializer<TContext> : SetupScript
+    where TContext : DbContext
 {
     private const string _utilsProjectName = "ethtps.utils";
     private readonly TContext _context;
     private readonly string[] _schemas;
 
-    public SchemaInit(TContext context, params string[] schemas)
+    public SchemaInitializer(TContext context, params string[] schemas)
     {
         _context = context;
         _schemas = schemas;

@@ -3,7 +3,7 @@ using ETHTPS.Configuration.Database;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace ETHTPS.Configuration.AutoSetup.Scripts.Configuration
+namespace ETHTPS.Configuration.AutoSetup.Scripts.Configuration.Database
 {
     internal sealed class ConfigDatabaseValidation : SetupScript
     {
@@ -28,7 +28,8 @@ namespace ETHTPS.Configuration.AutoSetup.Scripts.Configuration
                 if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
                 Assert.That(context.Database.CanConnect);
             }, "Can connect to config database");
-            builder.Add(new SchemaInit<ConfigurationContext>(context, "Configuration"));
+            builder.Add(new SchemaInitializer<ConfigurationContext>(context, "Configuration"));
+            builder.Add(new TableInitializer<ConfigurationContext>(context, "Configuration"));
             AddChild(builder.Build());
             base.Run();
         }

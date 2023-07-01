@@ -4,36 +4,38 @@ namespace ETHTPS.Configuration.AutoSetup.Infra;
 
 internal class ActionScript : SetupScript
 {
+    #region Variables
     private readonly Action _script;
     private readonly Action? _pre;
     private readonly Action? _post;
     private readonly Action? _clean;
+    private string? _details;
+    #endregion
 
-    public ActionScript(Action run, Action? pre, Action? post, Action? clean)
+    #region Constructors
+
+    public ActionScript(Action run, Action? pre, Action? post, Action? clean, string? details = null) : this(run, pre, post, details)
     {
-        _script = run;
-        _pre = pre;
-        _post = post;
         _clean = clean;
     }
 
-    public ActionScript(Action run, Action? pre, Action? post)
+    public ActionScript(Action run, Action? pre, Action? post, string? details = null) : this(run, pre, details)
     {
-        _script = run;
-        _pre = pre;
         _post = post;
     }
 
-    public ActionScript(Action run, Action? pre)
+    public ActionScript(Action run, Action? pre, string? details = null) : this(run, details)
     {
-        _script = run;
         _pre = pre;
     }
 
-    public ActionScript(Action run)
+    public ActionScript(Action run, string? details = null)
     {
         _script = run;
+        _details = details;
     }
+
+    #endregion
 
     public override void Pre()
     {
@@ -52,10 +54,20 @@ internal class ActionScript : SetupScript
         try
         {
             _script.Invoke();
+            if (!string.IsNullOrWhiteSpace(_details)) Logger.Ok(_details);
         }
         catch (Exception e)
         {
-            throw new SetupScriptException(e);
+            string? m = string.IsNullOrWhiteSpace(_details) ? null : $"{_details}, {e.Message}";
+            if (!string.IsNullOrWhiteSpace(m))
+            {
+                Logger.Error(m);
+                throw new SetupScriptException(m, e);
+            }
+            else
+            {
+                throw new SetupScriptException(e);
+            }
         }
     }
 

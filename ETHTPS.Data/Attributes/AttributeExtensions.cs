@@ -14,7 +14,9 @@ namespace ETHTPS.Data.Core.Attributes
 
 
         /// <summary>
-        /// https://stackoverflow.com/a/19621488
+        /// <para>Gets the first attribute of type <typeparamref name="T"/> that is associated with this value or null if one was not found.</para>
+        /// <seealso cref="T"/>
+        /// <para>Source: <![CDATA[https://stackoverflow.com/a/19621488]]></para>
         /// </summary>
         public static T GetAttribute<T>(this Enum value) where T : Attribute
         {
@@ -34,7 +36,7 @@ namespace ETHTPS.Data.Core.Attributes
             if (attributes.Any())
             {
                 var attribute = attributes.First();
-                return (attribute as ProviderAttribute).Name;
+                return (attribute as ProviderAttribute)?.Name;
             }
             else
             {
@@ -50,7 +52,7 @@ namespace ETHTPS.Data.Core.Attributes
                 if (attributes.Any())
                 {
                     var attribute = attributes.First();
-                    return (attribute as ProviderAttribute).Name;
+                    return (attribute as ProviderAttribute)?.Name;
                 }
             }
             return string.Empty;
