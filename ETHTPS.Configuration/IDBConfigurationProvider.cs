@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-using ETHTPS.Configuration.Database;
+﻿using ETHTPS.Configuration.Database;
 
 namespace ETHTPS.Configuration
 {
@@ -68,5 +66,11 @@ namespace ETHTPS.Configuration
         /// </summary>
         /// <returns></returns>
         int ClearHangfireQueue();
+
+        /// <summary>
+        /// Dumps the whole database into insert statements. Use with caution.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<InsertGenerationResult> GenerateInserts(string schemaName);
     }
 }

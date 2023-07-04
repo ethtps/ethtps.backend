@@ -14,9 +14,10 @@
             Environment = environment;
         }
 
-        public SetupScriptBuilder Add<T>(T script)
+        public SetupScriptBuilder Add<T>(T script, string? details = null)
             where T : SetupScript
         {
+            if (details != null) script.Details = details;
             _scripts.Add(script);
             return this;
         }
@@ -30,14 +31,7 @@
 
         public SetupScriptBuilder Add(Action action, string? details = null)
         {
-            if (details == null)
-            {
-                _scripts.Add(new ActionScript(action));
-            }
-            else
-            {
-                _scripts.Add(new ActionScript(action, () => Logger.Ok(details)));
-            }
+            _scripts.Add(new ActionScript(action, details));
             return this;
         }
 

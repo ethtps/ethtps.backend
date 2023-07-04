@@ -10,11 +10,8 @@ namespace ETHTPS.API.DependencyInjection
 {
     public static class DatabaseExtensions
     {
-        public static string GetDefaultConnectionString(this IServiceCollection services, string appName) => services.GetConnectionString(appName, "ConnectionString");
-        public static string GetConnectionString(this IServiceCollection services, string appName, string connectionStringName)
+        public static string GetDefaultConnectionString(this DBConfigurationProviderWithCache provider, string appName, string connectionStringName)
         {
-            using var built = services.BuildServiceProvider();
-            var provider = built.GetRequiredService<DBConfigurationProviderWithCache>();
             var strings = provider.GetConfigurationStringsForMicroservice(appName);
             var result = strings?
                              .FirstOrDefault(x =>
@@ -25,6 +22,34 @@ namespace ETHTPS.API.DependencyInjection
 #else
                             throw new ArgumentException($"Couldn't find a connection string called \"{connectionStringName}\" for {appName} for \"{Constants.ENVIRONMENT}\" environment");
 #endif
+            return result;
+
+        }
+
+        public static string GetDefaultConnectionString(this DBConfigurationProvider provider, string appName, string connectionStringName)
+        {
+            var strings = provider.GetConfigurationStringsForMicroservice(appName);
+            var result = strings?
+                             .FirstOrDefault(x =>
+                                                                 x.Name == connectionStringName)?.Value
+                         ??
+#if DEBUG
+                         throw new ArgumentException($"Couldn't find a connection string called \"{connectionStringName}\" for {appName} for \"{Constants.ENVIRONMENT}\" environment\r\nDetails: {JsonConvert.SerializeObject(strings)}");
+#else
+                            throw new ArgumentException($"Couldn't find a connection string called \"{connectionStringName}\" for {appName} for \"{Constants.ENVIRONMENT}\" environment");
+#endif
+            return result;
+
+        }
+
+        public static string GetDefaultConnectionString(this IServiceCollection services, string appName) => services.GetConnectionString(appName, "ConnectionString");
+
+        public static string GetConnectionString(this IServiceCollection services, string appName, string connectionStringName)
+        {
+            using var built = services.BuildServiceProvider();
+            var provider = built.GetRequiredService<DBConfigurationProviderWithCache>();
+            var strings = provider.GetConfigurationStringsForMicroservice(appName);
+            var result = GetDefaultConnectionString(provider, appName, connectionStringName);
             return result;
         }
 

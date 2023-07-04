@@ -5,15 +5,11 @@
 /// </summary>
 internal enum TableAction
 {
-    /// <summary>
-    /// Initialize a table by performing the following actions in this exact order: Validate, continue if ok, Create, Populate, Constrain.
-    /// </summary>
-    [HasSqlScript("init.sql")]
     Initialize,
     /// <summary>
     /// Create a table.
     /// </summary>
-    [HasSqlScript("create.sql")]
+    [HasSqlScript("init.sql")]
     Create,
     /// <summary>
     /// Delete a table.
@@ -21,10 +17,10 @@ internal enum TableAction
     [HasSqlScript("delete.sql")]
     Delete,
     /// <summary>
-    /// Validate the definition o a table.
+    /// Validate the definition of a table. If the definition is not valid, try to fix it by running remove constraints, delete, create, populate and lastly - constrain.
     /// </summary>
     [HasSqlScript("validate.sql")]
-    Validate,
+    ValidateAndFix,
     /// <summary>
     /// Populate a table and its relatives with data.
     /// </summary>
@@ -33,11 +29,11 @@ internal enum TableAction
     /// <summary>
     /// Add constraints to a table.
     /// </summary>
-    [HasSqlScript("constrain.sql")]
+    [HasSqlScript("constrain.sql", "Add constraints")]
     Constrain,
     /// <summary>
     /// Remove constraints from a table.
     /// </summary>
-    [HasSqlScript("deconstrain.sql")]
+    [HasSqlScript("deconstrain.sql", "Remove all constraints")]
     RemoveConstraints
 }

@@ -39,6 +39,7 @@ internal class ActionScript : SetupScript
 
     public override void Pre()
     {
+        base.Pre();
         try
         {
             _pre?.Invoke();
@@ -73,6 +74,7 @@ internal class ActionScript : SetupScript
 
     public override void Post()
     {
+        base.Post();
         try
         {
             _post?.Invoke();
@@ -85,6 +87,7 @@ internal class ActionScript : SetupScript
 
     public override void Clean()
     {
+        base.Clean();
         _clean?.Invoke();
     }
 }

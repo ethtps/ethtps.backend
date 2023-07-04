@@ -13,16 +13,25 @@ internal static class Assert
     /// <param name="action"></param>
     /// <param name="details">A very short summary describing this operation</param>
     /// <returns>A value indicating whether an exception was swallowed.</returns>
-    public static bool Controlled(Action action, string? details = null)
+    public static bool ThrowsException(Action action, string? details = null)
     {
+        var m = $"{(string.IsNullOrWhiteSpace(details) ? string.Empty : ($"{details}: "))}";
         try
         {
             action();
             return false;
         }
+        catch (AutoSetupException ex)
+        {
+            m += (ex.InnerException ?? ex).GetType().Name;
+            m += $" - {ex.Message}";
+            Logger.Warn(m);
+            return true;
+        }
         catch (Exception ex)
         {
-            var m = $"{(string.IsNullOrWhiteSpace(details) ? string.Empty : ($@"{details}:\w"))}Swallowed exception of type {ex.GetType().Name}";
+            m += ex.GetType().Name;
+            m += $" - {ex.Message}";
             Logger.Warn(m);
             return true;
         }
@@ -54,6 +63,29 @@ internal static class Assert
     public static void That(Func<bool> condition, string details)
     {
         That(condition(), details);
+    }
+
+    public static TRet DoesNotThrow<TRet>(Func<TRet> action, string details)
+    {
+        var ok = true;
+        try
+        {
+            return action();
+        }
+        catch (Exception e)
+        {
+            var m = $"{details} {e.GetType().Name}";
+            Logger.Error(m);
+            ok = false;
+            throw new AutoSetupException(m, e);
+        }
+        finally
+        {
+            if (ok)
+            {
+                Logger.Ok(details);
+            }
+        }
     }
 
     public static void DoesNotThrow(Action action, string details)

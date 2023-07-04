@@ -89,5 +89,26 @@ namespace ETHTPS.Configuration.Database
                     EncryptionAlgorithmOrHint = x.EncryptionAlgorithmOrHint
                 }).ToList();
         }
+
+        public IEnumerable<InsertGenerationResult> GenerateInsertsForSchema(string schema)
+        {
+            var result = Enumerable.Empty<InsertGenerationResult>();
+            var connection = (SqlConnection)Database.GetDbConnection();
+            connection.InfoMessage += (sender, e) =>
+            {
+                Console.WriteLine(e.Message);
+            };
+            try
+            {
+                connection.Open();
+                var schemaParam = new SqlParameter("@schemaName", schema);
+                result = Set<InsertGenerationResult>().FromSqlRaw("EXEC GenerateInsertsForSchema_2 @schemaName", schemaParam).ToArray();
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return result;
+        }
     }
 }

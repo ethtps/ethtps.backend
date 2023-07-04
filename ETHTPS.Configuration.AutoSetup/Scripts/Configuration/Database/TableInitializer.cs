@@ -3,6 +3,7 @@
 using ETHTPS.Configuration.AutoSetup.Infra;
 using ETHTPS.Configuration.AutoSetup.Scripts.Configuration.Database.Actions;
 using ETHTPS.Data.Core.Extensions;
+using ETHTPS.Data.Core.Extensions.StringExtensions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -21,11 +22,10 @@ internal sealed class TableInitializer<TContext> : SetupScript
     #region Variables + types
 
     private const string _utilsProjectName = "ethtps.utils";
-    private const string _creationScriptFileName = "create.sql";
-    private const string _populationScriptFileName = "populate.sql";
-    private const string _constraintScriptFileName = "constrain.sql";
     private readonly TContext _context;
-    private readonly string[] _schemas;
+    private readonly string[] _tablesToCreate;
+    private readonly string _existingSchema;
+    private readonly string _projectDirectory;
 
     [NotMapped]
     public class TableInfo
@@ -41,10 +41,41 @@ internal sealed class TableInitializer<TContext> : SetupScript
 
     #region  Constructors
 
-    public TableInitializer(TContext context, params string[] schemas)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TableInitializer{TContext}"/> class.
+    /// </summary>
+    /// <param name="context">An instance of the context to work on</param>
+    /// <param name="existingSchema"><para>An assumed-to-exist schema.</para>
+    /// <para>Providing an invalid value will lead to unexpected results. </para>
+    /// <para>It is assumed this class is used only *after* having ran <seealso cref="SchemaInitializer{TContext}"/>.</para>
+    /// </param>
+    /// <param name="tablesToCreate">A list of tables to be created. Only *new* tables should be specified as the initializer doesn't check for this.</param>
+    public TableInitializer(TContext context, string existingSchema, params string[] tablesToCreate)
     {
         _context = context;
-        _schemas = schemas;
+        _tablesToCreate = tablesToCreate;
+        _existingSchema = existingSchema;
+        _projectDirectory = Utils.TryGetSolutionDirectoryInfo()?.Parent?.FullName ?? string.Empty;
+    }
+
+    /// <summary>
+    /// <para> Initializes a new instance of the <see cref="TableInitializer{TContext}"/> class.</para>
+    /// <para> It is assumed that the directory ../[ProjectDir]/ethtps.utils/sql/[existingSchema]) exists and contains the table definitions.</para>
+    /// </summary>
+    /// <param name="context">An instance of the context to work on</param>
+    /// <param name="existingSchema"><para>An assumed-to-exist schema.</para>
+    /// <para>Providing an invalid value will lead to unexpected results. </para>
+    /// <para>It is assumed this class is used only *after* having ran <seealso cref="SchemaInitializer{TContext}"/>.</para>
+    /// </param>
+    public TableInitializer(TContext context, string existingSchema)
+    {
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+        _existingSchema = existingSchema ?? throw new ArgumentNullException(nameof(existingSchema));
+        var path = Path.Combine(Utils.SqlDirectoryPath, existingSchema.RemoveAllNonAlphaNumericCharacters().ToLower());
+        Assert.Directory.Exists(path);
+        _tablesToCreate = Assert.DoesNotThrow(() => Directory.GetDirectories(path).Select(x => (new DirectoryInfo(x)).Name).Where(x => x != "procedures").ToArray(), $"List required table definitions in [{existingSchema}]");
+        Logger.Info($"Found {_tablesToCreate.Length} table{(_tablesToCreate.Length != 1 ? "s" : string.Empty)} to validate and initialize");
+        _projectDirectory = Utils.TryGetSolutionDirectoryInfo()?.Parent?.FullName ?? string.Empty;
     }
 
     #endregion
@@ -53,17 +84,12 @@ internal sealed class TableInitializer<TContext> : SetupScript
 
     public override void Run()
     {
-        var rootPath = Utils.TryGetSolutionDirectoryInfo()?.Parent?.FullName;
-        Assert.Directory.Exists(rootPath);
-        rootPath ??= string.Empty;
-        var utilsPath = Path.Combine(rootPath, _utilsProjectName);
-        Assert.Directory.Exists(utilsPath);
-        var sqlDirectory = Path.Combine(utilsPath, "sql");
-        Assert.Directory.Exists(sqlDirectory);
-        // Validate all tables in all schemas
-        foreach (var schema in _schemas)
+        var kvps = _tablesToCreate.Select(t => new KeyValuePair<string, string>(_existingSchema, t)).ToList();
+        if (kvps.Any())
         {
-            ActOn(schema, TableAction.Validate);
+            AddChildren(CreateActions(kvps, TableAction.Create, null, false)); // The app will crash like mad without tables
+            AddChildren(CreateActions(kvps, TableAction.Populate));
+            AddChildren(CreateActions(kvps, TableAction.Constrain));
         }
         base.Run();
     }
@@ -72,6 +98,7 @@ internal sealed class TableInitializer<TContext> : SetupScript
     #endregion
 
     #region Action creation methods
+
     private void ActOn(string schema, TableAction action)
     {
         var actionDescription = action.GetAttribute<HasSqlScriptAttribute>().Description ?? action.ToString();
@@ -90,9 +117,10 @@ internal sealed class TableInitializer<TContext> : SetupScript
         }
     }
 
-    private TableAction<TContext>? CreateAction(TableInfo table, TableAction action) =>
-        CreateAction(table.SchemaName, table.TableName, action);
-    private TableAction<TContext>? CreateAction(string schema, string tableName, TableAction action)
+    private TableAction<TContext>? CreateAction(TableInfo table, TableAction action, bool dontThrow = true) =>
+        CreateAction(table.SchemaName, table.TableName, action, dontThrow);
+
+    private TableAction<TContext>? CreateAction(string schema, string tableName, TableAction action, bool dontThrow = true)
     {
         var fullName = $"[{schema}].[{tableName}]";
         var scriptFile =
@@ -102,18 +130,21 @@ internal sealed class TableInitializer<TContext> : SetupScript
             Logger.Warn($"No script file name defined for action \"{action}\". Member needs to be marked as [HasSqlScript].");
             return null;
         }
-
-        var path = Path.Combine(scriptFile.BaseDirectory, schema, tableName, scriptFile.ScriptFileName);
-        if (!Assert.Controlled(() => Assert.File.Exists(path), $"{action}({fullName})"))
+        var details = $"{action}({fullName})";
+        return new TableAction<TContext>(tableName, schema, _context, action)
         {
-            Logger.Warn($"{fullName}: file {scriptFile.FullPath} not found");
-            return null;
-        }
-        return new TableAction<TContext>(schema, tableName, _context, action);
+            Details = details,
+            DontThrow = dontThrow
+        };
     }
 
-    private IEnumerable<SetupScript> CreateActions(IEnumerable<KeyValuePair<string, string>> schemasAndTables, TableAction action) =>
-        schemasAndTables.Select(st => CreateAction(st.Key, st.Value, action)).WhereNotNull()!;
+    private IEnumerable<SetupScript> CreateActions(IEnumerable<KeyValuePair<string, string>> schemasAndTables,
+        TableAction action, in Func<KeyValuePair<string, string>, bool>? filter = null, bool dontThrow = true) =>
+        schemasAndTables.Where(
+            filter ?? (_ => true))
+            .Select(st =>
+                CreateAction(st.Key, st.Value, action, dontThrow))
+            .WhereNotNull()!;
 
 
     #endregion

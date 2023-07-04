@@ -245,6 +245,13 @@ namespace ETHTPS.Configuration
             }
         }
 
+        public IEnumerable<InsertGenerationResult> GenerateInserts(string schemaName)
+        {
+            lock (_context.LockObj)
+            {
+                return _context.GenerateInsertsForSchema(schemaName);
+            }
+        }
 
         public IEnumerable<IConfigurationString>? GetConfigurationStrings(string name)
         {

@@ -15,5 +15,8 @@
             }
             return directory;
         }
+
+        public static string SqlDirectoryPath { get; private set; } =
+            Path.Combine(TryGetSolutionDirectoryInfo()?.Parent?.FullName ?? string.Empty, "ethtps.utils", "sql");
     }
 }

@@ -6,6 +6,7 @@ using ETHTPS.Configuration.Extensions;
 using ETHTPS.Core;
 
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace ETHTPS.Configuration
 {
@@ -57,7 +58,7 @@ namespace ETHTPS.Configuration
                         throw new InvalidOperationException(
                         $"Can't deserialize to an interface. Please use a concrete type instead of {typeof(T).GetGenericTypeDefinition().Name}<{string.Join(',', typeof(T).GetGenericArguments().Select(gt => gt.Name))}>.");
 #else
-                    throw new InvalidOperationException("Can't deserialize to an interface. Please use a concrete type.");
+                        throw new InvalidOperationException("Can't deserialize to an interface. Please use a concrete type.");
 #endif
                 }
 
@@ -138,6 +139,11 @@ namespace ETHTPS.Configuration
             return Get("ACS", () => _provider.GetAllConfigurationStrings());
         }
 
+        IEnumerable<AllConfigurationStringsModel> IConfigurationStringProvider.GetAllConfigurationStrings()
+        {
+            return GetAllConfigurationStrings();
+        }
+
         public ConfigurationStringLinksModel GetAllLinks(int configurationStringID)
         {
             var key = $"{configurationStringID}_L_ALL";
@@ -202,6 +208,11 @@ namespace ETHTPS.Configuration
         public int ClearHangfireQueue()
         {
             return _provider.ClearHangfireQueue();
+        }
+
+        public IEnumerable<InsertGenerationResult> GenerateInserts(string schemaName)
+        {
+            return _provider.GenerateInserts(schemaName);
         }
     }
 }

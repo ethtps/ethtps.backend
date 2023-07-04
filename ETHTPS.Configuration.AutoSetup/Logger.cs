@@ -7,6 +7,9 @@ internal static class Logger
 {
     static Logger()
     {
+#if !RELEASE
+        if (File.Exists(LogFileName)) File.Delete(LogFileName);
+#endif
         Info($"Logger initialization...");
         Info($"Current time: {DateTime.Now}");
     }
@@ -93,5 +96,13 @@ internal static class Logger
     public static void Debug(string message)
     {
         Log("🔧", message, ConsoleColor.Green); // Are you a 🔧 monerator?
+    }
+
+    /// <summary>
+    /// Inserts a blank line.
+    /// </summary>
+    public static void NewLine()
+    {
+        Log("\r\n", string.Empty, ConsoleColor.Black);
     }
 }

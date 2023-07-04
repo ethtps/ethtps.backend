@@ -4,6 +4,8 @@ using ETHTPS.Configuration.AutoSetup.Infra;
 
 using Microsoft.EntityFrameworkCore;
 
+using Newtonsoft.Json;
+
 namespace ETHTPS.Configuration.AutoSetup.Scripts.Configuration.Database;
 
 /// <summary>
@@ -17,10 +19,33 @@ internal sealed class SchemaInitializer<TContext> : SetupScript
     private readonly TContext _context;
     private readonly string[] _schemas;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SchemaInitializer{TContext}"/> class.
+    /// </summary>
+    /// <param name="context">An instance of the context to work on</param>
+    /// <param name="schemas"></param>
     public SchemaInitializer(TContext context, params string[] schemas)
     {
         _context = context;
         _schemas = schemas;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SchemaInitializer{TContext}"/> class, attempts to load the schemas from the default file (../[ProjectDir]/ethtps.utils/sql/schemas.json) while assuming the context needs to have all tables belonging to the defined schemas present.
+    /// </summary>
+    /// <param name="context">An instance of the context to work on</param>
+    public SchemaInitializer(TContext context)
+    {
+        _context = context;
+        var rootPath = Utils.TryGetSolutionDirectoryInfo()?.Parent?.FullName ?? string.Empty;
+        Assert.Directory.Exists(rootPath);
+        var utilsPath = Path.Combine(rootPath, _utilsProjectName);
+        Assert.Directory.Exists(utilsPath);
+        var sqlDirectory = Path.Combine(utilsPath, "sql");
+        Assert.Directory.Exists(sqlDirectory);
+        var schemaFilePath = Path.Combine(sqlDirectory, "schemas.json");
+        Assert.File.Exists(schemaFilePath);
+        _schemas = Assert.DoesNotThrow(() => JsonConvert.DeserializeObject<string[]>(File.ReadAllText(schemaFilePath)), "Get schemas from default file")!;
     }
 
     [NotMapped]

@@ -7,10 +7,20 @@ internal abstract class SetupScript
 {
     private readonly IList<SetupScript> _children;
     private bool _ranChildren = false;
+    public string? Details { get; set; }
 
     internal void AddChild(SetupScript child)
     {
         _children.Add(child);
+    }
+
+    internal void AddChildren<T>(IEnumerable<T> children)
+        where T : SetupScript
+    {
+        foreach (var child in children)
+        {
+            AddChild(child);
+        }
     }
 
     internal void AddChild<T>()
@@ -19,20 +29,29 @@ internal abstract class SetupScript
         _children.Add(new T());
     }
 
-    protected SetupScript()
+    protected SetupScript(string? details = null)
     {
         _children = new List<SetupScript>();
+        Details = details;
     }
 
-    protected SetupScript(params SetupScript[] children)
+    protected SetupScript(string? details = null, params SetupScript[] children)
     {
         _children = children;
+        Details = details;
     }
 
     /// <summary>
     /// Represents a script that runs before the main script. It is used to set up the environment for the main script.
     /// </summary>
-    public virtual void Pre() { }
+    public virtual void Pre()
+    {
+        if (Details != null)
+        {
+            Logger.Debug($"Starting {Details}...");
+        }
+        Logger.LeftPadding.Increment();
+    }
 
     /// <summary>
     /// Represents the main setup script. Everything that needs to be done to set up the environment should be done here. Calling the base method will run all children scripts.
@@ -53,6 +72,7 @@ internal abstract class SetupScript
             child.Post();
             child.Clean();
         }
+        _ranChildren = true;
         Logger.LeftPadding.Decrement();
     }
 
@@ -65,10 +85,17 @@ internal abstract class SetupScript
         {
             Logger.Warn("Children scripts not ran");
         }
+        Logger.LeftPadding.Decrement();
+        if (Details != null)
+        {
+            Logger.Debug($"Completed");
+        }
     }
 
     /// <summary>
     /// Represents a script that cleans up the environment after setup.
     /// </summary>
-    public virtual void Clean() { }
+    public virtual void Clean()
+    {
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using ETHTPS.Configuration.AutoSetup.Infra;
+using ETHTPS.Configuration.AutoSetup.Scripts.Configuration.Database;
 
 namespace ETHTPS.Configuration.AutoSetup.Scripts.Configuration
 {
@@ -18,7 +19,7 @@ namespace ETHTPS.Configuration.AutoSetup.Scripts.Configuration
             Assert.File.AnyExists(Path.Combine(solutionDir?.FullName ?? string.Empty, ".env"),
                 Path.Combine(solutionDir?.FullName ?? string.Empty, _CONFIG_PROJECT_NAME, ".env"));
             Assert.File.Exists(Path.Combine(solutionDir?.FullName ?? string.Empty, _CONFIG_PROJECT_NAME, "StartupConfig.json"));
-            AddChild<ConfigDatabaseValidation>();
+            AddChild<ETHTPSDatabaseValidation>();
             base.Run();
         }
 
