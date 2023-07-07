@@ -43,9 +43,9 @@ namespace ETHTPS.Services.Ethereum
         protected string APIKey => PartialMatchOrThrow("APIKey");
         protected string Secret => PartialMatchOrThrow("Secret");
         protected string ProjectID => PartialMatchOrThrow("ProjectID");
+
         private string? GetEndpoint()
         {
-
             var valid = new string[] { "Endpoint", "EndpointBase", "BaseURL", "URL" };
             foreach (var configString in _configurationStrings)
             {
@@ -56,6 +56,7 @@ namespace ETHTPS.Services.Ethereum
             }
             return null;
         }
+
         protected string PartialMatchOrThrow(params string[] partialNames)
         {
             foreach (var configString in _configurationStrings)

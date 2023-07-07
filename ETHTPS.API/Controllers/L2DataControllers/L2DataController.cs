@@ -80,18 +80,16 @@ namespace ETHTPS.API.Controllers.L2DataControllers
         {
             if (!await _redisCacheService.HasKeyAsync(guid))
             {
-                if (await _redisCacheService.HasKeyAsync(L2DataRequestStatus.GenerateCacheKeyFromGuid(guid)))
+                if (!await _redisCacheService.HasKeyAsync(L2DataRequestStatus.GenerateCacheKeyFromGuid(guid)))
+                    return NotFound();
+                var status = await _redisCacheService.GetDataAsync<L2DataRequestStatus>(L2DataRequestStatus.GenerateCacheKeyFromGuid(guid));
+                if (status.State != L2DataRequestState.Failed && status.State != L2DataRequestState.Completed)
                 {
-                    var status = await _redisCacheService.GetDataAsync<L2DataRequestStatus>(L2DataRequestStatus.GenerateCacheKeyFromGuid(guid));
-                    if (status.State != L2DataRequestState.Failed && status.State != L2DataRequestState.Completed)
-                    {
-                        return Accepted(status);
-                    }
+                    return Accepted(status);
                 }
                 return NotFound();
             }
-            var result = await _redisCacheService.GetDataAsync<L2DataResponseModel>(guid);
-            return Ok();
+            return Ok(await _redisCacheService.GetDataAsync<L2DataResponseModel>(guid));
         }
 
         [HttpGet]

@@ -15,6 +15,13 @@ public sealed class ProvidersService : EFCoreCRUDServiceBase<ETHTPS.Data.Integra
     }
 }
 
+public sealed class ProviderTypesService : EFCoreCRUDServiceBase<ETHTPS.Data.Integrations.MSSQL.ProviderType>
+{
+    public ProviderTypesService(EthtpsContext context) : base(context.ProviderTypes, context)
+    {
+    }
+}
+
 public sealed class NetworksService : EFCoreCRUDServiceBase<ETHTPS.Data.Integrations.MSSQL.Network>
 {
     public NetworksService(EthtpsContext context) : base(context.Networks, context)

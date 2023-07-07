@@ -75,18 +75,17 @@ namespace ETHTPS.Tests.InfluxTests
                     Assert.Fail($"{nameof(_aggregatedDataservice)} is null");
                     return;
                 }
-
-                // Set a date range where no data is expected.
                 var noDataRequestModel = new L2DataRequestModel
                 {
-                    StartDate = DateTime.Now.AddYears(-100),  // Example: 100 years ago.
-                    EndDate = DateTime.Now.AddYears(-99),    // Example: 99 years ago.
-                    Providers = _TEST_PROVIDERS.ToList()
+                    StartDate = DateTime.Now.AddYears(-100),
+                    EndDate = DateTime.Now.AddYears(-99),
+                    Providers = _TEST_PROVIDERS.ToList(),
+                    IncludeEmptyDatasets = false
                 };
 
                 var response = await _aggregatedDataservice.GetDataAsync(noDataRequestModel, _dataType);
                 Assert.That(response, Is.Not.Null, "Response is null");
-                Assert.That(response.Datasets, Is.Empty, "Response datasets is not empty");  // Assert that the response is an empty list.
+                Assert.That(response.Datasets?.Sum(x => x.DataPoints.Count()), Is.EqualTo(0));
             });
         }
 
@@ -180,7 +179,7 @@ namespace ETHTPS.Tests.InfluxTests
                     Assert.That(data?.Count, Is.GreaterThan(0));
                     foreach (var dataset in data ?? throw new Exception("Null datasets"))
                     {
-                        var datedPoints = dataset.DataPoints.Select(x => x.ToDatedXYDataPoint());
+                        var datedPoints = dataset.DataPoints.Select(x => x.ToDatedXYDataPoint()).ToList();
                         for (int i = 0, j = 1; i < datedPoints?.Count() - 1; i++, j++)
                         {
                             Assert.That(datedPoints?.ElementAt(j).X - datedPoints?.ElementAt(i).X, Is.GreaterThanOrEqualTo(expectedSize));

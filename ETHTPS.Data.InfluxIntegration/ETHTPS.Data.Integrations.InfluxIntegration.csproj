@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="InfluxWrapper\" />
+    <Compile Remove="InfluxWrapper\**" />
+    <EmbeddedResource Remove="InfluxWrapper\**" />
+    <None Remove="InfluxWrapper\**" />
   </ItemGroup>
 
   <ItemGroup>

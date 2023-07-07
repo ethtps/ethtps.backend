@@ -31,23 +31,21 @@ namespace ETHTPS.Configuration.Database
             string configStringName,
             string configStringValue)
         {
-            using (var command = Database.GetDbConnection().CreateCommand())
-            {
-                command.CommandType = System.Data.CommandType.StoredProcedure;
-                command.CommandText = "[Configuration].[InsertOrUpdateConfigurationString]";
+            await using var command = Database.GetDbConnection().CreateCommand();
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandText = "[Configuration].[InsertOrUpdateConfigurationString]";
 
-                command.Parameters.AddRange(new SqlParameter[]
-                {
+            command.Parameters.AddRange(new SqlParameter[]
+            {
                 new SqlParameter("@MicroserviceName", microserviceName),
                 new SqlParameter("@EnvironmentName", environmentName),
                 new SqlParameter("@ConfigStringName", configStringName),
                 new SqlParameter("@ConfigStringValue", configStringValue)
-                });
+            });
 
-                await Database.OpenConnectionAsync();
-                var result = await command.ExecuteNonQueryAsync();
-                return result;
-            }
+            await Database.OpenConnectionAsync();
+            var result = await command.ExecuteNonQueryAsync();
+            return result;
         }
 
         public async Task InsertOrUpdateProviderConfigurationStringAsync(string providerName, string configurationStringName, string configurationStringValue, string environmentName)
