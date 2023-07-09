@@ -1,4 +1,4 @@
-# IHTTPBlockInfoProvider Project - Help us improve
+# Help us improve
 
 Welcome! We're so glad you're interested in helping out with this project. We are in need of data providers for missing L2 implementations of the `IHTTPBlockInfoProvider` C# interface.
 
