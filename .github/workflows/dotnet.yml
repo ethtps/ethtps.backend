@@ -1,6 +1,3 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
 name: .NET
 
 on:
@@ -14,15 +11,41 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      # Extracting branch name for Windows
+      - name: Extract branch name (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $branchName = $env:GITHUB_REF -replace "refs/heads/", ""
+          echo "BRANCH_NAME=$branchName" | Out-File -Append $env:GITHUB_ENV
+
+      # Extracting branch name for Linux/macOS
+      - name: Extract branch name (Linux/macOS)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+
+      # Modifying paths to include branch name
+      - name: Set up .env
+        run: cp ../${BRANCH_NAME}/ethtps_files/.env ./.env
+
+      - name: Set up appsttings.json
+        run: cp ../${BRANCH_NAME}/ethtps_files/appsettings.json ./ETHTPS.API/appsettings.json
+
+      - name: Set up docker-compose.yml
+        run: cp ../${BRANCH_NAME}/ethtps_files/docker-compose.yml ./docker-compose.yml
+
+      - name: Set up StartupConfig.json
+        run: cp ../${BRANCH_NAME}/ethtps_files/StartupConfig.json ./ETHTPS.Configuration/StartupConfig.json
+
       - uses: actions/checkout@v3
-      #      We assume .NET is already installed
+
+      # Assuming .NET is already installed
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 8.0.x
-
       - name: Restore dependencies
-        run: dotnet restore ETHTPS.sln
-
+        run: dotnet restore
       - name: Build
-        run: dotnet build ETHTPS.sln --no-restore
+        run: dotnet build --no-restore
