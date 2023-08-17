@@ -1,11 +1,11 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+FROM mcr.microsoft.com/dotnet/nightly/sdk:8.0-preview AS base
 WORKDIR /app
 EXPOSE 10350
 ENV ASPNETCORE_URLS="http://*:10350"
 ENV ASPNETCORE_ENVIRONMENT="Release"
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/nightly/sdk:8.0-preview AS build
 WORKDIR /src
 COPY ["ETHTPS.HangfireRunner/ETHTPS.TaskRunner.csproj", "ETHTPS.HangfireRunner/"]
 COPY ["ETHTPS.Configuration/ETHTPS.Configuration.csproj", "ETHTPS.Configuration/"]
