@@ -48,7 +48,7 @@ namespace ETHTPS.API.Core.Middlewares
             catch (Exception e)
             {
                 logger.LogError($"{e.GetType()} exception caught by middleware");
-#if DEBUG
+#if DEVELOPMENT
                 logger.LogError(JsonConvert.SerializeObject(e));
 #endif
                 context.Response.StatusCode = 400;

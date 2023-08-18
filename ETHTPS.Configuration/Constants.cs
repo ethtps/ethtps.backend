@@ -3,7 +3,7 @@
     public static class Constants
     {
         public const string ENVIRONMENT =
-#if DEBUG
+#if DEVELOPMENT
             "Debug";
 #elif STAGING
             "Staging";

@@ -17,7 +17,7 @@ namespace ETHTPS.API.DependencyInjection
                              .FirstOrDefault(x =>
                                  x.Name == connectionStringName)?.Value
                          ??
-#if DEBUG
+#if DEVELOPMENT
                          throw new ArgumentException($"Couldn't find a connection string called \"{connectionStringName}\" for {appName} for \"{Constants.ENVIRONMENT}\" environment\r\nDetails: {JsonConvert.SerializeObject(strings)}");
 #else
                             throw new ArgumentException($"Couldn't find a connection string called \"{connectionStringName}\" for {appName} for \"{Constants.ENVIRONMENT}\" environment");
@@ -33,7 +33,7 @@ namespace ETHTPS.API.DependencyInjection
                              .FirstOrDefault(x =>
                                                                  x.Name == connectionStringName)?.Value
                          ??
-#if DEBUG
+#if DEVELOPMENT
                          throw new ArgumentException($"Couldn't find a connection string called \"{connectionStringName}\" for {appName} for \"{Constants.ENVIRONMENT}\" environment\r\nDetails: {JsonConvert.SerializeObject(strings)}");
 #else
                             throw new ArgumentException($"Couldn't find a connection string called \"{connectionStringName}\" for {appName} for \"{Constants.ENVIRONMENT}\" environment");

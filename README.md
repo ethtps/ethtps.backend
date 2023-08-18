@@ -9,3 +9,7 @@ The ASP.NET Core backend for [ethtps.info](https://ethtps.info)'s API
 ### Setup
 
 # TODO
+
+### Useful commands
+
+`docker-compose  --file=./docker-compose.testing.yml up ethtps.taskrunner --force-recreate` - starts a specific service

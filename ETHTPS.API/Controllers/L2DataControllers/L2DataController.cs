@@ -37,7 +37,7 @@ namespace ETHTPS.API.Controllers.L2DataControllers
             _messagePublisher = messagePublisher;
         }
 
-#if DEBUG        
+#if DEVELOPMENT        
         /// <summary>
         /// A method for testing the charting API. Returns a response with junk values after an artificial delay.
         /// </summary>
@@ -138,7 +138,7 @@ namespace ETHTPS.API.Controllers.L2DataControllers
             _messagePublisher.PublishJSONMessage(requestModel, "L2DataRequestQueue");
             return Created(nameof(GetDataRequestAsync), guid);
         }
-#if DEBUG
+#if DEVELOPMENT
         [HttpPost]
         [SwaggerResponse(201)]
         public async Task<IActionResult> CreateLotsOfDummyRequests()

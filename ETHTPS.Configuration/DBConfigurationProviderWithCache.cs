@@ -54,7 +54,7 @@ namespace ETHTPS.Configuration
                 {
                     if (typeof(T).IsIEnumerable() && typeof(T).GetGenericArguments().All(t => t is { IsClass: true, IsAbstract: false })) { }//ok
                     else
-#if DEBUG
+#if DEVELOPMENT
                         throw new InvalidOperationException(
                         $"Can't deserialize to an interface. Please use a concrete type instead of {typeof(T).GetGenericTypeDefinition().Name}<{string.Join(',', typeof(T).GetGenericArguments().Select(gt => gt.Name))}>.");
 #else

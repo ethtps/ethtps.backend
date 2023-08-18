@@ -3,7 +3,7 @@ version: '3'
 services:
   ethtps.taskrunner:
     container_name: ethtps.taskrunner
-    env_file: .env.development
+    env_file: .env.testing
     image: ${DOCKER_REGISTRY-}ethtpstaskrunner
     build:
       context: .
@@ -15,7 +15,7 @@ services:
 
   ethtps.api:
     container_name: ethtps.api
-    env_file: .env.development
+    env_file: .env.testing
     image: ${DOCKER_REGISTRY-}ethtpsapi
     build:
       context: .
@@ -28,7 +28,7 @@ services:
 
   ethtps.wsapi:
     container_name: ethtps.wsapi
-    env_file: .env.development
+    env_file: .env.testing
     image: ${DOCKER_REGISTRY-}ethtpswsapi
     build:
       context: .
