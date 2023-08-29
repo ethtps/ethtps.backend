@@ -4,6 +4,6 @@ namespace ETHTPS.TaskRunner
 {
     public static class Constants
     {
-        public const ETHTPSMicroservice CURRENT_APP = ETHTPSMicroservice.TaskRunner;
+        public const Microservice CURRENT_APP = Microservice.TaskRunner;
     }
 }

@@ -63,7 +63,7 @@ namespace ETHTPS.Daemon
             builder.Host.UseNLog();
             var services = builder.Services;
             services.AddEssentialServices()
-                    .AddDatabaseContext(ETHTPSMicroservice.Tests)
+                    .AddDatabaseContext(Microservice.Tests)
                     .AddMixedCoreServices()
                     .AddRabbitMQMessagePublisher()
                     .AddSingleton<IRabbitMQSubscriptionService>(x =>

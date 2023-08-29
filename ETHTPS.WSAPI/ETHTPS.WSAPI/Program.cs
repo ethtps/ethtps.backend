@@ -24,7 +24,7 @@ namespace ETHTPS.WSAPI
             builder.Services.AddRazorPages();
             var services = builder.Services;
             services.AddEssentialServices();
-            services.AddDatabaseContext(ETHTPSMicroservice.WSAPI);
+            services.AddDatabaseContext(Microservice.WSAPI);
             services.AddCustomCORSPolicies();
             services.AddControllersWithViews()
                     .AddControllersAsServices()

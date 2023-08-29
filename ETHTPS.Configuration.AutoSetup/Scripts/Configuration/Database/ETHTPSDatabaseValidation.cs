@@ -12,7 +12,7 @@ namespace ETHTPS.Configuration.AutoSetup.Scripts.Configuration.Database
 {
     internal sealed class ETHTPSDatabaseValidation : SetupScript
     {
-        private const ETHTPSMicroservice _CONFIG_PROJECT = ETHTPSMicroservice.Configuration;
+        private const Data.Core.Microservice _CONFIG_PROJECT = Data.Core.Microservice.Configuration;
 
         public override void Pre()
         {

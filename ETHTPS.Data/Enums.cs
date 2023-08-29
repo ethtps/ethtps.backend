@@ -45,7 +45,7 @@ namespace ETHTPS.Data.Core
     /// A list of ETHTPS microservices or libraries that have their own configuration and permissions.
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum ETHTPSMicroservice
+    public enum Microservice
     {
         [FullName("ETHTPS.API.General")]
         API,

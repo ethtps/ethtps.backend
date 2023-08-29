@@ -10,7 +10,7 @@ namespace ETHTPS.API.DependencyInjection
 {
     public static class DatabaseExtensions
     {
-        public static string GetDefaultConnectionString(this DBConfigurationProviderWithCache provider, ETHTPSMicroservice microservice, string connectionStringName)
+        public static string GetDefaultConnectionString(this DBConfigurationProviderWithCache provider, Microservice microservice, string connectionStringName)
         {
             var strings = provider.GetConfigurationStringsForMicroservice(microservice.GetFullName());
             var result = strings?
@@ -26,7 +26,7 @@ namespace ETHTPS.API.DependencyInjection
 
         }
 
-        public static string GetDefaultConnectionString(this DBConfigurationProvider provider, ETHTPSMicroservice microservice, string connectionStringName)
+        public static string GetDefaultConnectionString(this DBConfigurationProvider provider, Microservice microservice, string connectionStringName)
         {
             var strings = provider.GetConfigurationStringsForMicroservice(microservice.GetFullName());
             var result = strings?
@@ -42,9 +42,9 @@ namespace ETHTPS.API.DependencyInjection
 
         }
 
-        public static string GetDefaultConnectionString(this IServiceCollection services, ETHTPSMicroservice microservice) => services.GetConnectionString(microservice, "ConnectionString");
+        public static string GetDefaultConnectionString(this IServiceCollection services, Microservice microservice) => services.GetConnectionString(microservice, "ConnectionString");
 
-        public static string GetConnectionString(this IServiceCollection services, ETHTPSMicroservice microservice, string connectionStringName)
+        public static string GetConnectionString(this IServiceCollection services, Microservice microservice, string connectionStringName)
         {
             using var built = services.BuildServiceProvider();
             var provider = built.GetRequiredService<DBConfigurationProviderWithCache>();
@@ -53,7 +53,7 @@ namespace ETHTPS.API.DependencyInjection
             return result;
         }
 
-        public static IServiceCollection AddDatabaseContext(this IServiceCollection services, ETHTPSMicroservice microservice)
+        public static IServiceCollection AddDatabaseContext(this IServiceCollection services, Microservice microservice)
         {
             try
             {

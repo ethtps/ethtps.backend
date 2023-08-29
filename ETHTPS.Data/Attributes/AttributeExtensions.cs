@@ -17,7 +17,7 @@ namespace ETHTPS.Data.Core.Attributes
         /// </summary>
         /// <param name="microservice"></param>
         /// <returns></returns>
-        public static string GetFullName(this ETHTPSMicroservice microservice) => microservice.GetAttribute<FullNameAttribute>().FullName;
+        public static string GetFullName(this Microservice microservice) => microservice.GetAttribute<FullNameAttribute>().FullName;
 
         /// <summary>
         /// <para>Gets the first attribute of type <typeparamref name="T"/> that is associated with this value or null if one was not found.</para>

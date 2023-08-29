@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
 
-using ETHTPS.Configuration;
-using ETHTPS.Configuration.Extensions;
 using ETHTPS.Data.Core.Models.LiveData.Triggers;
 using ETHTPS.Services;
 using ETHTPS.Services.Infrastructure.Messaging;
@@ -20,38 +18,22 @@ namespace ETHTPS.TaskRunner.BackgroundServices
     /// <seealso cref="Microsoft.Extensions.Hosting.IHostedService" />
     public sealed class NewDatapointHandler : IHostedService
     {
-        private readonly RabbitMQSubscriptionService _subscriptionService;
-        private readonly ILogger<NewDatapointHandler> _logger;
-        private readonly DBConfigurationProviderWithCache _configurationProvider;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly LatestEntryAggregator<string, L2DataUpdateModel> _latestEntryAggregator = new LatestEntryAggregator<string, L2DataUpdateModel>();
-        private readonly IMessagePublisher _messagePublisher;
         private bool _cancel = false;
 
-        public NewDatapointHandler(ILogger<NewDatapointHandler> logger, DBConfigurationProviderWithCache configurationProvider, IMessagePublisher messagePublisher)
+        public NewDatapointHandler(IServiceScopeFactory serviceScopeFactory)
         {
-            _logger = logger;
-            _configurationProvider = configurationProvider;
-            _messagePublisher = messagePublisher;
-
-            _subscriptionService = new RabbitMQSubscriptionService(new RabbitMQSubscriptionConfig()
-            {
-                AutoAck = false,
-                AutoDelete = false,
-                QueueName = MessagingQueues.LIVEDATA_NEWDATAPOINT_QUEUE,
-                Host = configurationProvider.GetFirstConfigurationString(
-#if DEBUG
-                    "RabbitMQ_Host_Dev"
-#else
-                    "RabbitMQ_Host"
-#endif
-                    )
-            });
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("NewDatapointHandler: listening...");
-            PublishLatestEntriesAsync(cancellationToken, 2500);
+            using var scope = _serviceScopeFactory.CreateScope();
+            var _subscriptionService = scope.ServiceProvider.GetRequiredService<IRabbitMQSubscriptionService>();
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<NewDatapointHandler>>();
+            logger.LogInformation("NewDatapointHandler: listening...");
+            PublishLatestEntriesAsync(cancellationToken, 2500, scope.ServiceProvider.GetRequiredService<IMessagePublisher>(), logger);
             void handler(object? sender, BasicDeliverEventArgs e)
             {
                 var stopwatch = new Stopwatch();
@@ -68,22 +50,22 @@ namespace ETHTPS.TaskRunner.BackgroundServices
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error processing message from RabbitMQ");
+                    logger.LogError(ex, "Error processing message from RabbitMQ");
                 }
                 finally
                 {
                     _subscriptionService.Channel.BasicAck(e.DeliveryTag, true);
                     stopwatch.Stop();
-                    _logger.LogInformation($"NewDatapointHandler: processed message in {stopwatch.ElapsedMilliseconds}ms");
+                    logger.LogInformation($"NewDatapointHandler: processed message in {stopwatch.ElapsedMilliseconds}ms");
                 }
             };
             _subscriptionService.MessageReceived += handler;
             while (!_cancel && !cancellationToken.IsCancellationRequested) await Task.Delay(100, cancellationToken);
             _subscriptionService.MessageReceived -= handler;
-            _logger.LogInformation("NewDatapointHandler: stopped");
+            logger.LogInformation("NewDatapointHandler: stopped");
         }
 
-        private async void PublishLatestEntriesAsync(CancellationToken cancellationToken, int msInterval)
+        private async void PublishLatestEntriesAsync(CancellationToken cancellationToken, int msInterval, IMessagePublisher messagePublisher, ILogger<NewDatapointHandler> logger)
         {
             while (!_cancel && !cancellationToken.IsCancellationRequested)
             {
@@ -94,19 +76,19 @@ namespace ETHTPS.TaskRunner.BackgroundServices
                     {
                         if (_latestEntryAggregator.Count() > 0)
                         {
-                            _messagePublisher.PublishJSONMessage(_latestEntryAggregator.ToArray(), MessagingQueues.LIVEDATA_MULTIPLENEWDATAPOINTS_QUEUE);
-                            _logger.LogInformation($"NewDatapointHandler: published latest entries. Count: {_latestEntryAggregator.Count()}");
+                            messagePublisher.PublishJSONMessage(_latestEntryAggregator.ToArray(), MessagingQueues.LIVEDATA_MULTIPLENEWDATAPOINTS_QUEUE);
+                            logger.LogInformation($"NewDatapointHandler: published latest entries. Count: {_latestEntryAggregator.Count()}");
                             _latestEntryAggregator.Clear();
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error publishing latest entries");
+                    logger.LogError(ex, "Error publishing latest entries");
                 }
                 await Task.Delay(msInterval, cancellationToken);
             }
-            _logger.LogInformation("Stopped aggregator publisher task");
+            logger.LogInformation("Stopped aggregator publisher task");
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

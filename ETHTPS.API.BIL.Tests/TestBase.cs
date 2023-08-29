@@ -28,7 +28,7 @@ namespace ETHTPS.Tests
         protected ServiceProvider ServiceProvider { get; private set; }
         protected DBConfigurationProviderWithCache ConfigurationProvider => ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>();
 
-        const ETHTPSMicroservice _APP = ETHTPSMicroservice.Tests;
+        const Microservice _APP = Microservice.Tests;
         const DatabaseProvider _DATABASE_PROVIDER = DatabaseProvider.InfluxDB;
         protected TestBase()
         {

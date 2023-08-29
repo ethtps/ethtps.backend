@@ -1,7 +1,6 @@
 ﻿using ETHTPS.Data.Core;
 
 using Hangfire;
-using Hangfire.InMemory;
 using Hangfire.SqlServer;
 
 using Microsoft.AspNetCore.Builder;
@@ -12,33 +11,49 @@ namespace ETHTPS.API.DependencyInjection
     public static class HangfireExtensions
     {
         private const string _DEFAULT_CONNECTION_STRING_NAME = "HangfireConnectionString";
-        public static void InitializeHangfire(this IServiceCollection services, ETHTPSMicroservice microservice)
+        private static void InitializeHangfireWithDBStorage(this IServiceCollection services, Microservice microservice)
         {
             SqlServerStorage sqlStorage = new(services.GetConnectionString(microservice, _DEFAULT_CONNECTION_STRING_NAME));
             JobStorage.Current = sqlStorage;
+            services.AddHangfire(config =>
+            {
+                config.UseSqlServerStorage(services.GetConnectionString(microservice, _DEFAULT_CONNECTION_STRING_NAME));
+            });
         }
 
-        public static IServiceCollection AddHangfireServer(this IServiceCollection services, ETHTPSMicroservice microservice, bool inMemoryStorage = true)
+        public static IServiceCollection AddHangfireServer(this IServiceCollection services, Microservice microservice, bool inMemoryStorage = true) // Called in ConfigureServices(...)
         {
-            Hangfire.JobStorage.Current = inMemoryStorage ? new InMemoryStorage() : new SqlServerStorage(services.GetConnectionString(microservice, _DEFAULT_CONNECTION_STRING_NAME));
-            if (!inMemoryStorage)
-                services.AddHangfire(x => x.UseSqlServerStorage(services.GetConnectionString(microservice, _DEFAULT_CONNECTION_STRING_NAME)));
-            else services.AddHangfire(x => x.UseInMemoryStorage());
+            if (inMemoryStorage)
+            {
+                GlobalConfiguration.Configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                           .UseColouredConsoleLogProvider()
+                           .UseSimpleAssemblyNameTypeSerializer()
+                           .UseRecommendedSerializerSettings()
+                           .UseInMemoryStorage();
+                services.AddHangfire(config =>
+                {
+                    /*   config.UseInMemoryStorage(new Hangfire.InMemory.InMemoryStorageOptions()
+                       {
+                           StringComparer = System.StringComparer.InvariantCultureIgnoreCase,
+                           DisableJobSerialization = true
+                       });*/
+                });
+            }
+            else
+            {
+                services.InitializeHangfireWithDBStorage(microservice);
+            }
             services.AddHangfireServer(options =>
             {
-                options.SchedulePollingInterval = TimeSpan.FromSeconds(5);
+                options.SchedulePollingInterval = TimeSpan.FromSeconds(2);
+                options.IsLightweightServer = false;
             });
             return services;
         }
 
-        public static IApplicationBuilder ConfigureHangfire(this IApplicationBuilder app, string[] configurationQueues)
+        public static IApplicationBuilder UseHangfire(this IApplicationBuilder app, string[] configurationQueues)
         {
-#pragma warning disable CS0618 // Type or member is obsolete
-            app.UseHangfireServer(options: new BackgroundJobServerOptions()
-            {
-                Queues = configurationQueues
-            });
-#pragma warning restore CS0618 // Type or member is obsolete
+            app.UseHangfireDashboard();
             return app;
         }
     }

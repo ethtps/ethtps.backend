@@ -25,7 +25,7 @@ namespace ETHTPS.API
     public sealed class Startup
     {
         private readonly string _myAllowSpecificOrigins = "_myAllowSpecificOrigins";
-        private readonly ETHTPSMicroservice _app = ETHTPSMicroservice.API;
+        private readonly Microservice _app = Microservice.API;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -47,7 +47,7 @@ namespace ETHTPS.API
                     .AddAPIKeyProvider()
                     .AddAPIKeyAuthenticationAndAuthorization()
                     .AddDataProviderServices(DatabaseProvider.InfluxDB)
-                    .WithStore(DatabaseProvider.InfluxDB, ETHTPSMicroservice.API)
+                    .WithStore(DatabaseProvider.InfluxDB, Microservice.API)
                     .AddMixedCoreServices()
                     .AddQueue()
                     .AddCache()
