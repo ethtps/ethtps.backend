@@ -11,21 +11,13 @@ using Hangfire;
 
 using NLog.Extensions.Hosting;
 
-using Steeltoe.Common.Http.Discovery;
-using Steeltoe.Discovery.Client;
-using Steeltoe.Discovery.Consul;
-
 using static ETHTPS.TaskRunner.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.AddServiceDiscovery(options =>
-{
-    options.UseConsul();
-});
 builder.Host.UseNLog();
 var services = builder.Services;
 services.AddEssentialServices()
-        .AddDatabaseContext(CURRENT_APP_NAME)
+        .AddDatabaseContext(CURRENT_APP)
         .AddMixedCoreServices()
         .AddCustomCORSPolicies()
         .AddControllers()
@@ -37,8 +29,8 @@ services.AddSwagger()
         .AddScoped<IInfluxWrapper, InfluxWrapper>()
         .AddDataUpdaterStatusService()
         .AddDataServices()
-        .AddRunner(runnerType, CURRENT_APP_NAME, DatabaseProvider.InfluxDB)
-        .WithStore(DatabaseProvider.InfluxDB, CURRENT_APP_NAME)
+        .AddRunner(runnerType, CURRENT_APP, DatabaseProvider.InfluxDB)
+        .WithStore(DatabaseProvider.InfluxDB, CURRENT_APP)
         .AddDataProviderServices(DatabaseProvider.InfluxDB)
         .AddRabbitMQMessagePublisher()
         .AddScoped<WSAPIPublisher>();

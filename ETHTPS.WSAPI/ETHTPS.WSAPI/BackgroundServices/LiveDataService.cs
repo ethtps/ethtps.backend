@@ -44,7 +44,13 @@ namespace ETHTPS.WSAPI.BackgroundServices
                 AutoAck = false,
                 AutoDelete = false,
                 QueueName = MessagingQueues.LIVEDATA_MULTIPLENEWDATAPOINTS_QUEUE,
-                Host = configurationProvider.GetFirstConfigurationString("RabbitMQ_Host_Dev")
+                Host = configurationProvider.GetFirstConfigurationString(
+#if DEBUG
+                    "RabbitMQ_Host_Dev"
+#else
+                    "RabbitMQ_Host"
+#endif
+                    )
             });
         }
 

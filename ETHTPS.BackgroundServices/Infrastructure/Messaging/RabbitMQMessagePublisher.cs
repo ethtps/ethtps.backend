@@ -15,7 +15,13 @@ namespace ETHTPS.Services.Infrastructure.Messaging
 
         public RabbitMQMessagePublisher(DBConfigurationProviderWithCache configurationProvider)
         {
-            _host = configurationProvider.GetFirstConfigurationString("RabbitMQ_Host_Dev");
+            _host = configurationProvider.GetFirstConfigurationString(
+#if DEBUG
+                    "RabbitMQ_Host_Dev"
+#else
+                    "RabbitMQ_Host"
+#endif
+                    );
         }
 
         public void PublishMessage(string message, string queue) => PublishMessage(message, queue, _host);

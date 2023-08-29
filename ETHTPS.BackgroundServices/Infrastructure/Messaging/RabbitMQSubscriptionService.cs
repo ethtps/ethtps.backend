@@ -14,7 +14,7 @@ namespace ETHTPS.Services.Infrastructure.Messaging
         {
             var queueName = config.QueueName;
 
-            var factory = new ConnectionFactory() { HostName = string.IsNullOrWhiteSpace(config.Host) ? RabbitMQSubscriptionConfig.DEFAULT_HOST_NAME : config.Host };
+            var factory = new ConnectionFactory() { HostName = string.IsNullOrWhiteSpace(config.Host) ? RabbitMQSubscriptionConfig.DEFAULT_EXT_HOST_NAME : config.Host };
             _connection = factory.CreateConnection();
             Channel = _connection.CreateModel();
             Channel.QueueDeclare(queue: string.IsNullOrWhiteSpace(queueName) ? RabbitMQSubscriptionConfig.DEFAULT_QUEUE_NAME : queueName,

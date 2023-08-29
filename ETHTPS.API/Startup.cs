@@ -3,13 +3,13 @@
 using Coravel;
 
 using EntityGraphQL.AspNet;
-using EntityGraphQL.Schema;
 
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.Core.Middlewares;
 using ETHTPS.API.DependencyInjection;
 using ETHTPS.API.Security.Core.Authentication;
 using ETHTPS.API.Security.Core.Policies;
+using ETHTPS.Data.Core;
 using ETHTPS.Data.Integrations.MSSQL;
 using ETHTPS.Services.BackgroundTasks.Recurring.Aggregated;
 using ETHTPS.Services.Infrastructure.Messaging;
@@ -25,7 +25,7 @@ namespace ETHTPS.API
     public sealed class Startup
     {
         private readonly string _myAllowSpecificOrigins = "_myAllowSpecificOrigins";
-        private readonly string _appName = "ETHTPS.API.General";
+        private readonly ETHTPSMicroservice _app = ETHTPSMicroservice.API;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -36,7 +36,7 @@ namespace ETHTPS.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddEssentialServices();
-            services.AddDatabaseContext(_appName);
+            services.AddDatabaseContext(_app);
             services.AddCustomCORSPolicies();
             services.AddResponseCompression();
             services.AddControllersWithViews()
@@ -47,7 +47,7 @@ namespace ETHTPS.API
                     .AddAPIKeyProvider()
                     .AddAPIKeyAuthenticationAndAuthorization()
                     .AddDataProviderServices(DatabaseProvider.InfluxDB)
-                    .WithStore(DatabaseProvider.InfluxDB, "ETHTPS.API")
+                    .WithStore(DatabaseProvider.InfluxDB, ETHTPSMicroservice.API)
                     .AddMixedCoreServices()
                     .AddQueue()
                     .AddCache()
@@ -75,11 +75,12 @@ namespace ETHTPS.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers().RequireAuthorization();
+                /*
                 endpoints.MapGraphQL<EthtpsContext>(options: new ExecutionOptions()
                 {
                     EnableQueryCache = true,
                     ExecuteServiceFieldsSeparately = true,
-                });
+                });*/
             });
         }
     }

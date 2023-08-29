@@ -23,7 +23,7 @@ COPY ["ETHTPS.Security/ETHTPS.API.Security.Core.csproj", "ETHTPS.Security/"]
 RUN dotnet restore "ETHTPS.HangfireRunner/ETHTPS.TaskRunner.csproj"
 COPY . .
 WORKDIR /src
-COPY [".env.development", "/src/"]
+COPY [".env.development", "/app/"]
 WORKDIR "/src/ETHTPS.HangfireRunner"
 RUN dotnet build "ETHTPS.TaskRunner.csproj" -c Debug -o /app/build
 

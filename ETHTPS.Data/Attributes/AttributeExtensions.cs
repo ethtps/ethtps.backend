@@ -12,6 +12,12 @@ namespace ETHTPS.Data.Core.Attributes
         /// </summary>
         public static TimeGrouping ExtractTimeGrouping(this TimeInterval timeInterval) => timeInterval.GetAttribute<GroupByAttribute>().Grouping;
 
+        /// <summary>
+        /// Returns the <see cref="FullNameAttribute"/> that is associated with this value or throws an exception if one was not found.
+        /// </summary>
+        /// <param name="microservice"></param>
+        /// <returns></returns>
+        public static string GetFullName(this ETHTPSMicroservice microservice) => microservice.GetAttribute<FullNameAttribute>().FullName;
 
         /// <summary>
         /// <para>Gets the first attribute of type <typeparamref name="T"/> that is associated with this value or null if one was not found.</para>

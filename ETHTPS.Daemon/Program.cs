@@ -5,6 +5,7 @@ using ETHTPS.Configuration;
 using ETHTPS.Configuration.Extensions;
 using ETHTPS.Core;
 using ETHTPS.Daemon.Infra;
+using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Services.Infrastructure.Messaging;
 
@@ -62,7 +63,7 @@ namespace ETHTPS.Daemon
             builder.Host.UseNLog();
             var services = builder.Services;
             services.AddEssentialServices()
-                    .AddDatabaseContext("ETHTPS.Tests")
+                    .AddDatabaseContext(ETHTPSMicroservice.Tests)
                     .AddMixedCoreServices()
                     .AddRabbitMQMessagePublisher()
                     .AddSingleton<IRabbitMQSubscriptionService>(x =>

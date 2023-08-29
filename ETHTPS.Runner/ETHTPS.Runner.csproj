@@ -22,7 +22,7 @@
 	<ItemGroup>
 		<PackageReference Include="BetterConsoleTables" Version="2.0.4-rc1" />
 		<PackageReference Include="Goblinfactory.Konsole" Version="7.0.0.7-alpha" />
-		<PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.3" />
+		<PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.4" />
 	</ItemGroup>
 
 	<ItemGroup>

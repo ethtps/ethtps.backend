@@ -1,6 +1,7 @@
 ﻿using ETHTPS.API.DependencyInjection;
 using ETHTPS.Configuration.AutoSetup.Infra;
 using ETHTPS.Configuration.Database;
+using ETHTPS.Data.Core;
 using ETHTPS.Data.Integrations.MSSQL;
 
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,7 @@ namespace ETHTPS.Configuration.AutoSetup.Scripts.Configuration.Database
 {
     internal sealed class ETHTPSDatabaseValidation : SetupScript
     {
-        private const string _CONFIG_PROJECT_NAME = "ETHTPS.Configuration";
+        private const ETHTPSMicroservice _CONFIG_PROJECT = ETHTPSMicroservice.Configuration;
 
         public override void Pre()
         {
@@ -30,7 +31,7 @@ namespace ETHTPS.Configuration.AutoSetup.Scripts.Configuration.Database
             var configurationProvider = new DBConfigurationProvider(context, null);
             var ethtpsOptions = new DbContextOptionsBuilder<EthtpsContext>();
             ethtpsOptions.UseSqlServer(
-                configurationProvider.GetDefaultConnectionString(_CONFIG_PROJECT_NAME, "ConnectionString"));
+                configurationProvider.GetDefaultConnectionString(_CONFIG_PROJECT, "ConnectionString"));
             builder.Add(new SchemaInitializer<ConfigurationContext>(context));
             var schemaFileName = Path.Combine(Utils.SqlDirectoryPath, "schemas.json");
             Assert.File.Exists(schemaFileName);

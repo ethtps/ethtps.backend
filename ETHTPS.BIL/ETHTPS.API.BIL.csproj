@@ -11,7 +11,7 @@
 	<ItemGroup>
 		<PackageReference Include="Deedle" Version="3.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-		<PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.3" />
+		<PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.4" />
 	</ItemGroup>
 
 	<ItemGroup>

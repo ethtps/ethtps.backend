@@ -38,7 +38,13 @@ namespace ETHTPS.TaskRunner.BackgroundServices
                 AutoAck = false,
                 AutoDelete = false,
                 QueueName = MessagingQueues.LIVEDATA_NEWDATAPOINT_QUEUE,
-                Host = configurationProvider.GetFirstConfigurationString("RabbitMQ_Host_Dev")
+                Host = configurationProvider.GetFirstConfigurationString(
+#if DEBUG
+                    "RabbitMQ_Host_Dev"
+#else
+                    "RabbitMQ_Host"
+#endif
+                    )
             });
         }
 

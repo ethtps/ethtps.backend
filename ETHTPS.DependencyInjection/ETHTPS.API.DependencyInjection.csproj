@@ -13,26 +13,26 @@
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.0-preview.4.23260.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0-preview.4.23259.5" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0-preview.4.23259.5" />
-    <PackageReference Include="NLog.Database" Version="5.1.5" />
+    <PackageReference Include="NLog.Database" Version="5.2.3" />
     <PackageReference Include="RabbitMQ.Client" Version="6.5.0" />
-    <PackageReference Include="StackExchange.Redis" Version="2.6.111" />
-    <PackageReference Include="Steeltoe.Common.Kubernetes" Version="3.2.3" />
-    <PackageReference Include="Steeltoe.Discovery.ClientCore" Version="3.2.3" />
+    <PackageReference Include="StackExchange.Redis" Version="2.6.122" />
+    <PackageReference Include="Steeltoe.Common.Kubernetes" Version="3.2.4" />
+    <PackageReference Include="Steeltoe.Discovery.ClientCore" Version="3.2.4" />
     <PackageReference Include="Steeltoe.Discovery.ConsulBase" Version="3.0.0-m3" />
-    <PackageReference Include="Steeltoe.Management.EndpointBase" Version="3.2.3" />
-    <PackageReference Include="Steeltoe.Management.EndpointCore" Version="3.2.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Filters.Abstractions" Version="7.0.6" />
+    <PackageReference Include="Steeltoe.Management.EndpointBase" Version="3.2.4" />
+    <PackageReference Include="Steeltoe.Management.EndpointCore" Version="3.2.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters.Abstractions" Version="7.0.8" />
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
-	  <PackageReference Include="Steeltoe.Common" Version="3.2.3" />
-	  <PackageReference Include="Steeltoe.Common.Abstractions" Version="3.2.3" />
-	  <PackageReference Include="Steeltoe.Common.Http" Version="3.2.3" />
-	  <PackageReference Include="Steeltoe.Discovery.Abstractions" Version="3.2.3" />
-	  <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.3" />
-	  <PackageReference Include="Steeltoe.Extensions.Configuration.Abstractions" Version="3.2.3" />
-	  <PackageReference Include="Steeltoe.Extensions.Logging.DynamicLogger" Version="3.2.3" />
+	  <PackageReference Include="Steeltoe.Common" Version="3.2.4" />
+	  <PackageReference Include="Steeltoe.Common.Abstractions" Version="3.2.4" />
+	  <PackageReference Include="Steeltoe.Common.Http" Version="3.2.4" />
+	  <PackageReference Include="Steeltoe.Discovery.Abstractions" Version="3.2.4" />
+	  <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.4" />
+	  <PackageReference Include="Steeltoe.Extensions.Configuration.Abstractions" Version="3.2.4" />
+	  <PackageReference Include="Steeltoe.Extensions.Logging.DynamicLogger" Version="3.2.4" />
   </ItemGroup>
 
   <ItemGroup>

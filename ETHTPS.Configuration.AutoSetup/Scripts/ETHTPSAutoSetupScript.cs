@@ -13,7 +13,7 @@ public sealed class ETHTPSAutoSetupScript
     {
         var builder = new SetupScriptBuilder(environmentName);
         builder.AddPre(() => Logger.Info("Checking system configuration..."))
-#if TESTING
+#if DEBUG
                 .Add<FrameworkCheckScript>()
 #endif
                 .Add<ConfigCheckScript>()

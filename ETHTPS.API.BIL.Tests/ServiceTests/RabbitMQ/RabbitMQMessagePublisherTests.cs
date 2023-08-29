@@ -27,7 +27,13 @@ namespace ETHTPS.Tests.ServiceTests.RabbitMQ
         public void Setup()
         {
             _configurationProvider = ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>();
-            _host = _configurationProvider.GetFirstConfigurationString("RabbitMQ_Host_Dev") ?? "localhost";
+            _host = _configurationProvider.GetFirstConfigurationString(
+#if DEBUG
+                    "RabbitMQ_Host_Dev"
+#else
+                    "RabbitMQ_Host"
+#endif
+                    ) ?? "localhost";
         }
 
         [Test]

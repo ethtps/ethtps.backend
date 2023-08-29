@@ -8,6 +8,7 @@ using ETHTPS.API.Core.Integrations.MSSQL.Services.TimeBuckets.Extensions;
 using ETHTPS.API.Core.Integrations.MSSQL.Services.Updater;
 using ETHTPS.Configuration;
 using ETHTPS.Configuration.Validation.Exceptions;
+using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Services;
@@ -67,7 +68,7 @@ namespace ETHTPS.API.DependencyInjection
             typeof(GnosisJSONRPCBlockInfoProvider)
         };
         public static IServiceCollection AddDataServices(this IServiceCollection services) => services.AddScoped(_enabledUpdaters);
-        public static IServiceCollection AddRunner(this IServiceCollection services, BackgroundServiceType type, string appName, DatabaseProvider databaseProvider)
+        public static IServiceCollection AddRunner(this IServiceCollection services, BackgroundServiceType type, ETHTPSMicroservice microservice, DatabaseProvider databaseProvider)
         {
             services.AddScoped<EthereumBlockTimeProvider>();
             switch (type)
@@ -77,7 +78,7 @@ namespace ETHTPS.API.DependencyInjection
                     services.AddScoped(_enabledUpdaters.Select(x => typeof(CoravelBlockLogger<>).MakeGenericType(x)));
                     break;
                 case BackgroundServiceType.Hangfire:
-                    services.AddHangfireServer(appName);
+                    services.AddHangfireServer(microservice);
                     _enabledUpdaters.ToList().ForEach(updater => services.RegisterHangfireBackgroundService(updater, databaseProvider));
                     services.InjectTimeBucketService(databaseProvider); //services.RegisterHangfireBackgroundServiceAndTimeBucket<MSSQLLogger<EthereumBlockInfoProvider>, EthereumBlockInfoProvider>(CronConstants.EVERY_5_S, "tpsdata");
 
@@ -110,12 +111,12 @@ namespace ETHTPS.API.DependencyInjection
             }
         }
 
-        public static IServiceCollection WithStore(this IServiceCollection services, DatabaseProvider databaseProvider, string appName)
+        public static IServiceCollection WithStore(this IServiceCollection services, DatabaseProvider databaseProvider, ETHTPSMicroservice microservice)
         {
             switch (databaseProvider)
             {
                 case DatabaseProvider.MSSQL:
-                    services.InitializeHangfire(appName);
+                    services.InitializeHangfire(microservice);
                     break;
             }
             return services;
@@ -142,7 +143,7 @@ namespace ETHTPS.API.DependencyInjection
             services.AddScoped<V>();
             services.AddScoped<T>();
 #pragma warning disable CS0618 // Type or member is obsolete
-            Hangfire.RecurringJob.AddOrUpdate<T>(typeof(V).Name, x => x.RunAsync(), cronExpression, queue: queue);
+            RecurringJob.AddOrUpdate<T>(typeof(V).Name, x => x.RunAsync(), cronExpression, queue: queue);
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 

@@ -14,8 +14,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.0-preview.4.23260.4" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0-preview.4.23259.5" />
-    <PackageReference Include="NLog.Database" Version="5.1.5" />
-    <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.3" />
+    <PackageReference Include="NLog.Database" Version="5.2.3" />
+    <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.4" />
   </ItemGroup>
 
   <ItemGroup>
