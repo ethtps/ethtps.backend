@@ -1,6 +1,7 @@
 ﻿using ETHTPS.Data.Core;
 
 using Hangfire;
+using Hangfire.InMemory;
 using Hangfire.SqlServer;
 
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +12,7 @@ namespace ETHTPS.API.DependencyInjection
     public static class HangfireExtensions
     {
         private const string _DEFAULT_CONNECTION_STRING_NAME = "HangfireConnectionString";
+        private static InMemoryStorage _storage = new();
         private static void InitializeHangfireWithDBStorage(this IServiceCollection services, Microservice microservice)
         {
             SqlServerStorage sqlStorage = new(services.GetConnectionString(microservice, _DEFAULT_CONNECTION_STRING_NAME));
@@ -25,34 +27,28 @@ namespace ETHTPS.API.DependencyInjection
         {
             if (inMemoryStorage)
             {
-                GlobalConfiguration.Configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-                           .UseColouredConsoleLogProvider()
-                           .UseSimpleAssemblyNameTypeSerializer()
-                           .UseRecommendedSerializerSettings()
-                           .UseInMemoryStorage();
+                JobStorage.Current = _storage;
                 services.AddHangfire(config =>
                 {
-                    /*   config.UseInMemoryStorage(new Hangfire.InMemory.InMemoryStorageOptions()
-                       {
-                           StringComparer = System.StringComparer.InvariantCultureIgnoreCase,
-                           DisableJobSerialization = true
-                       });*/
+                    config.UseInMemoryStorage();
                 });
             }
             else
             {
                 services.InitializeHangfireWithDBStorage(microservice);
             }
-            services.AddHangfireServer(options =>
-            {
-                options.SchedulePollingInterval = TimeSpan.FromSeconds(2);
-                options.IsLightweightServer = false;
-            });
             return services;
         }
 
-        public static IApplicationBuilder UseHangfire(this IApplicationBuilder app, string[] configurationQueues)
+        public static IApplicationBuilder UseHangfire(this IApplicationBuilder app, string[] configurationQueues) // Called in Configure(...)
         {
+#pragma warning disable CS0618 
+            app.UseHangfireServer(new BackgroundJobServerOptions()
+            {
+                Queues = configurationQueues,
+                SchedulePollingInterval = TimeSpan.FromSeconds(2)
+            }, storage: _storage);
+#pragma warning restore CS0618 
             app.UseHangfireDashboard();
             return app;
         }
