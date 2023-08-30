@@ -1,6 +1,7 @@
 using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.DependencyInjection;
 using ETHTPS.API.Security.Core.Policies;
+using ETHTPS.Configuration;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Integrations.InfluxIntegration;
@@ -38,11 +39,17 @@ services.AddSwagger()
         .AddDataProviderServices(DatabaseProvider.InfluxDB)
         .AddRabbitMQMessagePublisher()
         .AddRabbitMQSubscriptionService(AllowedSubscriptionScope.BlockDataAggregator)
-        .AddScoped<NewDatapointHandler>()
         .AddScoped<WSAPIPublisher>();
 
 Trace("Added dependencies");
-services.AddHostedService<NewDatapointHandler>();
+services.AddHostedService(x =>
+{
+    using var scope = x.CreateScope();
+    return new NewDatapointHandler(
+        scope.ServiceProvider.GetRequiredService<ILogger<NewDatapointHandler>>(),
+        scope.ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>(),
+        scope.ServiceProvider.GetRequiredService<IMessagePublisher>());
+});
 Trace("Registered hosted services");
 var app = builder.Build();
 app.UseStaticFiles();

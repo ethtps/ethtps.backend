@@ -58,7 +58,8 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             int c = 0;
             while (await _influxClient.ReadyAsync() == null)
             {
-                _logger.LogInformation($"[{++c}] Waiting for client...");
+                if (++c == 10) throw new OperationCanceledException($"[TID {Thread.CurrentThread.ManagedThreadId}]: InfluxDB did not respond in a timely manner");
+                _logger.LogInformation($"[a#{c}@TID{Thread.CurrentThread.ManagedThreadId}] Waiting for client...");
                 await Task.Delay(2500);
             }
         }
