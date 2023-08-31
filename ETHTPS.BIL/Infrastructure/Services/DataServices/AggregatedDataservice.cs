@@ -32,33 +32,38 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
             _allAvailableProviders = context.Providers.Select(x => x.Name).ToArray();
         }
 
-        private async Task<List<DataResponseModel>> GetDataAsync2(L2DataRequestModel requestModel, DataType dataType, TimeInterval? interval)
+        private async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetDataAsync2(L2DataRequestModel requestModel, DataType dataType, TimeInterval? interval)
         {
             requestModel.Validate(_allAvailableProviders).ThrowIfInvalid();
             if (requestModel is { StartDate: not null, EndDate: not null })
             {
                 return dataType switch
                 {
-                    DataType.TPS => (await _tpsService.GetAsync(requestModel)).ToList(),
-                    DataType.GPS => (await _gpsService.GetAsync(requestModel)).ToList(),
-                    DataType.GasAdjustedTPS => (await _gtpsService.GetAsync(requestModel)).ToList(),
+                    DataType.TPS => (await _tpsService.GetAsync(requestModel)),
+                    DataType.GPS => (await _gpsService.GetAsync(requestModel)),
+                    DataType.GasAdjustedTPS => (await _gtpsService.GetAsync(requestModel)),
                     _ => throw new ArgumentException($"{dataType} is not supported."),
                 };
             }
             else if (interval != null)
             {
+                IDictionary<string, IEnumerable<DataResponseModel>> format(List<DataResponseModel> data)
+                {
+                    var groups = data.GroupBy(x => x.Provider);
+                    return groups.ToDictionary(x => x.Key, x => x.AsEnumerable());
+                }
                 return dataType switch
                 {
-                    DataType.TPS => await GetTPSAsync(requestModel, interval.Value),
-                    DataType.GPS => await GetGPSAsync(requestModel, interval.Value),
-                    DataType.GasAdjustedTPS => await GetGTPSAsync(requestModel, interval.Value),
+                    DataType.TPS => format(await GetTPSAsync(requestModel, interval.Value)),
+                    DataType.GPS => format(await GetGPSAsync(requestModel, interval.Value)),
+                    DataType.GasAdjustedTPS => format(await GetGTPSAsync(requestModel, interval.Value)),
                     _ => throw new ArgumentException($"{dataType} is not supported."),
                 };
             }
             throw new ArgumentException($"No start date, end date or time interval specified");
         }
 
-        public async Task<List<DataResponseModel>> GetDataAsync(L2DataRequestModel requestModel, DataType dataType, TimeInterval interval) => await GetDataAsync2(requestModel, dataType, interval);
+        public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetDataAsync(L2DataRequestModel requestModel, DataType dataType, TimeInterval interval) => await GetDataAsync2(requestModel, dataType, interval);
 
         public Task<L2DataResponseModel> GetDataAsync(L2DataRequestModel requestModel, DataType dataType)
         {
@@ -94,7 +99,7 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
                 {
                     requestModel.Provider = providerName;
                     var data = await GetDataAsync(requestModel, dataType, requestModel.AutoInterval);
-                    return new Dataset(_dataFormatter.Format(data, requestModel), providerName, requestModel.IncludeSimpleAnalysis, requestModel.IncludeComplexAnalysis);
+                    return new Dataset(_dataFormatter.Format(data[providerName], requestModel), providerName, requestModel.IncludeSimpleAnalysis, requestModel.IncludeComplexAnalysis);
                 })
                 ?.Select(task => task.Result)
                 .Where(x => !requestModel.IncludeEmptyDatasets || x.DataPoints.Any())

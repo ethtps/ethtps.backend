@@ -9,6 +9,6 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
     {
         public IEnumerable<Dataset> MakeEqualLength(IEnumerable<Dataset> datasets, XPointType targetType);
 
-        IEnumerable<IXYMultiConvertible> Format(List<DataResponseModel> source, L2DataRequestModel requestModel);
+        IEnumerable<IXYMultiConvertible> Format(IEnumerable<DataResponseModel> source, L2DataRequestModel requestModel);
     }
 }
