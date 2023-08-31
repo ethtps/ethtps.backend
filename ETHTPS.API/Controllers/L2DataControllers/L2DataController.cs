@@ -7,8 +7,6 @@ using ETHTPS.API.Core.Controllers;
 using ETHTPS.API.Core.Integrations.MSSQL.Services;
 using ETHTPS.Core;
 using ETHTPS.Data.Core;
-using ETHTPS.Data.Core.Extensions.DateTimeExtensions;
-using ETHTPS.Data.Core.Models.DataPoints.XYPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Data.Core.Models.ResponseModels.L2s;
 using ETHTPS.Services.Infrastructure.Messaging;
@@ -161,7 +159,10 @@ namespace ETHTPS.API.Controllers.L2DataControllers
             var providers = _generalService.AllProviders.Select(x => (x.Name, x.Type == "Sidechain")).Where(x => requestModel.IncludeSidechains || !x.Item2);
             if (requestModel.Providers != null)
                 if (requestModel.Providers.Contains(Constants.All))
-                    requestModel.Providers = providers.Select(x => x.Name).ToList();
+                {
+                    throw new NotSupportedException("InfluxDB doesn\'t return strings for provider names - TOFIX");
+                    //requestModel.Providers = providers.Select(x => x.Name).ToList();
+                }
                 else requestModel.Providers = requestModel.Providers.Where(p => providers.Select(x => x.Name).Contains(p)).ToList();
             if (requestModel.Provider != null && (!requestModel.Providers?.Contains(requestModel.Provider) ?? false))
                 requestModel.Providers.Add(requestModel.Provider);

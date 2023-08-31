@@ -46,6 +46,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
                 _influxWrapper.GetEntriesForPeriod<Block
                 >(Constants.Influx.DEFAULT_BLOCK_BUCKET_NAME, "blockinfo", model.Provider, interval)))
             {
+                entry.Provider = model.Provider;
                 if (model.Provider != Constants.All && entry.Provider != model.Provider)
                 {
                     continue; //Redundant(?)
@@ -88,12 +89,14 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
 
         public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetMonthlyDataByYearAsync(ProviderQueryModel model, int year)
         {
+            //if (model.Provider == Constants.All) throw new NotSupportedException("InfluxDB doesn\'t return strings for provider names - TOFIX");
             var result = new Dictionary<string, List<DataResponseModel>>();
             var start = new DateTime(year, 1, 1);
             var end = new DateTime(year, 12, 31);
             await foreach (var entry in _influxWrapper.GetEntriesBetween<Block
                 >(Constants.Influx.DEFAULT_BLOCK_BUCKET_NAME, "blockinfo", start, end, "1mo"))
             {
+                entry.Provider = model.Provider;
                 if (model.Provider != Constants.All && entry.Provider != model.Provider)
                 {
                     continue;
@@ -101,6 +104,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
                 if (!result.TryGetValue(entry.Provider, out var list))
                 {
                     list = new List<DataResponseModel>();
+                    result[entry.Provider] = list;
                 }
 
                 var dataPoint = new DataPoint()
@@ -128,7 +132,6 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
                 {
                     Data = new List<DataPoint>() { dataPoint }
                 });
-                result.Add(entry.Provider, list);
             }
 
             return result.ToDictionary(x => x.Key, x => x.Value.AsEnumerable());

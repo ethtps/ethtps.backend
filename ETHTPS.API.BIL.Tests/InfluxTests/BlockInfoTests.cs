@@ -82,7 +82,7 @@ namespace ETHTPS.Tests.InfluxTests
                 Assert.Fail();
                 return;
             }
-            var result = await _service.GetAsync(ProviderQueryModel.FromProviderName("Ethereum"), TimeInterval.OneYear);
+            var result = await _service.GetAsync(ProviderQueryModel.FromProviderName("Ethereum"), TimeInterval.OneDay);
             Assert.That(result, Has.Count.AtMost(1));
             Assert.That(result.ContainsKey("Ethereum"), Is.True, $"Keys returned: [{string.Join(',', result.Select((x => x.Key)))}]");
         }
