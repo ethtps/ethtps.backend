@@ -160,8 +160,8 @@ namespace ETHTPS.API.Controllers.L2DataControllers
             if (requestModel.Providers != null)
                 if (requestModel.Providers.Contains(Constants.All))
                 {
-                    throw new NotSupportedException("InfluxDB doesn\'t return strings for provider names - TOFIX");
-                    //requestModel.Providers = providers.Select(x => x.Name).ToList();
+                    //throw new NotSupportedException("InfluxDB doesn\'t return strings for provider names - TOFIX");
+                    requestModel.Providers = providers.Select(x => x.Name).ToList();
                 }
                 else requestModel.Providers = requestModel.Providers.Where(p => providers.Select(x => x.Name).Contains(p)).ToList();
             if (requestModel.Provider != null && (!requestModel.Providers?.Contains(requestModel.Provider) ?? false))

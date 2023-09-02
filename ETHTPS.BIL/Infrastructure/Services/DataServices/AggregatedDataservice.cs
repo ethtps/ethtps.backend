@@ -99,7 +99,7 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
                 {
                     requestModel.Provider = providerName;
                     var data = await GetDataAsync(requestModel, dataType, requestModel.AutoInterval);
-                    return new Dataset(_dataFormatter.Format(data[providerName], requestModel), providerName, requestModel.IncludeSimpleAnalysis, requestModel.IncludeComplexAnalysis);
+                    return new Dataset(_dataFormatter.Format(data.ContainsKey(providerName) ? data[providerName] : Enumerable.Empty<DataResponseModel>(), requestModel), providerName, requestModel.IncludeSimpleAnalysis, requestModel.IncludeComplexAnalysis);
                 })
                 ?.Select(task => task.Result)
                 .Where(x => !requestModel.IncludeEmptyDatasets || x.DataPoints.Any())
