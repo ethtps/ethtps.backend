@@ -18,6 +18,7 @@ namespace ETHTPS.Tests.PerformanceTests
             private IConnection? _conn;
             private IModel? _ch;
             private EventingBasicConsumer? _consumer;
+
             [SetUp]
             public void Init()
             {

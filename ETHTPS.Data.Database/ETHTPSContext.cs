@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ETHTPS.Data.Integrations.MSSQL.RPC;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace ETHTPS.Data.Integrations.MSSQL;
 
@@ -107,7 +109,58 @@ public partial class EthtpsContext : ETHTPSContextBase
     public virtual DbSet<LiveDataUpdaterStatus> LiveDataUpdaterStatuses { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Binding>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Bindings__3214EC276F70E733");
 
+            entity.ToTable("Bindings", "RPC");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+            entity.Property(e => e.LastError).HasMaxLength(255);
+
+            entity.HasOne(d => d.EndpointNavigation).WithMany(p => p.Bindings)
+                .HasForeignKey(d => d.Endpoint)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Bindings__Endpoi__39CD8610");
+
+            entity.HasOne(d => d.UpdaterNavigation).WithMany(p => p.Bindings)
+                .HasForeignKey(d => d.Updater)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Bindings__Update__3AC1AA49");
+        });
+
+        modelBuilder.Entity<Health>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Health__3214EC27411D5327");
+
+            entity.ToTable("Health", "RPC");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ErrorDetails).HasMaxLength(255);
+            entity.Property(e => e.LastCheck).HasColumnType("datetime");
+
+            entity.HasOne(d => d.BindingNavigation).WithMany(p => p.Healths)
+                .HasForeignKey(d => d.Binding)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Health__Binding__3BB5CE82");
+
+            entity.HasOne(d => d.StatusNavigation).WithMany(p => p.Healths)
+                .HasForeignKey(d => d.Status)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Health__Status__3CA9F2BB");
+        });
+
+        modelBuilder.Entity<HealthStatus>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__HealthSt__3214EC27CC89C25A");
+
+            entity.ToTable("HealthStatuses", "RPC");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Details).HasMaxLength(255);
+            entity.Property(e => e.Name).HasMaxLength(255);
+        });
         modelBuilder.Entity<DataUpdater>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__DataUpda__3214EC2739E457A8");
@@ -136,6 +189,44 @@ public partial class EthtpsContext : ETHTPSContextBase
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Name).HasMaxLength(255);
+        });
+        modelBuilder.Entity<Updater>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Updaters__3214EC2763267566");
+
+            entity.ToTable("Updaters", "RPC");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Description).HasMaxLength(255);
+            entity.Property(e => e.LastUpdated).HasColumnType("datetime");
+
+            entity.HasOne(d => d.NetworkNavigation).WithMany(p => p.Updaters)
+                .HasForeignKey(d => d.Network)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Updaters__Networ__36F11965");
+
+            entity.HasOne(d => d.ProviderNavigation).WithMany(p => p.Updaters)
+                .HasForeignKey(d => d.Provider)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Updaters__Provid__37E53D9E");
+        });
+
+        modelBuilder.Entity<UpdaterConfiguration>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__UpdaterC__3214EC27AA1C983E");
+
+            entity.ToTable("UpdaterConfiguration", "RPC");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Enabled)
+                .IsRequired()
+                .HasDefaultValueSql("((1))");
+            entity.Property(e => e.UpdateIntervalMs).HasDefaultValueSql("((5000))");
+
+            entity.HasOne(d => d.UpdaterNavigation).WithMany(p => p.UpdaterConfigurations)
+                .HasForeignKey(d => d.Updater)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__UpdaterCo__Updat__38D961D7");
         });
 
         modelBuilder.Entity<LiveDataUpdaterStatus>(entity =>

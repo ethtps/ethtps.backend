@@ -1,4 +1,5 @@
 ﻿using ETHTPS.Data.Core.Models.Providers;
+using ETHTPS.Data.Integrations.MSSQL.RPC;
 
 namespace ETHTPS.Data.Integrations.MSSQL;
 
@@ -30,6 +31,7 @@ public partial class Provider : ProviderSummaryBase
     public virtual ICollection<Provider> InverseSubchainOfNavigation { get; set; }
     public virtual ICollection<OldestLoggedHistoricalEntry> OldestLoggedHistoricalEntries { get; set; }
     public virtual ICollection<OldestLoggedTimeWarpBlock> OldestLoggedTimeWarpBlocks { get; set; }
+    public virtual ICollection<Updater> Updaters { get; set; } = new List<Updater>();
     public virtual ICollection<Project> Projects { get; set; }
     public virtual ICollection<ProviderLink> ProviderLinks { get; set; }
 
