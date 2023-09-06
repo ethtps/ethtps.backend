@@ -1,6 +1,8 @@
 ﻿using ETHTPS.Data.Core.Models.Providers;
 using ETHTPS.Data.Integrations.MSSQL.RPC;
 
+using Newtonsoft.Json;
+
 namespace ETHTPS.Data.Integrations.MSSQL;
 
 public partial class Provider : ProviderSummaryBase
@@ -23,6 +25,12 @@ public partial class Provider : ProviderSummaryBase
     public bool? IsGeneralPurpose { get; set; }
     public int? HistoricalAggregationDeltaBlock { get; set; }
     public bool Enabled { get; set; }
+
+    [JsonIgnore]
+    /// <summary>
+    /// Whether this provider is currently pending approval. Used for approving auto-added providers.
+    /// </summary>
+    public bool? PendingApproval { get; set; }
     public int? SubchainOf { get; set; }
     public int TheoreticalMaxTps { get; set; }
 
