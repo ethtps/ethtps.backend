@@ -31,7 +31,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
         private readonly ILogger<InfluxWrapper> _logger;
         private readonly Stopwatch _stopwatch = new();
 
-        public InfluxWrapper(IDBConfigurationProvider configurationProvider, ILogger<InfluxWrapper> logger) : this(InfluxWrapperConfiguration.FromConfigurationProvider(configurationProvider), logger)
+        public InfluxWrapper(DBConfigurationProviderWithCache configurationProvider, ILogger<InfluxWrapper> logger) : this(InfluxWrapperConfiguration.FromConfigurationProvider(configurationProvider), logger)
         {
 
         }
@@ -58,7 +58,8 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration
             int c = 0;
             while (await _influxClient.ReadyAsync() == null)
             {
-                _logger.LogInformation($"[{++c}] Waiting for client...");
+                if (++c == 10) throw new OperationCanceledException($"[TID {Thread.CurrentThread.ManagedThreadId}]: InfluxDB did not respond in a timely manner");
+                _logger.LogInformation($"[a#{c}@TID{Thread.CurrentThread.ManagedThreadId}] Waiting for client...");
                 await Task.Delay(2500);
             }
         }

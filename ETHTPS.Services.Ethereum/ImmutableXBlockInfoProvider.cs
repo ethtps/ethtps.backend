@@ -21,7 +21,7 @@ namespace ETHTPS.Services.Ethereum
     [RunsEvery(CronConstants.EVERY_13_S)]
     public sealed class ImmutableXBlockInfoProvider : BlockInfoProviderBase
     {
-        public ImmutableXBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Immutable X")
+        public ImmutableXBlockInfoProvider(DBConfigurationProviderWithCache configuration) : base(configuration, "Immutable X")
         {
             BlockTimeSeconds = 60;
         }

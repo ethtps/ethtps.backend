@@ -21,13 +21,19 @@ namespace ETHTPS.Tests.ServiceTests.RabbitMQ
     {
         private static string _host = "localhost";
         private static string _queue = "test_queue";
-        private static IDBConfigurationProvider? _configurationProvider;
+        private static DBConfigurationProviderWithCache? _configurationProvider;
 
         [SetUp]
         public void Setup()
         {
-            _configurationProvider = ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
-            _host = _configurationProvider.GetFirstConfigurationString("RabbitMQ_Host_Dev") ?? "localhost";
+            _configurationProvider = ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>();
+            _host = _configurationProvider.GetFirstConfigurationString(
+#if DEBUG
+                    "RabbitMQ_Host_Dev"
+#else
+                    "RabbitMQ_Host"
+#endif
+                    ) ?? "localhost";
         }
 
         [Test]

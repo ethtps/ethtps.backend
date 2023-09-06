@@ -45,8 +45,8 @@ namespace ETHTPS.Data.Core.Extensions
 
             return expression(attribute);
         }
-        public static TimeGrouping Previous(this TimeGrouping timeInterval) => (TimeGrouping)(timeInterval - 1);
-        public static TimeGrouping Next(this TimeGrouping timeInterval) => (TimeGrouping)(timeInterval + 1);
+        public static TimeGrouping Previous(this TimeGrouping timeInterval) => timeInterval - 1;
+        public static TimeGrouping Next(this TimeGrouping timeInterval) => timeInterval + 1;
 
         public static TimeSpan ToTimeSpan(this TimeGrouping grouping)
         {

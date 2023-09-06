@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.Configuration.Database.Initialization
 {
-    public abstract class DataInitializerBase
+    internal abstract class DataInitializerBase
     {
         protected readonly IDBConfigurationProvider _provider;
 

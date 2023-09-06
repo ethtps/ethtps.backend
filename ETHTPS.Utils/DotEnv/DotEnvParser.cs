@@ -9,6 +9,8 @@ namespace ETHTPS.Utils.DotEnv
         public DotEnvParser(string path =
 #if DEBUG
             ".env.development"
+#elif TESTING
+            ".env.testing"
 #else
             ".env"
 #endif

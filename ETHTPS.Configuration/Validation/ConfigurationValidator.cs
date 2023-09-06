@@ -18,7 +18,7 @@ namespace ETHTPS.Configuration.Validation
     public sealed class ConfigurationValidator
     {
         private readonly ConfigurationContext _context;
-        private StartupConfigurationModel? _startupConfiguration;
+        private readonly StartupConfigurationModel? _startupConfiguration;
         private static bool _validated = false;
         private readonly ILogger<ConfigurationValidator>? _logger;
 
@@ -49,8 +49,12 @@ namespace ETHTPS.Configuration.Validation
 
         private void WarnOfMissingOptionalStrings()
         {
-            if (_startupConfiguration == null || _startupConfiguration.Required == null || _startupConfiguration.Required.MicroserviceConfiguration == null)
-                return;
+            lock (_context.LockObj)
+            {
+                if (_startupConfiguration == null || _startupConfiguration.Required == null || _startupConfiguration.Required.MicroserviceConfiguration == null)
+                    return;
+            }
+
             lock (_context.LockObj)
             {
                 foreach (var microserviceConfiguration in _startupConfiguration.Required.MicroserviceConfiguration)
@@ -77,8 +81,14 @@ namespace ETHTPS.Configuration.Validation
 
         private void ValidateRequiredConfigurationStrings()
         {
-            if (_startupConfiguration == null || _startupConfiguration.Required == null || _startupConfiguration.Required.MicroserviceConfiguration == null)
-                return;
+            lock (_context.LockObj)
+            {
+                if (_startupConfiguration == null || _startupConfiguration.Required == null || _startupConfiguration.Required.MicroserviceConfiguration == null)
+                    return;
+            }
+
+            var missingConfigurationStrings = new List<string>();
+            var invalidConfigurationStrings = new List<string>();
 
             lock (_context.LockObj)
             {
@@ -87,18 +97,34 @@ namespace ETHTPS.Configuration.Validation
                     if (microserviceConfiguration.RequiredConfigurationStrings == null) continue;
                     foreach (var requiredString in microserviceConfiguration.RequiredConfigurationStrings)
                     {
-                        var s = (_context.MicroserviceConfigurationStrings?.FirstOrDefault(x => (x.Microservice != null ? x.Microservice.Name : Microservice.EMPTY.Name) == microserviceConfiguration.Name && (x.ConfigurationString != null ? x.ConfigurationString.Name : ConfigurationString.EMPTY.Name) == requiredString)) ?? throw new ConfigurationStringNotFoundException(requiredString, microserviceConfiguration.Name ?? "ValidateRequiredConfigurationStrings");
+                        var s = (_context.MicroserviceConfigurationStrings?.FirstOrDefault(x => (x.Microservice != null ? x.Microservice.Name : Microservice.EMPTY.Name) == microserviceConfiguration.Name && (x.ConfigurationString != null ? x.ConfigurationString.Name : ConfigurationString.EMPTY.Name) == requiredString));
+
+                        if (s == null)
+                        {
+                            missingConfigurationStrings.Add($"{{{microserviceConfiguration.Name}.{requiredString}}}");
+                            continue;
+                        }
+
                         if (string.IsNullOrWhiteSpace(s.ConfigurationString?.Value))
-                            throw new InvalidConfigurationStringException((s.ConfigurationString != null ? s.ConfigurationString.Name : ConfigurationString.EMPTY.Name), "null or empty");
+                            invalidConfigurationStrings.Add($"{{{microserviceConfiguration.Name}.{s.ConfigurationString?.Name}}}");
                     }
                 }
             }
+
+            if (missingConfigurationStrings.Any())
+                throw new Exception($"Missing the following configuration strings strings: [{string.Join(',', missingConfigurationStrings)}]", new ConfigurationNotFoundException());
+            if (invalidConfigurationStrings.Any())
+                throw new Exception($"Invalid configuration strings: [{string.Join(',', missingConfigurationStrings)}]", new ConfigurationNotFoundException());
         }
+
 
         private void ValidateMicroservices()
         {
-            if (_startupConfiguration == null || _startupConfiguration.Required == null || _startupConfiguration.Required.MicroserviceConfiguration == null)
-                return;
+            lock (_context.LockObj)
+            {
+                if (_startupConfiguration == null || _startupConfiguration.Required == null || _startupConfiguration.Required.MicroserviceConfiguration == null)
+                    return;
+            }
 
             lock (_context.LockObj)
             {

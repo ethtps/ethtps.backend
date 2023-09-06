@@ -1,4 +1,6 @@
-﻿using ETHTPS.Data.Core.Database;
+﻿using System.Data;
+
+using ETHTPS.Data.Core.Database;
 using ETHTPS.Data.Core.Database.Relational;
 
 using Microsoft.Data.SqlClient;
@@ -107,6 +109,30 @@ namespace ETHTPS.Data.Integrations.MSSQL
                 var result = await command.ExecuteNonQueryAsync();
                 return result;
             }
+        }
+
+        public async Task UpsertRPCEndpoints(
+          string? description,
+          string? authType,
+          string? apiKey,
+          string network,
+          string endpoints,
+          string providerName)
+        {
+            description ??= string.Empty;
+            authType ??= string.Empty;
+            apiKey ??= string.Empty;
+            var parameters = new[]
+            {
+            new SqlParameter("@Description", SqlDbType.VarChar) { Value = description },
+            new SqlParameter("@AuthType", SqlDbType.VarChar) { Value = authType },
+            new SqlParameter("@ApiKey", SqlDbType.VarChar) { Value = apiKey },
+            new SqlParameter("@Network", SqlDbType.VarChar) { Value = network },
+            new SqlParameter("@Endpoints", SqlDbType.VarChar) { Value = endpoints },
+            new SqlParameter("@ProviderName", SqlDbType.VarChar) { Value = providerName }
+        };
+
+            await Database.ExecuteSqlRawAsync("EXEC [RPC].[UpsertRPCEndpoints] @Description, @AuthType, @ApiKey, @Network, @Endpoints, @ProviderName", parameters);
         }
     }
 }

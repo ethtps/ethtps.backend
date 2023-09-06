@@ -1,4 +1,6 @@
 ﻿
+using ETHTPS.Data.Core.Attributes;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -37,5 +39,32 @@ namespace ETHTPS.Data.Core
     public enum DataType
     {
         TPS, GPS, GasAdjustedTPS
+    }
+
+    /// <summary>
+    /// A list of ETHTPS microservices or libraries that have their own configuration and permissions.
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum Microservice
+    {
+        [FullName("ETHTPS.API.General")]
+        API,
+        [FullName("ETHTPS.TaskRunner")]
+        TaskRunner,
+        [FullName("ETHTPS.Admin.Backend")]
+        Admin,
+        [FullName("ETHTPS.WSAPI")]
+        WSAPI,
+        [FullName("ETHTPS.Configuration.IDBConfigurationProvider")]
+        Configuration,
+        [FullName("ETHTPS.Tests")]
+        Tests,
+        [FullName("ETHTPS.Services")]
+        Services,
+        /// <summary>
+        /// Dummy value, shouldn't really be used or even needed anywhere.
+        /// </summary>
+        [FullName("ETHTPS.TestsAPI")]
+        Mock
     }
 }

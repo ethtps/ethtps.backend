@@ -1,6 +1,6 @@
 ﻿namespace ETHTPS.Configuration.Database.Initialization
 {
-    public sealed class PublicDataInitializer : DataInitializerBase
+    internal sealed class PublicDataInitializer : DataInitializerBase
     {
         public PublicDataInitializer(IDBConfigurationProvider provider) : base(provider)
         {

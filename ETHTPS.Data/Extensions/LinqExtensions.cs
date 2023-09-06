@@ -24,11 +24,11 @@ namespace ETHTPS.Data.Core.Extensions
         }
 
         /// <summary>
-        /// Selects only the non-null elements of this list and returns an empty list if none is found
+        /// Selects only the non-null elements of this list and returns an empty list if no elements remain.
         /// </summary>
         public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> source) => source.SafeWhere(x => x != null);
 
-        public static IEnumerable<T> Where2<T>(this IEnumerable<T> source, Func<T, int> predicate) => Enumerable.Where(source, x => predicate(x) == 1);
+        public static IEnumerable<T> Where2<T>(this IEnumerable<T> source, Func<T, int> predicate) => source.Where(x => predicate(x) == 1);
 #pragma warning disable SYSLIB0011
         public static T DeepClone<T>(this T obj)
         {

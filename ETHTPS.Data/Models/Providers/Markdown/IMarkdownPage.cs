@@ -1,4 +1,4 @@
-﻿namespace ETHTPS.Data.Core.Models.Markdown
+﻿namespace ETHTPS.Data.Core.Models.Providers.Markdown
 {
     public interface IMarkdownPage : IIndexed
     {

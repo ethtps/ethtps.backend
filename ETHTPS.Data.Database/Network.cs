@@ -1,4 +1,5 @@
 ﻿using ETHTPS.Data.Core;
+using ETHTPS.Data.Integrations.MSSQL.RPC;
 
 namespace ETHTPS.Data.Integrations.MSSQL;
 
@@ -16,4 +17,6 @@ public partial class Network : IIndexed
     public virtual ICollection<OldestLoggedTimeWarpBlock>? OldestLoggedTimeWarpBlocks { get; }
 
     public virtual ICollection<StarkwareTransactionCountDatum>? StarkwareTransactionCountData { get; }
+
+    public virtual ICollection<Updater> Updaters { get; set; } = new List<Updater>();
 }

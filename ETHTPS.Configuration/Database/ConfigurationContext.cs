@@ -23,11 +23,9 @@ public partial class ConfigurationContext : ConfigurationContextBase
 
     public virtual DbSet<MicroserviceConfigurationString>? MicroserviceConfigurationStrings { get; set; }
 
-
     public virtual DbSet<Provider>? Providers { get; set; }
 
     public virtual DbSet<ConfigurationString>? ConfigurationStrings { get; set; }
-
 
     public virtual DbSet<ProviderConfigurationString>? ProviderConfigurationStrings { get; set; }
 
@@ -150,6 +148,7 @@ public partial class ConfigurationContext : ConfigurationContextBase
         });
 
         modelBuilder.Entity<AllConfigurationStringsModel>(e => e.HasNoKey());
+        modelBuilder.Entity<InsertGenerationResult>(e => e.HasNoKey());
         modelBuilder.Entity<AllLinksModel>(e => e.HasNoKey());
 
         modelBuilder.Entity<Provider>(entity =>

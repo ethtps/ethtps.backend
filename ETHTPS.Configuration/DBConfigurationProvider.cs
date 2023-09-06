@@ -14,8 +14,30 @@ namespace ETHTPS.Configuration
     {
         private readonly ConfigurationContext _context;
         private readonly ILogger<ConfigurationValidator>? _logger;
-        private readonly string _environment;
-        private readonly int _environmentID;
+        internal readonly string _environment;
+
+        private void WarnIfNullOrEmpty<T>(string? parameterName, params T?[]? list)
+        {
+            void LogDebug(string message)
+            {
+                _logger?.LogWarning($"DBConfigurationProvider:{_environment} - {message}");
+            }
+
+            if (list == null)
+            {
+                LogDebug($"{parameterName} was null");
+            }
+            else if (!list.Any())
+            {
+                LogDebug($"{parameterName} was empty");
+            }
+            else if (list.All(x => x == null))
+            {
+                LogDebug($"All members of {parameterName} were null");
+            }
+        }
+
+        private void LogIfNullOrEmpty<T>(params T?[]? list) => WarnIfNullOrEmpty("Parameter", list);
 
         public DBConfigurationProvider(ConfigurationContext context, ILogger<ConfigurationValidator>? logger, string environment = Constants
             .ENVIRONMENT)
@@ -29,21 +51,9 @@ namespace ETHTPS.Configuration
             AddEnvironments(environment);
             lock (_context.LockObj)
             {
-                _environmentID = _context.Environments.First(x => x.Name.ToUpper() == environment.ToUpper()).Id;
             }
             var validator = new ConfigurationValidator(context, logger);
             validator.ThrowIfConfigurationInvalid();
-        }
-
-        IDBConfigurationProvider IDBConfigurationProvider.this[string environment]
-        {
-            get
-            {
-                lock (_context.LockObj)
-                {
-                    return new DBConfigurationProvider(this._context, _logger, environment);
-                }
-            }
         }
 
         public void AddEnvironments(params string[] environments)
@@ -94,7 +104,10 @@ namespace ETHTPS.Configuration
         {
             lock (_context.LockObj)
             {
-                return _context.Database.SqlQueryRaw<AllConfigurationStringsModel>("EXEC [Configuration].[GetAllConfigurationStrings]");
+                var result = _context.Database.SqlQueryRaw<AllConfigurationStringsModel>(
+                    "EXEC [Configuration].[GetAllConfigurationStrings]");
+                LogIfNullOrEmpty(result);
+                return result;
             }
         }
 
@@ -134,7 +147,6 @@ namespace ETHTPS.Configuration
                             EnvironmentId = model.MicroserviceLinksEnvironmentID ?? -1
                         }).ToList()
                 };
-
                 return result;
             }
         }
@@ -233,12 +245,21 @@ namespace ETHTPS.Configuration
             }
         }
 
+        public IEnumerable<InsertGenerationResult> GenerateInserts(string schemaName)
+        {
+            lock (_context.LockObj)
+            {
+                return _context.GenerateInsertsForSchema(schemaName);
+            }
+        }
 
         public IEnumerable<IConfigurationString>? GetConfigurationStrings(string name)
         {
             lock (_context.LockObj)
             {
-                return _context.ConfigurationStrings?.Where(x => x.Name.ToUpper() == name.ToUpper()).ToList();
+                var result = _context.ConfigurationStrings?.Where(x => x.Name.ToUpper() == name.ToUpper()).ToList();
+                LogIfNullOrEmpty(result);
+                return result;
             }
         }
 
@@ -248,33 +269,29 @@ namespace ETHTPS.Configuration
         {
             lock (_context.LockObj)
             {
-                var emptyEnvironment = Database.Environment.EMPTY;
-                var emptyMicroservice = Database.Microservice.EMPTY;
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                return (_context.MicroserviceConfigurationStrings?
-                        .Where(x => (x.Microservice != null ? x.Microservice.Name : emptyMicroservice.Name).ToUpper() == microserviceName.ToUpper()
-                                    && (x.Environment != null ? x.Environment.Name : emptyEnvironment.Name).ToUpper() == _environment.ToUpper()
-                                    || (x.Environment != null ? x.Environment.Name : emptyEnvironment.Name).ToUpper() == "ALL")
-                        .Select(x => (IConfigurationString?)x.ConfigurationString))?
-                    .AsEnumerable()
-                    .WhereNotNull()
-                    .Select(x => new ConfigurationString()
-                    {
-                        Name = x.Name,
-                        Value = x.Value
-                    })
-                    .ToList();
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                var result = _context.GetConfigurationStringsOfMicroservice(microserviceName, _environment);
+                LogIfNullOrEmpty(result);
+                return result;
             }
         }
 
-        public IEnumerable<IConfigurationString> GetConfigurationStringsForProvider(string provider) => _context.GetConfigurationStrings(provider, _environment);
+        public IEnumerable<IConfigurationString> GetConfigurationStringsForProvider(string provider)
+        {
+            lock (_context.LockObj)
+            {
+                var result = _context.GetConfigurationStrings(provider, _environment);
+                LogIfNullOrEmpty(result);
+                return result;
+            }
+        }
 
         public int? GetEnvironmentID(string name)
         {
             lock (_context.LockObj)
             {
-                return _context.Environments?.First(x => string.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase)).Id;
+                var result = _context.Environments?.First(x => x.Name.ToUpper() == name.ToUpper()).Id;
+                LogIfNullOrEmpty(result);
+                return result;
             }
         }
 
@@ -282,7 +299,9 @@ namespace ETHTPS.Configuration
         {
             lock (_context.LockObj)
             {
-                return _context.Environments?.Select(x => x.Name).ToList();
+                var result = _context.Environments?.Select(x => x.Name).ToList();
+                LogIfNullOrEmpty(result);
+                return result;
             }
         }
 
@@ -303,7 +322,9 @@ namespace ETHTPS.Configuration
                     }
                 }
 
-                return _context.Microservices?.First(selector).Id;
+                var result = _context.Microservices?.First(selector).Id;
+                LogIfNullOrEmpty(result);
+                return result;
             }
         }
 
@@ -311,7 +332,9 @@ namespace ETHTPS.Configuration
         {
             lock (_context.LockObj)
             {
-                return _context.Microservices?.ToList();
+                var result = _context.Microservices?.ToList();
+                LogIfNullOrEmpty(result);
+                return result;
             }
         }
 

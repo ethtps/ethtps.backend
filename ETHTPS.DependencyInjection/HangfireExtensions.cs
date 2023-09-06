@@ -1,4 +1,7 @@
-﻿using Hangfire;
+﻿using ETHTPS.Data.Core;
+
+using Hangfire;
+using Hangfire.InMemory;
 using Hangfire.SqlServer;
 
 using Microsoft.AspNetCore.Builder;
@@ -9,31 +12,44 @@ namespace ETHTPS.API.DependencyInjection
     public static class HangfireExtensions
     {
         private const string _DEFAULT_CONNECTION_STRING_NAME = "HangfireConnectionString";
-        public static void InitializeHangfire(this IServiceCollection services, string appName)
+        private static InMemoryStorage _storage = new();
+        private static void InitializeHangfireWithDBStorage(this IServiceCollection services, Microservice microservice)
         {
-            SqlServerStorage sqlStorage = new(services.GetConnectionString(appName, _DEFAULT_CONNECTION_STRING_NAME));
+            SqlServerStorage sqlStorage = new(services.GetConnectionString(microservice, _DEFAULT_CONNECTION_STRING_NAME));
             JobStorage.Current = sqlStorage;
+            services.AddHangfire(config =>
+            {
+                config.UseSqlServerStorage(services.GetConnectionString(microservice, _DEFAULT_CONNECTION_STRING_NAME));
+            });
         }
 
-        public static IServiceCollection AddHangfireServer(this IServiceCollection services, string appName)
+        public static IServiceCollection AddHangfireServer(this IServiceCollection services, Microservice microservice, bool inMemoryStorage = true) // Called in ConfigureServices(...)
         {
-            Hangfire.JobStorage.Current = new SqlServerStorage(services.GetConnectionString(appName, _DEFAULT_CONNECTION_STRING_NAME));
-            services.AddHangfire(x => x.UseSqlServerStorage(services.GetConnectionString(appName, _DEFAULT_CONNECTION_STRING_NAME)));
-            services.AddHangfireServer(options =>
+            if (inMemoryStorage)
             {
-                options.SchedulePollingInterval = TimeSpan.FromSeconds(5);
-            });
+                JobStorage.Current = _storage;
+                services.AddHangfire(config =>
+                {
+                    config.UseInMemoryStorage();
+                });
+            }
+            else
+            {
+                services.InitializeHangfireWithDBStorage(microservice);
+            }
             return services;
         }
 
-        public static IApplicationBuilder ConfigureHangfire(this IApplicationBuilder app, string[] configurationQueues)
+        public static IApplicationBuilder UseHangfire(this IApplicationBuilder app, string[] configurationQueues) // Called in Configure(...)
         {
-#pragma warning disable CS0618 // Type or member is obsolete
-            app.UseHangfireServer(options: new BackgroundJobServerOptions()
+#pragma warning disable CS0618 
+            app.UseHangfireServer(new BackgroundJobServerOptions()
             {
-                Queues = configurationQueues
-            });
-#pragma warning restore CS0618 // Type or member is obsolete
+                Queues = configurationQueues,
+                SchedulePollingInterval = TimeSpan.FromSeconds(2)
+            }, storage: _storage);
+#pragma warning restore CS0618 
+            app.UseHangfireDashboard();
             return app;
         }
     }

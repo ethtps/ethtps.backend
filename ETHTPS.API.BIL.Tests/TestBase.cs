@@ -4,6 +4,7 @@ using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.DependencyInjection;
 using ETHTPS.Configuration;
 using ETHTPS.Configuration.ProviderConfiguration;
+using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Data.Integrations.InfluxIntegration;
 using ETHTPS.Data.Integrations.InfluxIntegration.HistoricalDataProviders;
@@ -25,9 +26,9 @@ namespace ETHTPS.Tests
     public abstract class TestBase
     {
         protected ServiceProvider ServiceProvider { get; private set; }
-        protected IDBConfigurationProvider ConfigurationProvider => ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
+        protected DBConfigurationProviderWithCache ConfigurationProvider => ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>();
 
-        const string APP_NAME = "ETHTPS.Tests";
+        const Microservice _APP = Microservice.Tests;
         const DatabaseProvider _DATABASE_PROVIDER = DatabaseProvider.InfluxDB;
         protected TestBase()
         {
@@ -36,16 +37,15 @@ namespace ETHTPS.Tests
             var services = builder.Services;
             services
                     .AddEssentialServices()
-                    .AddDatabaseContext(APP_NAME)
+                    .AddDatabaseContext(_APP)
                     .AddMixedCoreServices()
                     .AddScoped<IPSDataFormatter, DeedleTimeSeriesFormatter>()
                     .AddDataProviderServices(_DATABASE_PROVIDER)
-                    .WithStore(_DATABASE_PROVIDER, APP_NAME)
+                    .WithStore(_DATABASE_PROVIDER, _APP)
                     .AddDataUpdaterStatusService()
                     .AddScoped<IInfluxWrapper, InfluxWrapper>()
                     .AddScoped<IAsyncHistoricalBlockInfoProvider, HistoricalInfluxProvider>()
                     .AddTransient<IProviderConfigurationService, ProviderConfigurationService>()
-                    .AddRedisCache()
                     .AddRabbitMQMessagePublisher()
                     .AddSingleton<EthereumBlockTimeProvider>()
                     .AddScoped<WSAPIPublisher>()

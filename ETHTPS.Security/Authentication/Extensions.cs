@@ -34,7 +34,7 @@ namespace ETHTPS.API.Security.Core.Authentication
         }
         public static IServiceCollection AddAPIKeyProvider(this IServiceCollection services)
         {
-            services.TryAddScoped<IDBConfigurationProvider, DBConfigurationProvider>();
+            services.TryAddScoped<DBConfigurationProviderWithCache, DBConfigurationProviderWithCache>();
             return services.AddScoped<IRecaptchaVerificationService, RecaptchaVerificationService>()
             .AddScoped<IExtendedAPIKeyService, APIKeyServiceWithRecaptchaValidation>();
         }

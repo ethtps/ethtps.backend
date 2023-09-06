@@ -29,5 +29,12 @@ namespace ETHTPS.API.Controllers
         {
             return await _apiKeyService.RegisterNewKeyAsync(humanityProof, HttpContext.Request.HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString() ?? "0.0.0.0");
         }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult ValidateKey()
+        {
+            return Ok();
+        }
     }
 }

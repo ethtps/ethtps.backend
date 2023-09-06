@@ -21,14 +21,16 @@ public static class RequestExtensions
             throw new ArgumentException("Type is required and can't be empty");
         }
 
-        if (string.IsNullOrWhiteSpace(source.ProjectWebsite) || !Uri.TryCreate(source.ProjectWebsite, UriKind.Absolute, out var uriResult) || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+        if (!ValidateURL(source.ProjectWebsite))
         {
-            throw new ArgumentException("ProjectWebsite is required and should be a valid HTTP or HTTPS URL");
+            throw new ArgumentException("ProjectWebsite is required and should be a valid HTTP(s) URL");
         }
+    }
 
-        if (!string.IsNullOrWhiteSpace(source.BlockExplorerURL) && (!Uri.TryCreate(source.BlockExplorerURL, UriKind.Absolute, out uriResult) || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)))
-        {
-            throw new ArgumentException("BlockExplorerURL should be a valid HTTP or HTTPS URL");
-        }
+    private static bool ValidateURL(string url)
+    {
+        if (string.IsNullOrWhiteSpace(url)) return false;
+        if (!url.StartsWith("http://") && !url.StartsWith("https://")) url = $"https://{url}";
+        return Uri.IsWellFormedUriString("https://www.google.com", UriKind.Absolute);
     }
 }

@@ -7,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Implementations
     [RunsEvery(CronConstants.EVERY_5_S)]
     public sealed class OptimismJSONRPCBlockInfoProvider : JSONRPCBlockInfoProviderBase
     {
-        public OptimismJSONRPCBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Optimism")
+        public OptimismJSONRPCBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "Optimism")
         {
         }
     }

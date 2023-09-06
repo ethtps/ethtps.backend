@@ -17,7 +17,7 @@ namespace ETHTPS.Tests.ProviderTests
         [SetUp]
         public override void SetUp()
         {
-            _provider = new SorareBlockInfoProvider(ServiceProvider.GetRequiredService<EthtpsContext>(), ServiceProvider.GetRequiredService<IDBConfigurationProvider>());
+            _provider = new SorareBlockInfoProvider(ServiceProvider.GetRequiredService<EthtpsContext>(), ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>());
             PartialSetup(_provider);
         }
     }

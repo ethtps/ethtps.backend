@@ -10,7 +10,7 @@ namespace ETHTPS.Services.Ethereum.Scan.Implementations
     [Obsolete("Use JSONRPC.AVAXBlockInfoProvider instead", true)]
     public sealed class SnowTraceBlockInfoProvider : ScanBlockInfoProviderBase
     {
-        public SnowTraceBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Snowtrace")
+        public SnowTraceBlockInfoProvider(DBConfigurationProviderWithCache configuration) : base(configuration, "Snowtrace")
         {
         }
     }

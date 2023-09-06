@@ -16,7 +16,7 @@ namespace ETHTPS.Services.Ethereum
     public sealed class LoopringBlockInfoProvider : BlockInfoProviderBase
     {
 
-        public LoopringBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base
+        public LoopringBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base
             (configurationProvider, "Loopring")
         {
         }

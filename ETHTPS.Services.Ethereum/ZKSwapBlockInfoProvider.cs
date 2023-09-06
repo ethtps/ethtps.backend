@@ -14,7 +14,7 @@ namespace ETHTPS.Services.Ethereum
     [RunsEvery(CronConstants.EVERY_5_S)]
     public sealed class ZKSwapBlockInfoProvider : BlockInfoProviderBase
     {
-        public ZKSwapBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "ZKSwap")
+        public ZKSwapBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "ZKSwap")
         {
         }
 

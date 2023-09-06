@@ -12,7 +12,7 @@ namespace ETHTPS.Data.Core
 
         public static class EnvironmentVariables
         {
-            public static string ENV = "ETHTPS_ENV";
+            public static string ETHTPS_ENV = "ETHTPS_ENV";
             public static string BASE_DIR = "ETHTPS_BASE_DIR";
             public static string CONFIGURATION_PROVIDER_CONN_STR = "ETHTPS_CONFIGURATION_PROVIDER_DB_CONN_STR";
             public static class API

@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
 using ETHTPS.API.Core.Controllers;
 using ETHTPS.API.Core.Integrations.MSSQL.Services;
+using ETHTPS.Core;
 using ETHTPS.Data.Core;
-using ETHTPS.Data.Core.Extensions.DateTimeExtensions;
-using ETHTPS.Data.Core.Models.DataPoints.XYPoints;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Data.Core.Models.ResponseModels.L2s;
 using ETHTPS.Services.Infrastructure.Messaging;
@@ -36,7 +35,7 @@ namespace ETHTPS.API.Controllers.L2DataControllers
             _messagePublisher = messagePublisher;
         }
 
-#if DEBUG        
+#if DEVELOPMENT        
         /// <summary>
         /// A method for testing the charting API. Returns a response with junk values after an artificial delay.
         /// </summary>
@@ -79,18 +78,16 @@ namespace ETHTPS.API.Controllers.L2DataControllers
         {
             if (!await _redisCacheService.HasKeyAsync(guid))
             {
-                if (await _redisCacheService.HasKeyAsync(L2DataRequestStatus.GenerateCacheKeyFromGuid(guid)))
+                if (!await _redisCacheService.HasKeyAsync(L2DataRequestStatus.GenerateCacheKeyFromGuid(guid)))
+                    return NotFound();
+                var status = await _redisCacheService.GetDataAsync<L2DataRequestStatus>(L2DataRequestStatus.GenerateCacheKeyFromGuid(guid));
+                if (status.State != L2DataRequestState.Failed && status.State != L2DataRequestState.Completed)
                 {
-                    var status = await _redisCacheService.GetDataAsync<L2DataRequestStatus>(L2DataRequestStatus.GenerateCacheKeyFromGuid(guid));
-                    if (status.State != L2DataRequestState.Failed && status.State != L2DataRequestState.Completed)
-                    {
-                        return Accepted(status);
-                    }
+                    return Accepted(status);
                 }
                 return NotFound();
             }
-            var result = await _redisCacheService.GetDataAsync<L2DataResponseModel>(guid);
-            return Ok();
+            return Ok(await _redisCacheService.GetDataAsync<L2DataResponseModel>(guid));
         }
 
         [HttpGet]
@@ -139,7 +136,7 @@ namespace ETHTPS.API.Controllers.L2DataControllers
             _messagePublisher.PublishJSONMessage(requestModel, "L2DataRequestQueue");
             return Created(nameof(GetDataRequestAsync), guid);
         }
-#if DEBUG
+#if DEVELOPMENT
         [HttpPost]
         [SwaggerResponse(201)]
         public async Task<IActionResult> CreateLotsOfDummyRequests()
@@ -162,7 +159,10 @@ namespace ETHTPS.API.Controllers.L2DataControllers
             var providers = _generalService.AllProviders.Select(x => (x.Name, x.Type == "Sidechain")).Where(x => requestModel.IncludeSidechains || !x.Item2);
             if (requestModel.Providers != null)
                 if (requestModel.Providers.Contains(Constants.All))
+                {
+                    //throw new NotSupportedException("InfluxDB doesn\'t return strings for provider names - TOFIX");
                     requestModel.Providers = providers.Select(x => x.Name).ToList();
+                }
                 else requestModel.Providers = requestModel.Providers.Where(p => providers.Select(x => x.Name).Contains(p)).ToList();
             if (requestModel.Provider != null && (!requestModel.Providers?.Contains(requestModel.Provider) ?? false))
                 requestModel.Providers.Add(requestModel.Provider);

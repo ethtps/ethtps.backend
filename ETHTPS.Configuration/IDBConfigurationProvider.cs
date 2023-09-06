@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-using ETHTPS.Configuration.Database;
+﻿using ETHTPS.Configuration.Database;
 
 namespace ETHTPS.Configuration
 {
@@ -23,31 +21,6 @@ namespace ETHTPS.Configuration
         IConfigurationStringProvider,
         IDisposable
     {
-        /// <summary>
-        /// Configures this <see cref="IDBConfigurationProvider"/> for the specified environment.
-        /// </summary>
-        /// <value>
-        /// The <see cref="IDBConfigurationProvider"/>.
-        /// </value>
-        /// <param name="environment">The environment.</param>
-        IDBConfigurationProvider this[string environment]
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Dumps all the configuration strings in the database. It should *proooobably* not be here but hey, we're the only ones using this app anyway haha;
-        /// ha.
-        /// </summary>
-        IEnumerable<AllConfigurationStringsModel> GetAllConfigurationStrings();
-
-        /// <summary>
-        /// Gets all objects that link to the specified configuration string.
-        /// </summary>
-        /// <param name="configurationStringID">The ID of the target configuration string</param>
-        /// <returns></returns>
-        ConfigurationStringLinksModel GetAllLinks(int configurationStringID);
-
         /// <summary>
         /// Adds or updates a configuration string.
         /// </summary>
@@ -93,5 +66,11 @@ namespace ETHTPS.Configuration
         /// </summary>
         /// <returns></returns>
         int ClearHangfireQueue();
+
+        /// <summary>
+        /// Dumps the whole database into insert statements. Use with caution.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<InsertGenerationResult> GenerateInserts(string schemaName);
     }
 }

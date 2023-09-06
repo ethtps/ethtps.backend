@@ -7,12 +7,12 @@ namespace ETHTPS.Configuration.Database
 {
     public abstract class ConfigurationContextBase : ContextBase<ConfigurationContext>
     {
-        public ConfigurationContextBase()
+        protected ConfigurationContextBase()
         {
             Database.SetCommandTimeout(TimeSpan.FromSeconds(10));
         }
 
-        public ConfigurationContextBase(DbContextOptions<ConfigurationContext> options)
+        protected ConfigurationContextBase(DbContextOptions<ConfigurationContext> options)
             : base(options)
         {
             Database.AutoTransactionBehavior = AutoTransactionBehavior.WhenNeeded;
@@ -31,23 +31,21 @@ namespace ETHTPS.Configuration.Database
             string configStringName,
             string configStringValue)
         {
-            using (var command = Database.GetDbConnection().CreateCommand())
-            {
-                command.CommandType = System.Data.CommandType.StoredProcedure;
-                command.CommandText = "[Configuration].[InsertOrUpdateConfigurationString]";
+            await using var command = Database.GetDbConnection().CreateCommand();
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandText = "[Configuration].[InsertOrUpdateConfigurationString]";
 
-                command.Parameters.AddRange(new SqlParameter[]
-                {
+            command.Parameters.AddRange(new SqlParameter[]
+            {
                 new SqlParameter("@MicroserviceName", microserviceName),
                 new SqlParameter("@EnvironmentName", environmentName),
                 new SqlParameter("@ConfigStringName", configStringName),
                 new SqlParameter("@ConfigStringValue", configStringValue)
-                });
+            });
 
-                await Database.OpenConnectionAsync();
-                var result = await command.ExecuteNonQueryAsync();
-                return result;
-            }
+            await Database.OpenConnectionAsync();
+            var result = await command.ExecuteNonQueryAsync();
+            return result;
         }
 
         public async Task InsertOrUpdateProviderConfigurationStringAsync(string providerName, string configurationStringName, string configurationStringValue, string environmentName)
@@ -68,6 +66,47 @@ namespace ETHTPS.Configuration.Database
                     new SqlParameter("@ProviderName", providerName),
                     new SqlParameter("@EnvironmentName", environmentName))
                 .ToList();
+        }
+
+        public List<ConfigurationString> GetConfigurationStringsOfMicroservice(string microserviceName, string environmentName)
+        {
+            var parameters = new object[]
+            {
+
+                new SqlParameter("@MicroserviceName", microserviceName),
+                new SqlParameter("@EnvironmentName", environmentName)
+            };
+            return Set<ConfigurationString>()
+                .FromSqlRaw("EXEC [Configuration].[GetConfigurationStringsOfMicroservice] @MicroserviceName, @EnvironmentName", parameters)
+                .AsEnumerable().Select(x => new ConfigurationString()
+                {
+                    Name = x.Name,
+                    Value = x.Value,
+                    IsSecret = x.IsSecret,
+                    IsEncrypted = x.IsEncrypted,
+                    EncryptionAlgorithmOrHint = x.EncryptionAlgorithmOrHint
+                }).ToList();
+        }
+
+        public IEnumerable<InsertGenerationResult> GenerateInsertsForSchema(string schema)
+        {
+            var result = Enumerable.Empty<InsertGenerationResult>();
+            var connection = (SqlConnection)Database.GetDbConnection();
+            connection.InfoMessage += (sender, e) =>
+            {
+                Console.WriteLine(e.Message);
+            };
+            try
+            {
+                connection.Open();
+                var schemaParam = new SqlParameter("@schemaName", schema);
+                result = Set<InsertGenerationResult>().FromSqlRaw("EXEC GenerateInsertsForSchema_2 @schemaName", schemaParam).ToArray();
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return result;
         }
     }
 }

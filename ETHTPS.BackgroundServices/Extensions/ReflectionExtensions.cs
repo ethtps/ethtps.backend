@@ -84,7 +84,6 @@ namespace ETHTPS.Services.Extensions
 
             return propertyInfo;
         }
-
         #endregion
     }
 }

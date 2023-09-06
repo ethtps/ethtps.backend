@@ -17,7 +17,7 @@ namespace ETHTPS.Services.Ethereum
     {
         private readonly string _latestBlockURL;
         private readonly string _blockURL;
-        public ZKSsyncEraBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "ZKSync Era")
+        public ZKSsyncEraBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "ZKSync Era")
         {
             _latestBlockURL = _configurationStrings.First(x => x.Name == "LatestBlockURL").Value;
             _blockURL = _configurationStrings.First(x => x.Name == "BlockURL").Value;

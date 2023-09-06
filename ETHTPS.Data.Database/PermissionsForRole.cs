@@ -1,6 +1,8 @@
-﻿namespace ETHTPS.Data.Integrations.MSSQL;
+﻿using ETHTPS.Data.Core;
 
-public partial class PermissionsForRole
+namespace ETHTPS.Data.Integrations.MSSQL;
+
+public partial class PermissionsForRole : IIndexed
 {
     public int Id { get; set; }
 

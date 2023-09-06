@@ -1,6 +1,8 @@
-﻿namespace ETHTPS.Data.Integrations.MSSQL;
+﻿using ETHTPS.Data.Core;
 
-public partial class Experiment
+namespace ETHTPS.Data.Integrations.MSSQL;
+
+public partial class Experiment : IIndexed
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "We need this")]
     public static Experiment EMPTY = new()

@@ -21,7 +21,7 @@ namespace ETHTPS.Services.Ethereum
     {
         private const string NAME = "Arbitrum Nova";
 
-        public ArbitrumNovaBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, NAME)
+        public ArbitrumNovaBlockInfoProvider(DBConfigurationProviderWithCache configuration) : base(configuration, NAME)
         {
 
         }

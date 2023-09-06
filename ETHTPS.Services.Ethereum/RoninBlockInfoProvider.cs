@@ -18,7 +18,7 @@ namespace ETHTPS.Services.Ethereum
     {
         private readonly string _baseURL = string.Empty;
 
-        public RoninBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Ronin")
+        public RoninBlockInfoProvider(DBConfigurationProviderWithCache configuration) : base(configuration, "Ronin")
         {
             BlockTimeSeconds = 3;
         }

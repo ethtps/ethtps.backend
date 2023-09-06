@@ -13,7 +13,7 @@ namespace ETHTPS.API.BIL.Infrastructure.Services
 {
     public sealed class DeedleTimeSeriesFormatter : IPSDataFormatter
     {
-        public IEnumerable<IXYMultiConvertible> Format(List<DataResponseModel> source, L2DataRequestModel requestModel)
+        public IEnumerable<IXYMultiConvertible> Format(IEnumerable<DataResponseModel> source, L2DataRequestModel requestModel)
         {
             IEnumerable<IXYMultiConvertible> result = Enumerable.Empty<IXYMultiConvertible>();
             var partial = source.Transform()
@@ -76,10 +76,10 @@ namespace ETHTPS.API.BIL.Infrastructure.Services
 
     public static class TimeSeriesExtensions
     {
-        public static IEnumerable<IXYMultiConvertible> Transform(this IEnumerable<DataResponseModel> source) => source.Select(x => new DatedXYDataPoint()
+        public static IEnumerable<IXYMultiConvertible> Transform(this IEnumerable<DataResponseModel> source) => source.SelectMany(x => x.Data).Select(x => new DatedXYDataPoint()
         {
-            X = x.Data.FirstOrDefault()?.Date ?? DateTime.MinValue,
-            Y = x.Data.FirstOrDefault()?.Value ?? 0
+            X = x?.Date ?? DateTime.MinValue,
+            Y = x?.Value ?? 0
         }).OrderBy(x => x.Y);
 
         public static IEnumerable<IXYMultiConvertible> RemoveInvalidDataPoints(this IEnumerable<IXYMultiConvertible> source) => source.Where(x => x.ToDatedXYDataPoint().X != DateTime.MinValue);

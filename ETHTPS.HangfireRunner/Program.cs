@@ -2,72 +2,62 @@ using ETHTPS.API.BIL.Infrastructure.Services.DataUpdater;
 using ETHTPS.API.DependencyInjection;
 using ETHTPS.API.Security.Core.Policies;
 using ETHTPS.Configuration;
+using ETHTPS.Data.Core;
+using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Integrations.InfluxIntegration;
+using ETHTPS.Services.BackgroundTasks.Recurring.AutoDiscovery;
 using ETHTPS.Services.Infrastructure.Messaging;
 using ETHTPS.Services.LiveData;
 using ETHTPS.TaskRunner.BackgroundServices;
 
-using Hangfire;
-
 using NLog.Extensions.Hosting;
 
-using Steeltoe.Common.Http.Discovery;
-using Steeltoe.Discovery.Client;
-using Steeltoe.Discovery.Consul;
-
+using static ETHTPS.Services.Infrastructure.Messaging.MessagingExtensions;
 using static ETHTPS.TaskRunner.Constants;
+using static ETHTPS.Utils.Logging.LoggingUtils;
+
+Trace($"Starting {Microservice.TaskRunner.GetFullName()}...");
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.AddServiceDiscovery(options =>
-{
-    options.UseConsul();
-});
 builder.Host.UseNLog();
 var services = builder.Services;
 services.AddEssentialServices()
-        .AddDatabaseContext(CURRENT_APP_NAME)
+        .AddDatabaseContext(CURRENT_APP)
         .AddMixedCoreServices()
         .AddCustomCORSPolicies()
         .AddControllers()
         .AddControllersAsServices();
+Trace("Added essential services");
 
 var runnerType = BackgroundServiceType.Hangfire;
 
 services.AddSwagger()
-        .AddRedisCache()
         .AddScoped<IInfluxWrapper, InfluxWrapper>()
         .AddDataUpdaterStatusService()
         .AddDataServices()
-        .AddRunner(runnerType, CURRENT_APP_NAME, DatabaseProvider.InfluxDB)
-        .WithStore(DatabaseProvider.InfluxDB, CURRENT_APP_NAME)
+        .AddRunner(runnerType, CURRENT_APP, DatabaseProvider.InMemory)
+        .WithStore(DatabaseProvider.InfluxDB, CURRENT_APP)
         .AddDataProviderServices(DatabaseProvider.InfluxDB)
         .AddRabbitMQMessagePublisher()
+        .AddRabbitMQSubscriptionService(AllowedSubscriptionScope.BlockDataAggregator)
+        .AddScoped<RPCAutoDiscoveryTask>()
         .AddScoped<WSAPIPublisher>();
-services.AddHostedService<NewDatapointHandler>(x =>
+
+Trace("Added dependencies");
+services.AddHostedService(x =>
 {
-    using (var scope = x.CreateScope())
-    {
-        return new NewDatapointHandler(
+    using var scope = x.CreateScope();
+    return new NewDatapointHandler(
         scope.ServiceProvider.GetRequiredService<ILogger<NewDatapointHandler>>(),
-        scope.ServiceProvider.GetRequiredService<IDBConfigurationProvider>(),
+        scope.ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>(),
         scope.ServiceProvider.GetRequiredService<IMessagePublisher>());
-    }
 });
+Trace("Registered hosted services");
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    //scope.ServiceProvider.GetRequiredService<EthtpsContext>().DeleteAllJobsAsync().Wait();
-}
-
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-}
 app.UseStaticFiles();
 app.UseRouting();
-app.UseHangfireDashboard();
 app.ConfigureSwagger();
-app.UseRunner(runnerType);
 app.MapControllers();
+app.UseTaskRunner(runnerType);
+Trace("All set");
 app.Run();

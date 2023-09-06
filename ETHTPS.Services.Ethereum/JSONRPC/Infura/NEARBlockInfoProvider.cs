@@ -7,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
     [RunsEvery(CronConstants.EVERY_30_S)]
     public sealed class NEARBlockInfoProvider : InfuraBlockInfoProviderBase
     {
-        public NEARBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "NEAR")
+        public NEARBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "NEAR")
         {
         }
     }

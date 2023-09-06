@@ -12,7 +12,7 @@
         public string? EncryptionAlgorithmOrHint { get; set; }
     }
 
-    public sealed class ConfigurationStringUpdateModel : IConfigurationString
+    public class ConfigurationStringUpdateModel : IConfigurationString
     {
         public int? Id { get; set; }
         public required string Name { get; set; }

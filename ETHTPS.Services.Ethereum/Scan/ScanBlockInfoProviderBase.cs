@@ -18,7 +18,7 @@ namespace ETHTPS.Services.Ethereum.Scan
     public abstract class ScanBlockInfoProviderBase : BlockInfoProviderBase
     {
         private readonly ScanRequestModelFactory _requestModelFactory;
-        protected ScanBlockInfoProviderBase(IDBConfigurationProvider configuration, string providerName) : base(configuration, providerName)
+        protected ScanBlockInfoProviderBase(DBConfigurationProviderWithCache configuration, string providerName) : base(configuration, providerName)
         {
             _requestModelFactory = new ScanRequestModelFactory(APIKey);
         }

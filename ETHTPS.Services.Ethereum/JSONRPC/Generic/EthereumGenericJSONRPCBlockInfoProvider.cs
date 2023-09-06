@@ -7,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Generic
     [RunsEvery(CronConstants.EVERY_5_S)]
     public sealed class EthereumGenericJSONRPCBlockInfoProvider : JSONRPCBlockInfoProviderBase
     {
-        public EthereumGenericJSONRPCBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Ethereum")
+        public EthereumGenericJSONRPCBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "Ethereum")
         {
         }
     }

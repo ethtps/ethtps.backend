@@ -4,7 +4,9 @@ namespace ETHTPS.Data.Core.Models.ResponseModels.SocialMedia
 {
     public sealed class ProviderSocialMediaLinksResponseModel
     {
-        public IEnumerable<ProviderSocialMediaLink> Links { get; set; }
-        public IEnumerable<ExternalWebsiteBase> ExternalWebsites { get; set; }
+        /// <summary>
+        /// Gets or sets the links. Keys represent the categories of the websites.
+        /// </summary>
+        public required Dictionary<string, IEnumerable<ProviderSocialMediaLink>> CategorizedLinks { get; set; }
     }
 }

@@ -12,10 +12,10 @@ namespace ETHTPS.API.Security.Core.APIKeys
     {
         private readonly EthtpsContext _context;
         private const int DEFAULT_REQUEST_LIMIT_24H = 5 * 5 * 3600 * 24; //Equivalent to 1 request per second; should be more than anyone needs
-        private readonly IDBConfigurationProvider _configurationProvider;
+        private readonly DBConfigurationProviderWithCache _configurationProvider;
         public IRecaptchaVerificationService HumanityService { get; }
 
-        public APIKeyServiceWithRecaptchaValidation(EthtpsContext context, IRecaptchaVerificationService recaptchaVerificationService, IDBConfigurationProvider configurationProvider)
+        public APIKeyServiceWithRecaptchaValidation(EthtpsContext context, IRecaptchaVerificationService recaptchaVerificationService, DBConfigurationProviderWithCache configurationProvider)
         {
             _context = context;
             HumanityService = recaptchaVerificationService;

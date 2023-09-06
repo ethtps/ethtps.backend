@@ -7,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
     [RunsEvery(CronConstants.EVERY_13_S)]
     public sealed class PolygonBlockInfoProvider : InfuraBlockInfoProviderBase
     {
-        public PolygonBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Polygon")
+        public PolygonBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "Polygon")
         {
         }
     }

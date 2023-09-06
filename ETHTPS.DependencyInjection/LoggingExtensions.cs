@@ -7,7 +7,7 @@
         {
             using (var built = services.BuildServiceProvider())
             {
-                var provider = built.GetRequiredService<IDBConfigurationProvider>();
+                var provider = built.GetRequiredService<DBConfigurationProviderWithCache>();
                 return provider.GetCurrentEnvironmentLoggerParameters();
             }
         }
@@ -16,7 +16,7 @@
         {
             using (var built = services.BuildServiceProvider())
             {
-                var provider = built.GetRequiredService<IDBConfigurationProvider>();
+                var provider = built.GetRequiredService<DBConfigurationProviderWithCache>();
                 var configuration = JsonConvert.DeserializeObject<DbLoggerOptions>(provider.GetConfigurationStrings("LoggerConfiguration").First().Value);
                 if (configuration != null)
                 {
@@ -35,7 +35,7 @@
 
             using (var built = builder.Services.BuildServiceProvider())
             {
-                var provider = built.GetRequiredService<IDBConfigurationProvider>();
+                var provider = built.GetRequiredService<DBConfigurationProviderWithCache>();
                 var configuration = JsonConvert.DeserializeObject<DbLoggerOptions>(provider.GetConfigurationStrings("LoggerConfiguration").First().Value);
                 if (configuration != null)
                 {

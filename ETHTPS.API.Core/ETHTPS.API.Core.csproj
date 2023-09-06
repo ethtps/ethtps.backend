@@ -4,7 +4,7 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Configurations>Debug;Release;Staging</Configurations>
+		<Configurations>Debug;Release;Testing;Testing</Configurations>
 		<Platforms>AnyCPU;x64</Platforms>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591</NoWarn>
@@ -12,20 +12,20 @@
 
 	<ItemGroup>
 		<PackageReference Include="CaseExtensions" Version="1.1.0" />
-		<PackageReference Include="EntityGraphQL" Version="4.3.0" />
-		<PackageReference Include="EntityGraphQL.AspNet" Version="4.3.0" />
-		<PackageReference Include="NLog.Database" Version="5.1.5" />
-		<PackageReference Include="NLog.Extensions.Hosting" Version="5.2.5" />
-		<PackageReference Include="StackExchange.Redis" Version="2.6.111" />
-		<PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.3" />
+		<PackageReference Include="EntityGraphQL" Version="5.0.0" />
+		<PackageReference Include="EntityGraphQL.AspNet" Version="5.0.0" />
+		<PackageReference Include="NLog.Database" Version="5.2.3" />
+		<PackageReference Include="NLog.Extensions.Hosting" Version="5.3.3" />
+		<PackageReference Include="StackExchange.Redis" Version="2.6.122" />
+		<PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.4" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
-		<PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="7.0.0-rc2.5" />
-		<PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="7.0.0-rc2.5" />
-		<PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="7.0.0-rc2.11" />
-		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="7.0.0-rc2.7" />
-		<PackageReference Include="Google.Protobuf" Version="3.23.2" />
-		<PackageReference Include="Grpc.AspNetCore.Server" Version="2.54.0-pre1" />
-		<PackageReference Include="Grpc.Tools" Version="2.54.0">
+		<PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="7.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="7.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="7.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="7.1.0" />
+		<PackageReference Include="Google.Protobuf" Version="3.24.2" />
+		<PackageReference Include="Grpc.AspNetCore.Server" Version="2.56.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.57.0">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

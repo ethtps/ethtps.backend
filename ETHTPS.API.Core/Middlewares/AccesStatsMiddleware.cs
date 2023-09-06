@@ -8,8 +8,6 @@ using ETHTPS.Services.BackgroundTasks.Recurring.Aggregated;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-using Newtonsoft.Json;
-
 namespace ETHTPS.API.Core.Middlewares
 {
     public sealed class AccesStatsMiddleware
@@ -41,14 +39,15 @@ namespace ETHTPS.API.Core.Middlewares
         {
             Stopwatch stopwatch = new();
             stopwatch.Start();
+            await _next(context);
+            /*
             try
             {
-                await _next(context);
             }
             catch (Exception e)
             {
                 logger.LogError($"{e.GetType()} exception caught by middleware");
-#if DEBUG
+#if DEVELOPMENT
                 logger.LogError(JsonConvert.SerializeObject(e));
 #endif
                 context.Response.StatusCode = 400;
@@ -58,7 +57,7 @@ namespace ETHTPS.API.Core.Middlewares
             {
                 stopwatch.Stop();
             }
-
+            */
             logger.LogInformation($"{DateTime.Now.ToLongTimeString()} | {Math.Round((double)RequestsLastPeriod / (_period / 1000), 2)} hreq/s | {context.Connection.RemoteIpAddress?.MapToIPv4().ToString()} | {context.Request.Method} {context.Request.Path} | {context.Response.StatusCode} | {stopwatch.Elapsed.TotalMilliseconds}ms");
 
             var payload = new AggregatedEnpointStat()

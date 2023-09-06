@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using ETHTPS.Core;
+
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace ETHTPS.Data.Core.Models.Queries.Data.Requests

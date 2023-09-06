@@ -7,6 +7,8 @@ using Hangfire;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
+using static ETHTPS.Utils.Logging.LoggingUtils;
+
 namespace ETHTPS.Services.Infrastructure.Extensions
 {
     public static class BackgroundServiceExtensions
@@ -20,6 +22,7 @@ namespace ETHTPS.Services.Infrastructure.Extensions
             services.AddScoped<V>();
             services.AddScoped<T>();
             RecurringJob.AddOrUpdate<T>(typeof(V).Name, x => x.RunAsync(), cronExpression, queue: queue);
+            Trace($"Registered ${typeof(T).Name} into ${queue}");
         }
 
         public static void RegisterInfluxHangfireHistoricalBackgroundService<T, V>(this IServiceCollection services)
@@ -29,6 +32,7 @@ namespace ETHTPS.Services.Infrastructure.Extensions
             services.TryAddScoped<V>();
             services.AddScoped<T>();
             BackgroundJob.Enqueue<T>(x => x.RunAsync());
+            Trace($"Registered ${typeof(T).Name}<${typeof(V).Name}>");
         }
 
         public static void RegisterHangfireBackgroundService<T>(this IServiceCollection services, string cronExpression, string queue)
@@ -36,6 +40,7 @@ namespace ETHTPS.Services.Infrastructure.Extensions
         {
             services.AddScoped<T>();
             RecurringJob.AddOrUpdate<T>(typeof(T).Name, x => x.RunAsync(), cronExpression, queue: queue);
+            Trace($"Registered ${typeof(T).Name} into ${queue}");
         }
 
 #pragma warning restore CS0618

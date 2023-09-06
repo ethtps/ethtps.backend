@@ -7,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
 {
     public abstract class InfuraBlockInfoProviderBase : JSONRPCBlockInfoProviderBase
     {
-        protected InfuraBlockInfoProviderBase(IDBConfigurationProvider configurationProvider, string providerName) : base(configurationProvider, providerName)
+        protected InfuraBlockInfoProviderBase(DBConfigurationProviderWithCache configurationProvider, string providerName) : base(configurationProvider, providerName)
         {
             var authenticationString = $"{ProjectID}:{Secret}";
             var base64EncodedAuthenticationString = Convert.ToBase64String(Encoding.UTF8.GetBytes(authenticationString));

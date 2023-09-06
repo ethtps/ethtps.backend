@@ -1,4 +1,4 @@
-﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
+﻿using ETHTPS.Core;
 using ETHTPS.Data.Core.Models.Queries.Data.Requests;
 using ETHTPS.Services.Infrastructure.Messaging;
 

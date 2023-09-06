@@ -7,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
     [RunsEvery(CronConstants.EVERY_13_S)]
     public sealed class StarknetBlockInfoProvider : InfuraBlockInfoProviderBase
     {
-        public StarknetBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Starknet")
+        public StarknetBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "Starknet")
         {
         }
     }

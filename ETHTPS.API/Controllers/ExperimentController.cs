@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using ETHTPS.API.BIL.Infrastructure.Services;
 using ETHTPS.API.Core.Attributes;
+using ETHTPS.API.Core.Integrations.MSSQL.Services;
 using ETHTPS.Data.Core.Models;
 using ETHTPS.Data.Integrations.MSSQL;
 
@@ -17,9 +17,9 @@ namespace ETHTPS.API.Controllers
     [Authorize]
     public sealed class ExperimentController : ControllerBase
     {
-        private readonly IExperimentService _experimentService;
+        private readonly ExperimentService _experimentService;
 
-        public ExperimentController(IExperimentService experimentService)
+        public ExperimentController(ExperimentService experimentService)
         {
             _experimentService = experimentService;
         }

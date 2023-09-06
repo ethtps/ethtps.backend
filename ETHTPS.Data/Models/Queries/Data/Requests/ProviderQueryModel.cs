@@ -1,4 +1,5 @@
-﻿using ETHTPS.Data.Core.Extensions.StringExtensions;
+﻿using ETHTPS.Core;
+using ETHTPS.Data.Core.Extensions.StringExtensions;
 
 namespace ETHTPS.Data.Core.Models.Queries.Data.Requests
 {

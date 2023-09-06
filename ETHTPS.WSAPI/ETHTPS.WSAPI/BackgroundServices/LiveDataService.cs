@@ -36,7 +36,7 @@ namespace ETHTPS.WSAPI.BackgroundServices
         {
             _scope = services.CreateScope();
             _logger = logger;
-            var configurationProvider = _scope.ServiceProvider.GetRequiredService<IDBConfigurationProvider>();
+            var configurationProvider = _scope.ServiceProvider.GetRequiredService<DBConfigurationProviderWithCache>();
             _hubContext = _scope.ServiceProvider.GetRequiredService<IHubContext<LiveDataHub>>();
 
             _subscriptionService = new RabbitMQSubscriptionService(new RabbitMQSubscriptionConfig()
@@ -44,7 +44,13 @@ namespace ETHTPS.WSAPI.BackgroundServices
                 AutoAck = false,
                 AutoDelete = false,
                 QueueName = MessagingQueues.LIVEDATA_MULTIPLENEWDATAPOINTS_QUEUE,
-                Host = configurationProvider.GetFirstConfigurationString("RabbitMQ_Host_Dev")
+                Host = configurationProvider.GetFirstConfigurationString(
+#if DEBUG
+                    "RabbitMQ_Host_Dev"
+#else
+                    "RabbitMQ_Host"
+#endif
+                    )
             });
         }
 

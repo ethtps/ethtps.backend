@@ -7,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Infura
     [RunsEvery(CronConstants.EVERY_30_S)]
     public sealed class AVAXBlockInfoProvider : InfuraBlockInfoProviderBase
     {
-        public AVAXBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "AVAX C-chain")
+        public AVAXBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "AVAX C-chain")
         {
 
         }

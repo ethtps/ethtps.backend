@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Configurations>Debug;Release;Staging</Configurations>
+    <Configurations>Debug;Release;Staging;Testing</Configurations>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
@@ -34,8 +34,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="NLog.Database" Version="5.1.5" />
-    <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.3" />
+    <PackageReference Include="NLog.Database" Version="5.2.3" />
+    <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.4" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
   </ItemGroup>
 
@@ -46,6 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ETHTPS.Core\ETHTPS.Core.csproj" />
     <ProjectReference Include="..\ETHTPS.Utils\ETHTPS.Utils.csproj" />
   </ItemGroup>
 

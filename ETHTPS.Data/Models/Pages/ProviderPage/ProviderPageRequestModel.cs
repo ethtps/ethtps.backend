@@ -4,5 +4,6 @@ namespace ETHTPS.Data.Core.Models.Pages.ProviderPage
 {
     public sealed class ProviderPageRequestModel : RequestModelWithChartBase
     {
+
     }
 }

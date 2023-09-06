@@ -16,7 +16,7 @@ namespace ETHTPS.Services.Ethereum
     public sealed class PolygonHermezBlockInfoProvider : BlockInfoProviderBase
     {
 
-        public PolygonHermezBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Polygon Hermez")
+        public PolygonHermezBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "Polygon Hermez")
         {
         }
 

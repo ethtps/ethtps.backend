@@ -20,7 +20,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Services
             _lockObject = context.LockObj;
         }
 
-        public void Create(TEntity entity)
+        public virtual void Create(TEntity entity)
         {
             lock (_lockObject)
             {

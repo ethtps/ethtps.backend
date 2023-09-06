@@ -1,17 +1,45 @@
-version: '3.4'
+version: '3'
 
 services:
   ethtps.taskrunner:
+    container_name: ethtps.taskrunner
     env_file: .env.development
     image: ${DOCKER_REGISTRY-}ethtpstaskrunner
     build:
       context: .
       dockerfile: ETHTPS.HangfireRunner/Dockerfile
+    ports:
+      - "10350:10350"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   ethtps.api:
+    container_name: ethtps.api
     env_file: .env.development
     image: ${DOCKER_REGISTRY-}ethtpsapi
     build:
       context: .
       dockerfile: ETHTPS.API/Dockerfile
+    ports:
+      - "10202:10202"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
+
+  ethtps.wsapi:
+    container_name: ethtps.wsapi
+    env_file: .env.development
+    image: ${DOCKER_REGISTRY-}ethtpswsapi
+    build:
+      context: .
+      dockerfile: ETHTPS.WSAPI/Dockerfile
+    ports:
+      - "5136:5136"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  ethtps_network:
+    external: true
+    name: ethtps_network
+    driver: bridge

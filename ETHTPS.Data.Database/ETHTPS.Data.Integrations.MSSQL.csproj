@@ -4,17 +4,20 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Configurations>Debug;Release;Staging</Configurations>
+    <Configurations>Debug;Release;Staging;Testing</Configurations>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Database\**" />
     <Compile Remove="Temp\**" />
+    <Compile Remove="TimeWarp\**" />
     <EmbeddedResource Remove="Database\**" />
     <EmbeddedResource Remove="Temp\**" />
+    <EmbeddedResource Remove="TimeWarp\**" />
     <None Remove="Database\**" />
     <None Remove="Temp\**" />
+    <None Remove="TimeWarp\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,8 +25,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NLog.Database" Version="5.1.5" />
-    <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.3" />
+    <PackageReference Include="NLog.Database" Version="5.2.3" />
+    <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,7 +37,6 @@
     <Folder Include="db\" />
     <Folder Include="HistoricalDataProviders\" />
     <Folder Include="Definitions\" />
-    <Folder Include="TimeWarp\Models\" />
   </ItemGroup>
 
 </Project>

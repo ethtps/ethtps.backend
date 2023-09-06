@@ -8,6 +8,8 @@
     <IsPackable>false</IsPackable>
 
     <Platforms>AnyCPU;x64</Platforms>
+
+    <Configurations>Debug;Release;Testing</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,8 +24,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0-preview.4.23259.3" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
-    <PackageReference Include="Moq" Version="4.18.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+    <PackageReference Include="Moq" Version="4.20.69" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageReference Include="NUnit.Analyzers" Version="3.6.1">
@@ -38,11 +40,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ETHTPS.BIL\ETHTPS.API.BIL.csproj" />
+    <ProjectReference Include="..\ETHTPS.Configuration.AutoSetup\ETHTPS.Configuration.AutoSetup.csproj" />
     <ProjectReference Include="..\ETHTPS.DependencyInjection\ETHTPS.API.DependencyInjection.csproj" />
     <ProjectReference Include="..\ETHTPS.Services.Ethereum\ETHTPS.Services.Ethereum.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="AutoSetup\" />
     <Folder Include="WSTests\" />
   </ItemGroup>
 

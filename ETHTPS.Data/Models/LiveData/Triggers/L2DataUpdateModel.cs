@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using ETHTPS.Core;
+
 namespace ETHTPS.Data.Core.Models.LiveData.Triggers
 {
     public sealed class L2DataUpdateModel : ICachedKey

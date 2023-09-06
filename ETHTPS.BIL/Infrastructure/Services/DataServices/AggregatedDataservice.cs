@@ -10,6 +10,7 @@ using ETHTPS.Data.Core.Models.ResponseModels.L2s;
 using ETHTPS.Data.Integrations.MSSQL;
 
 using Microsoft.Extensions.Logging;
+#pragma warning disable CA1860
 
 namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
 {
@@ -20,7 +21,7 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
         private readonly IGTPSService _gtpsService;
         private readonly ILogger<AggregatedDataservice>? _logger;
         private readonly string[] _allAvailableProviders;
-        private readonly IPSDataFormatter _dataFormatter = new DeedleTimeSeriesFormatter();
+        private readonly DeedleTimeSeriesFormatter _dataFormatter = new();
 
         public AggregatedDataservice(ITPSService tpsService, IGPSService gpsService, IGTPSService gtpsService, EthtpsContext context, ILogger<AggregatedDataservice>? logger)
         {
@@ -31,87 +32,124 @@ namespace ETHTPS.API.BIL.Infrastructure.Services.DataServices
             _allAvailableProviders = context.Providers.Select(x => x.Name).ToArray();
         }
 
-        private async Task<List<DataResponseModel>> GetDataAsync2(L2DataRequestModel requestModel, DataType dataType, TimeInterval? interval)
+        private async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetDataAsync2(L2DataRequestModel requestModel, DataType dataType, TimeInterval? interval)
         {
             requestModel.Validate(_allAvailableProviders).ThrowIfInvalid();
-            if (requestModel.StartDate != null && requestModel.EndDate != null)
+            if (requestModel is { StartDate: not null, EndDate: not null })
             {
                 return dataType switch
                 {
-                    DataType.TPS => (await _tpsService.GetAsync(requestModel)).ToList(),
-                    DataType.GPS => (await _gpsService.GetAsync(requestModel)).ToList(),
-                    DataType.GasAdjustedTPS => (await _gtpsService.GetAsync(requestModel)).ToList(),
+                    DataType.TPS => (await _tpsService.GetAsync(requestModel)),
+                    DataType.GPS => (await _gpsService.GetAsync(requestModel)),
+                    DataType.GasAdjustedTPS => (await _gtpsService.GetAsync(requestModel)),
                     _ => throw new ArgumentException($"{dataType} is not supported."),
                 };
             }
             else if (interval != null)
             {
+                IDictionary<string, IEnumerable<DataResponseModel>> format(List<DataResponseModel> data)
+                {
+                    var groups = data.GroupBy(x => x.Provider);
+                    return groups.ToDictionary(x => x.Key, x => x.AsEnumerable());
+                }
                 return dataType switch
                 {
-                    DataType.TPS => await GetTPSAsync(requestModel, interval.Value),
-                    DataType.GPS => await GetGPSAsync(requestModel, interval.Value),
-                    DataType.GasAdjustedTPS => await GetGTPSAsync(requestModel, interval.Value),
+                    DataType.TPS => format(await GetTPSAsync(requestModel, interval.Value)),
+                    DataType.GPS => format(await GetGPSAsync(requestModel, interval.Value)),
+                    DataType.GasAdjustedTPS => format(await GetGTPSAsync(requestModel, interval.Value)),
                     _ => throw new ArgumentException($"{dataType} is not supported."),
                 };
             }
             throw new ArgumentException($"No start date, end date or time interval specified");
         }
 
-        public async Task<List<DataResponseModel>> GetDataAsync(L2DataRequestModel requestModel, DataType dataType, TimeInterval interval) => await GetDataAsync2(requestModel, dataType, interval);
+        public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetDataAsync(L2DataRequestModel requestModel, DataType dataType, TimeInterval interval) => await GetDataAsync2(requestModel, dataType, interval);
 
         public Task<L2DataResponseModel> GetDataAsync(L2DataRequestModel requestModel, DataType dataType)
         {
             requestModel = requestModel ?? throw new ArgumentNullException(nameof(requestModel));
+
+            var datasets = GetDatasets(requestModel, dataType) ?? Enumerable.Empty<Dataset>();
+
+            var formattedDatasets = _dataFormatter.MakeEqualLength(datasets, requestModel.ReturnXAxisType);
+
+            if (requestModel.MergeOptions.MergePercentage.HasValue)
+            {
+                formattedDatasets = HandlePercentageMerge(requestModel, formattedDatasets);
+            }
+
+            if (requestModel.MergeOptions.MaxCount.HasValue)
+            {
+                formattedDatasets = HandleMaxCountMerge(requestModel, formattedDatasets);
+            }
+
             var result = new L2DataResponseModel(requestModel)
             {
                 DataType = dataType,
-                Datasets = requestModel.AllDistinctProviders
+                Datasets = formattedDatasets ?? Array.Empty<Dataset>()
+            };
+
+            return Task.FromResult(result);
+        }
+
+        private IEnumerable<Dataset>? GetDatasets(L2DataRequestModel requestModel, DataType dataType)
+        {
+            return requestModel.AllDistinctProviders
                 ?.Select(async providerName =>
                 {
                     requestModel.Provider = providerName;
-                    return new Dataset(_dataFormatter.Format(await GetDataAsync(requestModel, dataType, requestModel.AutoInterval), requestModel), providerName, requestModel.IncludeSimpleAnalysis, requestModel.IncludeComplexAnalysis);
+                    var data = await GetDataAsync(requestModel, dataType, requestModel.AutoInterval);
+                    return new Dataset(_dataFormatter.Format(data.ContainsKey(providerName) ? data[providerName] : Enumerable.Empty<DataResponseModel>(), requestModel), providerName, requestModel.IncludeSimpleAnalysis, requestModel.IncludeComplexAnalysis);
                 })
                 ?.Select(task => task.Result)
-                .Where(x => !requestModel.IncludeEmptyDatasets ? x.DataPoints.Count() > 0 : true)
-                .OrderByDescending(x => x.DataPoints.Average(x => x.Y))
-                .ToArray()
-            };
-            if (result.Datasets != null)
-                result.Datasets = _dataFormatter.MakeEqualLength(result.Datasets, requestModel.ReturnXAxisType);
-            if (requestModel.MergeOptions.MergePercentage.HasValue)
-            {
-                SimpleMultiDatasetAnalysis analysis = result.SimpleAnalysis ?? new(result.Datasets);
-                if (result.Datasets != null && result.Datasets.Any())
+                .Where(x => !requestModel.IncludeEmptyDatasets || x.DataPoints.Any())
+                .OrderByDescending(x =>
                 {
-                    var toBeMergedCount = Enumerable.Range(1, result.Datasets.Count() - 1).Where(i => (new SimpleMultiDatasetAnalysis(result.Datasets.TakeLast(i)).Mean * 100 / analysis.Mean < requestModel.MergeOptions.MergePercentage.Value)).Count();
+                    if (!x.DataPoints.Any()) return 0;
+                    return x.DataPoints.Average(p => p.Y);
+                })
+                .ToArray();
+        }
 
-                    var toBeMerged = result.Datasets.TakeLast(toBeMergedCount);
+        private Dataset[] HandlePercentageMerge(L2DataRequestModel requestModel, IEnumerable<Dataset> datasets)
+        {
+            var enumerable = datasets as Dataset[] ?? datasets.ToArray();
+            SimpleMultiDatasetAnalysis analysis = new(enumerable);
+            if (!enumerable.Any()) return enumerable;
+            var toBeMergedCount = Enumerable.Range(1, enumerable.Length - 1).Count(i => requestModel.MergeOptions.MergePercentage != null && (new SimpleMultiDatasetAnalysis(enumerable.TakeLast(i)).Mean * 100 / analysis.Mean < requestModel.MergeOptions.MergePercentage.Value));
+            var toBeMerged = enumerable.TakeLast(toBeMergedCount).ToList();
 
-                    result.Datasets = result.Datasets.Take(result.Datasets.Count() - toBeMergedCount);
+            datasets = enumerable.Take(enumerable.Length - toBeMergedCount).ToArray();
 
-                    List<DatedXYDataPoint> mergedSet = new();
-                    for (int i = 0; i < toBeMerged.First().DataPoints.Count(); i++)
-                    {
-                        var points = toBeMerged.Select(x => x.DataPoints.ElementAt(i));
-                        mergedSet.Add(new DatedXYDataPoint()
-                        {
-                            X = points.First().ToDatedXYDataPoint().X,
-                            Y = Math.Round(points.Average(x => x.Y), 2)
-                        });
-                    }
-                    result.Datasets = result.Datasets.Concat(new[]
-                    {
-                        new Dataset(mergedSet.Convert
-                        (requestModel.ReturnXAxisType), "Others", requestModel.IncludeSimpleAnalysis, requestModel.IncludeComplexAnalysis)
-                    }).ToArray();
-                }
-            }
-            if (requestModel.MergeOptions.MaxCount.HasValue)
+            var mergedSet = MergeSets(toBeMerged);
+
+            datasets = datasets.Concat(new[]
             {
-                result.Datasets = result.Datasets?.Take(requestModel.MergeOptions.MaxCount.Value);
+                new Dataset(mergedSet.Convert(requestModel.ReturnXAxisType), "Others", requestModel.IncludeSimpleAnalysis, requestModel.IncludeComplexAnalysis)
+            }).ToArray();
+            return enumerable;
+        }
+
+        private static List<DatedXYDataPoint> MergeSets(IReadOnlyCollection<Dataset> toBeMerged)
+        {
+            List<DatedXYDataPoint> mergedSet = new();
+            for (var i = 0; i < toBeMerged.First().DataPoints.Count(); i++)
+            {
+                var points = toBeMerged.Select(x => x.DataPoints.ElementAt(i)).ToList();
+                mergedSet.Add(new DatedXYDataPoint()
+                {
+                    X = points.First().ToDatedXYDataPoint().X,
+                    Y = Math.Round(points.Average(x => x.Y), 2)
+                });
             }
-            result.Datasets ??= Array.Empty<Dataset>();
-            return Task.FromResult(result);
+
+            return mergedSet.ToList();
+        }
+
+        private static IEnumerable<Dataset> HandleMaxCountMerge(L2DataRequestModel requestModel, IEnumerable<Dataset> datasets)
+        {
+            var result = datasets as Dataset[] ?? datasets.ToArray();
+            return result.ToList().Take(requestModel.MergeOptions.MaxCount ?? result.Length).ToArray();
         }
 
         public async Task<List<DataResponseModel>> GetGPSAsync(ProviderQueryModel requestModel, TimeInterval interval)

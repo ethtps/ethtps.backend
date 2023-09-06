@@ -7,7 +7,7 @@ namespace ETHTPS.Services.Ethereum.JSONRPC.Implementations
     [RunsEvery(CronConstants.EVERY_5_S)]
     public sealed class AuroraJSONRPCBlockInfoProvider : JSONRPCBlockInfoProviderBase
     {
-        public AuroraJSONRPCBlockInfoProvider(IDBConfigurationProvider configurationProvider) : base(configurationProvider, "Aurora")
+        public AuroraJSONRPCBlockInfoProvider(DBConfigurationProviderWithCache configurationProvider) : base(configurationProvider, "Aurora")
         {
         }
     }

@@ -9,7 +9,7 @@ namespace ETHTPS.Services.Ethereum.Starkware
     [RunsEvery(CronConstants.EVERY_30_S)]
     public sealed class SorareBlockInfoProvider : StarkwareBlockInfoProviderBase
     {
-        public SorareBlockInfoProvider(EthtpsContext context, IDBConfigurationProvider configuration) : base(Products.Sorare, context, configuration)
+        public SorareBlockInfoProvider(EthtpsContext context, DBConfigurationProviderWithCache configuration) : base(Products.Sorare, context, configuration)
         {
         }
     }

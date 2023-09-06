@@ -1,4 +1,5 @@
 ﻿using ETHTPS.API.BIL.Infrastructure.Services;
+using ETHTPS.API.Core.Attributes;
 using ETHTPS.API.Core.Controllers;
 using ETHTPS.API.Core.Controllers.CRUD;
 
@@ -7,17 +8,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ETHTPS.API.Core.Integrations.MSSQL.Controllers
 {
+    [Authorize]
     public abstract class CRUDServiceControllerBase<TEntity> : APIControllerBase, ICRUDController<TEntity> where TEntity : class
     {
         private readonly ICRUDService<TEntity> _serviceImplementation;
-        public CRUDServiceControllerBase(ICRUDService<TEntity> serviceImplementation)
+        protected CRUDServiceControllerBase(ICRUDService<TEntity> serviceImplementation)
         {
             _serviceImplementation = serviceImplementation;
         }
 
         [Route("[action]")]
         [HttpPost]
-        [Authorize(Policy = "EditorsOnly")]
+        // [Authorize(Policy = "EditorsOnly")]
         public void Create([FromBody] TEntity entity)
         {
             _serviceImplementation.Create(entity);
@@ -25,7 +27,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Controllers
 
         [Route("[action]")]
         [HttpDelete]
-        [Authorize(Policy = "EditorsOnly")]
+        // [Authorize(Policy = "EditorsOnly")]
         public void DeleteById(int id)
         {
             _serviceImplementation.DeleteById(id);
@@ -33,6 +35,7 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Controllers
 
         [Route("[action]")]
         [HttpGet]
+        [TTL(30)]
         public IEnumerable<TEntity> GetAll()
         {
             return _serviceImplementation.GetAll();
@@ -40,13 +43,14 @@ namespace ETHTPS.API.Core.Integrations.MSSQL.Controllers
 
         [HttpGet]
         [Route("[action]")]
+        [TTL(30)]
         public TEntity GetById(int id)
         {
             return _serviceImplementation.GetById(id);
         }
 
         [Route("[action]")]
-        [Authorize(Policy = "EditorsOnly")]
+        // [Authorize(Policy = "EditorsOnly")]
         [HttpPut]
         public void Update([FromBody] TEntity entity)
         {

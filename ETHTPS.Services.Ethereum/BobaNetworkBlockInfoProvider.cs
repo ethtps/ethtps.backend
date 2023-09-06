@@ -20,7 +20,7 @@ namespace ETHTPS.Services.Ethereum
     public sealed class BobaNetworkBlockInfoProvider : BlockInfoProviderBase
     {
         private const string _NAME = "Boba Network";
-        public BobaNetworkBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, _NAME)
+        public BobaNetworkBlockInfoProvider(DBConfigurationProviderWithCache configuration) : base(configuration, _NAME)
         {
 
         }

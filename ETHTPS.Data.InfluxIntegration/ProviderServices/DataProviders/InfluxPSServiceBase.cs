@@ -1,4 +1,5 @@
 ﻿using ETHTPS.API.BIL.Infrastructure.Services.DataServices;
+using ETHTPS.Core;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Extensions;
 using ETHTPS.Data.Core.Models.DataEntries;
@@ -45,6 +46,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
                 _influxWrapper.GetEntriesForPeriod<Block
                 >(Constants.Influx.DEFAULT_BLOCK_BUCKET_NAME, "blockinfo", model.Provider, interval)))
             {
+                entry.Provider = model.Provider;
                 if (model.Provider != Constants.All && entry.Provider != model.Provider)
                 {
                     continue; //Redundant(?)
@@ -87,12 +89,14 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
 
         public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetMonthlyDataByYearAsync(ProviderQueryModel model, int year)
         {
+            //if (model.Provider == Constants.All) throw new NotSupportedException("InfluxDB doesn\'t return strings for provider names - TOFIX");
             var result = new Dictionary<string, List<DataResponseModel>>();
             var start = new DateTime(year, 1, 1);
             var end = new DateTime(year, 12, 31);
             await foreach (var entry in _influxWrapper.GetEntriesBetween<Block
                 >(Constants.Influx.DEFAULT_BLOCK_BUCKET_NAME, "blockinfo", start, end, "1mo"))
             {
+                entry.Provider = model.Provider;
                 if (model.Provider != Constants.All && entry.Provider != model.Provider)
                 {
                     continue;
@@ -100,6 +104,7 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
                 if (!result.TryGetValue(entry.Provider, out var list))
                 {
                     list = new List<DataResponseModel>();
+                    result[entry.Provider] = list;
                 }
 
                 var dataPoint = new DataPoint()
@@ -127,7 +132,6 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
                 {
                     Data = new List<DataPoint>() { dataPoint }
                 });
-                result.Add(entry.Provider, list);
             }
 
             return result.ToDictionary(x => x.Key, x => x.Value.AsEnumerable());
@@ -210,46 +214,71 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
             }
         }
 
+        /// <summary>
+        /// Replaces the provider name in the list of blocks with the given provider name. Useful because InfluxDB returns numbers back instead of names.
+        /// </summary>
+        private static IEnumerable<InfluxBlock> SetProvider(IEnumerable<InfluxBlock> list, string provider)
+        {
+            foreach (var item in list)
+            {
+                item.Provider = provider;
+                yield return item;
+            }
+        }
+
         public async Task<IDictionary<string, IEnumerable<DataResponseModel>>> GetAsync(L2DataRequestModel model)
         {
             var result = new Dictionary<string, List<DataResponseModel>>();
-            model.StartDate ??= DateTime.Now;
-            model.EndDate ??= DateTime.Now.Subtract(TimeSpan.FromDays(365 * 10 + 2));
+            model.StartDate ??= DateTime.Now.Subtract(TimeSpan.FromDays(365 * 10 + 2)); // Default to 10 years ago
+            model.EndDate ??= DateTime.Now; // Default to now
+
             var providerData = new List<IEnumerable<InfluxBlock>>();
+
             if (string.IsNullOrWhiteSpace(model.Provider) || model.Provider == Constants.All)
             {
                 foreach (var provider in model.AllDistinctProviders)
                 {
-                    providerData.Add(await _influxWrapper
-                .GetEntriesBetweenAsync<InfluxBlock>(
+                    providerData.Add(SetProvider(await _influxWrapper
+                    .GetEntriesBetweenAsync<InfluxBlock>(
                     Constants.Influx.DEFAULT_BLOCK_BUCKET_NAME,
                     "blockinfo",
                     provider,
-                    model.StartDate ?? new DateTime(),
-                    model.EndDate ?? new DateTime()));
+                    model.StartDate.Value,
+                    model.EndDate.Value), provider));
                 }
             }
             else
             {
-                providerData.Add(await _influxWrapper
+                providerData.Add(SetProvider(await _influxWrapper
                 .GetEntriesBetweenAsync<InfluxBlock>(
                     Constants.Influx.DEFAULT_BLOCK_BUCKET_NAME,
                     "blockinfo",
                     model.Provider,
-                    model.StartDate ?? new DateTime(),
-                    model.EndDate ?? new DateTime()));
+                    model.StartDate.Value,
+                    model.EndDate.Value), model.Provider));
             }
 
             foreach (var data in providerData)
             {
-                List<DataResponseModel>? list = default;
+                if (!data.Any())
+                {
+                    continue;
+                }
+
+                var provider = data.First().Provider;
+                if (!result.TryGetValue(provider, out var list))
+                {
+                    list = new List<DataResponseModel>();
+                    result[provider] = list;
+                }
+
+                var dataResponse = new DataResponseModel()
+                {
+                    Data = new List<DataPoint>()
+                };
+
                 foreach (var entry in data)
                 {
-                    if (!result.TryGetValue(entry.Provider, out list))
-                    {
-                        list = new List<DataResponseModel>();
-                    }
-
                     var dataPoint = new DataPoint()
                     {
                         BlockNumber = (int)entry.BlockNumber,
@@ -257,9 +286,9 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
                         Value = _valueSelector(entry.ToBlock())
                     };
 
-                    if (list.Count > 0)
+                    if (dataResponse.Data.Count > 0)
                     {
-                        var lastDataPoint = list.Last().Data.Last();
+                        var lastDataPoint = dataResponse.Data.Last();
                         var timeDiffInSeconds = (dataPoint.Date - lastDataPoint.Date).TotalSeconds;
                         if (timeDiffInSeconds > 0)
                         {
@@ -271,18 +300,15 @@ namespace ETHTPS.Data.Integrations.InfluxIntegration.ProviderServices.DataProvid
                         }
                     }
 
-                    list.Add(new DataResponseModel()
-                    {
-                        Data = new List<DataPoint>() { dataPoint }
-                    });
+                    dataResponse.Data.Add(dataPoint);
                 }
-                if (list != null && data.Any())
-                {
-                    result.Add(data.First().Provider, list);
-                }
+
+                list.Add(dataResponse);
             }
+
 
             return result.ToDictionary(x => x.Key, x => x.Value.AsEnumerable());
         }
+
     }
 }

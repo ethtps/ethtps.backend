@@ -12,7 +12,7 @@ using ETHTPS.Data.Core.Models.DataEntries;
 namespace ETHTPS.Services.Ethereum
 {
     /// <summary>
-    /// Provides a base class for building block info providers based on an <see cref="IDBConfigurationProvider"/>
+    /// Provides a base class for building block info providers based on an <see cref="DBConfigurationProviderWithCache"/>
     /// </summary>
     public abstract class BlockInfoProviderBase : IHTTPBlockInfoProvider
     {
@@ -33,10 +33,7 @@ namespace ETHTPS.Services.Ethereum
                 }
                 return _endpoint;
             }
-            set
-            {
-                _endpoint = value;
-            }
+            set => _endpoint = value;
         }
 
         protected string TXCountSelector => PartialMatchOrThrow("TXCount");
@@ -46,9 +43,9 @@ namespace ETHTPS.Services.Ethereum
         protected string APIKey => PartialMatchOrThrow("APIKey");
         protected string Secret => PartialMatchOrThrow("Secret");
         protected string ProjectID => PartialMatchOrThrow("ProjectID");
+
         private string? GetEndpoint()
         {
-
             var valid = new string[] { "Endpoint", "EndpointBase", "BaseURL", "URL" };
             foreach (var configString in _configurationStrings)
             {
@@ -59,6 +56,7 @@ namespace ETHTPS.Services.Ethereum
             }
             return null;
         }
+
         protected string PartialMatchOrThrow(params string[] partialNames)
         {
             foreach (var configString in _configurationStrings)
@@ -73,7 +71,7 @@ namespace ETHTPS.Services.Ethereum
 
         #endregion
 
-        protected BlockInfoProviderBase(IDBConfigurationProvider configurationProvider, string providerName)
+        protected BlockInfoProviderBase(DBConfigurationProviderWithCache configurationProvider, string providerName)
         {
             _configurationStrings = configurationProvider.GetConfigurationStringsForProvider(providerName);
             _providerName = providerName;

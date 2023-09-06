@@ -57,7 +57,7 @@ namespace ETHTPS.Data.Core.Extensions.StringExtensions
         {
             StringBuilder Sb = new StringBuilder();
 
-#pragma warning disable SYSLIB0021 // Type or member is obsolete
+#pragma warning disable SYSLIB0021 
             using (var hash = SHA256Managed.Create())
             {
                 Encoding enc = Encoding.UTF8;
@@ -66,7 +66,7 @@ namespace ETHTPS.Data.Core.Extensions.StringExtensions
                 foreach (Byte b in result)
                     Sb.Append(b.ToString("x2"));
             }
-#pragma warning restore SYSLIB0021 // Type or member is obsolete
+#pragma warning restore SYSLIB0021 
 
             return Sb.ToString().ToUpper();
         }

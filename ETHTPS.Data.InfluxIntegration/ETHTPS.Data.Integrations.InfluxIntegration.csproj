@@ -5,10 +5,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Platforms>AnyCPU;x64</Platforms>
+    <Configurations>Debug;Release;Testing</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="InfluxWrapper\" />
+    <Compile Remove="InfluxWrapper\**" />
+    <EmbeddedResource Remove="InfluxWrapper\**" />
+    <None Remove="InfluxWrapper\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,7 +20,7 @@
     <PackageReference Include="InfluxDB.Client.Core" Version="4.11.0" />
     <PackageReference Include="InfluxDB.Client.Flux" Version="4.11.0" />
     <PackageReference Include="InfluxDB.Client.Linq" Version="4.11.0" />
-    <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.3" />
+    <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.4" />
   </ItemGroup>
 
   <ItemGroup>

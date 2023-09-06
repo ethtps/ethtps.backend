@@ -10,7 +10,7 @@ namespace ETHTPS.Services.Ethereum.Scan.Implementations
     [Obsolete("Use JSONRPC.EthereumBlockInfoProvider instead", true)]
     public sealed class EtherscanBlockInfoProvider : ScanBlockInfoProviderBase
     {
-        public EtherscanBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Etherscan")
+        public EtherscanBlockInfoProvider(DBConfigurationProviderWithCache configuration) : base(configuration, "Etherscan")
         {
 
         }

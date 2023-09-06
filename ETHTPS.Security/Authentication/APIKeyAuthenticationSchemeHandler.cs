@@ -20,8 +20,10 @@ namespace ETHTPS.API.Security.Core.Authentication
             IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
+#pragma warning disable CS0618 // Suggests something that can't be used ??
             ISystemClock clock,
             EthtpsContext context) : base(options, logger, encoder, clock)
+#pragma warning restore CS0618 
         {
             _context = context;
             _logger = logger.CreateLogger<APIKeyAuthenticationSchemeHandler>();

@@ -10,7 +10,7 @@ namespace ETHTPS.Services.Ethereum.Scan.Implementations
     [Disabled]
     public sealed class ArbiscanBlockInfoProvider : ScanBlockInfoProviderBase
     {
-        public ArbiscanBlockInfoProvider(IDBConfigurationProvider configuration) : base(configuration, "Arbiscan")
+        public ArbiscanBlockInfoProvider(DBConfigurationProviderWithCache configuration) : base(configuration, "Arbiscan")
         {
         }
     }

@@ -10,9 +10,9 @@ namespace ETHTPS.API.Security.Core.Humanity.Recaptcha
     {
         private readonly string? _privateKey;
         private readonly HttpClient _httpClient = new();
-        private readonly IDBConfigurationProvider _dBConfigurationProvider;
+        private readonly DBConfigurationProviderWithCache _dBConfigurationProvider;
 
-        public RecaptchaVerificationService(IDBConfigurationProvider configurationProvider)
+        public RecaptchaVerificationService(DBConfigurationProviderWithCache configurationProvider)
         {
             _privateKey = configurationProvider.GetFirstConfigurationString("RecaptchaSecretKey");
             _dBConfigurationProvider = configurationProvider;
