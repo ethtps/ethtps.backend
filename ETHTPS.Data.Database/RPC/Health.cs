@@ -1,4 +1,6 @@
-﻿namespace ETHTPS.Data.Integrations.MSSQL.RPC;
+﻿using Newtonsoft.Json;
+
+namespace ETHTPS.Data.Integrations.MSSQL.RPC;
 
 public partial class Health
 {
@@ -13,8 +15,10 @@ public partial class Health
     public int? ResponseTimeMs { get; set; }
 
     public string? ErrorDetails { get; set; }
+    [JsonIgnore]
 
     public virtual Binding BindingNavigation { get; set; } = null!;
+    [JsonIgnore]
 
     public virtual HealthStatus StatusNavigation { get; set; } = null!;
 }

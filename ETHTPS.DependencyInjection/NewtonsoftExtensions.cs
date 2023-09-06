@@ -23,7 +23,7 @@ namespace ETHTPS.API.DependencyInjection
             {
                 options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                options.SerializerSettings.MaxDepth = 2;
+                options.SerializerSettings.MaxDepth = 10;
                 options.SerializerSettings.Formatting = Formatting.None;
                 if (ignoreVirtualProperties) options.SerializerSettings.ContractResolver = new NoVirtualPropertiesResolver()
                 {
@@ -35,7 +35,7 @@ namespace ETHTPS.API.DependencyInjection
                 options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                 options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
                 options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
-                options.JsonSerializerOptions.MaxDepth = 2;
+                options.JsonSerializerOptions.MaxDepth = 10;
             });
             return builder;
         }
