@@ -60,7 +60,7 @@ public partial class EthtpsContext : ETHTPSContextBase
 
     public virtual DbSet<ExternalWebsite> ExternalWebsites { get; set; }
 
-    public virtual DbSet<ExternalWebsiteCategory> ExternalWebsiteCateopries { get; set; }
+    public virtual DbSet<ExternalWebsiteCategory> ExternalWebsiteCategories { get; set; }
 
     public virtual DbSet<Feature> Features { get; set; }
 
@@ -103,6 +103,8 @@ public partial class EthtpsContext : ETHTPSContextBase
     public virtual DbSet<Server> Servers { get; set; }
 
     public virtual DbSet<Set> Sets { get; set; }
+    public virtual DbSet<Tag> Tags { get; set; }
+    public virtual DbSet<ProviderTag> ProviderTags { get; set; }
 
     public virtual DbSet<StarkwareTransactionCountDatum> StarkwareTransactionCountData { get; set; }
 

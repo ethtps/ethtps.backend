@@ -12,6 +12,7 @@ using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Core.BlockInfo;
 using ETHTPS.Services;
+using ETHTPS.Services.BackgroundTasks.Recurring.AutoDiscovery;
 using ETHTPS.Services.BlockchainServices;
 using ETHTPS.Services.BlockchainServices.BlockTime;
 using ETHTPS.Services.BlockchainServices.CoravelLoggers;
@@ -121,6 +122,7 @@ namespace ETHTPS.API.DependencyInjection
                             queues = new string[] { "default" };
                         }
                         app.UseHangfire(queues);
+                        RecurringJob.AddOrUpdate<RPCAutoDiscoveryTask>("RPCAutoDiscoveryTask", x => x.RunAsync(), typeof(RPCAutoDiscoveryTask).GetCustomAttribute<RunsEveryAttribute>()?.CronExpression ?? CronConstants.EVERY_HOUR);
                         break;
                     }
             }

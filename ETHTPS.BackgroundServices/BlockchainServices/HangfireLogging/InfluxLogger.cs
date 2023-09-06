@@ -47,7 +47,7 @@ namespace ETHTPS.Services.BlockchainServices.HangfireLogging
         {
             if (!_statusService.Enabled ?? false)
             {
-                _logger.LogInformation($"Not running InfluxLogger<{_provider}> because it is disabled");
+                //_logger.LogInformation($"Not running InfluxLogger<{_provider}> because it is disabled");
                 return; //TODO: remove self from hangfire
             }
             if (TimeSinceLastRan?.TotalSeconds >= 5)

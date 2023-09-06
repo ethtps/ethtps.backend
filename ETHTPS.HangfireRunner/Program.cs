@@ -5,6 +5,7 @@ using ETHTPS.Configuration;
 using ETHTPS.Data.Core;
 using ETHTPS.Data.Core.Attributes;
 using ETHTPS.Data.Integrations.InfluxIntegration;
+using ETHTPS.Services.BackgroundTasks.Recurring.AutoDiscovery;
 using ETHTPS.Services.Infrastructure.Messaging;
 using ETHTPS.Services.LiveData;
 using ETHTPS.TaskRunner.BackgroundServices;
@@ -39,6 +40,7 @@ services.AddSwagger()
         .AddDataProviderServices(DatabaseProvider.InfluxDB)
         .AddRabbitMQMessagePublisher()
         .AddRabbitMQSubscriptionService(AllowedSubscriptionScope.BlockDataAggregator)
+        .AddScoped<RPCAutoDiscoveryTask>()
         .AddScoped<WSAPIPublisher>();
 
 Trace("Added dependencies");

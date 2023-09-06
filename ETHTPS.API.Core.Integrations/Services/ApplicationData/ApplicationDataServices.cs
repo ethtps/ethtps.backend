@@ -64,7 +64,7 @@ public sealed class ExternalWebsitesService : EFCoreCRUDServiceBase<ExternalWebs
 
 public sealed class ExternalWebsiteCategoryService : EFCoreCRUDServiceBase<ExternalWebsiteCategory>
 {
-    public ExternalWebsiteCategoryService(EthtpsContext context) : base(context.ExternalWebsiteCateopries ?? throw new ArgumentNullException("ExternalWebsiteCateopries"), context)
+    public ExternalWebsiteCategoryService(EthtpsContext context) : base(context.ExternalWebsiteCategories ?? throw new ArgumentNullException("ExternalWebsiteCateopries"), context)
     {
     }
 }
