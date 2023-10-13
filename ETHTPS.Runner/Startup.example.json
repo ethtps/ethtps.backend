@@ -4,13 +4,13 @@
       "Name": "ETHTPS.API",
       "Directory": "ETHTPS.API\\bin\\Debug\\net7.0",
       "Executable": "ETHTPS.API.exe",
-      "Arguments": [ "--urls=http://lcoalhost:10202" ]
+      "Arguments": [ "--urls=http://localhost:10202" ]
     },
     {
       "Name": "ETHTPS.WSAPI",
       "Directory": "ETHTPS.WSAPI\\bin\\Debug\\net7.0",
       "Executable": "ETHTPS.WSAPI.exe",
-      "Arguments": [ "--urls=http://lcoalhost:5136" ]
+      "Arguments": [ "--urls=http://localhost:5136" ]
     },
     {
       "Name": "ETHTPS.Runner",
